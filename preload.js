@@ -12,5 +12,6 @@ window.addEventListener('DOMContentLoaded', () => {
 const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('site', {
-  getPosts: () => ipcRenderer.invoke('site:posts')
+  getPosts: () => ipcRenderer.invoke('site:posts'),
+  getCategories: () => ipcRenderer.invoke('site:categories')
 })

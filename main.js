@@ -25,6 +25,23 @@ function getPosts () {
   return postList
 }
 
+function getCategories () {
+  var categories = []
+   hexo.locals.get('categories').each(function(category) {
+
+     var cat = {
+       id: category._id,
+       parent: category.parent,
+       name : category.name,
+       slug : category.slug,
+       path : category.path,
+       permalink: category.permalink,
+       length: category.length
+     }
+     categories.push(cat)
+   })
+   return categories
+}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -43,6 +60,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
   ipcMain.handle('site:posts', getPosts)
+  ipcMain.handle('site:categories', getCategories)
   createWindow()
 
   app.on('activate', () => {
