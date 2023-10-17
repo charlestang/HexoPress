@@ -13,5 +13,6 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('site', {
   getPosts: () => ipcRenderer.invoke('site:posts'),
-  getCategories: () => ipcRenderer.invoke('site:categories')
+  getCategories: () => ipcRenderer.invoke('site:categories'),
+  getTags: () => ipcRenderer.invoke('site:tags')
 })

@@ -6,18 +6,23 @@ const hexo = new Hexo('/Users/charles/Projects/charlestang.github.io', {
   drafts: true,
   safe: true
 })
-hexo.init().then(function() {
+hexo.init().then(function () {
   hexo.load()
 })
 
-function getPosts () {
+/**
+ * 获取所有的文章
+ *
+ * @returns {[Object]}
+ */
+function getPosts() {
   var postList = []
-  posts =  hexo.locals.get('posts')
-  posts.each(function(post) {
+  posts = hexo.locals.get('posts')
+  posts.each(function (post) {
     var onePost = {
       title: post.title,
       date: post.date.format(),
-      source: post.source,
+      source: post.source
     }
     console.log(onePost)
     postList.push(onePost)
@@ -25,22 +30,44 @@ function getPosts () {
   return postList
 }
 
-function getCategories () {
+/**
+ * 获取所有的分类
+ * @returns {[Object]}
+ */
+function getCategories() {
   var categories = []
-   hexo.locals.get('categories').each(function(category) {
+  hexo.locals.get('categories').each(function (category) {
+    var cat = {
+      id: category._id,
+      parent: category.parent,
+      name: category.name,
+      slug: category.slug,
+      path: category.path,
+      permalink: category.permalink,
+      length: category.length
+    }
+    categories.push(cat)
+  })
+  return categories
+}
 
-     var cat = {
-       id: category._id,
-       parent: category.parent,
-       name : category.name,
-       slug : category.slug,
-       path : category.path,
-       permalink: category.permalink,
-       length: category.length
-     }
-     categories.push(cat)
-   })
-   return categories
+function getTags() {
+  var tags = []
+  hexo.locals.get('tags').each(function (tag) {
+    var t = {
+      id: tag._id,
+      name: tag.name,
+      slug: tag.slug,
+      path: tag.path,
+      permalink: tag.permalink,
+      length: tag.length
+    }
+
+    console.log(tag)
+    tags.push(t)
+  })
+
+  return tags
 }
 
 function createWindow() {
@@ -61,6 +88,7 @@ function createWindow() {
 app.whenReady().then(() => {
   ipcMain.handle('site:posts', getPosts)
   ipcMain.handle('site:categories', getCategories)
+  ipcMain.handle('site:tags', getTags)
   createWindow()
 
   app.on('activate', () => {

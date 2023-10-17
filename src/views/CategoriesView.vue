@@ -3,20 +3,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
 import type { Category } from '@/local.d.ts'
+import { ref, watch } from 'vue'
 
 let categories = ref<null | Category[]>(null)
 
-async function fetch () {
+async function fetch() {
   categories.value = await window.site.getCategories()
 }
 
 fetch()
 
 interface Tree {
-   id: string
-   parent: string | undefined
+  id: string
+  parent: string | undefined
   label: string
   children?: Tree[]
 }
@@ -27,12 +27,9 @@ const handleNodeClick = (data: Tree) => {
 
 let data1 = ref<Tree[]>([])
 watch(categories, (newVal) => {
-  const nodeMap: {[id: string]: Tree} = {}
+  const nodeMap: { [id: string]: Tree } = {}
 
   for (const entry of newVal!) {
-    console.log(entry.name)
-    console.log(entry.id)
-    console.log(entry.parent)
     nodeMap[entry.id] = {
       id: entry.id,
       parent: entry.parent,
@@ -51,7 +48,6 @@ watch(categories, (newVal) => {
       data1.value.push(node)
     }
   }
-
 })
 
 const defaultProps = {

@@ -1,7 +1,18 @@
 <template>
-  <el-tag>Tag 1</el-tag>
-  <el-tag class="ml-2" type="success">Tag 2</el-tag>
-  <el-tag class="ml-2" type="info">Tag 3</el-tag>
-  <el-tag class="ml-2" type="warning">Tag 4</el-tag>
-  <el-tag class="ml-2" type="danger">Tag 5</el-tag>
+  <el-tag v-for="tag in tags" :key="tag.id">
+    {{ tag.name }}
+  </el-tag>
 </template>
+
+<script lang="ts" setup>
+import type { Tag } from '@/local.d.ts'
+import { ref } from 'vue'
+
+let tags = ref<null | Tag[]>(null)
+
+async function fetch() {
+  tags.value = await window.site.getTags()
+}
+
+fetch()
+</script>
