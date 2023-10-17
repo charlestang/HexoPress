@@ -1,9 +1,22 @@
 <template>
-  <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
+  <el-tree :data="data1" :props="defaultProps" @node-click="handleNodeClick" />
 </template>
 
 <script lang="ts" setup>
+import { ref, watch } from 'vue';
+import type { Category } from '@/local.d.ts'
+
+let categories = ref<null | Category[]>(null)
+
+async function fetch () {
+  categories.value = await window.site.getCategories()
+}
+
+fetch()
+
 interface Tree {
+   id: string
+   parent: string | undefined
   label: string
   children?: Tree[]
 }
@@ -12,63 +25,34 @@ const handleNodeClick = (data: Tree) => {
   console.log(data)
 }
 
-const data: Tree[] = [
-  {
-    label: 'Level one 1',
-    children: [
-      {
-        label: 'Level two 1-1',
-        children: [
-          {
-            label: 'Level three 1-1-1'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Level one 2',
-    children: [
-      {
-        label: 'Level two 2-1',
-        children: [
-          {
-            label: 'Level three 2-1-1'
-          }
-        ]
-      },
-      {
-        label: 'Level two 2-2',
-        children: [
-          {
-            label: 'Level three 2-2-1'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    label: 'Level one 3',
-    children: [
-      {
-        label: 'Level two 3-1',
-        children: [
-          {
-            label: 'Level three 3-1-1'
-          }
-        ]
-      },
-      {
-        label: 'Level two 3-2',
-        children: [
-          {
-            label: 'Level three 3-2-1'
-          }
-        ]
-      }
-    ]
+let data1 = ref<Tree[]>([])
+watch(categories, (newVal) => {
+  const nodeMap: {[id: string]: Tree} = {}
+
+  for (const entry of newVal!) {
+    console.log(entry.name)
+    console.log(entry.id)
+    console.log(entry.parent)
+    nodeMap[entry.id] = {
+      id: entry.id,
+      parent: entry.parent,
+      label: entry.name,
+      children: []
+    }
   }
-]
+
+  for (const node of Object.values(nodeMap)) {
+    if (node.parent) {
+      const parent = nodeMap[node.parent]
+      if (parent) {
+        parent.children?.push(node)
+      }
+    } else {
+      data1.value.push(node)
+    }
+  }
+
+})
 
 const defaultProps = {
   children: 'children',
