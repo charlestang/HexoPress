@@ -1,7 +1,15 @@
 export type Post = {
   title: string
   date: string
+  updated: string
   source: string
+  status: string
+  layout: string
+  path: string
+  permalink: string
+  asset_dir: string
+  tags: string
+  categories: string
 }
 
 export type Category = {

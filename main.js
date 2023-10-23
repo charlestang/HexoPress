@@ -26,7 +26,27 @@ function getPosts(a, b) {
     var onePost = {
       title: post.title,
       date: post.date.format(),
-      source: post.source
+      updated: post.updated.format(),
+      source: post.source,
+      status: post.published ? 'published' : 'draft',
+      layout: post.layout,
+      path: post.path,
+      permalink: post.permalink,
+      asset_dir: post.asset_dir,
+      tags: post.tags.data.reduce(function (acc, tag) {
+        if (acc === '') {
+          return tag.name
+        } else {
+          return `${acc}, ${tag.name}`
+        }
+      }, ''),
+      categories: post.categories.data.reduce(function (acc1, cat) {
+        if (acc1 === '') {
+          return cat.name
+        } else {
+          return `${acc1}, ${cat.name}`
+        }
+      }, '')
     }
     postList.push(onePost)
   })
