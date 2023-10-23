@@ -24,7 +24,7 @@ export type Tag = {
 }
 
 export interface ISite {
-  getPosts: () => Promise<Post[]>
+  getPosts: (a, b, c) => Promise<Post[]>
   getCategories: () => Promise<Category[]>
   getTags: () => Promise<Tag[]>
 }

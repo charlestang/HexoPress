@@ -4,7 +4,10 @@ import type { Post } from '@/local.d.ts'
 let posts = ref<null | Post[]>(null)
 
 async function fetch() {
-  let data = await window.site.getPosts()
+  let x = '3'
+  let y = 4
+  let z = false
+  let data = await window.site.getPosts(x, y, z)
   posts.value = data
   
 }

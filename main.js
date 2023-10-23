@@ -1,9 +1,13 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 
+const wrapper = require(path.join(__dirname, '/lib/api-wrapper.js'))
+const settings = require(path.join(__dirname, '/lib/settings.js'))
+
+wrapper.registerApis(settings.apis)
+
 const Hexo = require('hexo')
 const hexo = new Hexo('/Users/charles/Projects/charlestang.github.io', {
-  drafts: true,
   safe: true
 })
 hexo.init().then(function () {
@@ -15,7 +19,7 @@ hexo.init().then(function () {
  *
  * @returns {[Object]}
  */
-function getPosts() {
+function getPosts(a, b) {
   var postList = []
   posts = hexo.locals.get('posts')
   posts.each(function (post) {
@@ -24,9 +28,11 @@ function getPosts() {
       date: post.date.format(),
       source: post.source
     }
-    console.log(onePost)
     postList.push(onePost)
   })
+  console.log('参数测试')
+  console.log(a)
+  console.log(b)
   return postList
 }
 
@@ -89,6 +95,14 @@ app.whenReady().then(() => {
   ipcMain.handle('site:posts', getPosts)
   ipcMain.handle('site:categories', getCategories)
   ipcMain.handle('site:tags', getTags)
+
+  const apis = wrapper.getWrapper()
+
+  for (let channel in apis) {
+    ipcMain.handle(channel, function (event, ...args) {
+      return apis[channel](...args)
+    })
+  }
   createWindow()
 
   app.on('activate', () => {
