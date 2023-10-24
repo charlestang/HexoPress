@@ -4,6 +4,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import CategoriesView from '../views/CategoriesView.vue'
 import EditorView from '../views/EditorView.vue'
 import PostListView from '../views/PostListView.vue'
+import SetupView from '../views/SetupView.vue'
 import TagsView from '../views/TagsView.vue'
 
 const router = createRouter({
@@ -44,8 +45,25 @@ const router = createRouter({
       path: '/new-post',
       name: 'new-post',
       component: EditorView
+    },
+    {
+      path: '/setup',
+      name: 'setup',
+      component: SetupView
     }
   ]
+})
+
+router.beforeEach(async (to, from, next) => {
+  const vaultPath = await window.site.getConfig('vaultPath')
+  console.log(vaultPath)
+  if (vaultPath === null && to.name !== 'setup') {
+    console.log('redirecting to setup')
+    next('/setup')
+  } else {
+    console.log('to right place')
+    next()
+  }
 })
 
 export default router

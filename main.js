@@ -1,10 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 
-const wrapper = require(path.join(__dirname, '/lib/api-wrapper.js'))
-const settings = require(path.join(__dirname, '/lib/settings.js'))
-
-wrapper.registerApis(settings.apis)
+const config = require(path.join(__dirname, '/lib/config.js'))
 
 const Hexo = require('hexo')
 const hexo = new Hexo('/Users/charles/Projects/charlestang.github.io', {
@@ -117,14 +114,9 @@ app.whenReady().then(() => {
   ipcMain.handle('site:posts', getPosts)
   ipcMain.handle('site:categories', getCategories)
   ipcMain.handle('site:tags', getTags)
+  ipcMain.handle('config:get', (event, key) => config.get(key)) 
+  ipcMain.handle('config:set', (event, config) => config.set(config[0], config[1])) 
 
-  const apis = wrapper.getWrapper()
-
-  for (let channel in apis) {
-    ipcMain.handle(channel, function (event, ...args) {
-      return apis[channel](...args)
-    })
-  }
   createWindow()
 
   app.on('activate', () => {

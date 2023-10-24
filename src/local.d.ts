@@ -32,9 +32,11 @@ export type Tag = {
 }
 
 export interface ISite {
-  getPosts: (a, b, c) => Promise<Post[]>
+  getPosts: () => Promise<Post[]>
   getCategories: () => Promise<Category[]>
   getTags: () => Promise<Tag[]>
+  getConfig: (key) => Promise<string | null | bool | number | array | object>
+  setConfig: (key, value) => Promise<any>
 }
 
 declare global {

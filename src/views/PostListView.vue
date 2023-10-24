@@ -4,14 +4,19 @@ import { ref } from 'vue'
 let posts = ref<null | Post[]>(null)
 
 async function fetch() {
-  let x = '3'
-  let y = 4
-  let z = false
-  let data = await window.site.getPosts(x, y, z)
+  let data = await window.site.getPosts()
   posts.value = data
 }
 
 fetch()
+
+async function getConfig() {
+  let path = await window.site.getConfig('defaultVault')
+  console.log('test read config')
+  console.log(path)
+}
+
+getConfig()
 </script>
 <template>
   <el-table :data="posts" stripe style="width: 100%">
