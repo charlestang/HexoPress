@@ -14,5 +14,4 @@ contextBridge.exposeInMainWorld('site', {
   getPosts:(...args) => ipcRenderer.invoke('site:posts', args),
   getCategories:  (...args) => ipcRenderer.invoke('site:categories', args),
   getTags:  (...args) => ipcRenderer.invoke('site:tags', args),
-  ipcRenderer: () => ipcRenderer
 })

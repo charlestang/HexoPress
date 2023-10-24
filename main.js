@@ -19,7 +19,7 @@ hexo.init().then(function () {
  *
  * @returns {[Object]}
  */
-function getPosts(a, b) {
+function getPosts(event, args) {
   var postList = []
   posts = hexo.locals.get('posts')
   posts.each(function (post) {
@@ -50,9 +50,6 @@ function getPosts(a, b) {
     }
     postList.push(onePost)
   })
-  console.log('参数测试')
-  console.log(a)
-  console.log(b)
   return postList
 }
 
@@ -60,7 +57,7 @@ function getPosts(a, b) {
  * 获取所有的分类
  * @returns {[Object]}
  */
-function getCategories() {
+function getCategories(event, args) {
   var categories = []
   hexo.locals.get('categories').each(function (category) {
     var cat = {
@@ -77,7 +74,13 @@ function getCategories() {
   return categories
 }
 
-function getTags() {
+/**
+ * 获取所有的标签
+ * @param {*} event
+ * @param {*} args
+ * @returns
+ */
+function getTags(event, args) {
   var tags = []
   hexo.locals.get('tags').each(function (tag) {
     var t = {
@@ -89,7 +92,6 @@ function getTags() {
       length: tag.length
     }
 
-    console.log(tag)
     tags.push(t)
   })
 
