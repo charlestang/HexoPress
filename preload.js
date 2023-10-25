@@ -15,5 +15,6 @@ contextBridge.exposeInMainWorld('site', {
   getCategories:  (...args) => ipcRenderer.invoke('site:categories', args),
   getTags:  (...args) => ipcRenderer.invoke('site:tags', args),
   getConfig: (key) => ipcRenderer.invoke('config:get', key),
-  setConfig: (key, value) => ipcRenderer.invoke('config:set', [key, value])
+  setConfig: (key, value) => ipcRenderer.invoke('config:set', [key, value]),
+  openDirDialog: () => ipcRenderer.invoke('dialog:dir')
 })

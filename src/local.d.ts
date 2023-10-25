@@ -31,12 +31,18 @@ export type Tag = {
   length: number
 }
 
+type DialogResult = {
+  canceled: boolean
+  filePaths: string[]
+}
+
 export interface ISite {
   getPosts: () => Promise<Post[]>
   getCategories: () => Promise<Category[]>
   getTags: () => Promise<Tag[]>
-  getConfig: (key) => Promise<string | null | bool | number | array | object>
+  getConfig: (key) => Promise<string | null | bool | number | array | Object>
   setConfig: (key, value) => Promise<any>
+  openDirDialog: () => Promise<DialogResult>
 }
 
 declare global {

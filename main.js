@@ -1,9 +1,9 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
+const Hexo = require('hexo')
 
 const config = require(path.join(__dirname, '/lib/config.js'))
 
-const Hexo = require('hexo')
 const hexo = new Hexo('/Users/charles/Projects/charlestang.github.io', {
   safe: true
 })
@@ -116,6 +116,7 @@ app.whenReady().then(() => {
   ipcMain.handle('site:tags', getTags)
   ipcMain.handle('config:get', (event, key) => config.get(key)) 
   ipcMain.handle('config:set', (event, config) => config.set(config[0], config[1])) 
+  ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({properties: ['openDirectory']}))
 
   createWindow()
 
