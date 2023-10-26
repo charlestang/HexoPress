@@ -43,6 +43,7 @@ export interface ISite {
   getConfig: (key) => Promise<string | null | bool | number | array | Object>
   setConfig: (key, value) => Promise<any>
   openDirDialog: () => Promise<DialogResult>
+  getContent: (path: string) => Promise<string>
 }
 
 declare global {

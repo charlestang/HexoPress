@@ -12,8 +12,8 @@ async function fetch() {
 fetch()
 
 function onClick(sourcePath: string) {
-  console.log(sourcePath)
-  router.push({ path: '/editor', params: { sourcePath: sourcePath } })
+  console.log('send parmas: ', sourcePath)
+  router.push({ name: 'editor', params: { sourcePath: sourcePath } })
 }
 </script>
 <template>

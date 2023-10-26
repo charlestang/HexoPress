@@ -26,7 +26,7 @@ const form = reactive({
 async function onSubmit() {
   if (form.directory === '') return
   await window.site.setConfig('vaultPath', form.directory)
-  router.replace('/home')
+  router.replace('/')
 }
 
 function selectPath() {

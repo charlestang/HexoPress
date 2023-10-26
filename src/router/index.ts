@@ -42,9 +42,10 @@ const router = createRouter({
       ]
     },
     {
-      path: '/editor',
+      path: '/editor/:sourcePath',
       name: 'editor',
-      component: EditorView
+      component: EditorView,
+      props: true
     },
     {
       path: '/setup',
@@ -61,7 +62,6 @@ router.beforeEach(async (to, from, next) => {
     console.log('redirecting to setup')
     next('/setup')
   } else {
-    console.log('to right place')
     next()
   }
 })

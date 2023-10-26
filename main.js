@@ -38,6 +38,7 @@ app.whenReady().then(() => {
   ipcMain.handle('config:get', (event, key) => config.get(key)) 
   ipcMain.handle('config:set', (event, kv) => config.set(kv[0], kv[1])) 
   ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({properties: ['openDirectory']}))
+  ipcMain.handle('post:content', (event, path) => agent.getContent(path))
 
   createWindow()
 

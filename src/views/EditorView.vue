@@ -11,14 +11,24 @@
 </template>
 
 <script lang="ts" setup>
+import router from '@/router'
 import { Back } from '@element-plus/icons-vue'
 import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { ref } from 'vue'
-import router from '../router'
-import type RouteLocationNormalized from 'vue-router'
+import { useRoute } from 'vue-router'
 
-const text = ref('# Hello Editor')
+const route = useRoute()
+const sourcePath = route.params.sourcePath
+const text = ref('')
+console.log('route: ', route)
+console.log('params: ', route.params)
+console.log('sourcePath: ', sourcePath)
+if (typeof sourcePath !== 'undefined' && typeof sourcePath === 'string') {
+  window.site.getContent(sourcePath).then((content) => {
+    text.value = content
+  })
+}
 </script>
 
 <style scoped>
