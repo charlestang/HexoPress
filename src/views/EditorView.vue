@@ -16,6 +16,7 @@ import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { ref } from 'vue'
 import router from '../router'
+import type RouteLocationNormalized from 'vue-router'
 
 const text = ref('# Hello Editor')
 </script>

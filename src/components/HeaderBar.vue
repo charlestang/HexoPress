@@ -10,7 +10,7 @@ import { EditPen } from '@element-plus/icons-vue'
 import router from '../router'
 
 const handleNewPost = () => {
-  router.push('/new-post')
+  router.push('/editor')
 }
 </script>
 <style scoped>

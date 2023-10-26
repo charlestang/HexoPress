@@ -42,8 +42,8 @@ const router = createRouter({
       ]
     },
     {
-      path: '/new-post',
-      name: 'new-post',
+      path: '/editor',
+      name: 'editor',
       component: EditorView
     },
     {

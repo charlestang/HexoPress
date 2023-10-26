@@ -17,13 +17,16 @@
 </template>
 
 <script lang="ts" setup>
+import router from '@/router'
 import { reactive } from 'vue'
 const form = reactive({
   directory: ''
 })
 
-function onSubmit() {
+async function onSubmit() {
   if (form.directory === '') return
+  await window.site.setConfig('vaultPath', form.directory)
+  router.replace('/home')
 }
 
 function selectPath() {

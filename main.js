@@ -1,99 +1,20 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
-const Hexo = require('hexo')
-
 const config = require(path.join(__dirname, '/lib/config.js'))
+const agent = require(path.join(__dirname, '/lib/hexo-agent.js'))
 
-const hexo = new Hexo('/Users/charles/Projects/charlestang.github.io', {
-  safe: true
+console.log('vaultPath is: ' , config.get('vaultPath'))
+if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
+  console.log('init agent with vaultPath: ', config.get('vaultPath'))
+  agent.init(config.get('vaultPath'))
+  console.log('after init agent')
+}
+
+config.on('config:changed', async (key, value) => {
+  if (key === "vaultPath") {
+    await agent.init(value)
+  }
 })
-hexo.init().then(function () {
-  hexo.load()
-})
-
-/**
- * 获取所有的文章
- *
- * @returns {[Object]}
- */
-function getPosts(event, args) {
-  var postList = []
-  posts = hexo.locals.get('posts')
-  posts.each(function (post) {
-    var onePost = {
-      title: post.title,
-      date: post.date.format(),
-      updated: post.updated.format(),
-      source: post.source,
-      status: post.published ? 'published' : 'draft',
-      layout: post.layout,
-      path: post.path,
-      permalink: post.permalink,
-      asset_dir: post.asset_dir,
-      tags: post.tags.data.reduce(function (acc, tag) {
-        if (acc === '') {
-          return tag.name
-        } else {
-          return `${acc}, ${tag.name}`
-        }
-      }, ''),
-      categories: post.categories.data.reduce(function (acc1, cat) {
-        if (acc1 === '') {
-          return cat.name
-        } else {
-          return `${acc1}, ${cat.name}`
-        }
-      }, '')
-    }
-    postList.push(onePost)
-  })
-  return postList
-}
-
-/**
- * 获取所有的分类
- * @returns {[Object]}
- */
-function getCategories(event, args) {
-  var categories = []
-  hexo.locals.get('categories').each(function (category) {
-    var cat = {
-      id: category._id,
-      parent: category.parent,
-      name: category.name,
-      slug: category.slug,
-      path: category.path,
-      permalink: category.permalink,
-      length: category.length
-    }
-    categories.push(cat)
-  })
-  return categories
-}
-
-/**
- * 获取所有的标签
- * @param {*} event
- * @param {*} args
- * @returns
- */
-function getTags(event, args) {
-  var tags = []
-  hexo.locals.get('tags').each(function (tag) {
-    var t = {
-      id: tag._id,
-      name: tag.name,
-      slug: tag.slug,
-      path: tag.path,
-      permalink: tag.permalink,
-      length: tag.length
-    }
-
-    tags.push(t)
-  })
-
-  return tags
-}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -111,11 +32,11 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('site:posts', getPosts)
-  ipcMain.handle('site:categories', getCategories)
-  ipcMain.handle('site:tags', getTags)
+  ipcMain.handle('site:posts', () => agent.getPosts())
+  ipcMain.handle('site:categories', () => agent.getCategories())
+  ipcMain.handle('site:tags', () => agent.getTags() )
   ipcMain.handle('config:get', (event, key) => config.get(key)) 
-  ipcMain.handle('config:set', (event, config) => config.set(config[0], config[1])) 
+  ipcMain.handle('config:set', (event, kv) => config.set(kv[0], kv[1])) 
   ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({properties: ['openDirectory']}))
 
   createWindow()
