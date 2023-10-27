@@ -1,4 +1,14 @@
-# hexo-writer
+<div align="center">
+  <p align="center">
+    <img style="width:300px" src="https://github.com/charlestang/HexoPress/blob/main/docs/logo.svg" alt="logo" />
+  </p>
+  <h1>HexoPress</h1>
+  <p>A client software designed specifically for editing blog articles and managing blog content that supports Hexo!</p>
+  <p align="center"><!-- some badges like version, release status, test coverage, license, etc.--></p>
+</div>
+
+English | [简体中文](./README_zh.md)
+
 
 This template should help get you started developing with Vue 3 in Vite.
 

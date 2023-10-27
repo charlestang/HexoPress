@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2001px" height="503px" viewBox="0 0 2001 503" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>HexoPress-logo</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M196,70 L325.903811,145 L325.903811,196 L196,121 L66.0961894,196 L66.0961894,145 L196,70 Z" id="形状结合" stroke="#979797" fill="#2271B1"></path>
+        <path d="M325.87401,82.0516155 L455.777821,157.051615 L455.777821,208.051615 L325.87401,133.051615 L195.9702,208.051615 L195.9702,157.051615 L325.87401,82.0516155 Z" id="形状结合" stroke="#979797" fill="#2271B1" transform="translate(325.874010, 145.051615) rotate(60.000000) translate(-325.874010, -145.051615) "></path>
+        <path d="M380.37401,200.551615 L510.277821,275.551615 L510.277821,326.551615 L380.37401,251.551615 L250.4702,326.551615 L250.4702,275.551615 L380.37401,200.551615 Z" id="形状结合" stroke="#979797" fill="#2271B1" transform="translate(380.374010, 263.551615) rotate(120.000000) translate(-380.374010, -263.551615) "></path>
+        <path d="M305,307 L434.903811,382 L434.903811,433 L305,358 L175.096189,433 L175.096189,382 L305,307 Z" id="形状结合" stroke="#979797" fill="#2271B1" transform="translate(305.000000, 370.000000) rotate(180.000000) translate(-305.000000, -370.000000) "></path>
+        <path d="M175.12599,294.948385 L305.0298,369.948385 L305.0298,420.948385 L175.12599,345.948385 L45.2221791,420.948385 L45.2221791,369.948385 L175.12599,294.948385 Z" id="形状结合" stroke="#979797" fill="#2271B1" transform="translate(175.125990, 357.948385) rotate(240.000000) translate(-175.125990, -357.948385) "></path>
+        <path d="M120.62599,176.448385 L250.5298,251.448385 L250.5298,302.448385 L120.62599,227.448385 L-9.27782092,302.448385 L-9.27782092,251.448385 L120.62599,176.448385 Z" id="形状结合" stroke="#979797" fill="#2271B1" transform="translate(120.625990, 239.448385) rotate(300.000000) translate(-120.625990, -239.448385) "></path>
+        <text id="HexoPress" font-family="HelveticaNeue-Medium, Helvetica Neue" font-size="300" font-weight="400" fill="#2271B1">
+            <tspan x="500" y="358">HexoPress</tspan>
+        </text>
+    </g>
+</svg>
