@@ -42,7 +42,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/editor/:sourcePath',
+      path: '/editor/:sourcePath*',
       name: 'editor',
       component: EditorView,
       props: true
@@ -57,9 +57,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const vaultPath = await window.site.getConfig('vaultPath')
-  console.log(vaultPath)
   if (vaultPath === null && to.name !== 'setup') {
-    console.log('redirecting to setup')
     next('/setup')
   } else {
     next()

@@ -3,7 +3,7 @@ const path = require('path')
 const config = require(path.join(__dirname, '/lib/config.js'))
 const agent = require(path.join(__dirname, '/lib/hexo-agent.js'))
 
-console.log('vaultPath is: ' , config.get('vaultPath'))
+console.log('vaultPath is: ', config.get('vaultPath'))
 if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
   console.log('init agent with vaultPath: ', config.get('vaultPath'))
   agent.init(config.get('vaultPath'))
@@ -11,7 +11,7 @@ if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
 }
 
 config.on('config:changed', async (key, value) => {
-  if (key === "vaultPath") {
+  if (key === 'vaultPath') {
     await agent.init(value)
   }
 })
@@ -20,6 +20,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1440,
     height: 900,
+    titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
@@ -32,12 +33,13 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('site:posts', () => agent.getPosts())
+  ipcMain.handle('site:posts', (event, ...args) => agent.getPosts(...args))
   ipcMain.handle('site:categories', () => agent.getCategories())
-  ipcMain.handle('site:tags', () => agent.getTags() )
-  ipcMain.handle('config:get', (event, key) => config.get(key)) 
-  ipcMain.handle('config:set', (event, kv) => config.set(kv[0], kv[1])) 
-  ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({properties: ['openDirectory']}))
+  ipcMain.handle('site:tags', () => agent.getTags())
+  ipcMain.handle('site:stats', () => agent.getStats())
+  ipcMain.handle('config:get', (event, key) => config.get(key))
+  ipcMain.handle('config:set', (event, kv) => config.set(kv[0], kv[1]))
+  ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
   ipcMain.handle('post:content', (event, path) => agent.getContent(path))
 
   createWindow()

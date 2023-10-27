@@ -23,19 +23,22 @@ import NavMenu from '../components/NavMenu.vue'
 .topbar {
   color: #fff;
   background: #59524c;
-  height: 48px;
+  height: 62px;
   padding-left: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
 }
 .main {
   flex: 1;
 }
 .nav {
-  height: calc(100vh - 48px);
+  height: calc(100vh - 62px);
   color: #fff;
   background: #59524c;
 }
 
 .main-content {
-  height: calc(100vh - 48px);
+  height: calc(100vh - 62px);
 }
 </style>

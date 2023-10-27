@@ -31,15 +31,27 @@ export type Tag = {
   length: number
 }
 
+export type Stats = {
+  postCount: number
+  pageCount: number
+}
+
 type DialogResult = {
   canceled: boolean
   filePaths: string[]
 }
 
 export interface ISite {
-  getPosts: () => Promise<Post[]>
+  getPosts: (
+    draft?: boolean,
+    limit?: number,
+    offset?: number,
+    orderBy?: string,
+    order?: string
+  ) => Promise<Post[]>
   getCategories: () => Promise<Category[]>
   getTags: () => Promise<Tag[]>
+  getStats: () => Promise<Stats>
   getConfig: (key) => Promise<string | null | bool | number | array | Object>
   setConfig: (key, value) => Promise<any>
   openDirDialog: () => Promise<DialogResult>
