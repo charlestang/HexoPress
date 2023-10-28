@@ -40,5 +40,7 @@ import NavMenu from '../components/NavMenu.vue'
 
 .main-content {
   height: calc(100vh - 62px);
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 </style>

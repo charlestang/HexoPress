@@ -1,15 +1,23 @@
 import './assets/main.css'
 import './local.d.ts'
 
+import { setupI18n } from '@/plugins/vueI18n'
+
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
 import App from './App.vue'
 import router from './router'
 
-const app = createApp(App)
+const setupAll = async () => {
+  const app = createApp(App)
 
-app.use(createPinia())
-app.use(router)
+  await setupI18n(app)
 
-app.mount('#app')
+  app.use(createPinia())
+  app.use(router)
+
+  app.mount('#app')
+}
+
+setupAll()

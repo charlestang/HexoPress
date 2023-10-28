@@ -20,6 +20,8 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1440,
     height: 900,
+    minWidth: 1280,
+    minHeight: 800,
     titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
@@ -27,7 +29,7 @@ function createWindow() {
   })
 
   //win.loadFile('dist/index.html')
-  win.loadURL('http://localhost:5173/Users/charles/Projects/hexo-writer/dist')
+  win.loadURL('http://localhost:5173/Users/charles/Projects/HexoPress/dist')
 
   win.webContents.openDevTools()
 }

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import {
+  Briefcase,
   CaretLeft,
   CaretRight,
-  Document,
+  Flag,
   Menu as IconMenu,
-  Management,
-  Odometer
+  TrendCharts
 } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 
@@ -34,11 +34,11 @@ const handleSelect = (key: string, keyPath: string[]) => {
     @select="handleSelect"
   >
     <el-menu-item index="/main/dashboard">
-      <el-icon><odometer /></el-icon>
+      <el-icon><trend-charts /></el-icon>
       <template #title>Dashboard</template>
     </el-menu-item>
     <el-menu-item index="/main/post-list">
-      <el-icon><document /></el-icon>
+      <el-icon><briefcase /></el-icon>
       <template #title>All posts</template>
     </el-menu-item>
     <el-menu-item index="/main/categories">
@@ -46,7 +46,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
       <template #title>Categories</template>
     </el-menu-item>
     <el-menu-item index="/main/tags">
-      <el-icon><management /></el-icon>
+      <el-icon><flag /></el-icon>
       <template #title>Tags</template>
     </el-menu-item>
     <el-menu-item @click="isCollapse = !isCollapse">

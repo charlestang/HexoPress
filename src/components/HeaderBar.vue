@@ -2,8 +2,8 @@
   <el-row><el-col :span="24" class="control-bar" /></el-row>
   <el-row>
     <el-col :span="24">
-      <img alt="Hexo Writer" height="48" width="48" src="../assets/logo.svg" />
-      <div class="title">Hexo Writer</div>
+      <img alt="HexoPress" height="30" width="30" src="../assets/logo.svg" />
+      <div class="app-name">HexoPress</div>
       <el-button key="new-post" :icon="EditPen" text class="new" @click="handleNewPost"
         >New post</el-button
       >
@@ -25,12 +25,14 @@ const handleNewPost = () => {
 }
 img {
   float: left;
-  margin-left: 8px;
+  margin: 10px 17px 10px 17px;
 }
-.title {
+.app-name {
   float: left;
   line-height: 48px;
-  padding: 0 12px;
+  padding: 0 12px 0 0;
+  margin-left: -12px;
+  font-weight: bold;
 }
 .new {
   height: 40px;

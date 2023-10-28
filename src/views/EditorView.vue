@@ -6,7 +6,8 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <img alt="Hexo Writer" height="48" width="48" class="logo" src="../assets/logo.svg" />
+          <img alt="HexoPress" height="30" width="30" src="../assets/logo.svg" />
+          <div class="app-name">HexoPress</div>
           <el-button key="back" class="back" text :icon="Back" @click="router.go(-1)"
             >Back</el-button
           >
@@ -51,6 +52,17 @@ if (typeof sourcePath !== 'undefined' && typeof sourcePath === 'string' && sourc
 .control-bar {
   height: 14px;
   display: block;
+}
+img {
+  float: left;
+  margin: 10px 17px 10px 17px;
+}
+.app-name {
+  float: left;
+  line-height: 48px;
+  padding: 0 12px 0 0;
+  margin-left: -12px;
+  font-weight: bold;
 }
 .logo {
   float: left;
