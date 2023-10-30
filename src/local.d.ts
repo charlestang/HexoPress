@@ -33,6 +33,7 @@ export type Tag = {
 
 export type Stats = {
   postCount: number
+  postDraftCount: number
   pageCount: number
 }
 
@@ -53,6 +54,7 @@ export interface ISite {
   getTags: () => Promise<Tag[]>
   getStats: () => Promise<Stats>
   getConfig: (key) => Promise<string | null | bool | number | array | Object>
+  getSiteConfig: () => Promise<Object>
   setConfig: (key, value) => Promise<any>
   openDirDialog: () => Promise<DialogResult>
   getContent: (path: string) => Promise<string>

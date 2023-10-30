@@ -22,9 +22,11 @@
         <template #header>
           <h3>{{ t('common.overview') }}</h3>
         </template>
-        <el-button type="primary" :icon="Document" link>415 posts</el-button>
-        <el-button type="primary" :icon="Document" link>7 pages</el-button>
-        <el-button type="primary" :icon="Document" link>2,215 comments</el-button>
+        <el-button type="primary" :icon="Document" link>{{ stats?.postCount }} posts</el-button>
+        <el-button type="primary" :icon="Document" link
+          >{{ stats?.postDraftCount }} drafts</el-button
+        >
+        <el-button type="primary" :icon="Document" link>{{ stats?.pageCount }} pages</el-button>
         <p>Hexo 6.3.0, use Next theme.</p>
       </el-card>
     </el-col>
@@ -40,7 +42,7 @@
   </el-row>
 </template>
 <script lang="ts" setup>
-import type { Post } from '@/local.d.ts'
+import type { Post, Stats } from '@/local.d.ts'
 import router from '@/router'
 import { Document } from '@element-plus/icons-vue'
 import { ref } from 'vue'
@@ -49,6 +51,7 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 let posts = ref<null | Post[]>(null)
+let stats = ref<null | Stats>(null)
 
 async function fetch() {
   let data = await window.site.getPosts(false, 5)
@@ -56,6 +59,14 @@ async function fetch() {
 }
 
 fetch()
+
+async function fetchStats() {
+  let data = await window.site.getStats()
+  stats.value = data
+  console.log('stats: ', stats.value)
+}
+
+fetchStats()
 
 function onClick(sourcePath: string) {
   console.log('send parmas: ', sourcePath)

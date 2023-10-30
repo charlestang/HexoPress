@@ -39,10 +39,12 @@ app.whenReady().then(() => {
   ipcMain.handle('site:categories', () => agent.getCategories())
   ipcMain.handle('site:tags', () => agent.getTags())
   ipcMain.handle('site:stats', () => agent.getStats())
+  ipcMain.handle('site:config', () => agent.getConfig())
   ipcMain.handle('config:get', (event, key) => config.get(key))
   ipcMain.handle('config:set', (event, kv) => config.set(kv[0], kv[1]))
   ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
   ipcMain.handle('post:content', (event, path) => agent.getContent(path))
+  ipcMain.handle('post:save', (event, path, content) => agent.saveContent(path, content))
 
   createWindow()
 

@@ -5,7 +5,11 @@ common:
   overview: 概览
   system: 系统
 posts:
+  all: 全部
   categories: 分类
+  draft: 草稿
+  pageTitle: 文章
+  published: 已发布
   publishedDate: 发表于
   status: 状态
   tags: 标签

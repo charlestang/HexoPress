@@ -15,8 +15,10 @@ contextBridge.exposeInMainWorld('site', {
   getCategories: (...args) => ipcRenderer.invoke('site:categories', ...args),
   getTags: (...args) => ipcRenderer.invoke('site:tags', ...args),
   getStats: () => ipcRenderer.invoke('site:stats'),
+  getSiteConfig: () => ipcRenderer.invoke('site:config'),
   getConfig: (key) => ipcRenderer.invoke('config:get', key),
   setConfig: (key, value) => ipcRenderer.invoke('config:set', [key, value]),
   openDirDialog: () => ipcRenderer.invoke('dialog:dir'),
-  getContent: (sourcePath) => ipcRenderer.invoke('post:content', sourcePath)
+  getContent: (sourcePath) => ipcRenderer.invoke('post:content', sourcePath),
+  saveContent: (sourcePath, content) => ipcRenderer.invoke('post:save', sourcePath, content)
 })

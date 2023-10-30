@@ -5,7 +5,11 @@ common:
   overview: Overview
   system: System
 posts:
+  all: All
   categories: Categories
+  draft: Draft
+  pageTitle: Posts
+  published: Published
   publishedDate: Published
   status: Status
   tags: Tags
