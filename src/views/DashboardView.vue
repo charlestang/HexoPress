@@ -33,7 +33,7 @@
     <el-col :span="12">
       <el-card>
         <template #header>
-          <h3>System</h3>
+          <h3>{{ t('common.system') }}</h3>
         </template>
       </el-card>
     </el-col>

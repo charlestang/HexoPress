@@ -22,10 +22,11 @@
     "md-editor-v3": "^4.8.1",
     "pinia": "^2.1.7",
     "vue": "^3.3.6",
-    "vue-i18n": "^9.6.1",
+    "vue-i18n": "^9.6.2",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@modyfi/vite-plugin-yaml": "^1.0.4",
     "@rushstack/eslint-patch": "^1.5.1",
     "@tsconfig/node18": "^18.2.2",
     "@types/jsdom": "^21.1.3",

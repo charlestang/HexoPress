@@ -1,11 +1,11 @@
 <template>
   <div class="wrap">
-    <h2>Please select your hexo directory first:</h2>
+    <h2>{{ t('setup.baseDirTip') }}</h2>
     <el-form :model="form">
       <el-form-item label="Select a directory" label-width="150px">
         <el-input v-model="form.directory" autocomplete="off" read-only="true">
           <template #append>
-            <el-button @click="selectPath">Choose</el-button>
+            <el-button @click="selectPath">{{ t('setup.choose') }}</el-button>
           </template>
         </el-input>
       </el-form-item>
@@ -19,6 +19,10 @@
 <script lang="ts" setup>
 import router from '@/router'
 import { reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const {t} = useI18n()
+
 const form = reactive({
   directory: ''
 })

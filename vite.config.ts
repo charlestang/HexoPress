@@ -6,6 +6,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
+import ViteYaml from '@modyfi/vite-plugin-yaml';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,7 +18,8 @@ export default defineConfig({
     }),
     Components({
       resolvers: [ElementPlusResolver()]
-    })
+    }),
+    ViteYaml()
   ],
   resolve: {
     alias: {

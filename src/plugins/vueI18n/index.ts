@@ -2,7 +2,12 @@ import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 export const setupI18n = async (app: App) => {
-  const messages = await import(`../../locales/zh-CN`)
+  const currentLocale = 'zh-CN'
+  //const messages = await import(`../../locales/${currentLocale}.yml`)
+  const messages = await import(`../../locales/${currentLocale}.json`)
+  //console.log('yaml translations loaded')
+  console.log('json translations loaded')
+  console.log(messages.default)
   const options = {
     legacy: false,
     locale: 'zh-CN',

@@ -1,0 +1,16 @@
+common:
+  activities: 动态
+  back: 返回
+  dashboard: 仪表盘
+  overview: 概览
+  system: 系统
+posts:
+  categories: 分类
+  publishedDate: 发表于
+  status: 状态
+  tags: 标签
+  title: 标题
+  updatedDate: 更新于
+setup:
+  baseDirTip: 请先选择您 Hexo 所在的目录：
+  choose: 选择

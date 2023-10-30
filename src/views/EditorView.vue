@@ -9,7 +9,7 @@
           <img alt="HexoPress" height="30" width="30" src="../assets/logo.svg" />
           <div class="app-name">HexoPress</div>
           <el-button key="back" class="back" text :icon="Back" @click="router.go(-1)"
-            >Back</el-button
+            >{{ t('common.back') }}</el-button
           >
         </el-col>
       </el-row>
@@ -27,7 +27,9 @@ import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+const {t} = useI18n()
 const route = useRoute()
 const sourcePath = route.params.sourcePath
 const text = ref('')

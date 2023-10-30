@@ -1,0 +1,16 @@
+common:
+  activities: Activities
+  back: Back
+  dashboard: Dashboard
+  overview: Overview
+  system: System
+posts:
+  categories: Categories
+  publishedDate: Published
+  status: Status
+  tags: Tags
+  title: Title
+  updatedDate: Updated
+setup:
+  baseDirTip: 'Please select your hexo directory first:'
+  choose: Choose
