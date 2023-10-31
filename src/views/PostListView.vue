@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import type { Post } from '@/local.d.ts'
 import router from '@/router'
+import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 // stats info
 let allCount = ref<null | number>(null)
@@ -50,9 +50,13 @@ function onClick(sourcePath: string) {
   <el-row>
     <el-col :span="12">
       <div v-for="(caption, k, idx) in filters" :key="k" style="float: left">
-        <el-button link type="primary" @click="currentFilter = caption" v-if="currentFilter !== caption">{{
-          caption
-        }}</el-button>
+        <el-button
+          link
+          type="primary"
+          @click="currentFilter = caption"
+          v-if="currentFilter !== caption"
+          >{{ caption }}</el-button
+        >
         <span v-else>{{ caption }}</span>
         <span v-if="k == 'all' && allCount != null">( {{ allCount }} )</span>
         <span v-if="k == 'published' && postCount != null">( {{ postCount }} )</span>
@@ -64,17 +68,58 @@ function onClick(sourcePath: string) {
   </el-row>
   <el-table :data="posts" stripe style="width: 100%">
     <el-table-column type="index" label="#" width="55" />
-    <el-table-column prop="title" :label="t('posts.title')" width="360" />
-    <el-table-column prop="status" :label="t('posts.status')" />
-    <el-table-column prop="tags" :label="t('posts.tags')" />
-    <el-table-column prop="categories" :label="t('posts.categories')" />
-    <el-table-column prop="date" :label="t('posts.publishedDate')" />
-    <el-table-column prop="updated" :label="t('posts.updatedDate')" />
-    <el-table-column label="操作">
+    <el-table-column :label="t('posts.title')" width="360">
       <template #default="scope">
-        <el-button link type="primary" @click="onClick(scope.row.source)">Edit</el-button>
+        <el-row>
+          <el-col :span="24">
+            {{ scope.row.title }}
+            <span v-if="scope.row.status == 'draft'" class="draft-status">
+              -- {{ t('posts.draft') }}</span
+            >
+          </el-col>
+        </el-row>
+        <el-row class="op">
+          <el-col :span="24">
+            <el-button link type="primary" @click="onClick(scope.row.source)">{{
+              t('posts.edit')
+            }}</el-button>
+            | <el-button link type="primary">{{ t('posts.editMeta') }}</el-button> |
+            <el-button link type="danger">{{ t('posts.delete') }}</el-button>
+          </el-col>
+        </el-row>
+      </template>
+    </el-table-column>
+    <el-table-column prop="categories" :label="t('posts.categories')" />
+    <el-table-column prop="tags" :label="t('posts.tags')" />
+    <el-table-column :label="t('posts.datetime')">
+      <template #default="scope">
+        <el-row>
+          <el-col :span="24">
+            <span v-if="scope.row.status == 'published'">{{ t('posts.published') }}</span>
+            <span v-else>{{ t('posts.updatedDate') }}</span>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <span v-if="scope.row.status == 'published'">{{ scope.row.date }}</span>
+            <span v-else>{{ scope.row.updated }}</span>
+          </el-col>
+        </el-row>
       </template>
     </el-table-column>
   </el-table>
 </template>
-<style scoped></style>
+<style>
+.el-table .el-table__cell {
+  vertical-align: top;
+}
+.draft-status {
+  font-weight: bold;
+}
+.el-table__cell .op {
+  display: none;
+}
+.el-table__cell:hover .op {
+  display: block;
+}
+</style>

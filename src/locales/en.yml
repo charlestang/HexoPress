@@ -15,7 +15,11 @@ nav:
 posts:
   all: All
   categories: Categories
+  datetime: Date
+  delete: Delete
   draft: Draft
+  edit: Edit
+  editMeta: Edit meta
   pageTitle: Posts
   published: Published
   publishedDate: Published

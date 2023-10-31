@@ -14,8 +14,12 @@ nav:
   tags: 标签
 posts:
   all: 全部
-  categories: 分类
+  categories: 分类目录
+  datetime: 日期
+  delete: 删除
   draft: 草稿
+  edit: 编辑
+  editMeta: 编辑元信息
   pageTitle: 文章
   published: 已发布
   publishedDate: 发表于
