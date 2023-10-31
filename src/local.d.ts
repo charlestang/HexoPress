@@ -44,6 +44,7 @@ type DialogResult = {
 
 export interface ISite {
   getPosts: (
+    published?: boolean,
     draft?: boolean,
     limit?: number,
     offset?: number,
@@ -58,6 +59,7 @@ export interface ISite {
   setConfig: (key, value) => Promise<any>
   openDirDialog: () => Promise<DialogResult>
   getContent: (path: string) => Promise<string>
+  getSystemLocale: () => Promise<string>
 }
 
 declare global {

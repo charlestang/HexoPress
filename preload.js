@@ -20,5 +20,6 @@ contextBridge.exposeInMainWorld('site', {
   setConfig: (key, value) => ipcRenderer.invoke('config:set', [key, value]),
   openDirDialog: () => ipcRenderer.invoke('dialog:dir'),
   getContent: (sourcePath) => ipcRenderer.invoke('post:content', sourcePath),
-  saveContent: (sourcePath, content) => ipcRenderer.invoke('post:save', sourcePath, content)
+  saveContent: (sourcePath, content) => ipcRenderer.invoke('post:save', sourcePath, content),
+  getSystemLocale: () => ipcRenderer.invoke('sys:locale')
 })

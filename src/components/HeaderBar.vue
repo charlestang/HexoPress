@@ -5,7 +5,7 @@
       <img alt="HexoPress" height="30" width="30" src="../assets/logo.svg" />
       <div class="app-name">HexoPress</div>
       <el-button key="new-post" :icon="EditPen" text class="new" @click="handleNewPost"
-        >New post</el-button
+        >{{ t('common.newPost') }}</el-button
       >
     </el-col>
   </el-row>
@@ -13,6 +13,9 @@
 <script lang="ts" setup>
 import { EditPen } from '@element-plus/icons-vue'
 import router from '../router'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const handleNewPost = () => {
   router.push('/editor')

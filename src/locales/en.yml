@@ -2,8 +2,16 @@ common:
   activities: Activities
   back: Back
   dashboard: Dashboard
+  newPost: New Post
   overview: Overview
   system: System
+nav:
+  allPosts: All posts
+  categories: Categories
+  collapse: Collapse menu
+  dashborad: Dashboard
+  expand: Expand menu
+  tags: Tags
 posts:
   all: All
   categories: Categories

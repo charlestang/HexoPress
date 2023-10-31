@@ -45,6 +45,7 @@ app.whenReady().then(() => {
   ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
   ipcMain.handle('post:content', (event, path) => agent.getContent(path))
   ipcMain.handle('post:save', (event, path, content) => agent.saveContent(path, content))
+  ipcMain.handle('sys:locale', (event) => app.getSystemLocale())
 
   createWindow()
 

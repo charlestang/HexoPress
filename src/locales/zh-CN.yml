@@ -2,8 +2,16 @@ common:
   activities: 动态
   back: 返回
   dashboard: 仪表盘
+  newPost: 新建
   overview: 概览
   system: 系统
+nav:
+  allPosts: 文章
+  categories: 分类
+  collapse: 折叠导航栏
+  dashborad: 仪表盘
+  expand: 展开导航栏
+  tags: 标签
 posts:
   all: 全部
   categories: 分类

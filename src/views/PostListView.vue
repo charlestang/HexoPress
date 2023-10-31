@@ -1,44 +1,69 @@
 <script lang="ts" setup>
+import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { Post } from '@/local.d.ts'
 import router from '@/router'
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-let posts = ref<null | Post[]>(null)
+// stats info
 let allCount = ref<null | number>(null)
 let postCount = ref<null | number>(null)
 let draftCount = ref<null | number>(null)
-async function fetch() {
-  let data = await window.site.getPosts()
-  posts.value = data
-}
-
-fetch()
 async function fetchStats() {
   let data = await window.site.getStats()
-  console.log('stats: ', data)
   allCount.value = data.postCount + data.postDraftCount
   postCount.value = data.postCount
   draftCount.value = data.postDraftCount
 }
-
 fetchStats()
-
+// posts list
+const filters = {
+  all: t('posts.all'),
+  published: t('posts.published'),
+  draft: t('posts.draft')
+}
+let currentFilter = ref(filters.all)
+let posts = ref<null | Post[]>(null)
+async function fetch() {
+  let data
+  if (currentFilter.value === filters.all) {
+    data = await window.site.getPosts()
+  } else if (currentFilter.value === filters.published) {
+    data = await window.site.getPosts(true, false)
+  } else {
+    data = await window.site.getPosts(false, true)
+  }
+  posts.value = data
+}
+fetch()
+watch(currentFilter, (value, oldValue) => {
+  if (value !== oldValue) {
+    fetch()
+  }
+})
+// open editor
 function onClick(sourcePath: string) {
-  console.log('send parmas: ', sourcePath)
   router.push({ name: 'editor', params: { sourcePath: sourcePath } })
 }
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
   <el-row>
-    <el-col :span="12"
-      >{{ t('posts.all') }} {{ allCount !== null ? '(' + allCount + ')' : '' }} |
-      {{ t('posts.published') }} | {{ t('posts.draft') }}</el-col
-    >
+    <el-col :span="12">
+      <div v-for="(caption, k, idx) in filters" :key="k" style="float: left">
+        <el-button link type="primary" @click="currentFilter = caption" v-if="currentFilter !== caption">{{
+          caption
+        }}</el-button>
+        <span v-else>{{ caption }}</span>
+        <span v-if="k == 'all' && allCount != null">( {{ allCount }} )</span>
+        <span v-if="k == 'published' && postCount != null">( {{ postCount }} )</span>
+        <span v-if="k == 'draft' && draftCount != null">( {{ draftCount }} )</span>
+        <span v-if="idx < Object.keys(filters).length - 1"> | </span>
+      </div>
+    </el-col>
     <el-col :span="12"></el-col>
   </el-row>
   <el-table :data="posts" stripe style="width: 100%">
+    <el-table-column type="index" label="#" width="55" />
     <el-table-column prop="title" :label="t('posts.title')" width="360" />
     <el-table-column prop="status" :label="t('posts.status')" />
     <el-table-column prop="tags" :label="t('posts.tags')" />

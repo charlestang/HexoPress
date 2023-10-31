@@ -7,16 +7,31 @@ import {
   Menu as IconMenu,
   TrendCharts
 } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useCache } from '@/hooks/useCache'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
-const isCollapse = ref(true)
+const { t } = useI18n()
+
+const { wsCache } = useCache()
+const route = useRoute()
+
+const isCollapse = ref(wsCache.get('isCollapse') || false)
+watch(isCollapse, (val, oldVal) => {
+  if (val !== oldVal) {
+    wsCache.set('isCollapse', val)
+  }
+})
+
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
-const activeIndex = ref('/main/dashboard')
+console.log('Read current path from route: ', route.fullPath)
+const activeIndex = ref(route.fullPath)
 const handleSelect = (key: string, keyPath: string[]) => {
   activeIndex.value = key
   console.log(key, keyPath)
@@ -35,24 +50,24 @@ const handleSelect = (key: string, keyPath: string[]) => {
   >
     <el-menu-item index="/main/dashboard">
       <el-icon><trend-charts /></el-icon>
-      <template #title>Dashboard</template>
+      <template #title>{{ t('nav.dashborad') }}</template>
     </el-menu-item>
     <el-menu-item index="/main/post-list">
       <el-icon><briefcase /></el-icon>
-      <template #title>All posts</template>
+      <template #title>{{ t('nav.allPosts') }}</template>
     </el-menu-item>
     <el-menu-item index="/main/categories">
       <el-icon><icon-menu /></el-icon>
-      <template #title>Categories</template>
+      <template #title>{{ t('nav.categories') }}</template>
     </el-menu-item>
     <el-menu-item index="/main/tags">
       <el-icon><flag /></el-icon>
-      <template #title>Tags</template>
+      <template #title>{{ t('nav.tags') }}</template>
     </el-menu-item>
     <el-menu-item @click="isCollapse = !isCollapse">
       <el-icon v-if="isCollapse"><caret-right /></el-icon>
       <el-icon v-else><caret-left /></el-icon>
-      <template #title>Collapse Menu</template>
+      <template #title>{{ isCollapse ? t('nav.expand') : t('nav.collapse') }}</template>
     </el-menu-item>
   </el-menu>
 </template>

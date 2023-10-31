@@ -1,5 +1,5 @@
 {
-  "name": "hexo-writer",
+  "name": "hexopress",
   "main": "main.js",
   "version": "0.0.1",
   "private": true,
@@ -53,6 +53,7 @@
     "vite": "^4.5.0",
     "vitest": "^0.34.6",
     "vue-tsc": "^1.8.22",
-    "wait-on": "^7.0.1"
+    "wait-on": "^7.0.1",
+    "web-storage-cache": "^1.1.1"
   }
 }

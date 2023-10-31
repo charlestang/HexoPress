@@ -54,7 +54,7 @@ let posts = ref<null | Post[]>(null)
 let stats = ref<null | Stats>(null)
 
 async function fetch() {
-  let data = await window.site.getPosts(false, 5)
+  let data = await window.site.getPosts(true, false, 5)
   posts.value = data
 }
 

@@ -6,6 +6,7 @@ import EditorView from '../views/EditorView.vue'
 import PostListView from '../views/PostListView.vue'
 import SetupView from '../views/SetupView.vue'
 import TagsView from '../views/TagsView.vue'
+import type { App } from 'vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -63,5 +64,9 @@ router.beforeEach(async (to, from, next) => {
     next()
   }
 })
+
+export const setupRouter = (app: App<Element>) => {
+  app.use(router)
+}
 
 export default router
