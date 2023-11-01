@@ -37,6 +37,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 </script>
+
 <template>
   <el-menu
     :router="true"

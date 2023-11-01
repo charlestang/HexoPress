@@ -1,3 +1,36 @@
+<script lang="ts" setup>
+import type { Post, Stats } from '@/local.d.ts'
+import router from '@/router'
+import { Document } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+let posts = ref<null | Post[]>(null)
+let stats = ref<null | Stats>(null)
+
+async function fetch() {
+  let data = await window.site.getPosts(true, false, 5)
+  console.log(data)
+  posts.value = data
+}
+
+fetch()
+
+async function fetchStats() {
+  let data = await window.site.getStats()
+  stats.value = data
+  console.log('stats: ', stats.value)
+}
+
+fetchStats()
+
+function onClick(sourcePath: string) {
+  console.log('send parmas: ', sourcePath)
+  router.push({ name: 'editor', params: { sourcePath: sourcePath } })
+}
+</script>
 <template>
   <h2>{{ t('common.dashboard') }}</h2>
   <el-row :gutter="20">
@@ -41,38 +74,6 @@
     </el-col>
   </el-row>
 </template>
-<script lang="ts" setup>
-import type { Post, Stats } from '@/local.d.ts'
-import router from '@/router'
-import { Document } from '@element-plus/icons-vue'
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
-
-let posts = ref<null | Post[]>(null)
-let stats = ref<null | Stats>(null)
-
-async function fetch() {
-  let data = await window.site.getPosts(true, false, 5)
-  posts.value = data
-}
-
-fetch()
-
-async function fetchStats() {
-  let data = await window.site.getStats()
-  stats.value = data
-  console.log('stats: ', stats.value)
-}
-
-fetchStats()
-
-function onClick(sourcePath: string) {
-  console.log('send parmas: ', sourcePath)
-  router.push({ name: 'editor', params: { sourcePath: sourcePath } })
-}
-</script>
 <style scoped>
 h2 {
   line-height: 2.5em;
@@ -93,7 +94,7 @@ h3 {
 }
 .latest-posts li {
   display: grid;
-  grid-template-columns: clamp(260px, calc(2vw + 140px), 200px) auto;
+  grid-template-columns: clamp(200px, calc(2vw + 140px), 200px) auto;
   column-gap: 10px;
   padding: 6px 0;
   color: #646970;

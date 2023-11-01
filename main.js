@@ -2,12 +2,10 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
 const config = require(path.join(__dirname, '/lib/config.js'))
 const agent = require(path.join(__dirname, '/lib/hexo-agent.js'))
+const http = require(path.join(__dirname, '/lib/http.js'))
 
-console.log('vaultPath is: ', config.get('vaultPath'))
 if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
-  console.log('init agent with vaultPath: ', config.get('vaultPath'))
   agent.init(config.get('vaultPath'))
-  console.log('after init agent')
 }
 
 config.on('config:changed', async (key, value) => {

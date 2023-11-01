@@ -1,12 +1,12 @@
 import DashboardView from '@/views/DashboardView.vue'
 import MainWindow from '@/views/MainWindow.vue'
+import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import CategoriesView from '../views/CategoriesView.vue'
 import EditorView from '../views/EditorView.vue'
 import PostListView from '../views/PostListView.vue'
 import SetupView from '../views/SetupView.vue'
 import TagsView from '../views/TagsView.vue'
-import type { App } from 'vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -43,7 +43,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/editor/:sourcePath*',
+      path: '/editor',
       name: 'editor',
       component: EditorView,
       props: true

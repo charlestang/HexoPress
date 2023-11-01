@@ -1,9 +1,3 @@
-<template>
-  <el-tag v-for="tag in tags" :key="tag.id">
-    {{ tag.name }}
-  </el-tag>
-</template>
-
 <script lang="ts" setup>
 import type { Tag } from '@/local.d.ts'
 import { ref } from 'vue'
@@ -16,3 +10,9 @@ async function fetch() {
 
 fetch()
 </script>
+
+<template>
+  <el-tag v-for="tag in tags" :key="tag.id">
+    {{ tag.name }}
+  </el-tag>
+</template>

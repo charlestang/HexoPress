@@ -1,20 +1,3 @@
-<template>
-  <div class="wrap">
-    <h2>{{ t('setup.baseDirTip') }}</h2>
-    <el-form :model="form">
-      <el-form-item label="Select a directory" label-width="150px">
-        <el-input v-model="form.directory" autocomplete="off" read-only="true">
-          <template #append>
-            <el-button @click="selectPath">{{ t('setup.choose') }}</el-button>
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item label-width="150px">
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
-</template>
 
 <script lang="ts" setup>
 import router from '@/router'
@@ -39,6 +22,24 @@ function selectPath() {
   })
 }
 </script>
+
+<template>
+  <div class="wrap">
+    <h2>{{ t('setup.baseDirTip') }}</h2>
+    <el-form :model="form">
+      <el-form-item label="Select a directory" label-width="150px">
+        <el-input v-model="form.directory" autocomplete="off" read-only="true">
+          <template #append>
+            <el-button @click="selectPath">{{ t('setup.choose') }}</el-button>
+          </template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label-width="150px">
+        <el-button type="primary" @click="onSubmit">Create</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+</template>
 
 <style scoped>
 .wrap {

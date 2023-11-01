@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "element-plus": "^2.4.1",
+    "express": "^4.18.2",
     "hexo": "^7.0.0-rc2",
     "md-editor-v3": "^4.8.1",
     "pinia": "^2.1.7",

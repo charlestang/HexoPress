@@ -1,7 +1,3 @@
-<template>
-  <el-tree :data="data1" :props="defaultProps" @node-click="handleNodeClick" />
-</template>
-
 <script lang="ts" setup>
 import type { Category } from '@/local.d.ts'
 import { ref, watch } from 'vue'
@@ -55,3 +51,7 @@ const defaultProps = {
   label: 'label'
 }
 </script>
+
+<template>
+  <el-tree :data="data1" :props="defaultProps" @node-click="handleNodeClick" />
+</template>

@@ -1,3 +1,15 @@
+<script lang="ts" setup>
+import { EditPen } from '@element-plus/icons-vue'
+import router from '../router'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+const handleNewPost = () => {
+  router.push('/editor')
+}
+</script>
+
 <template>
   <el-row><el-col :span="24" class="control-bar" /></el-row>
   <el-row>
@@ -10,17 +22,7 @@
     </el-col>
   </el-row>
 </template>
-<script lang="ts" setup>
-import { EditPen } from '@element-plus/icons-vue'
-import router from '../router'
-import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
-
-const handleNewPost = () => {
-  router.push('/editor')
-}
-</script>
 <style scoped>
 .control-bar {
   height: 14px;
