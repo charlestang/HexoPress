@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import router from '@/router'
 import { Back } from '@element-plus/icons-vue'
+import matter from 'gray-matter'
 import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { ref } from 'vue'
@@ -11,19 +12,36 @@ const { t } = useI18n()
 const route = useRoute()
 const sourcePath = route.query.sourcePath
 let currentPath = route.query.currentPath
-console.log(route.query)
+console.log('currentPath is: ', currentPath)
+console.log('sourcePath is: ', sourcePath)
 if (Array.isArray(currentPath)) {
   currentPath = currentPath[0]
 }
 const text = ref('')
+interface FrontMatter {
+  title: string
+  date: string
+  permalink: string
+  categories: string[]
+  tags: string[]
+}
+const frontMatter = ref<FrontMatter>({
+  title: '',
+  date: '',
+  permalink: '',
+  categories: [],
+  tags: []
+})
 
 if (typeof sourcePath !== 'undefined' && typeof sourcePath === 'string' && sourcePath.length > 0) {
   window.site.getContent(sourcePath).then((content) => {
-    text.value = content
+    const parseDown = matter(content)
+    frontMatter.value = parseDown.data as FrontMatter
+    text.value = parseDown.content
   })
 }
+
 function filterImage(html: string): string {
-  console.log(html.length)
   return addPrefixToImgSrc(html, 'http://127.0.0.1:2357/', String(currentPath))
 }
 function addPrefixToImgSrc(html: string, prefix: string, currentPath: string): string {
@@ -65,10 +83,10 @@ function addPrefixToImgSrc(html: string, prefix: string, currentPath: string): s
         <el-aside width="200px">
           <el-form>
             <el-form-item label="Date">
-              <el-input></el-input>
+              <el-input v-model="frontMatter.date" />
             </el-form-item>
             <el-form-item label="Path">
-              <el-input v-model="currentPath" />
+              <el-input v-model="frontMatter.permalink" />
             </el-form-item>
             <el-form-item label="Categories">
               <el-input />
@@ -82,7 +100,7 @@ function addPrefixToImgSrc(html: string, prefix: string, currentPath: string): s
           <el-header>
             <el-form>
               <el-form-item label="Title">
-                <el-input />
+                <el-input v-model="frontMatter.title" />
               </el-form-item>
             </el-form>
             File Path: {{ sourcePath }}

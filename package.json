@@ -19,6 +19,7 @@
   "dependencies": {
     "element-plus": "^2.4.1",
     "express": "^4.18.2",
+    "gray-matter": "^4.0.3",
     "hexo": "^7.0.0-rc2",
     "md-editor-v3": "^4.8.1",
     "pinia": "^2.1.7",
@@ -52,6 +53,7 @@
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.2",
     "vite": "^4.5.0",
+    "vite-plugin-node-polyfills": "^0.15.0",
     "vitest": "^0.34.6",
     "vue-tsc": "^1.8.22",
     "wait-on": "^7.0.1",
