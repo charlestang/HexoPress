@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import router from '@/router'
-import { Back } from '@element-plus/icons-vue'
+import { Back, Folder } from '@element-plus/icons-vue'
 import matter from 'gray-matter'
 import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
@@ -60,27 +60,22 @@ function addPrefixToImgSrc(html: string, prefix: string, currentPath: string): s
     return p1 + prefix + curPath.concat(imgPath).join('/')
   })
 }
+
+let dialogSourcePath = ref(false)
 </script>
 
 <template>
   <el-container>
     <el-header class="topbar">
-      <el-row>
-        <el-col :span="24" class="control-bar" />
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <img alt="HexoPress" height="30" width="30" src="../assets/logo.svg" />
-          <div class="app-name">HexoPress</div>
-          <el-button key="back" class="back" text :icon="Back" @click="router.go(-1)">{{
-            t('common.back')
-          }}</el-button>
-        </el-col>
-      </el-row>
+      <header-bar>
+        <el-button key="back" class="back" text :icon="Back" @click="router.go(-1)">{{
+          t('common.back')
+        }}</el-button>
+      </header-bar>
     </el-header>
     <el-main class="page-area">
       <el-container style="display: flex; flex-direction: row-reverse">
-        <el-aside width="200px">
+        <el-aside width="240px">
           <el-form>
             <el-form-item label="Date">
               <el-input v-model="frontMatter.date" />
@@ -97,15 +92,39 @@ function addPrefixToImgSrc(html: string, prefix: string, currentPath: string): s
           </el-form>
         </el-aside>
         <el-container>
-          <el-header>
-            <el-form>
-              <el-form-item label="Title">
-                <el-input v-model="frontMatter.title" />
-              </el-form-item>
-            </el-form>
-            File Path: {{ sourcePath }}
+          <el-header class="editor-header">
+            <el-row>
+              <el-col :span="24">
+                <el-form>
+                  <el-form-item class="title-input">
+                    <el-input v-model="frontMatter.title" placeholder="Title">
+                      <template #suffix>
+                        <el-icon class="el-input__icon" @click="dialogSourcePath = true"
+                          ><folder
+                        /></el-icon>
+                      </template>
+                    </el-input>
+                  </el-form-item>
+                </el-form>
+                <el-dialog v-model="dialogSourcePath" title="The file path of the document">
+                  <el-form>
+                    <el-form-item label="File path" label-width="70px">
+                      <el-input v-model="sourcePath" autocomplete="off" />
+                    </el-form-item>
+                  </el-form>
+                  <template #footer>
+                    <span class="dialog-footer">
+                      <el-button @click="dialogSourcePath = false">Cancel</el-button>
+                      <el-button type="primary" @click="dialogSourcePath = false">
+                        Change
+                      </el-button>
+                    </span>
+                  </template>
+                </el-dialog>
+              </el-col>
+            </el-row>
           </el-header>
-          <el-main>
+          <el-main class="editor-wrapper">
             <MdEditor
               class="editor"
               v-model="text"
@@ -134,25 +153,6 @@ function addPrefixToImgSrc(html: string, prefix: string, currentPath: string): s
   -webkit-user-select: none;
   -webkit-app-region: drag;
 }
-.control-bar {
-  height: 14px;
-  display: block;
-}
-img {
-  float: left;
-  margin: 10px 17px 10px 17px;
-}
-.app-name {
-  float: left;
-  line-height: 48px;
-  padding: 0 12px 0 0;
-  margin-left: -12px;
-  font-weight: bold;
-}
-.logo {
-  float: left;
-  margin-left: 8px;
-}
 .back {
   height: 40px;
   margin: 4px 0;
@@ -162,7 +162,23 @@ img {
 .back:hover {
   color: #c7a589;
 }
+.title-input {
+  margin-bottom: 0;
+}
+.editor-header {
+  padding: 0 10px;
+}
+.editor-header .el-row {
+  height: 100%;
+}
+.editor-header .el-row .el-col {
+  align-self: center;
+}
+.editor-wrapper {
+  padding: 10px;
+  padding-top: 0;
+}
 .editor {
-  height: calc(100vh - 62px - 40px);
+  height: calc(100vh - 62px - 40px - 60px + 30px);
 }
 </style>

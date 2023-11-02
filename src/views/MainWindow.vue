@@ -1,12 +1,23 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavMenu from '../components/NavMenu.vue'
+import { EditPen } from '@element-plus/icons-vue'
+import router from '../router'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+const handleNewPost = () => {
+  router.push('/editor')
+}
 </script>
 
 <template>
   <el-container>
     <el-header class="topbar">
-      <header-bar />
+      <header-bar>
+        <el-button key="new-post" :icon="EditPen" text class="new" @click="handleNewPost">{{
+          t('common.newPost')
+        }}</el-button>
+      </header-bar>
     </el-header>
     <el-container class="main">
       <el-aside class="nav" width="collapse">
@@ -37,10 +48,18 @@ import NavMenu from '../components/NavMenu.vue'
   color: #fff;
   background: #59524c;
 }
-
 .main-content {
   height: calc(100vh - 62px);
   padding-top: 10px;
   padding-bottom: 10px;
+}
+.new {
+  height: 40px;
+  margin: 4px 0;
+  color: #fff;
+  -webkit-app-region: no-drag;
+}
+.new:hover {
+  color: #c7a589;
 }
 </style>
