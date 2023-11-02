@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { Post, Stats } from '@/local.d.ts'
 import router from '@/router'
-import { Document } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -55,11 +54,17 @@ function onClick(sourcePath: string) {
         <template #header>
           <h3>{{ t('common.overview') }}</h3>
         </template>
-        <el-button type="primary" :icon="Document" link>{{ stats?.postCount }} posts</el-button>
-        <el-button type="primary" :icon="Document" link
-          >{{ stats?.postDraftCount }} drafts</el-button
-        >
-        <el-button type="primary" :icon="Document" link>{{ stats?.pageCount }} pages</el-button>
+        <el-row class="stats">
+          <el-col :span="8">
+            <el-statistic title="Published" :value="stats?.postCount" :precision="0" />
+          </el-col>
+          <el-col :span="8">
+            <el-statistic title="Draft" :value="stats?.postDraftCount" :precision="0" />
+          </el-col>
+          <el-col :span="8">
+            <el-statistic title="Page" :value="stats?.pageCount" :precision="0" />
+          </el-col>
+        </el-row>
         <p>Hexo 6.3.0, use Next theme.</p>
       </el-card>
     </el-col>
@@ -85,6 +90,9 @@ h3 {
 .el-card {
   --el-card-padding: 10px;
   margin-bottom: 20px;
+}
+.stats .el-col {
+  text-align: center;
 }
 .latest-posts {
   list-style: none;

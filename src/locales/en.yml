@@ -5,6 +5,14 @@ common:
   newPost: New Post
   overview: Overview
   system: System
+editor:
+  categories: Categories
+  createNewCategory: Create new category
+  date: Date
+  meta: Meta
+  permalink: Permalink
+  tags: Tags
+  update: Update
 nav:
   allPosts: All posts
   categories: Categories

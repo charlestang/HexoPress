@@ -5,6 +5,15 @@ common:
   newPost: 新建
   overview: 概览
   system: 系统
+editor:
+  categories: 分类目录
+  createNewCategory: 添加新分类
+  date: 日期
+  meta: 基础信息
+  permalink: 永久链接
+  status: 状态
+  tags: 标签
+  update: 更新
 nav:
   allPosts: 文章
   categories: 分类
