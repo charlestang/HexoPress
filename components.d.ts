@@ -42,5 +42,6 @@ declare module 'vue' {
     NavMenu: typeof import('./src/components/NavMenu.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TagInput: typeof import('./src/components/TagInput.vue')['default']
   }
 }

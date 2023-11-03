@@ -122,6 +122,27 @@ const defaultProps = {
   children: 'children',
   label: 'label'
 }
+
+let tagsInputActive = ref('')
+let tagInputing = ref('')
+let tagsList = ref<string[]>([])
+function onTagInputingChange(tagName: string): void {
+  tagsList.value.push(tagName)
+  tagInputing.value = ''
+}
+function onTagClose(tag: string): void {
+  tagsList.value = tagsList.value.filter((item) => item !== tag)
+}
+function onTagInputingDel(event: KeyboardEvent) {
+  if (event.type == 'keydown' && event.key == 'Backspace' && tagInputing.value === '') {
+    tagsList.value.pop()
+  }
+}
+function onTagInputingChar(tag: string) {
+  if (tag.endsWith(',')) {
+    onTagInputingChange(tag.slice(0, -1))
+  }
+}
 </script>
 
 <template>
@@ -214,7 +235,26 @@ const defaultProps = {
                 </el-scrollbar>
                 <el-link type="warning">{{ t('editor.createNewCategory') }}</el-link>
               </el-collapse-item>
-              <el-collapse-item :title="t('editor.tags')"></el-collapse-item>
+              <el-collapse-item :title="t('editor.tags')">
+                <div class="tags-area" :class="tagsInputActive">
+                  <div class="tags-field">
+                    <el-tag v-for="tag in tagsList" :key="tag" closable @close="onTagClose(tag)">
+                      {{ tag }}
+                    </el-tag>
+                    <el-input
+                      v-model="tagInputing"
+                      type="text"
+                      autocomplete="off"
+                      class="tags-input"
+                      @focus="tagsInputActive = 'is-active'"
+                      @blur="tagsInputActive = ''"
+                      @change="onTagInputingChange"
+                      @input="onTagInputingChar"
+                      @keydown.delete="onTagInputingDel"
+                    />
+                  </div>
+                </div>
+              </el-collapse-item>
             </el-collapse>
           </el-aside>
           <el-main class="editor-wrapper">
@@ -248,6 +288,7 @@ const defaultProps = {
 }
 .aside-expand {
   width: 240px;
+  padding: 0 10px 0 0;
 }
 .aside-collapsed {
   width: 0;
@@ -284,5 +325,41 @@ const defaultProps = {
 }
 .editor {
   height: calc(100vh - 62px - 40px - 60px + 30px);
+}
+
+.tags-area {
+  border: 1px solid #dcdfe6;
+  border-radius: 2px;
+}
+.tags-area.is-active {
+  border: 2px solid #dd823b;
+  outline: 2px solid transparent;
+}
+.tags-field {
+  display: flex;
+  -webkit-box-align: center;
+  padding: 4px 7px;
+  flex-flow: wrap;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.tags-input {
+  border: 0;
+  box-shadow: none;
+  color: #1e1e1e;
+  flex: 1;
+  font-size: 14px;
+}
+.tags-input >>> .el-input__inner {
+  height: 24px;
+  line-height: 24px;
+}
+.tags-input >>> .el-input__wrapper {
+  box-shadow: none;
+  padding: 1px 4px;
+}
+.tags-input:focus {
+  box-shadow: none;
+  outline: none;
 }
 </style>
