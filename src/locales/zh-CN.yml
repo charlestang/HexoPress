@@ -9,11 +9,15 @@ editor:
   categories: 分类目录
   createNewCategory: 添加新分类
   date: 日期
+  draft: 草稿
   meta: 基础信息
   permalink: 永久链接
+  published: 已发布
   status: 状态
   tags: 标签
   update: 更新
+eidtor:
+  tagsTip: 用逗号或回车分割。
 nav:
   allPosts: 文章
   categories: 分类

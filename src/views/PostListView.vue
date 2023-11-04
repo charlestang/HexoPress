@@ -41,10 +41,8 @@ watch(currentFilter, (value, oldValue) => {
   }
 })
 // open editor
-function onClick(sourcePath: string, cp: string) {
-  console.log('sourcePath: ', sourcePath)
-  console.log('currentPath: ', cp)
-  router.push({ path: '/editor', query: { sourcePath: sourcePath, currentPath: cp} })
+function onClick(sourcePath: string) {
+  router.push({ path: '/editor', query: { sourcePath: sourcePath } })
 }
 </script>
 <template>
@@ -82,7 +80,7 @@ function onClick(sourcePath: string, cp: string) {
         </el-row>
         <el-row class="op">
           <el-col :span="24">
-            <el-button link type="primary" @click="onClick(scope.row.source, scope.row.path)"
+            <el-button link type="primary" @click="onClick(scope.row.source)"
               >{{ t('posts.edit') }}
             </el-button>
             | <el-button link type="primary">{{ t('posts.editMeta') }}</el-button> |

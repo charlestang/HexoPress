@@ -9,10 +9,14 @@ editor:
   categories: Categories
   createNewCategory: Create new category
   date: Date
+  draft: Draft
   meta: Meta
   permalink: Permalink
+  published: Published
   tags: Tags
   update: Update
+eidtor:
+  tagsTip: Seperate with comma or enter.
 nav:
   allPosts: All posts
   categories: Categories

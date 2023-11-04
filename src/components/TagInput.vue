@@ -10,13 +10,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:modelValue'])
 
+console.log('transimoprt arguments is: ', props.modelValue)
 let tagsInputActive = ref('')
 let tagInputing = ref('')
 let tagsList = ref<string[]>([])
 if (props.modelValue.length > 0) {
-  for (const tag of props.modelValue) {
-    tagsList.value.push(tag)
-  }
+  tagsList.value = props.modelValue
+  console.log('tagsList is: ', tagsList.value)
 }
 
 function onTagInputingChange(tagName: string): void {

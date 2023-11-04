@@ -1,7 +1,7 @@
 <script lang="ts" setup>
+import { parseFrontMatter, type FrontMatter } from '@/components/FrontMatter'
 import router from '@/router'
 import { Back, Expand, Fold, Folder } from '@element-plus/icons-vue'
-import matter from 'gray-matter'
 import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { ref } from 'vue'
@@ -11,20 +11,13 @@ import { useRoute } from 'vue-router'
 const { t } = useI18n()
 const route = useRoute()
 const sourcePath = route.query.sourcePath
-let currentPath = route.query.currentPath
-console.log('currentPath is: ', currentPath)
 console.log('sourcePath is: ', sourcePath)
-if (Array.isArray(currentPath)) {
-  currentPath = currentPath[0]
-}
+const postPublished =
+  typeof sourcePath !== 'undefined' &&
+  typeof sourcePath === 'string' &&
+  sourcePath.startsWith('_post')
+
 const text = ref('')
-interface FrontMatter {
-  title: string
-  date: string
-  permalink: string
-  categories: string[]
-  tags: string[]
-}
 const frontMatter = ref<FrontMatter>({
   title: '',
   date: '',
@@ -35,14 +28,16 @@ const frontMatter = ref<FrontMatter>({
 
 if (typeof sourcePath !== 'undefined' && typeof sourcePath === 'string' && sourcePath.length > 0) {
   window.site.getContent(sourcePath).then((content) => {
-    const parseDown = matter(content)
+    const parseDown = parseFrontMatter(content)
+    console.log('parsed document is: ', parseDown)
     frontMatter.value = parseDown.data as FrontMatter
+    console.log('front-matter parsed result is: ', frontMatter.value)
     text.value = parseDown.content
   })
 }
 
 function filterImage(html: string): string {
-  return addPrefixToImgSrc(html, 'http://127.0.0.1:2357/', String(currentPath))
+  return addPrefixToImgSrc(html, 'http://127.0.0.1:2357/', frontMatter.value.permalink || '')
 }
 function addPrefixToImgSrc(html: string, prefix: string, currentPath: string): string {
   const regex = /(<img[^>]+src\s*=\s*["'])([^"']*)/gi
@@ -122,8 +117,6 @@ const defaultProps = {
   children: 'children',
   label: 'label'
 }
-
-let tagsList = ref<string[]>([])
 </script>
 
 <template>
@@ -195,7 +188,9 @@ let tagsList = ref<string[]>([])
                 <el-row>
                   <el-col :span="10">{{ t('editor.status') }}</el-col>
                   <el-col :span="14">
-                    <el-link type="primary">{{ 'draft' }}</el-link>
+                    <el-link type="primary">{{
+                      postPublished ? t('editor.published') : t('editor.draft')
+                    }}</el-link>
                   </el-col>
                 </el-row>
                 <el-row>
@@ -217,7 +212,9 @@ let tagsList = ref<string[]>([])
                 <el-link type="warning">{{ t('editor.createNewCategory') }}</el-link>
               </el-collapse-item>
               <el-collapse-item :title="t('editor.tags')">
-                <tag-input v-model="tagsList" />
+                <tag-input v-model="frontMatter.tags" />
+                {{ frontMatter.tags }}
+                <el-text class="mx-1" type="info">{{ t('eidtor.tagsTip') }}</el-text>
               </el-collapse-item>
             </el-collapse>
           </el-aside>
