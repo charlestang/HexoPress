@@ -11,7 +11,6 @@ import { useRoute } from 'vue-router'
 const { t } = useI18n()
 const route = useRoute()
 const sourcePath = route.query.sourcePath
-console.log('sourcePath is: ', sourcePath)
 const postPublished =
   typeof sourcePath !== 'undefined' &&
   typeof sourcePath === 'string' &&
@@ -29,9 +28,7 @@ const frontMatter = ref<FrontMatter>({
 if (typeof sourcePath !== 'undefined' && typeof sourcePath === 'string' && sourcePath.length > 0) {
   window.site.getContent(sourcePath).then((content) => {
     const parseDown = parseFrontMatter(content)
-    console.log('parsed document is: ', parseDown)
     frontMatter.value = parseDown.data as FrontMatter
-    console.log('front-matter parsed result is: ', frontMatter.value)
     text.value = parseDown.content
   })
 }
@@ -213,7 +210,6 @@ const defaultProps = {
               </el-collapse-item>
               <el-collapse-item :title="t('editor.tags')">
                 <tag-input v-model="frontMatter.tags" />
-                {{ frontMatter.tags }}
                 <el-text class="mx-1" type="info">{{ t('eidtor.tagsTip') }}</el-text>
               </el-collapse-item>
             </el-collapse>

@@ -10,30 +10,24 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:modelValue'])
 
-console.log('transimoprt arguments is: ', props.modelValue)
 let tagsInputActive = ref('')
 let tagInputing = ref('')
-let tagsList = ref<string[]>([])
-if (props.modelValue.length > 0) {
-  tagsList.value = props.modelValue
-  console.log('tagsList is: ', tagsList.value)
-}
 
 function onTagInputingChange(tagName: string): void {
-  tagsList.value.push(tagName)
   tagInputing.value = ''
-  emit('update:modelValue', tagsList.value)
+  emit('update:modelValue', props.modelValue.concat(tagName))
 }
 
 function onTagClose(tag: string): void {
-  tagsList.value = tagsList.value.filter((item) => item !== tag)
-  emit('update:modelValue', tagsList.value)
+  emit(
+    'update:modelValue',
+    props.modelValue.filter((item) => item !== tag)
+  )
 }
 
 function onTagInputingDel(event: KeyboardEvent) {
   if (event.type == 'keydown' && event.key == 'Backspace' && tagInputing.value === '') {
-    tagsList.value.pop()
-    emit('update:modelValue', tagsList.value)
+    emit('update:modelValue', props.modelValue.slice(0, -1))
   }
 }
 
@@ -46,7 +40,7 @@ function onTagInputingChar(tag: string) {
 <template>
   <div class="tags-area" :class="tagsInputActive">
     <div class="tags-field">
-      <el-tag v-for="tag in tagsList" :key="tag" closable @close="onTagClose(tag)">
+      <el-tag v-for="tag in modelValue" :key="tag" closable @close="onTagClose(tag)">
         {{ tag }}
       </el-tag>
       <el-input
