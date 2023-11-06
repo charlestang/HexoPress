@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 export interface Props {
   modelValue?: string[]
@@ -9,6 +9,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits(['update:modelValue'])
+
+console.log('tag-input props: \n model: ', props.modelValue)
+watch(props.modelValue, (newVal) => {
+  console.log('tag-input properties changed:  modelValue ', newVal)
+})
 
 let tagsInputActive = ref('')
 let tagInputing = ref('')

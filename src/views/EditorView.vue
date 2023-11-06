@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { parseFrontMatter, type FrontMatter } from '@/components/FrontMatter'
+import type { Category } from '@/local.d.ts'
 import router from '@/router'
 import { Back, Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { MdEditor } from 'md-editor-v3'
@@ -63,57 +64,12 @@ function toggleAside() {
   }
 }
 
-import type { Category } from '@/local.d.ts'
-import { watch } from 'vue'
-
-let categories = ref<null | Category[]>(null)
-
+// fetch all categories from backend
+let categories = ref<Category[]>([])
 async function fetch() {
   categories.value = await window.site.getCategories()
 }
-
 fetch()
-
-interface Tree {
-  id: string
-  parent: string | undefined
-  label: string
-  children?: Tree[]
-}
-
-const handleNodeClick = (data: Tree) => {
-  console.log(data)
-}
-
-let data1 = ref<Tree[]>([])
-watch(categories, (newVal) => {
-  const nodeMap: { [id: string]: Tree } = {}
-
-  for (const entry of newVal!) {
-    nodeMap[entry.id] = {
-      id: entry.id,
-      parent: entry.parent,
-      label: entry.name,
-      children: []
-    }
-  }
-
-  for (const node of Object.values(nodeMap)) {
-    if (node.parent) {
-      const parent = nodeMap[node.parent]
-      if (parent) {
-        parent.children?.push(node)
-      }
-    } else {
-      data1.value.push(node)
-    }
-  }
-})
-
-const defaultProps = {
-  children: 'children',
-  label: 'label'
-}
 </script>
 
 <template>
@@ -199,12 +155,7 @@ const defaultProps = {
               </el-collapse-item>
               <el-collapse-item :title="t('editor.categories')">
                 <el-scrollbar height="250px">
-                  <el-tree
-                    :data="data1"
-                    :props="defaultProps"
-                    show-checkbox
-                    @node-click="handleNodeClick"
-                  />
+                  <categories-tree v-model="frontMatter.categories" :categories="categories"/>
                 </el-scrollbar>
                 <el-link type="warning">{{ t('editor.createNewCategory') }}</el-link>
               </el-collapse-item>

@@ -27,7 +27,7 @@ fetchStats()
 
 function onClick(sourcePath: string) {
   console.log('send parmas: ', sourcePath)
-  router.push({ name: 'editor', params: { sourcePath: sourcePath } })
+  router.push({ name: 'editor', query: { sourcePath: sourcePath } })
 }
 </script>
 <template>
