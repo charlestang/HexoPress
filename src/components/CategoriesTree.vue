@@ -1,18 +1,19 @@
 <script setup lang="ts">
+import { normalizeList } from '@/components/CategoryList'
 import type { Category } from '@/local.d.ts'
 import { computed } from 'vue'
 
-interface Tree {
+interface TreeNode {
   id: string
   parent: string | undefined
   label: string
-  children?: Tree[]
+  children?: TreeNode[]
   length: number
   permalink: string
 }
 
 export interface Props {
-  modelValue?: string[] | string[][]
+  modelValue?: string | string[] | (string | string[])[]
   categories?: Category[]
 }
 
@@ -23,12 +24,10 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:modelValue'])
 
-const treeData = computed(() => {
-  const nodeMap: { [id: string]: Tree } = {}
-  let tree: Tree[] = []
-
+const nodeMap = computed(() => {
+  const map: { [id: string]: TreeNode } = {}
   for (const entry of props.categories) {
-    nodeMap[entry.id] = {
+    map[entry.id] = {
       id: entry.id,
       parent: entry.parent,
       label: entry.name,
@@ -37,10 +36,15 @@ const treeData = computed(() => {
       permalink: entry.permalink
     }
   }
+  return map
+})
 
-  for (const node of Object.values(nodeMap)) {
+const treeData = computed(() => {
+  let tree: TreeNode[] = []
+
+  for (const node of Object.values(nodeMap.value)) {
     if (node.parent) {
-      const parent = nodeMap[node.parent]
+      const parent = nodeMap.value[node.parent]
       if (parent) {
         parent.children?.push(node)
       }
@@ -52,12 +56,35 @@ const treeData = computed(() => {
   return tree
 })
 
+const normalizedCats = computed(() => {
+  return normalizeList(props.modelValue)
+})
+
+const defaultChecked = computed(() => {
+  const defaultCheckedKeys: string[] = []
+  if (normalizedCats.value.length == 0) {
+    return []
+  }
+
+  for (const cat of normalizedCats.value) {
+    for (const catName of cat) {
+      for (const node of Object.values(nodeMap.value)) {
+        if (node.label == catName) {
+          defaultCheckedKeys.push(node.id)
+        }
+      }
+    }
+  }
+
+  return defaultCheckedKeys
+})
+
 const defaultProps = {
   children: 'children',
   label: 'label'
 }
 
-function onNodeClick(node: Tree, treeNodeProp: any, treeNode: any, event: PointerEvent) {
+function onNodeClick(node: TreeNode, treeNodeProp: any, treeNode: any, event: PointerEvent) {
   console.log(
     'onNodeClick, node: ',
     node,
@@ -69,7 +96,7 @@ function onNodeClick(node: Tree, treeNodeProp: any, treeNode: any, event: Pointe
     event
   )
 }
-function onCheckChange(node: Tree, selfChecked: boolean, childrenChecked: boolean) {
+function onCheckChange(node: TreeNode, selfChecked: boolean, childrenChecked: boolean) {
   console.log(
     'onCheckChange, node: ',
     node,
@@ -79,7 +106,7 @@ function onCheckChange(node: Tree, selfChecked: boolean, childrenChecked: boolea
     childrenChecked
   )
 }
-function onCheck(node: Tree, selectedNodes: any) {
+function onCheck(node: TreeNode, selectedNodes: any) {
   console.log('onCheck, node: ', node, '\n selectedNodes: ', selectedNodes)
 }
 </script>
@@ -89,10 +116,13 @@ function onCheck(node: Tree, selectedNodes: any) {
     :props="defaultProps"
     node-key="id"
     show-checkbox
+    :checkStrictly="true"
+    :defaultCheckedKeys="defaultChecked"
     @nodeClick="onNodeClick"
     @checkChange="onCheckChange"
     @check="onCheck"
   />
+  {{ props.modelValue }}
 </template>
 
 <style scoped></style>
