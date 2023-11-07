@@ -135,27 +135,79 @@ fetch()
                 <el-row>
                   <el-col :span="10">{{ t('editor.date') }}</el-col>
                   <el-col :span="14">
-                    <el-link type="primary">{{ frontMatter.date }}</el-link>
+                    <el-popover
+                      trigger="click"
+                      :showArrow="false"
+                      width="240px"
+                      placement="bottom-end"
+                      :hideAfter="0"
+                    >
+                      <template #reference>
+                        <el-link type="primary">{{ frontMatter.date }}</el-link>
+                      </template>
+                      <h3>日期</h3>
+                      <el-form>
+                        <el-form-item label="Time">
+                          <el-time-picker />
+                        </el-form-item>
+                        <el-form-item label="Date">
+                          <el-date-picker type="date" placeholder="Pick a day" size="small" />
+                        </el-form-item>
+                      </el-form>
+                    </el-popover>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="10">{{ t('editor.status') }}</el-col>
                   <el-col :span="14">
-                    <el-link type="primary">{{
-                      postPublished ? t('editor.published') : t('editor.draft')
-                    }}</el-link>
+                    <el-popover
+                      trigger="click"
+                      :showArrow="false"
+                      width="240px"
+                      placement="bottom-end"
+                      :hideAfter="0"
+                    >
+                      <template #reference>
+                        <el-link type="primary">{{
+                          postPublished ? t('editor.published') : t('editor.draft')
+                        }}</el-link>
+                      </template>
+                      <h3>发布</h3>
+                      <el-form>
+                        <el-form-item label="状态">
+                          <el-radio-group v-model="frontMatter.status">
+                            <el-radio label="published">{{ t('editor.published') }}</el-radio>
+                            <el-radio label="draft">{{ t('editor.draft') }}</el-radio>
+                          </el-radio-group>
+                        </el-form-item>
+                      </el-form>
+                    </el-popover>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="10">{{ t('editor.permalink') }}</el-col>
                   <el-col :span="14">
-                    <el-link type="primary">{{ frontMatter.permalink }}</el-link>
+                    <el-popover
+                      trigger="click"
+                      :showArrow="false"
+                      width="240px"
+                      placement="bottom-end"
+                      :hideAfter="0"
+                    >
+                      <template #reference>
+                        <el-link type="primary">{{ frontMatter.permalink }}</el-link></template
+                      >
+                      <h3>永久链接</h3>
+                      <el-form>
+                        <el-form-item label="永久链接"><el-input /> </el-form-item>
+                      </el-form>
+                    </el-popover>
                   </el-col>
                 </el-row>
               </el-collapse-item>
               <el-collapse-item :title="t('editor.categories')">
                 <el-scrollbar height="250px">
-                  <categories-tree v-model="frontMatter.categories" :categories="categories"/>
+                  <categories-tree v-model="frontMatter.categories" :categories="categories" />
                 </el-scrollbar>
                 <el-link type="warning">{{ t('editor.createNewCategory') }}</el-link>
               </el-collapse-item>
