@@ -2,7 +2,7 @@ import { parse, stringify as yStringify } from 'hexo-front-matter'
 export interface FrontMatter {
   layout?: string
   title?: string
-  date?: string
+  date?: Date 
   updated?: string
   comments?: boolean
   tags: string[]

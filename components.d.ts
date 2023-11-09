@@ -8,14 +8,18 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     CategoriesTree: typeof import('./src/components/CategoriesTree.vue')['default']
+    DateMetaEntry: typeof import('./src/components/DateMetaEntry.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCalander: typeof import('element-plus/es')['ElCalander']
+    ElCalendar: typeof import('element-plus/es')['ElCalendar']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElCollapse: typeof import('element-plus/es')['ElCollapse']
     ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
+    ElDatetimePicker: typeof import('element-plus/es')['ElDatetimePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']

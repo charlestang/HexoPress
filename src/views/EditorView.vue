@@ -20,7 +20,7 @@ const postPublished =
 const text = ref('')
 const frontMatter = ref<FrontMatter>({
   title: '',
-  date: '',
+  date: new Date(),
   permalink: '',
   categories: [],
   tags: []
@@ -31,6 +31,7 @@ if (typeof sourcePath !== 'undefined' && typeof sourcePath === 'string' && sourc
     const parseDown = parseFrontMatter(content)
     frontMatter.value = parseDown.data as FrontMatter
     text.value = parseDown.content
+    console.log('parsed front-matter: ', frontMatter.value)
   })
 }
 
@@ -133,31 +134,6 @@ fetch()
             <el-collapse>
               <el-collapse-item :title="t('editor.meta')">
                 <el-row>
-                  <el-col :span="10">{{ t('editor.date') }}</el-col>
-                  <el-col :span="14">
-                    <el-popover
-                      trigger="click"
-                      :showArrow="false"
-                      width="240px"
-                      placement="bottom-end"
-                      :hideAfter="0"
-                    >
-                      <template #reference>
-                        <el-link type="primary">{{ frontMatter.date }}</el-link>
-                      </template>
-                      <h3>日期</h3>
-                      <el-form>
-                        <el-form-item label="Time">
-                          <el-time-picker />
-                        </el-form-item>
-                        <el-form-item label="Date">
-                          <el-date-picker type="date" placeholder="Pick a day" size="small" />
-                        </el-form-item>
-                      </el-form>
-                    </el-popover>
-                  </el-col>
-                </el-row>
-                <el-row>
                   <el-col :span="10">{{ t('editor.status') }}</el-col>
                   <el-col :span="14">
                     <el-popover
@@ -184,6 +160,7 @@ fetch()
                     </el-popover>
                   </el-col>
                 </el-row>
+                <date-meta-entry v-model="frontMatter.date" />
                 <el-row>
                   <el-col :span="10">{{ t('editor.permalink') }}</el-col>
                   <el-col :span="14">
