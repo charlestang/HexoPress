@@ -133,37 +133,11 @@ fetch()
           <el-aside :class="asideExpand">
             <el-collapse>
               <el-collapse-item :title="t('editor.meta')">
-                <el-row>
-                  <el-col :span="10">{{ t('editor.status') }}</el-col>
-                  <el-col :span="14">
-                    <el-popover
-                      trigger="click"
-                      :showArrow="false"
-                      width="240px"
-                      placement="bottom-end"
-                      :hideAfter="0"
-                    >
-                      <template #reference>
-                        <el-link type="primary">{{
-                          postPublished ? t('editor.published') : t('editor.draft')
-                        }}</el-link>
-                      </template>
-                      <h3>发布</h3>
-                      <el-form>
-                        <el-form-item label="状态">
-                          <el-radio-group v-model="frontMatter.status">
-                            <el-radio label="published">{{ t('editor.published') }}</el-radio>
-                            <el-radio label="draft">{{ t('editor.draft') }}</el-radio>
-                          </el-radio-group>
-                        </el-form-item>
-                      </el-form>
-                    </el-popover>
-                  </el-col>
-                </el-row>
+                <status-meta-entry v-model="postPublished" />
                 <date-meta-entry v-model="frontMatter.date" />
                 <el-row>
-                  <el-col :span="10">{{ t('editor.permalink') }}</el-col>
-                  <el-col :span="14">
+                  <el-col :span="8">{{ t('editor.permalink') }}</el-col>
+                  <el-col :span="16">
                     <el-popover
                       trigger="click"
                       :showArrow="false"

@@ -1,3 +1,12 @@
+datetime:
+  long: YYYY/M/D HH:mm
+  short: M/D HH:mm
+date:
+  long: YYYY/M/D
+  short: M/D
+time:
+  long: HH:mm:ss
+  short: HH:mm
 common:
   activities: Activities
   back: Back
@@ -12,8 +21,10 @@ editor:
   draft: Draft
   meta: Meta
   permalink: Permalink
+  publish: Publish
   published: Published
   tags: Tags
+  time: Time
   update: Update
 eidtor:
   tagsTip: Seperate with comma or enter.

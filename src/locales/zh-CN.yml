@@ -1,3 +1,12 @@
+datetime:
+  long: YYYY年M月D日 HH:mm
+  short: M月D日 HH:mm
+date:
+  long: YYYY年M月D日
+  short: M月D日
+time:
+  long: HH:mm:ss
+  short: HH:mm
 common:
   activities: 动态
   back: 返回
@@ -12,9 +21,11 @@ editor:
   draft: 草稿
   meta: 基础信息
   permalink: 永久链接
+  publish: 发布
   published: 已发布
   status: 状态
   tags: 标签
+  time: 时间
   update: 更新
 eidtor:
   tagsTip: 用逗号或回车分割。
