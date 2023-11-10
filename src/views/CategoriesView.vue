@@ -6,30 +6,33 @@ let categories = ref<null | Category[]>(null)
 
 async function fetch() {
   categories.value = await window.site.getCategories()
+  console.log(categories.value)
 }
 
 fetch()
 
-interface Tree {
+interface TreeEntry {
   id: string
   parent: string | undefined
   label: string
-  children?: Tree[]
+  length: number
+  path: string
+  permalink: string
+  children?: TreeEntry[]
 }
 
-const handleNodeClick = (data: Tree) => {
-  console.log(data)
-}
-
-let data1 = ref<Tree[]>([])
+let data1 = ref<TreeEntry[]>([])
 watch(categories, (newVal) => {
-  const nodeMap: { [id: string]: Tree } = {}
+  const nodeMap: { [id: string]: TreeEntry } = {}
 
   for (const entry of newVal!) {
     nodeMap[entry.id] = {
       id: entry.id,
       parent: entry.parent,
       label: entry.name,
+      length: entry.length,
+      path: entry.path,
+      permalink: entry.permalink,
       children: []
     }
   }
@@ -46,12 +49,24 @@ watch(categories, (newVal) => {
   }
 })
 
-const defaultProps = {
-  children: 'children',
-  label: 'label'
-}
+
 </script>
 
 <template>
-  <el-tree :data="data1" :props="defaultProps" @node-click="handleNodeClick" />
+  <el-table
+      :data="data1"
+      style="width: 100%; margin-bottom: 20px"
+      row-key="id"
+      :border="false"
+      :stripe="true"
+      default-expand-all
+    >
+      <el-table-column prop="label" label="Name" sortable />
+      <el-table-column prop="length" label="Total" sortable />
+      <el-table-column label="Operation" >
+        <template #default="scope">
+         <el-link type="primary" link :href="scope.row.permalink">{{ "View" }}</el-link>
+        </template>
+      </el-table-column>
+    </el-table>
 </template>

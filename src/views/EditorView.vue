@@ -71,6 +71,14 @@ async function fetch() {
   categories.value = await window.site.getCategories()
 }
 fetch()
+
+let layout = ref('post')
+const options = [
+  {
+    value: 'post',
+    label: 'Post'
+  }
+]
 </script>
 
 <template>
@@ -133,26 +141,36 @@ fetch()
           <el-aside :class="asideExpand">
             <el-collapse>
               <el-collapse-item :title="t('editor.meta')">
-                <status-meta-entry v-model="postPublished" />
-                <date-meta-entry v-model="frontMatter.date" />
-                <el-row>
-                  <el-col :span="8">{{ t('editor.permalink') }}</el-col>
-                  <el-col :span="16">
-                    <el-popover
-                      trigger="click"
-                      :showArrow="false"
-                      width="240px"
-                      placement="bottom-end"
-                      :hideAfter="0"
+                <status-meta-entry v-model="postPublished" class="meta-entry" />
+                <date-meta-entry v-model="frontMatter.date" class="meta-entry" />
+                <url-meta-entry v-model="frontMatter.permalink" class="meta-entry" />
+                <el-form label-position="top">
+                  <el-form-item :label="t('editor.layout')">
+                    <el-select
+                      v-model="layout"
+                      placeholder="Select"
+                      style="width: 100%"
+                      size="small"
                     >
-                      <template #reference>
-                        <el-link type="primary">{{ frontMatter.permalink }}</el-link></template
-                      >
-                      <h3>永久链接</h3>
-                      <el-form>
-                        <el-form-item label="永久链接"><el-input /> </el-form-item>
-                      </el-form>
-                    </el-popover>
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-form>
+                <el-row :gutter="20">
+                  <el-col :span="10">
+                    <el-button type="warning" plain size="small" style="width: 100%">{{
+                      t('editor.turnToDraft')
+                    }}</el-button>
+                  </el-col>
+                  <el-col :span="14">
+                    <el-button type="danger" plain size="small" style="width: 100%">{{
+                      t('editor.moveToTrash')
+                    }}</el-button>
                   </el-col>
                 </el-row>
               </el-collapse-item>
@@ -163,8 +181,9 @@ fetch()
                 <el-link type="warning">{{ t('editor.createNewCategory') }}</el-link>
               </el-collapse-item>
               <el-collapse-item :title="t('editor.tags')">
+                <el-text type="info" size="small">{{ t('eidtor.selectTags') }}</el-text>
                 <tag-input v-model="frontMatter.tags" />
-                <el-text class="mx-1" type="info">{{ t('eidtor.tagsTip') }}</el-text>
+                <el-text type="info">{{ t('eidtor.tagsTip') }}</el-text>
               </el-collapse-item>
             </el-collapse>
           </el-aside>
@@ -236,5 +255,12 @@ fetch()
 }
 .editor {
   height: calc(100vh - 62px - 40px - 60px + 30px);
+}
+.meta-entry {
+  margin-bottom: 7px;
+}
+:deep(.el-form-item__label) {
+  font-size: 13px;
+  color: #303133;
 }
 </style>

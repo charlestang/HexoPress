@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['update:modelValue'])
 
 const publishTime = ref(props.modelValue)
+const publishDate = ref(props.modelValue)
 
 function onTimeChange(val: Date) {
   if (val !== null) {
@@ -57,7 +58,7 @@ const visible = ref(false)
           </el-form-item>
           <el-form-item :label="t('editor.date')">
             <el-date-picker
-              v-model="publishTime"
+              v-model="publishDate"
               :format="t('date.short')"
               @change="onDateChange"
             ></el-date-picker>

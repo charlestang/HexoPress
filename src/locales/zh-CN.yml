@@ -1,12 +1,3 @@
-datetime:
-  long: YYYY年M月D日 HH:mm
-  short: M月D日 HH:mm
-date:
-  long: YYYY年M月D日
-  short: M月D日
-time:
-  long: HH:mm:ss
-  short: HH:mm
 common:
   activities: 动态
   back: 返回
@@ -14,20 +5,32 @@ common:
   newPost: 新建
   overview: 概览
   system: 系统
+date:
+  long: YYYY年M月D日
+  short: M月D日
+datetime:
+  long: YYYY年M月D日 HH:mm
+  short: M月D日 HH:mm
 editor:
   categories: 分类目录
   createNewCategory: 添加新分类
   date: 日期
   draft: 草稿
+  layout: 页面布局
   meta: 基础信息
-  permalink: 永久链接
+  moveToTrash: 移至回收站
+  permalink: 固定链接
+  permalinkTip: URl 的最后一段。
   publish: 发布
   published: 已发布
   status: 状态
   tags: 标签
   time: 时间
+  turnToDraft: 切换至草稿
   update: 更新
+  url: URL
 eidtor:
+  selectTags: 选择标签
   tagsTip: 用逗号或回车分割。
 nav:
   allPosts: 文章
@@ -54,3 +57,6 @@ posts:
 setup:
   baseDirTip: 请先选择您 Hexo 所在的目录：
   choose: 选择
+time:
+  long: HH:mm:ss
+  short: HH:mm
