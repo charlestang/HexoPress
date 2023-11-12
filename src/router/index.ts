@@ -1,3 +1,4 @@
+import { useAppStoreWithout } from '@/stores/app'
 import DashboardView from '@/views/DashboardView.vue'
 import MainWindow from '@/views/MainWindow.vue'
 import type { App } from 'vue'
@@ -56,9 +57,10 @@ const router = createRouter({
   ]
 })
 
+const appStore = useAppStoreWithout()
+
 router.beforeEach(async (to, from, next) => {
-  const vaultPath = await window.site.getConfig('vaultPath')
-  if (vaultPath === null && to.name !== 'setup') {
+  if (!(await appStore.isBasePathSet) && to.name !== 'setup') {
     next('/setup')
   } else {
     next()

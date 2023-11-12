@@ -11,22 +11,17 @@ let stats = ref<null | Stats>(null)
 
 async function fetch() {
   let data = await window.site.getPosts(true, false, 5)
-  console.log(data)
   posts.value = data
 }
-
 fetch()
 
 async function fetchStats() {
   let data = await window.site.getStats()
   stats.value = data
-  console.log('stats: ', stats.value)
 }
-
 fetchStats()
 
 function onClick(sourcePath: string) {
-  console.log('send parmas: ', sourcePath)
   router.push({ name: 'editor', query: { sourcePath: sourcePath } })
 }
 </script>

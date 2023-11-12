@@ -1,8 +1,4 @@
-<script lang="ts" setup>
-import { useAppStore } from './stores/app'
-
-const appStore = useAppStore()
-</script>
+<script lang="ts" setup></script>
 <template>
   <router-view />
 </template>
