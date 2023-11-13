@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { parseFrontMatter, type FrontMatter, stringify } from '@/components/FrontMatter'
+import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
 import type { Category } from '@/local.d.ts'
 import router from '@/router'
 import { Back, Expand, Fold, Folder } from '@element-plus/icons-vue'
@@ -102,7 +102,11 @@ async function updatePost() {
           <el-container style="display: flex; flex-direction: row-reverse">
             <el-aside width="240px">
               <div class="op-buttons">
-                <el-link type="primary" v-if="!postPublished" style="margin-right: 10px" @click="updatePost"
+                <el-link
+                  type="primary"
+                  v-if="!postPublished"
+                  style="margin-right: 10px"
+                  @click="updatePost"
                   >{{ t('editor.saveDraft') }}
                 </el-link>
                 <el-button v-if="postPublished" type="primary" @click="updatePost">
@@ -138,9 +142,11 @@ async function updatePost() {
                     </el-form>
                     <template #footer>
                       <span class="dialog-footer">
-                        <el-button @click="dialogSourcePath = false">{{ t('editor.cancel') }}</el-button>
+                        <el-button @click="dialogSourcePath = false">{{
+                          t('editor.cancel')
+                        }}</el-button>
                         <el-button type="primary" @click="dialogSourcePath = false">
-                          {{ t('editor.change') }} 
+                          {{ t('editor.change') }}
                         </el-button>
                       </span>
                     </template>

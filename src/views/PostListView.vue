@@ -64,10 +64,10 @@ function onClick(sourcePath: string) {
         <span v-if="idx < Object.keys(filters).length - 1"> | </span>
       </div>
     </el-col>
-    <el-col :span="4" style="float:right">
+    <el-col :span="4" style="float: right">
       <el-input placeholder="Search" size="small" />
     </el-col>
-    <el-col :span="2" style="float:right">
+    <el-col :span="2" style="float: right">
       <el-button type="primary" size="small">{{ t('posts.search') }}</el-button>
     </el-col>
   </el-row>
@@ -85,11 +85,12 @@ function onClick(sourcePath: string) {
         </el-row>
         <el-row class="op">
           <el-col :span="24">
-            <el-button link type="primary" @click="onClick(scope.row.source)"
-              >{{ t('posts.edit') }}
-            </el-button>
-            | <el-button link type="primary">{{ t('posts.editMeta') }}</el-button> |
-            <el-button link type="danger">{{ t('posts.delete') }}</el-button>
+            <el-link type="primary" @click="onClick(scope.row.source)"
+              >{{ t('posts.edit') }} </el-link
+            ><el-divider direction="vertical" />
+            <el-link type="primary">{{ t('posts.editMeta') }}</el-link
+            ><el-divider direction="vertical" />
+            <el-link type="danger">{{ t('posts.delete') }}</el-link>
           </el-col>
         </el-row>
       </template>
@@ -123,6 +124,7 @@ function onClick(sourcePath: string) {
 }
 .el-table__cell .op {
   display: none;
+  line-height: 1.5;
 }
 .el-table__cell:hover .op {
   display: block;
