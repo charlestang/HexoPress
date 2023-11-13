@@ -12,19 +12,26 @@ datetime:
   long: YYYY/M/D HH:mm
   short: M/D HH:mm
 editor:
+  cancel: Cancel
   categories: Categories
+  change: Change
   createNewCategory: Create new category
   date: Date
   draft: Draft
+  filePath: File path
+  filePathDialog: The real path of the file
   layout: Layout
   meta: Meta
   moveToTrash: Move to Trash
+  notSet: ' not set(generated default)'
   permalink: Permalink
   permalinkTip: The last part of the url.
   publish: Publish
   published: Published
+  saveDraft: Save Draft
   tags: Tags
   time: Time
+  title: Please input title
   turnToDraft: Turn to Draft
   update: Update
   url: URL
@@ -49,6 +56,7 @@ posts:
   pageTitle: Posts
   published: Published
   publishedDate: Published
+  search: Search
   status: Status
   tags: Tags
   title: Title

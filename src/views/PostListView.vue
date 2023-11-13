@@ -47,8 +47,8 @@ function onClick(sourcePath: string) {
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
-  <el-row>
-    <el-col :span="12">
+  <el-row :gutter="5">
+    <el-col :span="18">
       <div v-for="(caption, k, idx) in filters" :key="k" style="float: left">
         <el-button
           link
@@ -64,7 +64,12 @@ function onClick(sourcePath: string) {
         <span v-if="idx < Object.keys(filters).length - 1"> | </span>
       </div>
     </el-col>
-    <el-col :span="12"></el-col>
+    <el-col :span="4" style="float:right">
+      <el-input placeholder="Search" size="small" />
+    </el-col>
+    <el-col :span="2" style="float:right">
+      <el-button type="primary" size="small">{{ t('posts.search') }}</el-button>
+    </el-col>
   </el-row>
   <el-table :data="posts" stripe style="width: 100%">
     <el-table-column type="index" label="#" width="55" />

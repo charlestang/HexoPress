@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { parseFrontMatter, type FrontMatter } from '@/components/FrontMatter'
+import { parseFrontMatter, type FrontMatter, stringify } from '@/components/FrontMatter'
 import type { Category } from '@/local.d.ts'
 import router from '@/router'
 import { Back, Expand, Fold, Folder } from '@element-plus/icons-vue'
@@ -79,6 +79,12 @@ const options = [
     label: 'Post'
   }
 ]
+
+async function updatePost() {
+  // change js object to yaml string
+  const blogContent = stringify(frontMatter.value, text.value)
+  await window.site.saveContent(sourcePath as string, blogContent)
+}
 </script>
 
 <template>
@@ -96,7 +102,14 @@ const options = [
           <el-container style="display: flex; flex-direction: row-reverse">
             <el-aside width="240px">
               <div class="op-buttons">
-                <el-button type="primary"> {{ t('editor.update') }} </el-button>
+                <el-link type="primary" v-if="!postPublished" style="margin-right: 10px" @click="updatePost"
+                  >{{ t('editor.saveDraft') }}
+                </el-link>
+                <el-button v-if="postPublished" type="primary" @click="updatePost">
+                  {{ t('editor.update') }}
+                </el-button>
+                <el-button v-else type="primary"> {{ t('editor.publish') }} </el-button>
+
                 <el-button type="default" @click="toggleAside">
                   <el-icon v-if="asideExpand == 'aside-expand'"><expand /></el-icon>
                   <el-icon v-else><fold /></el-icon>
@@ -108,7 +121,7 @@ const options = [
                 <el-col :span="24">
                   <el-form>
                     <el-form-item class="title-input">
-                      <el-input v-model="frontMatter.title" placeholder="Title">
+                      <el-input v-model="frontMatter.title" :placeholder="t('editor.title')">
                         <template #suffix>
                           <el-icon class="el-input__icon" @click="dialogSourcePath = true"
                             ><folder
@@ -117,17 +130,17 @@ const options = [
                       </el-input>
                     </el-form-item>
                   </el-form>
-                  <el-dialog v-model="dialogSourcePath" title="The file path of the document">
+                  <el-dialog v-model="dialogSourcePath" :title="t('editor.filePathDialog')">
                     <el-form>
-                      <el-form-item label="File path" label-width="70px">
+                      <el-form-item :label="t('editor.filePath')" label-width="70px">
                         <el-input v-model="sourcePath" autocomplete="off" />
                       </el-form-item>
                     </el-form>
                     <template #footer>
                       <span class="dialog-footer">
-                        <el-button @click="dialogSourcePath = false">Cancel</el-button>
+                        <el-button @click="dialogSourcePath = false">{{ t('editor.cancel') }}</el-button>
                         <el-button type="primary" @click="dialogSourcePath = false">
-                          Change
+                          {{ t('editor.change') }} 
                         </el-button>
                       </span>
                     </template>
@@ -141,7 +154,6 @@ const options = [
           <el-aside :class="asideExpand">
             <el-collapse>
               <el-collapse-item :title="t('editor.meta')">
-                <status-meta-entry v-model="postPublished" class="meta-entry" />
                 <date-meta-entry v-model="frontMatter.date" class="meta-entry" />
                 <url-meta-entry v-model="frontMatter.permalink" class="meta-entry" />
                 <el-form label-position="top">
@@ -161,7 +173,7 @@ const options = [
                     </el-select>
                   </el-form-item>
                 </el-form>
-                <el-row :gutter="20">
+                <el-row v-if="postPublished" :gutter="20">
                   <el-col :span="10">
                     <el-button type="warning" plain size="small" style="width: 100%">{{
                       t('editor.turnToDraft')

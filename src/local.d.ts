@@ -59,6 +59,7 @@ export interface ISite {
   setConfig: (key, value) => Promise<any>
   openDirDialog: () => Promise<DialogResult>
   getContent: (path: string) => Promise<string>
+  saveContent: (path: string, content: string) => Promise<void>
   getSystemLocale: () => Promise<string>
 }
 
