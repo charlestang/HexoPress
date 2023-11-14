@@ -60,6 +60,7 @@ export interface ISite {
   openDirDialog: () => Promise<DialogResult>
   getContent: (path: string) => Promise<string>
   saveContent: (path: string, content: string) => Promise<void>
+  deleteFile: (path: string) => Promise<void>
   getSystemLocale: () => Promise<string>
 }
 

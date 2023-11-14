@@ -44,6 +44,20 @@ watch(currentFilter, (value, oldValue) => {
 function onClick(sourcePath: string) {
   router.push({ path: '/editor', query: { sourcePath: sourcePath } })
 }
+const doubleConfirmDelete = ref(false)
+const articleToDelete = ref('')
+const articleToDeletePath = ref('')
+function onDelete(articleName: string, articlePath: string) {
+  articleToDelete.value = articleName
+  articleToDeletePath.value = articlePath
+  doubleConfirmDelete.value = true
+}
+function onConfirmDelete() {
+  window.site.deleteFile(articleToDeletePath.value)
+  articleToDelete.value = ''
+  articleToDeletePath.value = ''
+  doubleConfirmDelete.value = false
+}
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -90,7 +104,9 @@ function onClick(sourcePath: string) {
             ><el-divider direction="vertical" />
             <el-link type="primary">{{ t('posts.editMeta') }}</el-link
             ><el-divider direction="vertical" />
-            <el-link type="danger">{{ t('posts.delete') }}</el-link>
+            <el-link type="danger" @click="onDelete(scope.row.title, scope.row.source)">{{
+              t('posts.delete')
+            }}</el-link>
           </el-col>
         </el-row>
       </template>
@@ -114,6 +130,13 @@ function onClick(sourcePath: string) {
       </template>
     </el-table-column>
   </el-table>
+  <el-dialog v-model="doubleConfirmDelete" :title="t('posts.doubleConfirmDeleteTitle')" width="30%">
+    <span>{{ t('posts.doubleConfirmDeleteContent') }} {{ articleToDelete }} ?</span>
+    <template #footer>
+      <el-button @click="doubleConfirmDelete = false">{{ t('posts.cancel') }}</el-button>
+      <el-button type="primary" @click="onConfirmDelete">{{ t('posts.confirm') }}</el-button>
+    </template>
+  </el-dialog>
 </template>
 <style>
 .el-table .el-table__cell {

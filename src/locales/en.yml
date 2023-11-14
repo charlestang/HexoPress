@@ -47,9 +47,13 @@ nav:
   tags: Tags
 posts:
   all: All
+  cancel: Cancel
   categories: Categories
+  confirm: Confirm
   datetime: Date
   delete: Delete
+  doubleConfirmDeleteContent: 'Once delete, it cannot be recovered. Are you sure you want to delete: '
+  doubleConfirmDeleteTitle: 'Attention ⚠️ '
   draft: Draft
   edit: Edit
   editMeta: Edit meta

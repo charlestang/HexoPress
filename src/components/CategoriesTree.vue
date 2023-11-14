@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { normalizeList } from '@/components/CategoryList'
 import type { Category } from '@/local.d.ts'
-import { ElTree } from 'element-plus'
+import type { ElTree } from 'element-plus'
 import { computed, ref } from 'vue'
 
 interface TreeNode {

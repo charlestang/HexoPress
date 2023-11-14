@@ -48,9 +48,13 @@ nav:
   tags: 标签
 posts:
   all: 全部
+  cancel: 取消
   categories: 分类目录
+  confirm: 确认
   datetime: 日期
   delete: 删除
+  doubleConfirmDeleteContent: 一旦删除，将不能恢复，是否确认删除文章：
+  doubleConfirmDeleteTitle: 注意⚠️
   draft: 草稿
   edit: 编辑
   editMeta: 编辑元信息
