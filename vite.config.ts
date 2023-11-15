@@ -14,6 +14,9 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
+      eslintrc: {
+        enabled: true
+      },
       resolvers: [ElementPlusResolver()]
     }),
     Components({

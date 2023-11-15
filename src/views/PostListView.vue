@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { Post } from '@/local.d.ts'
-import router from '@/router'
-import { ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
+import type { Post } from '@/local.d.ts';
+import router from '@/router';
+import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 const { t } = useI18n()
 // stats info
 let allCount = ref<null | number>(null)
@@ -44,19 +44,44 @@ watch(currentFilter, (value, oldValue) => {
 function onClick(sourcePath: string) {
   router.push({ path: '/editor', query: { sourcePath: sourcePath } })
 }
-const doubleConfirmDelete = ref(false)
-const articleToDelete = ref('')
-const articleToDeletePath = ref('')
 function onDelete(articleName: string, articlePath: string) {
-  articleToDelete.value = articleName
-  articleToDeletePath.value = articlePath
-  doubleConfirmDelete.value = true
-}
-function onConfirmDelete() {
-  window.site.deleteFile(articleToDeletePath.value)
-  articleToDelete.value = ''
-  articleToDeletePath.value = ''
-  doubleConfirmDelete.value = false
+  ElMessageBox.confirm(
+    t('posts.doubleConfirmDeleteContent') + articleName + t('posts.questionMark'),
+    t('posts.warning'),
+    {
+      confirmButtonText: t('posts.confirm'),
+      cancelButtonText: t('posts.cancel'),
+      type: 'warning'
+    }
+  )
+    .then(async (a) => {
+      console.log(a)
+      await window.site.deleteFile(articlePath)
+      ElMessage({
+        type: 'success',
+        message: t('posts.deleteSuccess')
+      })
+    })
+    .catch((reason) => {
+      if (reason === 'cancel') {
+        ElMessage({
+          type: 'info',
+          message: t('posts.deleteCanceled')
+        })
+      } else {
+        if (typeof reason === 'object' && reason.name === 'Error') {
+          ElMessage({
+            type: 'error',
+            message: reason.message
+          })
+        } else {
+          ElMessage({
+            type: 'error',
+            message: t('posts.unknownError')
+          })
+        }
+      }
+    })
 }
 </script>
 <template>
@@ -130,13 +155,6 @@ function onConfirmDelete() {
       </template>
     </el-table-column>
   </el-table>
-  <el-dialog v-model="doubleConfirmDelete" :title="t('posts.doubleConfirmDeleteTitle')" width="30%">
-    <span>{{ t('posts.doubleConfirmDeleteContent') }} {{ articleToDelete }} ?</span>
-    <template #footer>
-      <el-button @click="doubleConfirmDelete = false">{{ t('posts.cancel') }}</el-button>
-      <el-button type="primary" @click="onConfirmDelete">{{ t('posts.confirm') }}</el-button>
-    </template>
-  </el-dialog>
 </template>
 <style>
 .el-table .el-table__cell {

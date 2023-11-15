@@ -17,6 +17,7 @@
     "electron:run": "concurrently -k \"npm run dev\" \"npm run electron:dev\""
   },
   "dependencies": {
+    "@replit/codemirror-vim": "^6.1.0",
     "element-plus": "^2.4.1",
     "express": "^4.18.2",
     "hexo": "^7.0.0",

@@ -53,6 +53,8 @@ posts:
   confirm: 确认
   datetime: 日期
   delete: 删除
+  deleteCanceled: 取消删除
+  deleteSuccess: 删除成功。
   doubleConfirmDeleteContent: 一旦删除，将不能恢复，是否确认删除文章：
   doubleConfirmDeleteTitle: 注意⚠️
   draft: 草稿
@@ -61,11 +63,14 @@ posts:
   pageTitle: 文章
   published: 已发布
   publishedDate: 发表于
+  questionMark: ？
   search: 搜索
   status: 状态
   tags: 标签
   title: 标题
+  unknownError: 发生了未知错误。
   updatedDate: 更新于
+  warning: 注意
 setup:
   baseDirTip: 请先选择您 Hexo 所在的目录：
   choose: 选择

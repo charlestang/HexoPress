@@ -52,6 +52,8 @@ posts:
   confirm: Confirm
   datetime: Date
   delete: Delete
+  deleteCanceled: Delete canceled
+  deleteSuccess: Delete success.
   doubleConfirmDeleteContent: 'Once delete, it cannot be recovered. Are you sure you want to delete: '
   doubleConfirmDeleteTitle: 'Attention ⚠️ '
   draft: Draft
@@ -60,11 +62,14 @@ posts:
   pageTitle: Posts
   published: Published
   publishedDate: Published
+  questionMark: '?'
   search: Search
   status: Status
   tags: Tags
   title: Title
+  unknownError: Unknown error.
   updatedDate: Updated
+  warning: Warning
 setup:
   baseDirTip: 'Please select your hexo directory first:'
   choose: Choose

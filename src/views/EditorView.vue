@@ -3,7 +3,9 @@ import { parseFrontMatter, stringify, type FrontMatter } from '@/components/Fron
 import type { Category } from '@/local.d.ts'
 import router from '@/router'
 import { Back, Expand, Fold, Folder } from '@element-plus/icons-vue'
-import { MdEditor } from 'md-editor-v3'
+import { vim } from '@replit/codemirror-vim'
+import { MdEditor, config } from 'md-editor-v3'
+import { lineNumbers } from '@codemirror/view';
 import 'md-editor-v3/lib/style.css'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -85,6 +87,12 @@ async function updatePost() {
   const blogContent = stringify(frontMatter.value, text.value)
   await window.site.saveContent(sourcePath as string, blogContent)
 }
+
+config({
+  codeMirrorExtensions(theme, extensions) {
+    return [...extensions, lineNumbers(), vim()]
+  }
+})
 </script>
 
 <template>
@@ -280,5 +288,8 @@ async function updatePost() {
 :deep(.el-form-item__label) {
   font-size: 13px;
   color: #303133;
+}
+.ͼ1 .cm-vim-panel input {
+  color: white;
 }
 </style>
