@@ -2,10 +2,10 @@
 import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
 import type { Category } from '@/local.d.ts'
 import router from '@/router'
+import { lineNumbers } from '@codemirror/view'
 import { Back, Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { vim } from '@replit/codemirror-vim'
 import { MdEditor, config } from 'md-editor-v3'
-import { lineNumbers } from '@codemirror/view';
 import 'md-editor-v3/lib/style.css'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -289,7 +289,8 @@ config({
   font-size: 13px;
   color: #303133;
 }
-.ͼ1 .cm-vim-panel input {
+:deep(.ͼ1 .cm-vim-panel),
+:deep(.ͼ1 .cm-vim-panel input) {
   color: white;
 }
 </style>
