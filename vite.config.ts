@@ -1,6 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
 
-import ViteYaml from '@modyfi/vite-plugin-yaml'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -22,7 +21,6 @@ export default defineConfig({
     Components({
       resolvers: [ElementPlusResolver()]
     }),
-    ViteYaml(),
   ],
   resolve: {
     alias: {

@@ -1,20 +1,90 @@
 {
   "common": {
-    "dashboard": "仪表盘",
     "activities": "动态",
+    "back": "返回",
+    "dashboard": "仪表盘",
+    "newPost": "新建",
     "overview": "概览",
     "system": "系统"
+  },
+  "date": {
+    "long": "YYYY年M月D日",
+    "short": "M月D日"
+  },
+  "datetime": {
+    "long": "YYYY年M月D日 HH:mm",
+    "short": "M月D日 HH:mm"
+  },
+  "editor": {
+    "cancel": "取消",
+    "categories": "分类目录",
+    "change": "更改",
+    "createNewCategory": "添加新分类",
+    "date": "日期",
+    "draft": "草稿",
+    "filePath": "文件路径",
+    "filePathDialog": "文件在磁盘上的真实路径",
+    "layout": "页面布局",
+    "meta": "基础信息",
+    "moveToTrash": "移至回收站",
+    "notSet": "未设置（默认规则生成）",
+    "permalink": "固定链接",
+    "permalinkTip": "URl 的最后一段。",
+    "publish": "发布",
+    "published": "已发布",
+    "saveDraft": "保存草稿",
+    "status": "状态",
+    "tags": "标签",
+    "time": "时间",
+    "title": "请输入标题",
+    "turnToDraft": "切换至草稿",
+    "update": "更新",
+    "url": "URL"
+  },
+  "eidtor": {
+    "selectTags": "选择标签",
+    "tagsTip": "用逗号或回车分割。"
+  },
+  "nav": {
+    "allPosts": "文章",
+    "categories": "分类",
+    "collapse": "折叠导航栏",
+    "dashborad": "仪表盘",
+    "expand": "展开导航栏",
+    "tags": "标签"
+  },
+  "posts": {
+    "all": "全部",
+    "cancel": "取消",
+    "categories": "分类目录",
+    "confirm": "确认",
+    "datetime": "日期",
+    "delete": "删除",
+    "deleteCanceled": "取消删除",
+    "deleteSuccess": "删除成功。",
+    "doubleConfirmDeleteContent": "一旦删除，将不能恢复，是否确认删除文章：",
+    "doubleConfirmDeleteTitle": "注意⚠️",
+    "draft": "草稿",
+    "edit": "编辑",
+    "editMeta": "编辑元信息",
+    "pageTitle": "文章",
+    "published": "已发布",
+    "publishedDate": "发表于",
+    "questionMark": "？",
+    "search": "搜索",
+    "status": "状态",
+    "tags": "标签",
+    "title": "标题",
+    "unknownError": "发生了未知错误。",
+    "updatedDate": "更新于",
+    "warning": "注意"
   },
   "setup": {
     "baseDirTip": "请先选择您 Hexo 所在的目录：",
     "choose": "选择"
   },
-  "posts": {
-    "title": "标题",
-    "status": "状态",
-    "tags": "标签",
-    "categories": "分类",
-    "publishedDate": "发表于",
-    "updatedDate": "更新于"
+  "time": {
+    "long": "HH:mm:ss",
+    "short": "HH:mm"
   }
 }

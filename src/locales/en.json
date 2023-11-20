@@ -1,0 +1,89 @@
+{
+  "common": {
+    "activities": "Activities",
+    "back": "Back",
+    "dashboard": "Dashboard",
+    "newPost": "New Post",
+    "overview": "Overview",
+    "system": "System"
+  },
+  "date": {
+    "long": "YYYY/M/D",
+    "short": "M/D"
+  },
+  "datetime": {
+    "long": "YYYY/M/D HH:mm",
+    "short": "M/D HH:mm"
+  },
+  "editor": {
+    "cancel": "Cancel",
+    "categories": "Categories",
+    "change": "Change",
+    "createNewCategory": "Create new category",
+    "date": "Date",
+    "draft": "Draft",
+    "filePath": "File path",
+    "filePathDialog": "The real path of the file",
+    "layout": "Layout",
+    "meta": "Meta",
+    "moveToTrash": "Move to Trash",
+    "notSet": " not set(generated default)",
+    "permalink": "Permalink",
+    "permalinkTip": "The last part of the url.",
+    "publish": "Publish",
+    "published": "Published",
+    "saveDraft": "Save Draft",
+    "tags": "Tags",
+    "time": "Time",
+    "title": "Please input title",
+    "turnToDraft": "Turn to Draft",
+    "update": "Update",
+    "url": "URL"
+  },
+  "eidtor": {
+    "selectTags": "Select Tags",
+    "tagsTip": "Seperate with comma or enter."
+  },
+  "nav": {
+    "allPosts": "All posts",
+    "categories": "Categories",
+    "collapse": "Collapse menu",
+    "dashborad": "Dashboard",
+    "expand": "Expand menu",
+    "tags": "Tags"
+  },
+  "posts": {
+    "all": "All",
+    "cancel": "Cancel",
+    "categories": "Categories",
+    "confirm": "Confirm",
+    "datetime": "Date",
+    "delete": "Delete",
+    "deleteCanceled": "Delete canceled",
+    "deleteSuccess": "Delete success.",
+    "doubleConfirmDeleteContent": "Once delete, it cannot be recovered. Are you sure you want to delete: ",
+    "doubleConfirmDeleteTitle": "Attention ⚠️ ",
+    "draft": "Draft",
+    "edit": "Edit",
+    "editMeta": "Edit meta",
+    "pageTitle": "Posts",
+    "published": "Published",
+    "publishedDate": "Published",
+    "questionMark": "?",
+    "search": "Search",
+    "status": "Status",
+    "tags": "Tags",
+    "title": "Title",
+    "unknownError": "Unknown error.",
+    "updatedDate": "Updated",
+    "warning": "Warning"
+  },
+  "setup": {
+    "baseDirTip": "Please select your hexo directory first:",
+    "choose": "Choose"
+  },
+  "time": {
+    "long": "HH:mm:ss",
+    "short": "HH:mm"
+  }
+}
