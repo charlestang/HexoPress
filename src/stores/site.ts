@@ -1,8 +1,27 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
+import type { HexoConfig, SiteInfo } from '../local'
 
-export const useSiteStore = defineStore('site', () => {
-  const _siteInfo = ref(null)
+interface SiteStore {
+  siteName: Ref<string | undefined>
+  siteVersion: Ref<string | undefined>
+  hexoVersion: Ref<string | undefined>
+  siteTitle: Ref<string | undefined>
+  siteSubtitle: Ref<string | undefined>
+  siteDescription: Ref<string | undefined>
+  siteKeywords: Ref<string[] | undefined>
+  siteAuthor: Ref<string | undefined>
+  siteLanguage: Ref<string | undefined>
+  siteTimezone: Ref<string | undefined>
+  siteUrl: Ref<string | undefined>
+  sitePermalink: Ref<string | undefined>
+  siteDateFormat: Ref<string | undefined>
+  siteTimeFormat: Ref<string | undefined>
+}
+
+export const useSiteStore = defineStore('site', (): SiteStore => {
+  const _siteInfo = ref<SiteInfo | null>(null)
+
   const siteName = computed(() => {
     return _siteInfo.value?.name
   })
@@ -13,7 +32,7 @@ export const useSiteStore = defineStore('site', () => {
     return _siteInfo.value?.hexoVersion
   })
 
-  const _siteConfig = ref(null)
+  const _siteConfig = ref<HexoConfig | null>(null)
   const siteTitle = computed(() => {
     return _siteConfig.value?.title
   })
@@ -47,4 +66,20 @@ export const useSiteStore = defineStore('site', () => {
   const siteTimeFormat = computed(() => {
     return _siteConfig.value?.time_format
   })
+  return {
+    siteName,
+    siteVersion,
+    hexoVersion,
+    siteTitle,
+    siteSubtitle,
+    siteDescription,
+    siteKeywords,
+    siteAuthor,
+    siteLanguage,
+    siteTimezone,
+    siteUrl,
+    sitePermalink,
+    siteDateFormat,
+    siteTimeFormat
+  }
 })

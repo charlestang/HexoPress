@@ -42,6 +42,26 @@ type DialogResult = {
   filePaths: string[]
 }
 
+export type SiteInfo = {
+  name: string
+  version: string
+  hexoVersion: string
+}
+
+export type HexoConfig = {
+  title: string;
+  subtitle: string;
+  description: string;
+  keywords: string[];
+  author: string;
+  language: string;
+  timezone: string;
+  url: string;
+  permalink: string;
+  date_format: string;
+  time_format: string;
+}
+
 export interface ISite {
   getPosts: (
     published?: boolean,
@@ -56,6 +76,8 @@ export interface ISite {
   getStats: () => Promise<Stats>
   getConfig: (key) => Promise<string | null | bool | number | array | Object>
   getSiteConfig: () => Promise<Object>
+  getSiteInfo: () => Promise<SiteInfo>
+  getHexoConfig: () => Promise<HexoConfig>
   setConfig: (key, value) => Promise<any>
   openDirDialog: () => Promise<DialogResult>
   getContent: (path: string) => Promise<string>
