@@ -3,9 +3,28 @@
     "activities": "Activities",
     "back": "Back",
     "dashboard": "Dashboard",
+    "draft": "Draft",
+    "hexoVersion": "Hexo Version",
     "newPost": "New Post",
     "overview": "Overview",
+    "packageName": "Package Name",
+    "packageVersion": "Package Version",
+    "page": "Page",
+    "published": "Published",
+    "site": "Site Config",
     "system": "System"
+  },
+  "dashboard": {
+    "metaAuthor": "Author",
+    "metaDateFormat": "Date Format",
+    "metaKeywords": "Keywords",
+    "metaLanguage": "Language",
+    "metaPermalink": "Permalink",
+    "metaSubtitle": "Subtitle",
+    "metaTimeFormat": "Time Format",
+    "metaTimezone": "Timezone",
+    "metaTitle": "Blog title",
+    "metaUrl": "URL"
   },
   "date": {
     "long": "YYYY/M/D",
