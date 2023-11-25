@@ -80,21 +80,13 @@ fetchHexoConfig()
         </el-divider>
         <el-row class="stats">
           <el-col :span="8">
-            <el-statistic :title="t('common.packageName')" :value="siteInfo?.name" :precision="0" />
+            <el-text> {{ t('common.packageName') }} {{ siteInfo?.name }} </el-text>
           </el-col>
           <el-col :span="8">
-            <el-statistic
-              :title="t('common.packageVersion')"
-              :value="siteInfo?.version"
-              :precision="0"
-            />
+            <el-text> {{ t('common.packageVersion') }} {{ siteInfo?.version }} </el-text>
           </el-col>
           <el-col :span="8">
-            <el-statistic
-              :title="t('common.hexoVersion')"
-              :value="siteInfo?.hexoVersion"
-              :precision="0"
-            />
+            <el-text> {{ t('common.hexoVersion') }} {{ siteInfo?.hexoVersion }} </el-text>
           </el-col>
         </el-row>
       </el-card>

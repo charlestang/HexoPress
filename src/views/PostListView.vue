@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { Category, Post } from '@/local.d.ts'
 import router from '@/router'
+import moment from 'moment'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -138,6 +139,27 @@ const treeData = computed(() => {
 })
 
 const selectedCat = ref<string>('')
+
+const updatedMonths = computed(() => {
+  const months = new Map<string, string>()
+  if (posts.value == null) {
+    return []
+  }
+  for (const post of posts.value) {
+    if (post.date) {
+      const label = moment(post.date).format(t('date.month'))
+      const month = moment(post.date).format('YYYY-MM') + '-01'
+      if (month == 'Invalid date-01') {
+        console.log('Invalid date: ', post.date)
+      }
+      console.log('options ', month, '-', label)
+      months.set(month, label)
+    }
+  }
+  return Array.from(months).map(([value, label]) => ({ value, label }))
+})
+
+const selectedMonth = ref<string>('')
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -174,6 +196,20 @@ const selectedCat = ref<string>('')
         size="small"
         :placeholder="t('posts.categorySearch')"
       />
+      <el-select
+        v-model="selectedMonth"
+        size="small"
+        :placeholder="t('posts.monthFilter')"
+        :filterable="true"
+      >
+        <el-option
+          v-for="item in updatedMonths"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+
       <el-button type="primary" size="small" plain>{{ t('posts.filter') }}</el-button>
     </el-col>
     <el-col :span="12"></el-col>

@@ -29,6 +29,7 @@
   },
   "date": {
     "long": "YYYY年M月D日",
+    "month": "YYYY年M月",
     "short": "M月D日"
   },
   "datetime": {
@@ -89,6 +90,7 @@
     "edit": "编辑",
     "editMeta": "编辑元信息",
     "filter": "过滤",
+    "monthFilter": "选择月份",
     "pageTitle": "文章",
     "published": "已发布",
     "publishedDate": "发表于",

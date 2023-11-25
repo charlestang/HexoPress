@@ -28,6 +28,7 @@
   },
   "date": {
     "long": "YYYY/M/D",
+    "month": "M/YYYY",
     "short": "M/D"
   },
   "datetime": {
@@ -87,6 +88,7 @@
     "edit": "Edit",
     "editMeta": "Edit meta",
     "filter": "Filter",
+    "monthFilter": "Select Month",
     "pageTitle": "Posts",
     "published": "Published",
     "publishedDate": "Published",
