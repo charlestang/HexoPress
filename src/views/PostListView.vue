@@ -1,8 +1,19 @@
 <script lang="ts" setup>
-import type { Post } from '@/local.d.ts';
-import router from '@/router';
-import { ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
+import type { Category, Post } from '@/local.d.ts'
+import router from '@/router'
+import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+interface TreeNode {
+  id: string
+  parent: string | undefined
+  label: string
+  children?: TreeNode[]
+  length: number
+  permalink: string
+  value: string
+}
+
 const { t } = useI18n()
 // stats info
 let allCount = ref<null | number>(null)
@@ -83,6 +94,50 @@ function onDelete(articleName: string, articlePath: string) {
       }
     })
 }
+
+// fetch all categories from backend
+let categories = ref<Category[]>([])
+async function fetchCategories() {
+  categories.value = await window.site.getCategories()
+}
+fetchCategories()
+
+// put all category entries into a map
+const nodeMap = computed(() => {
+  const map: { [id: string]: TreeNode } = {}
+  for (const entry of categories.value) {
+    map[entry.id] = {
+      id: entry.id,
+      value: entry.id,
+      parent: entry.parent,
+      label: entry.name,
+      children: [],
+      length: entry.length,
+      permalink: entry.permalink
+    }
+  }
+  return map
+})
+
+// build a tree to display category hierarchy
+const treeData = computed(() => {
+  let tree: TreeNode[] = []
+
+  for (const node of Object.values(nodeMap.value)) {
+    if (node.parent) {
+      const parent = nodeMap.value[node.parent]
+      if (parent) {
+        parent.children?.push(node)
+      }
+    } else {
+      tree.push(node)
+    }
+  }
+
+  return tree
+})
+
+const selectedCat = ref<string>('')
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -109,6 +164,19 @@ function onDelete(articleName: string, articlePath: string) {
     <el-col :span="2" style="float: right">
       <el-button type="primary" size="small">{{ t('posts.search') }}</el-button>
     </el-col>
+  </el-row>
+  <el-row :gutter="5">
+    <el-col :span="12">
+      <el-tree-select
+        v-model="selectedCat"
+        :data="treeData"
+        :render-after-expand="false"
+        size="small"
+        :placeholder="t('posts.categorySearch')"
+      />
+      <el-button type="primary" size="small" plain>{{ t('posts.filter') }}</el-button>
+    </el-col>
+    <el-col :span="12"></el-col>
   </el-row>
   <el-table :data="posts" stripe style="width: 100%">
     <el-table-column type="index" label="#" width="55" />
