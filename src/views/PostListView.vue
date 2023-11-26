@@ -16,6 +16,7 @@ interface TreeNode {
 }
 
 const { t } = useI18n()
+
 // stats info
 let allCount = ref<null | number>(null)
 let postCount = ref<null | number>(null)
@@ -27,29 +28,52 @@ async function fetchStats() {
   draftCount.value = data.postDraftCount
 }
 fetchStats()
+
 // posts list
 const filters = {
   all: t('posts.all'),
   published: t('posts.published'),
   draft: t('posts.draft')
 }
-let currentFilter = ref(filters.all)
-let posts = ref<null | Post[]>(null)
-async function fetch() {
+const currentFilter = ref(filters.all)
+const posts = ref<null | Post[]>(null)
+const selectedCat = ref<string>('')
+const selectedMonth = ref<string>('')
+const total = ref(0)
+const currentPage = ref(1)
+const pageSize = ref(20)
+async function fetch(curPage: number) {
   let data
-  if (currentFilter.value === filters.all) {
-    data = await window.site.getPosts()
-  } else if (currentFilter.value === filters.published) {
-    data = await window.site.getPosts(true, false)
-  } else {
-    data = await window.site.getPosts(false, true)
-  }
-  posts.value = data
+  let published = currentFilter.value === filters.published || currentFilter.value === filters.all
+  let draft = currentFilter.value === filters.draft || currentFilter.value === filters.all
+  let limit = pageSize.value
+  let offset = (curPage - 1) * limit
+
+  data = await window.site.getPosts(
+    published,
+    draft,
+    limit,
+    offset,
+    selectedCat.value,
+    selectedMonth.value
+  )
+  posts.value = data.posts
+  total.value = data.total
 }
-fetch()
+fetch(currentPage.value)
 watch(currentFilter, (value, oldValue) => {
   if (value !== oldValue) {
-    fetch()
+    fetch(currentPage.value)
+  }
+})
+watch(selectedCat, (value, oldValue) => {
+  if (value !== oldValue) {
+    fetch(currentPage.value)
+  }
+})
+watch(selectedMonth, (value, oldValue) => {
+  if (value !== oldValue) {
+    fetch(currentPage.value)
   }
 })
 // open editor
@@ -138,8 +162,6 @@ const treeData = computed(() => {
   return tree
 })
 
-const selectedCat = ref<string>('')
-
 const updatedMonths = computed(() => {
   const months = new Map<string, string>()
   if (posts.value == null) {
@@ -148,7 +170,7 @@ const updatedMonths = computed(() => {
   for (const post of posts.value) {
     if (post.date) {
       const label = moment(post.date).format(t('date.month'))
-      const month = moment(post.date).format('YYYY-MM') + '-01'
+      const month = moment(post.date).format('YYYY-MM')
       if (month == 'Invalid date-01') {
         console.log('Invalid date: ', post.date)
       }
@@ -158,63 +180,79 @@ const updatedMonths = computed(() => {
   }
   return Array.from(months).map(([value, label]) => ({ value, label }))
 })
-
-const selectedMonth = ref<string>('')
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
-  <el-row :gutter="5">
-    <el-col :span="18">
-      <div v-for="(caption, k, idx) in filters" :key="k" style="float: left">
-        <el-button
-          link
-          type="primary"
-          @click="currentFilter = caption"
-          v-if="currentFilter !== caption"
-          >{{ caption }}</el-button
-        >
-        <span v-else>{{ caption }}</span>
-        <span v-if="k == 'all' && allCount != null">( {{ allCount }} )</span>
-        <span v-if="k == 'published' && postCount != null">( {{ postCount }} )</span>
-        <span v-if="k == 'draft' && draftCount != null">( {{ draftCount }} )</span>
-        <span v-if="idx < Object.keys(filters).length - 1"> | </span>
-      </div>
+  <el-row :gutter="5" style="margin-bottom: 5px">
+    <el-col :span="19">
+      <el-space>
+        <div v-for="(caption, k, idx) in filters" :key="k" style="float: left">
+          <el-button
+            link
+            type="primary"
+            @click="currentFilter = caption"
+            v-if="currentFilter !== caption"
+            >{{ caption }}</el-button
+          >
+          <span v-else>{{ caption }}</span>
+          <span v-if="k == 'all' && allCount != null">( {{ allCount }} )</span>
+          <span v-if="k == 'published' && postCount != null">( {{ postCount }} )</span>
+          <span v-if="k == 'draft' && draftCount != null">( {{ draftCount }} )</span>
+          <span v-if="idx < Object.keys(filters).length - 1"> | </span>
+        </div>
+      </el-space>
     </el-col>
-    <el-col :span="4" style="float: right">
-      <el-input placeholder="Search" size="small" />
-    </el-col>
-    <el-col :span="2" style="float: right">
-      <el-button type="primary" size="small">{{ t('posts.search') }}</el-button>
+    <el-col :span="5" style="display: flex; justify-content: flex-end">
+      <el-space>
+        <el-input placeholder="Search" size="small" />
+        <el-button type="primary" size="small">{{ t('posts.search') }}</el-button>
+      </el-space>
     </el-col>
   </el-row>
   <el-row :gutter="5">
     <el-col :span="12">
-      <el-tree-select
-        v-model="selectedCat"
-        :data="treeData"
-        :render-after-expand="false"
-        size="small"
-        :placeholder="t('posts.categorySearch')"
-      />
-      <el-select
-        v-model="selectedMonth"
-        size="small"
-        :placeholder="t('posts.monthFilter')"
-        :filterable="true"
-      >
-        <el-option
-          v-for="item in updatedMonths"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+      <el-space>
+        <el-tree-select
+          v-model="selectedCat"
+          :data="treeData"
+          :render-after-expand="false"
+          size="small"
+          :placeholder="t('posts.categorySearch')"
+          :clearable="true"
         />
-      </el-select>
+        <el-select
+          v-model="selectedMonth"
+          size="small"
+          :placeholder="t('posts.monthFilter')"
+          :filterable="true"
+          :clearable="true"
+        >
+          <el-option
+            v-for="item in updatedMonths"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
 
-      <el-button type="primary" size="small" plain>{{ t('posts.filter') }}</el-button>
+        <el-button type="primary" size="small" plain>{{ t('posts.filter') }}</el-button>
+      </el-space>
     </el-col>
-    <el-col :span="12"></el-col>
+    <el-col :span="12" style="display: flex; justify-content: flex-end">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :small="true"
+        :disabled="false"
+        :background="false"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        :pager-count="5"
+        @current-change="fetch"
+      />
+    </el-col>
   </el-row>
-  <el-table :data="posts" stripe style="width: 100%">
+  <el-table :data="posts" stripe style="width: 100%; margin-bottom: 10px">
     <el-table-column type="index" label="#" width="55" />
     <el-table-column :label="t('posts.title')" width="360">
       <template #default="scope">
@@ -259,6 +297,16 @@ const selectedMonth = ref<string>('')
       </template>
     </el-table-column>
   </el-table>
+  <el-pagination
+    v-model:current-page="currentPage"
+    v-model:page-size="pageSize"
+    :small="false"
+    :disabled="false"
+    :background="true"
+    layout="prev, pager, next, jumper"
+    :total="total"
+    @current-change="fetch"
+  />
 </template>
 <style>
 .el-table .el-table__cell {

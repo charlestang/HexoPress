@@ -12,6 +12,11 @@ export type Post = {
   categories: string
 }
 
+export type PostsResults = {
+  total: number
+  posts: Post[]
+}
+
 export type Category = {
   id: string
   parent: string | undefined
@@ -68,9 +73,11 @@ export interface ISite {
     draft?: boolean,
     limit?: number,
     offset?: number,
+    categoryId?: string,
+    monthCode?: string,
     orderBy?: string,
     order?: string
-  ) => Promise<Post[]>
+  ) => Promise<PostsResults>
   getCategories: () => Promise<Category[]>
   getTags: () => Promise<Tag[]>
   getStats: () => Promise<Stats>
