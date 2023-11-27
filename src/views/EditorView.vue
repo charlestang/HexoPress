@@ -29,6 +29,7 @@ const frontMatter = ref<FrontMatter>({
 })
 
 if (typeof sourcePath !== 'undefined' && typeof sourcePath === 'string' && sourcePath.length > 0) {
+  // The blog post already exists, it is now being edited.
   window.site.getContent(sourcePath).then((content) => {
     const parseDown = parseFrontMatter(content)
     frontMatter.value = parseDown.data as FrontMatter
@@ -82,10 +83,19 @@ const options = [
   }
 ]
 
-async function updatePost() {
+async function updatePost(type: '_posts' | '_drafts') {
   // change js object to yaml string
   const blogContent = stringify(frontMatter.value, text.value)
-  await window.site.saveContent(sourcePath as string, blogContent)
+
+  if (typeof sourcePath === 'undefined' || (typeof sourcePath === 'string' && sourcePath.length === 0)) {
+    await window.site.createFile(type, blogContent, '')
+  } else {
+    if (postPublished) {
+      await window.site.saveContent(sourcePath as string, blogContent)
+    } else {
+      await window.site.moveFile(sourcePath as string, blogContent)
+    }
+  }
 }
 
 config({
@@ -114,13 +124,13 @@ config({
                   type="primary"
                   v-if="!postPublished"
                   style="margin-right: 10px"
-                  @click="updatePost"
+                  @click="updatePost('_drafts')"
                   >{{ t('editor.saveDraft') }}
                 </el-link>
-                <el-button v-if="postPublished" type="primary" @click="updatePost">
+                <el-button v-if="postPublished" type="primary" @click="updatePost('_posts')">
                   {{ t('editor.update') }}
                 </el-button>
-                <el-button v-else type="primary"> {{ t('editor.publish') }} </el-button>
+                <el-button v-else type="primary" @click="updatePost('_posts')"> {{ t('editor.publish') }} </el-button>
 
                 <el-button type="default" @click="toggleAside">
                   <el-icon v-if="asideExpand == 'aside-expand'"><expand /></el-icon>
