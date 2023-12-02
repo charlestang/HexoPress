@@ -7,7 +7,7 @@ import { Back, Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { vim } from '@replit/codemirror-vim'
 import { MdEditor, config } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
@@ -19,13 +19,27 @@ const postPublished =
   typeof sourcePath === 'string' &&
   sourcePath.startsWith('_post')
 
+const dirty = ref(false)
 const text = ref('')
+
+watch(text, (oldVal, newVal) => {
+  if (oldVal !== newVal) {
+    dirty.value = true
+  }
+})
+
 const frontMatter = ref<FrontMatter>({
   title: '',
   date: new Date(),
   permalink: '',
   categories: [],
   tags: []
+})
+
+watch(frontMatter, (oldVal, newVal) => {
+  if (oldVal !== newVal) {
+    dirty.value = true
+  }
 })
 
 if (typeof sourcePath !== 'undefined' && typeof sourcePath === 'string' && sourcePath.length > 0) {
@@ -84,10 +98,22 @@ const options = [
 ]
 
 async function updatePost(type: '_posts' | '_drafts') {
+  if (!dirty.value) {
+    ElMessage.info(t('editor.nothingChanged'))
+    return
+  }
+  if (!frontMatter.value.title || frontMatter.value.title.length === 0) {
+    ElMessageBox.alert(t('editor.titleRequired'), t('editor.tipsTitle'), {
+      confirmButtonText: t('editor.ok')
+    })
+  }
   // change js object to yaml string
   const blogContent = stringify(frontMatter.value, text.value)
 
-  if (typeof sourcePath === 'undefined' || (typeof sourcePath === 'string' && sourcePath.length === 0)) {
+  if (
+    typeof sourcePath === 'undefined' ||
+    (typeof sourcePath === 'string' && sourcePath.length === 0)
+  ) {
     await window.site.createFile(type, blogContent, '')
   } else {
     if (postPublished) {
@@ -130,7 +156,9 @@ config({
                 <el-button v-if="postPublished" type="primary" @click="updatePost('_posts')">
                   {{ t('editor.update') }}
                 </el-button>
-                <el-button v-else type="primary" @click="updatePost('_posts')"> {{ t('editor.publish') }} </el-button>
+                <el-button v-else type="primary" @click="updatePost('_posts')">
+                  {{ t('editor.publish') }}
+                </el-button>
 
                 <el-button type="default" @click="toggleAside">
                   <el-icon v-if="asideExpand == 'aside-expand'"><expand /></el-icon>

@@ -11,6 +11,7 @@
     "packageVersion": "包版本号",
     "page": "页面",
     "published": "已发布",
+    "recentPosts": "最新文章",
     "site": "站点配置",
     "system": "系统"
   },
@@ -49,6 +50,8 @@
     "meta": "基础信息",
     "moveToTrash": "移至回收站",
     "notSet": "未设置（默认规则生成）",
+    "nothingChanged": "什么都没有修改",
+    "ok": "确认",
     "permalink": "固定链接",
     "permalinkTip": "URl 的最后一段。",
     "publish": "发布",
@@ -57,7 +60,9 @@
     "status": "状态",
     "tags": "标签",
     "time": "时间",
+    "tipsTitle": "提示",
     "title": "请输入标题",
+    "titleRequired": "必须设置标题才能保存",
     "turnToDraft": "切换至草稿",
     "update": "更新",
     "url": "URL"

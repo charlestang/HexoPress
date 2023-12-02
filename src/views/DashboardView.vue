@@ -44,10 +44,10 @@ fetchHexoConfig()
         <template #header>
           <h3>{{ t('common.activities') }}</h3>
         </template>
-        <h4>Recent posts</h4>
+        <h4>{{ t('common.recentPosts') }}</h4>
         <ul class="latest-posts">
           <li v-for="post in posts" :key="post.permalink">
-            <span>{{ post.date }}</span>
+            <span>{{ new Date(post.date).toLocaleString() }}</span>
             <el-button link type="primary" @click="onClick(post.source)">{{
               post.title
             }}</el-button>

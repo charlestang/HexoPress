@@ -11,6 +11,7 @@
     "packageVersion": "Package Version",
     "page": "Page",
     "published": "Published",
+    "recentPosts": "Recent Posts",
     "site": "Site Config",
     "system": "System"
   },
@@ -48,6 +49,8 @@
     "meta": "Meta",
     "moveToTrash": "Move to Trash",
     "notSet": " not set(generated default)",
+    "nothingChanged": "Nothing changed.",
+    "ok": "Ok",
     "permalink": "Permalink",
     "permalinkTip": "The last part of the url.",
     "publish": "Publish",
@@ -55,7 +58,9 @@
     "saveDraft": "Save Draft",
     "tags": "Tags",
     "time": "Time",
+    "tipsTitle": "Tips",
     "title": "Please input title",
+    "titleRequired": "Title is required!",
     "turnToDraft": "Turn to Draft",
     "update": "Update",
     "url": "URL"

@@ -1,3 +1,7 @@
+export type TagOrCategoryList = {
+  [_id: string]: string
+}
+
 export type Post = {
   title: string
   date: string
@@ -8,8 +12,8 @@ export type Post = {
   path: string
   permalink: string
   asset_dir: string
-  tags: string
-  categories: string
+  tags: TagOrCategoryList
+  categories: TagOrCategoryList
 }
 
 export type PostsResults = {
@@ -54,17 +58,17 @@ export type SiteInfo = {
 }
 
 export type HexoConfig = {
-  title: string;
-  subtitle: string;
-  description: string;
-  keywords: string[];
-  author: string;
-  language: string;
-  timezone: string;
-  url: string;
-  permalink: string;
-  date_format: string;
-  time_format: string;
+  title: string
+  subtitle: string
+  description: string
+  keywords: string[]
+  author: string
+  language: string
+  timezone: string
+  url: string
+  permalink: string
+  date_format: string
+  time_format: string
 }
 
 export interface ISite {
@@ -81,7 +85,7 @@ export interface ISite {
   getCategories: () => Promise<Category[]>
   getTags: () => Promise<Tag[]>
   getStats: () => Promise<Stats>
-  getConfig: (key) => Promise<string | null | bool | number | array | Object>
+  getConfig: (key) => Promise<string | null | boolean | number | any[] | object>
   getSiteConfig: () => Promise<Object>
   getSiteInfo: () => Promise<SiteInfo>
   getHexoConfig: () => Promise<HexoConfig>
@@ -89,7 +93,7 @@ export interface ISite {
   openDirDialog: () => Promise<DialogResult>
   getContent: (path: string) => Promise<string>
   saveContent: (path: string, content: string) => Promise<void>
-  createFile: (type: string , content: string, filename: string?) => Promise<void>
+  createFile: (type: string, content: string, filename?: string) => Promise<void>
   moveFile: (sourcePath: string, content: string) => Promise<void>
   deleteFile: (path: string) => Promise<void>
   getSystemLocale: () => Promise<string>

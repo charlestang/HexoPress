@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { Category, Post } from '@/local.d.ts'
 import router from '@/router'
+import { useAppStore } from '@/stores/app'
 import moment from 'moment'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -15,6 +16,7 @@ interface TreeNode {
   value: string
 }
 
+const appStore = useAppStore()
 const { t } = useI18n()
 
 // stats info
@@ -97,6 +99,7 @@ function onDelete(articleName: string, articlePath: string) {
         type: 'success',
         message: t('posts.deleteSuccess')
       })
+      fetch(currentPage.value)
     })
     .catch((reason) => {
       if (reason === 'cancel') {
@@ -205,7 +208,7 @@ const updatedMonths = computed(() => {
     <el-col :span="5" style="display: flex; justify-content: flex-end">
       <el-space>
         <el-input placeholder="Search" size="small" />
-        <el-button type="primary" size="small">{{ t('posts.search') }}</el-button>
+        <el-button type="primary" size="small" plain>{{ t('posts.search') }}</el-button>
       </el-space>
     </el-col>
   </el-row>
@@ -278,8 +281,25 @@ const updatedMonths = computed(() => {
         </el-row>
       </template>
     </el-table-column>
-    <el-table-column prop="categories" :label="t('posts.categories')" />
-    <el-table-column prop="tags" :label="t('posts.tags')" />
+    <el-table-column prop="categories" :label="t('posts.categories')">
+      <template #default="scope">
+        <el-tag
+          v-for="(val, k) in scope.row.categories"
+          :key="k"
+          size="small"
+          style="margin-right: 5px"
+        >
+          {{ val }}
+        </el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column prop="tags" :label="t('posts.tags')">
+      <template #default="scope">
+        <el-tag v-for="(val, k) in scope.row.tags" :key="k" size="small" style="margin-right: 5px">
+          {{ val }}
+        </el-tag>
+      </template>
+    </el-table-column>
     <el-table-column :label="t('posts.datetime')">
       <template #default="scope">
         <el-row>
@@ -290,8 +310,18 @@ const updatedMonths = computed(() => {
         </el-row>
         <el-row>
           <el-col :span="24">
-            <span v-if="scope.row.status == 'published'">{{ scope.row.date }}</span>
-            <span v-else>{{ scope.row.updated }}</span>
+            <span v-if="scope.row.status == 'published'">{{
+              Intl.DateTimeFormat(appStore.locale, {
+                dateStyle: 'medium',
+                timeStyle: 'short'
+              }).format(new Date(scope.row.date))
+            }}</span>
+            <span v-else>{{
+              Intl.DateTimeFormat(appStore.locale, {
+                dateStyle: 'medium',
+                timeStyle: 'short'
+              }).format(new Date(scope.row.date))
+            }}</span>
           </el-col>
         </el-row>
       </template>

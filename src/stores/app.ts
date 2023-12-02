@@ -19,7 +19,7 @@ export const useAppStore = defineStore('app', () => {
         console.log('Vault path is not set')
         return false
       } else {
-        basePath = vaultPath
+        basePath = vaultPath as string
         return true
       }
     } else {
