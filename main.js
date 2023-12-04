@@ -44,7 +44,9 @@ app.whenReady().then(() => {
   ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
   ipcMain.handle('post:content', (event, path) => agent.getContent(path))
   ipcMain.handle('post:save', (event, path, content) => agent.saveContent(path, content))
-  ipcMain.handle('post:create', (event, type, content, filename) => agent.createFile(type, content, filename))
+  ipcMain.handle('post:create', (event, type, title, slug, content) =>
+    agent.createFile(type, title, slug, content)
+  )
   ipcMain.handle('post:move', (event, sourcePath, content) => agent.moveFile(sourcePath, content))
   ipcMain.handle('post:delete', (event, path) => agent.deleteFile(path))
   ipcMain.handle('sys:locale', (event) => app.getSystemLocale())

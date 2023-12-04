@@ -23,7 +23,8 @@ contextBridge.exposeInMainWorld('site', {
   openDirDialog: () => ipcRenderer.invoke('dialog:dir'),
   getContent: (sourcePath) => ipcRenderer.invoke('post:content', sourcePath),
   saveContent: (sourcePath, content) => ipcRenderer.invoke('post:save', sourcePath, content),
-  createFile: (type, content, filename) => ipcRenderer.invoke('post:create', type, content, filename),
+  createFile: (type, title, slug, content) =>
+    ipcRenderer.invoke('post:create', type, title, slug, content),
   moveFile: (sourcePath, content) => ipcRenderer.invoke('post:move', sourcePath, content),
   deleteFile: (sourcePath) => ipcRenderer.invoke('post:delete', sourcePath),
   getSystemLocale: () => ipcRenderer.invoke('sys:locale')

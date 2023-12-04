@@ -5,6 +5,7 @@ import router from '@/router'
 import { lineNumbers } from '@codemirror/view'
 import { Back, Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { vim } from '@replit/codemirror-vim'
+import { dir } from 'console'
 import { MdEditor, config } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { ref, watch } from 'vue'
@@ -13,17 +14,18 @@ import { useRoute } from 'vue-router'
 
 const { t } = useI18n()
 const route = useRoute()
-const sourcePath = route.query.sourcePath
+const sourcePath = ref('')
+sourcePath.value = route.query.sourcePath as string
 const postPublished =
-  typeof sourcePath !== 'undefined' &&
-  typeof sourcePath === 'string' &&
-  sourcePath.startsWith('_post')
+  typeof sourcePath.value !== 'undefined' &&
+  typeof sourcePath.value === 'string' &&
+  sourcePath.value.startsWith('_post')
 
 const dirty = ref(false)
 const text = ref('')
 
-watch(text, (oldVal, newVal) => {
-  if (oldVal !== newVal) {
+watch(text, (val, oldVal) => {
+  if (val !== oldVal) {
     dirty.value = true
   }
 })
@@ -36,15 +38,22 @@ const frontMatter = ref<FrontMatter>({
   tags: []
 })
 
-watch(frontMatter, (oldVal, newVal) => {
-  if (oldVal !== newVal) {
+watch(
+  frontMatter,
+  (val, oldVal) => {
+    console.log('frontMatter changed: ', val)
     dirty.value = true
-  }
-})
+  },
+  { deep: true }
+)
 
-if (typeof sourcePath !== 'undefined' && typeof sourcePath === 'string' && sourcePath.length > 0) {
+if (
+  typeof sourcePath.value !== 'undefined' &&
+  typeof sourcePath.value === 'string' &&
+  sourcePath.value.length > 0
+) {
   // The blog post already exists, it is now being edited.
-  window.site.getContent(sourcePath).then((content) => {
+  window.site.getContent(sourcePath.value).then((content) => {
     const parseDown = parseFrontMatter(content)
     frontMatter.value = parseDown.data as FrontMatter
     text.value = parseDown.content
@@ -111,15 +120,20 @@ async function updatePost(type: '_posts' | '_drafts') {
   const blogContent = stringify(frontMatter.value, text.value)
 
   if (
-    typeof sourcePath === 'undefined' ||
-    (typeof sourcePath === 'string' && sourcePath.length === 0)
+    typeof sourcePath.value === 'undefined' ||
+    (typeof sourcePath.value === 'string' && sourcePath.value.length === 0)
   ) {
-    await window.site.createFile(type, blogContent, '')
+    sourcePath.value = await window.site.createFile(
+      type,
+      frontMatter.value.title ?? '',
+      frontMatter.value.permalink ?? '',
+      blogContent
+    )
+    dirty.value = false
   } else {
-    if (postPublished) {
-      await window.site.saveContent(sourcePath as string, blogContent)
-    } else {
-      await window.site.moveFile(sourcePath as string, blogContent)
+    await window.site.saveContent(sourcePath.value, blogContent)
+    if (!postPublished) {
+      await window.site.moveFile(sourcePath.value, blogContent)
     }
   }
 }
