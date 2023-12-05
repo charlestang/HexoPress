@@ -2,6 +2,7 @@
   "common": {
     "activities": "Activities",
     "back": "Back",
+    "categories": "Categories",
     "dashboard": "Dashboard",
     "draft": "Draft",
     "hexoVersion": "Hexo Version",
@@ -12,8 +13,10 @@
     "page": "Page",
     "published": "Published",
     "recentPosts": "Recent Posts",
+    "setup": "Settings",
     "site": "Site Config",
-    "system": "System"
+    "system": "System",
+    "tags": "Tags"
   },
   "dashboard": {
     "metaAuthor": "Author",
@@ -22,6 +25,7 @@
     "metaLanguage": "Language",
     "metaPermalink": "Permalink",
     "metaSubtitle": "Subtitle",
+    "metaTheme": "Theme",
     "metaTimeFormat": "Time Format",
     "metaTimezone": "Timezone",
     "metaTitle": "Blog title",
@@ -69,12 +73,16 @@
     "selectTags": "Select Tags",
     "tagsTip": "Seperate with comma or enter."
   },
+  "mediaLibrary": {
+    "MediaLibrary": "Media Library"
+  },
   "nav": {
     "allPosts": "All posts",
     "categories": "Categories",
     "collapse": "Collapse menu",
     "dashborad": "Dashboard",
     "expand": "Expand menu",
+    "mediaLibrary": "Media",
     "tags": "Tags"
   },
   "posts": {

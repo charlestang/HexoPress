@@ -11,6 +11,8 @@ import { setupStore } from '@/stores'
 // router
 import { setupRouter } from '@/router'
 
+import '@/styles/index.css'
+
 import { createApp } from 'vue'
 
 import App from './App.vue'

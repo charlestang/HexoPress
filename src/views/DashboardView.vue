@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { HexoConfig, Post, SiteInfo, Stats } from '@/local.d.ts'
-import router from '@/router'
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import type { HexoConfig, Post, SiteInfo, Stats } from '@/local.d.ts';
+import router from '@/router';
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n()
 
@@ -143,19 +143,16 @@ fetchHexoConfig()
             <span class="meta-title">{{ t('dashboard.metaTimeFormat') }}:</span>
             <span class="meta-val">{{ hexoConfig?.time_format }}</span>
           </li>
+          <li>
+            <span class="meta-title">{{ t('dashboard.metaTheme') }}:</span>
+            <span class="meta-val">{{ hexoConfig?.theme}}</span>
+          </li>
         </ul>
       </el-card>
     </el-col>
   </el-row>
 </template>
 <style scoped>
-h2 {
-  line-height: 2.5em;
-  font-weight: 500;
-}
-h3 {
-  font-weight: 500;
-}
 .el-card {
   --el-card-padding: 10px;
   margin-bottom: 20px;

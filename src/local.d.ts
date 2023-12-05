@@ -69,6 +69,7 @@ export type HexoConfig = {
   permalink: string
   date_format: string
   time_format: string
+  theme: string
 }
 
 export interface ISite {

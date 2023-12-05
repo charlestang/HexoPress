@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { EditPen } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
 import NavMenu from '../components/NavMenu.vue'
-import { EditPen } from '@element-plus/icons-vue'
 import router from '../router'
-import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const handleNewPost = () => {
   router.push('/editor')

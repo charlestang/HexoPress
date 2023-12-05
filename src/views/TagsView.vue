@@ -1,6 +1,9 @@
 <script lang="ts" setup>
-import type { Tag } from '@/local.d.ts'
-import { ref, computed } from 'vue'
+import type { Tag } from '@/local.d.ts';
+import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 
 let tags = ref<null | Tag[]>(null)
 
@@ -36,6 +39,7 @@ let secondHalf = computed(() => {
 </script>
 
 <template>
+  <h2>{{ t('common.tags') }}</h2>
   <el-row :gutter="20">
     <el-col :span="12">
       <el-table

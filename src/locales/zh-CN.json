@@ -2,6 +2,7 @@
   "common": {
     "activities": "动态",
     "back": "返回",
+    "categories": "分类",
     "dashboard": "仪表盘",
     "draft": "草稿",
     "hexoVersion": "Hexo 版本",
@@ -12,8 +13,10 @@
     "page": "页面",
     "published": "已发布",
     "recentPosts": "最新文章",
+    "setup": "设置",
     "site": "站点配置",
-    "system": "系统"
+    "system": "系统",
+    "tags": "标签"
   },
   "dashboard": {
     "metaAuthor": "作者",
@@ -23,6 +26,7 @@
     "metaLanguage": "语言",
     "metaPermalink": "永久链接模式",
     "metaSubtitle": "副标题",
+    "metaTheme": "皮肤主题",
     "metaTimeFormat": "时间格式",
     "metaTimezone": "时区",
     "metaTitle": "博客标题",
@@ -71,12 +75,16 @@
     "selectTags": "选择标签",
     "tagsTip": "用逗号或回车分割。"
   },
+  "mediaLibrary": {
+    "MediaLibrary": "媒体库"
+  },
   "nav": {
     "allPosts": "文章",
     "categories": "分类",
     "collapse": "折叠导航栏",
     "dashborad": "仪表盘",
     "expand": "展开导航栏",
+    "mediaLibrary": "媒体库",
     "tags": "标签"
   },
   "posts": {

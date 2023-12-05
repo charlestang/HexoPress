@@ -5,7 +5,8 @@ import {
   CaretRight,
   Flag,
   Menu as IconMenu,
-  TrendCharts
+  TrendCharts,
+  PictureFilled
 } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
 import { useCache } from '@/hooks/useCache'
@@ -64,6 +65,10 @@ const handleSelect = (key: string, keyPath: string[]) => {
     <el-menu-item index="/main/tags">
       <el-icon><flag /></el-icon>
       <template #title>{{ t('nav.tags') }}</template>
+    </el-menu-item>
+    <el-menu-item index="/main/media-library">
+      <el-icon><picture-filled /></el-icon>
+      <template #title>{{ t('nav.mediaLibrary') }}</template>
     </el-menu-item>
     <el-menu-item @click="isCollapse = !isCollapse">
       <el-icon v-if="isCollapse"><caret-right /></el-icon>

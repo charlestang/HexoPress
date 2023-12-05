@@ -5,6 +5,7 @@ import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import CategoriesView from '../views/CategoriesView.vue'
 import EditorView from '../views/EditorView.vue'
+import MediaLibraryView from '../views/MediaLibraryView.vue'
 import PostListView from '../views/PostListView.vue'
 import SetupView from '../views/SetupView.vue'
 import TagsView from '../views/TagsView.vue'
@@ -40,6 +41,11 @@ const router = createRouter({
           path: 'post-list',
           name: 'post-list',
           component: PostListView
+        },
+        {
+          path: 'media-library',
+          name: 'media-library',
+          component: MediaLibraryView
         }
       ]
     },

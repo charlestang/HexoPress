@@ -14,6 +14,20 @@
 English | [简体中文](./README_zh.md)
 
 
+## Features
+-----
+- [x] 📝 Display of the list of published articles and drafts;
+- [x] 🔍 Article categorization filter and sorting by time;
+- [x] 🌳 Categorical tree display and management with article count statistics;
+- [x] 🏷️ Display of tag list with article count statistics;
+- [ ] 🖼️ Display of media resources list such as images;
+- [x] ✍️ Article editor with Markdown preview support;
+- [x] 🗂️ Editor supports an Outline panel for navigation;
+- [x] ⌨️ Editor supports Vim key bindings;
+- [x] 📊 Editor supports dropdown selection for categories and tag search;
+- [x] ⚙️ Support for quickly editing metadata (FrontMatter) without opening the article.
+
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup

@@ -1,6 +1,9 @@
 <script lang="ts" setup>
-import type { Category } from '@/local.d.ts'
-import { ref, watch } from 'vue'
+import type { Category } from '@/local.d.ts';
+import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n()
 
 let categories = ref<null | Category[]>(null)
 
@@ -48,25 +51,24 @@ watch(categories, (newVal) => {
     }
   }
 })
-
-
 </script>
 
 <template>
+  <h2>{{ t('common.categories') }}</h2>
   <el-table
-      :data="data1"
-      style="width: 100%; margin-bottom: 20px"
-      row-key="id"
-      :border="false"
-      :stripe="true"
-      default-expand-all
-    >
-      <el-table-column prop="label" label="Name" sortable />
-      <el-table-column prop="length" label="Total" sortable />
-      <el-table-column label="Operation" >
-        <template #default="scope">
-         <el-link type="primary" link :href="scope.row.permalink">{{ "View" }}</el-link>
-        </template>
-      </el-table-column>
-    </el-table>
+    :data="data1"
+    style="width: 100%; margin-bottom: 20px"
+    row-key="id"
+    :border="false"
+    :stripe="true"
+    default-expand-all
+  >
+    <el-table-column prop="label" label="Name" sortable />
+    <el-table-column prop="length" label="Total" sortable />
+    <el-table-column label="Operation">
+      <template #default="scope">
+        <el-link type="primary" link :href="scope.row.permalink">{{ 'View' }}</el-link>
+      </template>
+    </el-table-column>
+  </el-table>
 </template>

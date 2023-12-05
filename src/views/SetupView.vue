@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import router from '@/router'
-import { reactive } from 'vue'
-import { useI18n } from 'vue-i18n'
+import router from '@/router';
+import { reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n()
 
@@ -23,6 +23,7 @@ function selectPath() {
 </script>
 
 <template>
+  <h2>{{ t('common.setup') }}</h2>
   <div class="wrap">
     <h2>{{ t('setup.baseDirTip') }}</h2>
     <el-form :model="form">

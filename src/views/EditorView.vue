@@ -39,8 +39,7 @@ const frontMatter = ref<FrontMatter>({
 
 watch(
   frontMatter,
-  (val, oldVal) => {
-    console.log('frontMatter changed: ', val)
+  () => {
     dirty.value = true
   },
   { deep: true }
