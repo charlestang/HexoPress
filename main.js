@@ -9,7 +9,7 @@ if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
 
 config.on('config:changed', async (key, value) => {
   if (key === 'vaultPath') {
-    await agent.init(value)
+    agent.init(value)
   }
 })
 
