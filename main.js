@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
-const config = require(path.join(__dirname, '/lib/config.js'))
-const agent = require(path.join(__dirname, '/lib/hexo-agent.js'))
+const config = require(path.join(__dirname, 'lib/config.js'))
+const agent = require(path.join(__dirname, 'lib/hexo-agent.js'))
 
 if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
   agent.init(config.get('vaultPath'))
@@ -15,6 +15,7 @@ config.on('config:changed', async (key, value) => {
 
 function createWindow() {
   const win = new BrowserWindow({
+    icon: path.join(__dirname, 'src/assets/icon.png'),
     width: 1440,
     height: 900,
     minWidth: 1280,
@@ -25,10 +26,14 @@ function createWindow() {
     }
   })
 
-  //win.loadFile('dist/index.html')
-  win.loadURL('http://localhost:5173/Users/charles/Projects/HexoPress/dist')
+  console.log('current env is: ', process.env.NODE_ENV)
+  if (process.env.NODE_ENV === 'dev') {
+    win.loadURL('http://localhost:5173/Users/charles/Projects/HexoPress/dist')
 
-  win.webContents.openDevTools()
+    win.webContents.openDevTools()
+  } else {
+    win.loadFile('dist/index.html')
+  }
 }
 
 app.whenReady().then(() => {

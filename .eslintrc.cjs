@@ -13,5 +13,5 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest'
   },
-  ignorePatterns: ['main.js', 'preload.js']
+  ignorePatterns: ['main.js', 'preload.js', 'forge.config.js']
 }
