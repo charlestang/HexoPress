@@ -70,6 +70,7 @@ export type HexoConfig = {
   date_format: string
   time_format: string
   theme: string
+  source_dir: string
 }
 
 export interface ISite {

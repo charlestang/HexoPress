@@ -9,7 +9,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     CategoriesTree: typeof import('./src/components/CategoriesTree.vue')['default']
     DateMetaEntry: typeof import('./src/components/DateMetaEntry.vue')['default']
+    EditorMain: typeof import('./src/components/EditorMain.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
+    ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
+    ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
@@ -43,6 +46,7 @@ declare module 'vue' {
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     ElTree: typeof import('element-plus/es')['ElTree']
     ElTreeSelect: typeof import('element-plus/es')['ElTreeSelect']
+    FileExplorer: typeof import('./src/components/FileExplorer.vue')['default']
     HeaderBar: typeof import('./src/components/HeaderBar.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']

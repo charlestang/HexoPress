@@ -1,10 +1,13 @@
 <script lang="ts" setup>
-import type { HexoConfig, Post, SiteInfo, Stats } from '@/local.d.ts';
-import router from '@/router';
-import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
+import type { HexoConfig, Post, SiteInfo, Stats } from '@/local.d.ts'
+import router from '@/router'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useAppStore } from '@/stores/app'
+import { watchEffect } from 'vue'
 
 const { t } = useI18n()
+const appStore = useAppStore()
 
 let posts = ref<null | Post[]>(null)
 let stats = ref<null | Stats>(null)
@@ -22,19 +25,17 @@ async function fetchStats() {
 fetchStats()
 
 function onClick(sourcePath: string) {
-  router.push({ name: 'editor', query: { sourcePath: sourcePath } })
+  router.push({ name: 'frame', query: { sourcePath: sourcePath } })
 }
 
-let siteInfo = ref<null | SiteInfo>(null)
-let hexoConfig = ref<null | HexoConfig>(null)
+const siteInfo = ref<SiteInfo | null>(null)
+const hexoConfig = ref<HexoConfig | null>(null)
 
-async function fetchHexoConfig() {
-  let data = await window.site.getHexoConfig()
-  hexoConfig.value = data
-  siteInfo.value = await window.site.getSiteInfo()
-}
+watchEffect(async () => {
+  hexoConfig.value = await appStore.hexoConfig
+  siteInfo.value = await appStore.siteInfo
+})
 
-fetchHexoConfig()
 </script>
 <template>
   <h2>{{ t('common.dashboard') }}</h2>
@@ -145,7 +146,7 @@ fetchHexoConfig()
           </li>
           <li>
             <span class="meta-title">{{ t('dashboard.metaTheme') }}:</span>
-            <span class="meta-val">{{ hexoConfig?.theme}}</span>
+            <span class="meta-val">{{ hexoConfig?.theme }}</span>
           </li>
         </ul>
       </el-card>

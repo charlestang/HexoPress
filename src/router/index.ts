@@ -4,7 +4,7 @@ import MainWindow from '@/views/MainWindow.vue'
 import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import CategoriesView from '../views/CategoriesView.vue'
-import EditorView from '../views/EditorView.vue'
+import FrameView from '../views/FrameView.vue'
 import MediaLibraryView from '../views/MediaLibraryView.vue'
 import PostListView from '../views/PostListView.vue'
 import SetupView from '../views/SetupView.vue'
@@ -50,9 +50,9 @@ const router = createRouter({
       ]
     },
     {
-      path: '/editor',
-      name: 'editor',
-      component: EditorView,
+      path: '/frame',
+      name: 'frame',
+      component: FrameView,
       props: true
     },
     {

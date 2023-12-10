@@ -6,7 +6,7 @@ import NavMenu from '../components/NavMenu.vue'
 import router from '../router'
 const { t } = useI18n()
 const handleNewPost = () => {
-  router.push('/editor')
+  router.push('/frame')
 }
 </script>
 
@@ -31,15 +31,6 @@ const handleNewPost = () => {
 </template>
 
 <style scoped>
-.topbar {
-  color: #fff;
-  background: #59524c;
-  height: 62px;
-  padding-left: 0;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-app-region: drag;
-}
 .main {
   flex: 1;
 }

@@ -80,7 +80,7 @@ watch(selectedMonth, (value, oldValue) => {
 })
 // open editor
 function onClick(sourcePath: string) {
-  router.push({ path: '/editor', query: { sourcePath: sourcePath } })
+  router.push({ path: '/frame', query: { sourcePath: sourcePath } })
 }
 function onDelete(articleName: string, articlePath: string) {
   ElMessageBox.confirm(

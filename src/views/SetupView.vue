@@ -27,7 +27,7 @@ function selectPath() {
   <div class="wrap">
     <h2>{{ t('setup.baseDirTip') }}</h2>
     <el-form :model="form">
-      <el-form-item label="Select a directory" label-width="150px">
+      <el-form-item :label="t('common.selectDir')" label-width="150px">
         <el-input v-model="form.directory" autocomplete="off" read-only="true">
           <template #append>
             <el-button @click="selectPath">{{ t('setup.choose') }}</el-button>

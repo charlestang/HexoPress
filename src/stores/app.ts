@@ -11,24 +11,24 @@ export const useAppStore = defineStore('app', () => {
   }
 
   // base path
-  let basePath: string = ''
+  const basePath = computed(async () => {
+    return (await window.site.getConfig('vaultPath')) as string
+  })
   const isBasePathSet = computed(async () => {
-    if (basePath === '') {
-      const vaultPath = await window.site.getConfig('vaultPath')
-      if (vaultPath == null || vaultPath === '') {
-        console.log('Vault path is not set')
-        return false
-      } else {
-        basePath = vaultPath as string
-        return true
-      }
-    } else {
-      return true
-    }
+    return (await basePath.value) !== ''
+  })
+  const hexoConfig = computed(() => {
+    return window.site.getHexoConfig()
+  })
+  const siteInfo = computed(() => {
+    return window.site.getSiteInfo()
   })
 
   return {
     locale,
+    basePath,
+    hexoConfig,
+    siteInfo,
     isBasePathSet,
     setLocale
   }
