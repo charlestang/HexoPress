@@ -1,7 +1,10 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron')
-const path = require('path')
-const config = require(path.join(__dirname, 'lib/config.js'))
-const agent = require(path.join(__dirname, 'lib/hexo-agent.js'))
+import { BrowserWindow, app, dialog, ipcMain } from 'electron';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import config from './lib/config.mjs';
+import agent from './lib/hexo-agent.mjs';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
   agent.init(config.get('vaultPath'))
@@ -15,14 +18,14 @@ config.on('config:changed', async (key, value) => {
 
 function createWindow() {
   const win = new BrowserWindow({
-    icon: path.join(__dirname, 'src/assets/icon.png'),
+    icon: join(__dirname, 'src/assets/icon.png'),
     width: 1440,
     height: 900,
     minWidth: 1280,
     minHeight: 800,
     titleBarStyle: 'hidden',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: join(__dirname, 'preload.js')
     }
   })
 
