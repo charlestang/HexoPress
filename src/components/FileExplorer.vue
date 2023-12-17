@@ -1,15 +1,19 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
 import { useAppStore } from '@/stores/app'
-import { watchEffect } from 'vue'
-import { useRoute } from 'vue-router'
 import { dirname, join } from 'path-browserify'
+import { ref, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 
 const appStore = useAppStore()
 const route = useRoute()
 
-const sourcePath = ref('')
-sourcePath.value = route.query.sourcePath as string
+const currentPath = ref('') // current showing path in file explorer
+const sourcePath = route.query.sourcePath as string
+if (typeof sourcePath !== 'undefined' && sourcePath !== '') {
+  currentPath.value = dirname(sourcePath) // it should be the dirname of current editing file
+}
+console.log('sourcePath is: ', sourcePath)
+console.log('initialize currentPath: ', currentPath.value)
 
 interface BreadcrumbItem {
   dir: string
@@ -17,22 +21,19 @@ interface BreadcrumbItem {
 }
 const breadcrumbs = ref<BreadcrumbItem[]>([])
 watchEffect(async () => {
-  console.log('watchEffect')
   const hexoConfig = await appStore.hexoConfig
   let rootPath = 'source'
   breadcrumbs.value.push({
     dir: rootPath,
     path: hexoConfig.source_dir
   })
-  if (typeof sourcePath.value !== 'undefined' && sourcePath.value !== '') {
-    dirname(sourcePath.value)
-      .split('/')
-      .forEach((dir: string, index: number, arr: string[]) => {
-        breadcrumbs.value.push({
-          dir: dir,
-          path: join(hexoConfig.source_dir, dir)
-        })
+  if (currentPath.value !== '') {
+    currentPath.value.split('/').forEach((dir: string, index: number, arr: string[]) => {
+      breadcrumbs.value.push({
+        dir: dir,
+        path: join(hexoConfig.source_dir, dir)
       })
+    })
   }
 })
 
@@ -56,16 +57,23 @@ function handleMouseMove(e: MouseEvent) {
   console.log(rect, x, scrollWidth)
   container.value.scrollLeft = (x / rect.width) * scrollWidth
 }
+const files = ref<string[]>([])
+watchEffect(async () => {
+  files.value = await window.site.getReadDir(currentPath.value)
+})
 </script>
 <template>
   <div class="wrapper">
     <div class="container" ref="container" @mousemove="handleMouseMove">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
-            {{ item.dir }}
+          {{ item.dir }}
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
+    <ul>
+      <li v-for="f in files">{{ f }}</li>
+    </ul>
   </div>
 </template>
 <style scoped>

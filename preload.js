@@ -27,5 +27,6 @@ contextBridge.exposeInMainWorld('site', {
     ipcRenderer.invoke('post:create', type, title, slug, content),
   moveFile: (sourcePath, content) => ipcRenderer.invoke('post:move', sourcePath, content),
   deleteFile: (sourcePath) => ipcRenderer.invoke('post:delete', sourcePath),
-  getSystemLocale: () => ipcRenderer.invoke('sys:locale')
+  getSystemLocale: () => ipcRenderer.invoke('sys:locale'),
+  getReadDir: (path) => ipcRenderer.invoke('fs:readdir', path)
 })

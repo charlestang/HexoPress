@@ -99,6 +99,7 @@ export interface ISite {
   moveFile: (sourcePath: string, content: string) => Promise<void>
   deleteFile: (path: string) => Promise<void>
   getSystemLocale: () => Promise<string>
+  getReadDir: (path: string) => Promise<string[]>
 }
 
 declare global {

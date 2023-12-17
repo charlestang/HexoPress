@@ -2,12 +2,14 @@ import { BrowserWindow, app, dialog, ipcMain } from 'electron';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import config from './lib/config.mjs';
+import fsAgent from './lib/fs-agent.mjs';
 import agent from './lib/hexo-agent.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
   agent.init(config.get('vaultPath'))
+  fsAgent.init(config.get('vaultPath'))
 }
 
 config.on('config:changed', async (key, value) => {
@@ -58,6 +60,7 @@ app.whenReady().then(() => {
   ipcMain.handle('post:move', (event, sourcePath, content) => agent.moveFile(sourcePath, content))
   ipcMain.handle('post:delete', (event, path) => agent.deleteFile(path))
   ipcMain.handle('sys:locale', (event) => app.getSystemLocale())
+  ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))
 
   createWindow()
 
