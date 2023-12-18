@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+import type { FileEntry } from '@/local'
 import { useAppStore } from '@/stores/app'
+import { Document, Folder } from '@element-plus/icons-vue'
 import { dirname, join } from 'path-browserify'
 import { ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
@@ -12,19 +14,18 @@ const sourcePath = route.query.sourcePath as string
 if (typeof sourcePath !== 'undefined' && sourcePath !== '') {
   currentPath.value = dirname(sourcePath) // it should be the dirname of current editing file
 }
-console.log('sourcePath is: ', sourcePath)
-console.log('initialize currentPath: ', currentPath.value)
 
 interface BreadcrumbItem {
   dir: string
   path: string
 }
 const breadcrumbs = ref<BreadcrumbItem[]>([])
-watchEffect(async () => {
+
+async function updateBreadcrumbs() {
   const hexoConfig = await appStore.hexoConfig
-  let rootPath = 'source'
+  breadcrumbs.value = []
   breadcrumbs.value.push({
-    dir: rootPath,
+    dir: 'source',
     path: hexoConfig.source_dir
   })
   if (currentPath.value !== '') {
@@ -35,6 +36,9 @@ watchEffect(async () => {
       })
     })
   }
+}
+watchEffect(() => {
+  updateBreadcrumbs()
 })
 
 const container = ref<HTMLElement | null>(null)
@@ -57,10 +61,14 @@ function handleMouseMove(e: MouseEvent) {
   console.log(rect, x, scrollWidth)
   container.value.scrollLeft = (x / rect.width) * scrollWidth
 }
-const files = ref<string[]>([])
+const files = ref<FileEntry[]>([])
 watchEffect(async () => {
   files.value = await window.site.getReadDir(currentPath.value)
 })
+function handleDoubleClick(path: string) {
+  currentPath.value = path
+  updateBreadcrumbs()
+}
 </script>
 <template>
   <div class="wrapper">
@@ -71,8 +79,12 @@ watchEffect(async () => {
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <ul>
-      <li v-for="f in files">{{ f }}</li>
+    <ul class="file-list">
+      <li v-for="f in files" :key="f.name" class="file-item">
+        <el-icon v-if="f.type == 'directory'"><folder /></el-icon>
+        <el-icon v-else><document /></el-icon>
+        <span class="file-name" @dblclick="handleDoubleClick(f.relativePath)">{{ f.name }}</span>
+      </li>
     </ul>
   </div>
 </template>
@@ -83,11 +95,42 @@ watchEffect(async () => {
 .container {
   display: flex;
   overflow: hidden;
+  height: 32px;
 }
 .breadcrumb {
   /** each piece does not wrap */
   white-space: nowrap;
   /** whole breadcrumb does not wrap */
   display: inline-flex;
+}
+.file-list {
+  list-style: none;
+  padding: 0;
+}
+
+.file-item {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.file-name {
+  flex-grow: 1;
+  white-space: normal;
+  word-wrap: break-word;
+  display: flex;
+  align-items: center;
+}
+.file-item:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.file-item:nth-child(even) {
+  background-color: #ffffff;
+}
+.el-icon {
+  color: #409eff;
+  margin: 5px 10px 0 5px;
 }
 </style>

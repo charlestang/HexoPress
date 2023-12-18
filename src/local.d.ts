@@ -73,6 +73,12 @@ export type HexoConfig = {
   source_dir: string
 }
 
+export type FileEntry = {
+  name: string
+  relativePath: string
+  type: string
+}
+
 export interface ISite {
   getPosts: (
     published?: boolean,
@@ -99,7 +105,7 @@ export interface ISite {
   moveFile: (sourcePath: string, content: string) => Promise<void>
   deleteFile: (path: string) => Promise<void>
   getSystemLocale: () => Promise<string>
-  getReadDir: (path: string) => Promise<string[]>
+  getReadDir: (path: string) => Promise<FileEntry[]>
 }
 
 declare global {
