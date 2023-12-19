@@ -47,6 +47,7 @@ declare module 'vue' {
     ElTree: typeof import('element-plus/es')['ElTree']
     ElTreeSelect: typeof import('element-plus/es')['ElTreeSelect']
     FileExplorer: typeof import('./src/components/FileExplorer.vue')['default']
+    FilenameDialog: typeof import('./src/components/FilenameDialog.vue')['default']
     HeaderBar: typeof import('./src/components/HeaderBar.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']

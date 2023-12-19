@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 export interface Props {
-  modelValue?: String
+  modelValue?: string
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => ''
@@ -18,7 +18,10 @@ function onClickChange() {
   visible.value = false
 }
 
-const permalink = ref(props.modelValue)
+const permalink = ref('')
+watchEffect(() => {
+  permalink.value = props.modelValue
+})
 </script>
 <template>
   <el-row>
@@ -33,7 +36,9 @@ const permalink = ref(props.modelValue)
         :visible="visible"
       >
         <template #reference>
-          <el-link type="primary" @click="visible = true" v-if="props.modelValue !== ''">{{ props.modelValue }}</el-link>
+          <el-link type="primary" @click="visible = true" v-if="props.modelValue !== ''">{{
+            props.modelValue
+          }}</el-link>
           <el-link type="primary" @click="visible = true" v-else>{{ t('editor.notSet') }}</el-link>
         </template>
         <meta-entry-title @close="visible = false">{{ t('editor.url') }}</meta-entry-title>

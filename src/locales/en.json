@@ -42,14 +42,11 @@
     "short": "M/D HH:mm"
   },
   "editor": {
-    "cancel": "Cancel",
     "categories": "Categories",
     "change": "Change",
     "createNewCategory": "Create new category",
     "date": "Date",
     "draft": "Draft",
-    "filePath": "File path",
-    "filePathDialog": "The real path of the file",
     "layout": "Layout",
     "meta": "Meta",
     "moveToTrash": "Move to Trash",
@@ -73,6 +70,12 @@
   "eidtor": {
     "selectTags": "Select Tags",
     "tagsTip": "Seperate with comma or enter."
+  },
+  "filenameDialog": {
+    "fileNotSaved": "File not saved",
+    "sourceDir": "Source directory",
+    "sourcePath": "File path",
+    "title": "The actual filename of the document"
   },
   "mediaLibrary": {
     "MediaLibrary": "Media Library"

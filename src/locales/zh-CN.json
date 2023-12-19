@@ -43,14 +43,11 @@
     "short": "M月D日 HH:mm"
   },
   "editor": {
-    "cancel": "取消",
     "categories": "分类目录",
     "change": "更改",
     "createNewCategory": "添加新分类",
     "date": "日期",
     "draft": "草稿",
-    "filePath": "文件路径",
-    "filePathDialog": "文件在磁盘上的真实路径",
     "layout": "页面布局",
     "meta": "基础信息",
     "moveToTrash": "移至回收站",
@@ -75,6 +72,12 @@
   "eidtor": {
     "selectTags": "选择标签",
     "tagsTip": "用逗号或回车分割。"
+  },
+  "filenameDialog": {
+    "fileNotSaved": "文件未保存",
+    "sourceDir": "资源目录",
+    "sourcePath": "文件路径",
+    "title": "文档在磁盘上的实际文件名"
   },
   "mediaLibrary": {
     "MediaLibrary": "媒体库"

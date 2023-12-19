@@ -183,23 +183,7 @@ config({
                     </el-input>
                   </el-form-item>
                 </el-form>
-                <el-dialog v-model="dialogSourcePath" :title="t('editor.filePathDialog')">
-                  <el-form>
-                    <el-form-item :label="t('editor.filePath')" label-width="70px">
-                      <el-input v-model="sourcePath" autocomplete="off" />
-                    </el-form-item>
-                  </el-form>
-                  <template #footer>
-                    <span class="dialog-footer">
-                      <el-button @click="dialogSourcePath = false">{{
-                        t('editor.cancel')
-                      }}</el-button>
-                      <el-button type="primary" @click="dialogSourcePath = false">
-                        {{ t('editor.change') }}
-                      </el-button>
-                    </span>
-                  </template>
-                </el-dialog>
+                <FilenameDialog v-model="dialogSourcePath" :sourcePath="sourcePath" />
               </el-col>
             </el-row>
           </el-main>
