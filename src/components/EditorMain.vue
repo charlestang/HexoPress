@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
 import type { Category } from '@/local.d.ts'
+import router from '@/router'
 import { lineNumbers } from '@codemirror/view'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { vim } from '@replit/codemirror-vim'
@@ -17,7 +18,7 @@ sourcePath.value = route.query.sourcePath as string
 const postPublished =
   typeof sourcePath.value !== 'undefined' &&
   typeof sourcePath.value === 'string' &&
-  sourcePath.value.startsWith('_post')
+  sourcePath.value.startsWith('_posts')
 
 const dirty = ref(false)
 const text = ref('')
@@ -95,14 +96,6 @@ async function fetch() {
 }
 fetch()
 
-let layout = ref('post')
-const options = [
-  {
-    value: 'post',
-    label: 'Post'
-  }
-]
-
 async function updatePost(type: '_posts' | '_drafts') {
   if (!dirty.value) {
     ElMessage.info(t('editor.nothingChanged'))
@@ -113,6 +106,7 @@ async function updatePost(type: '_posts' | '_drafts') {
       confirmButtonText: t('editor.ok')
     })
   }
+  frontMatter.value.updated = new Date()
   // change js object to yaml string
   const blogContent = stringify(frontMatter.value, text.value)
 
@@ -120,6 +114,7 @@ async function updatePost(type: '_posts' | '_drafts') {
     typeof sourcePath.value === 'undefined' ||
     (typeof sourcePath.value === 'string' && sourcePath.value.length === 0)
   ) {
+    // that means this is a new post or draft
     sourcePath.value = await window.site.createFile(
       type,
       frontMatter.value.title ?? '',
@@ -127,10 +122,16 @@ async function updatePost(type: '_posts' | '_drafts') {
       blogContent
     )
     dirty.value = false
+    ElMessage.success(t('editor.createSuccess'))
+    router.replace({ path: '/frame', query: { sourcePath: sourcePath.value } })
   } else {
+    // that means this is an update request
     await window.site.saveContent(sourcePath.value, blogContent)
+    ElMessage.success(t('editor.createSuccess'))
     if (!postPublished) {
       await window.site.moveFile(sourcePath.value, blogContent)
+      ElMessage.success(t('editor.publishedSuccess'))
+      router.replace({ path: '/frame', query: { sourcePath: sourcePath.value } })
     }
   }
 }
@@ -140,6 +141,7 @@ config({
     return [...extensions, lineNumbers(), vim()]
   }
 })
+const activeAsidePanels = ref(['meta', 'cate', 'tags'])
 </script>
 
 <template>
@@ -191,22 +193,10 @@ config({
       </el-header>
       <el-container style="display: flex; flex-direction: row-reverse">
         <el-aside :class="asideExpand">
-          <el-collapse>
-            <el-collapse-item :title="t('editor.meta')">
-              <date-meta-entry v-model="frontMatter.date" class="meta-entry" />
-              <url-meta-entry v-model="frontMatter.permalink" class="meta-entry" />
-              <el-form label-position="top">
-                <el-form-item :label="t('editor.layout')">
-                  <el-select v-model="layout" placeholder="Select" style="width: 100%" size="small">
-                    <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-form>
+          <el-collapse v-model="activeAsidePanels">
+            <el-collapse-item :title="t('editor.meta')" name="meta">
+              <DateMetaEntry v-model="frontMatter.date" class="meta-entry" />
+              <UrlMetaEntry v-model="frontMatter.permalink" class="meta-entry" />
               <el-row v-if="postPublished" :gutter="20">
                 <el-col :span="10">
                   <el-button type="warning" plain size="small" style="width: 100%">{{
@@ -220,13 +210,13 @@ config({
                 </el-col>
               </el-row>
             </el-collapse-item>
-            <el-collapse-item :title="t('editor.categories')">
+            <el-collapse-item :title="t('editor.categories')" name="cate">
               <el-scrollbar height="250px">
                 <categories-tree v-model="frontMatter.categories" :categories="categories" />
               </el-scrollbar>
               <el-link type="warning">{{ t('editor.createNewCategory') }}</el-link>
             </el-collapse-item>
-            <el-collapse-item :title="t('editor.tags')">
+            <el-collapse-item :title="t('editor.tags')" name="tags">
               <el-text type="info" size="small">{{ t('eidtor.selectTags') }}</el-text>
               <tag-input v-model="frontMatter.tags" />
               <el-text type="info">{{ t('eidtor.tagsTip') }}</el-text>

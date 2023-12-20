@@ -3,7 +3,7 @@ export interface FrontMatter {
   layout?: string
   title?: string
   date?: Date 
-  updated?: string
+  updated?: Date
   comments?: boolean
   tags: string[]
   categories: string | string[] | string[][]
