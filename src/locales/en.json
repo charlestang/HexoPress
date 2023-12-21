@@ -42,8 +42,11 @@
     "short": "M/D HH:mm"
   },
   "editor": {
+    "add": "Add",
     "categories": "Categories",
+    "categoryName": "Category Name",
     "change": "Change",
+    "createCategory": "Create Category",
     "createNewCategory": "Create new category",
     "createSuccess": "Your post is saved successfully.",
     "date": "Date",
@@ -53,6 +56,7 @@
     "notSet": " not set(generated default)",
     "nothingChanged": "Nothing changed.",
     "ok": "Ok",
+    "parentCategory": "Parent Category",
     "permalink": "Permalink",
     "permalinkTip": "The last part of the url.",
     "publish": "Publish",

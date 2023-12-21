@@ -43,8 +43,11 @@
     "short": "M月D日 HH:mm"
   },
   "editor": {
+    "add": "添加",
     "categories": "分类目录",
+    "categoryName": "新分类名",
     "change": "更改",
+    "createCategory": "新建分类",
     "createNewCategory": "添加新分类",
     "createSuccess": "您的文章保存成功！",
     "date": "日期",
@@ -54,6 +57,7 @@
     "notSet": "未设置（默认规则生成）",
     "nothingChanged": "什么都没有修改",
     "ok": "确认",
+    "parentCategory": "父分类",
     "permalink": "固定链接",
     "permalinkTip": "URl 的最后一段。",
     "publish": "发布",

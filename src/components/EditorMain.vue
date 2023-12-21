@@ -142,6 +142,15 @@ config({
   }
 })
 const activeAsidePanels = ref(['meta', 'cate', 'tags'])
+
+const showCreateCategory = ref(false)
+const createCategoryForm = ref({
+  name: '',
+  parent: ''
+})
+function onClickAddCategory() {
+  console.log('add new category: ')
+}
 </script>
 
 <template>
@@ -214,7 +223,41 @@ const activeAsidePanels = ref(['meta', 'cate', 'tags'])
               <el-scrollbar height="250px">
                 <categories-tree v-model="frontMatter.categories" :categories="categories" />
               </el-scrollbar>
-              <el-link type="warning">{{ t('editor.createNewCategory') }}</el-link>
+              <el-popover
+                :visible="showCreateCategory"
+                :show-arrow="false"
+                width="250"
+                trigger="click"
+                placement="bottom"
+              >
+                <template #reference>
+                  <el-link type="warning" @click="showCreateCategory = true">{{
+                    t('editor.createNewCategory')
+                  }}</el-link>
+                </template>
+                <meta-entry-title @close="showCreateCategory = false">{{
+                  t('editor.createCategory')
+                }}</meta-entry-title>
+                <el-form :model="createCategoryForm">
+                  <el-form-item :label="t('editor.categoryName')">
+                    <el-input v-model="createCategoryForm.name"></el-input>
+                  </el-form-item>
+                  <el-form-item :label="t('editor.parentCategory')">
+                    <el-select v-model="createCategoryForm.parent" placeholder="请选择">
+                      <el-option
+                        v-for="item in categories"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.name"
+                      >
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-button type="primary" @click="onClickAddCategory">{{
+                    t('editor.add')
+                  }}</el-button>
+                </el-form>
+              </el-popover>
             </el-collapse-item>
             <el-collapse-item :title="t('editor.tags')" name="tags">
               <el-text type="info" size="small">{{ t('eidtor.selectTags') }}</el-text>
