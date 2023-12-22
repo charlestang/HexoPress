@@ -183,6 +183,13 @@ const updatedMonths = computed(() => {
   }
   return Array.from(months).map(([value, label]) => ({ value, label }))
 })
+
+const showMetaEditDialog = ref(false)
+const currentEditingSourcePath = ref('')
+function onClickEditMeta(sourcePath: string) {
+  currentEditingSourcePath.value = sourcePath
+  showMetaEditDialog.value = true
+}
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -272,7 +279,7 @@ const updatedMonths = computed(() => {
             <el-link type="primary" @click="onClick(scope.row.source)"
               >{{ t('posts.edit') }} </el-link
             ><el-divider direction="vertical" />
-            <el-link type="primary">{{ t('posts.editMeta') }}</el-link
+            <el-link type="primary" @click="onClickEditMeta(scope.row.source)">{{ t('posts.editMeta') }}</el-link
             ><el-divider direction="vertical" />
             <el-link type="danger" @click="onDelete(scope.row.title, scope.row.source)">{{
               t('posts.delete')
@@ -337,6 +344,9 @@ const updatedMonths = computed(() => {
     :total="total"
     @current-change="fetch"
   />
+  <meta-data-dialog
+    v-model="showMetaEditDialog"
+    :source-path="currentEditingSourcePath"/>
 </template>
 <style>
 .el-table .el-table__cell {
