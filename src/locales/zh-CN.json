@@ -13,6 +13,7 @@
     "page": "页面",
     "published": "已发布",
     "recentPosts": "最新文章",
+    "save": "保存",
     "selectDir": "选择目录",
     "setup": "设置",
     "site": "站点配置",
@@ -52,6 +53,7 @@
     "createSuccess": "您的文章保存成功！",
     "date": "日期",
     "draft": "草稿",
+    "excerpt": "摘要",
     "meta": "基础信息",
     "moveToTrash": "移至回收站",
     "notSet": "未设置（默认规则生成）",
@@ -72,6 +74,7 @@
     "titleRequired": "必须设置标题才能保存",
     "turnToDraft": "切换至草稿",
     "update": "更新",
+    "updated": "更新日期",
     "url": "URL"
   },
   "eidtor": {

@@ -13,6 +13,7 @@
     "page": "Page",
     "published": "Published",
     "recentPosts": "Recent Posts",
+    "save": "Save",
     "selectDir": "Select a directory",
     "setup": "Settings",
     "site": "Site Config",
@@ -51,6 +52,7 @@
     "createSuccess": "Your post is saved successfully.",
     "date": "Date",
     "draft": "Draft",
+    "excerpt": "Excerpt",
     "meta": "Meta",
     "moveToTrash": "Move to Trash",
     "notSet": " not set(generated default)",
@@ -70,6 +72,7 @@
     "titleRequired": "Title is required!",
     "turnToDraft": "Turn to Draft",
     "update": "Update",
+    "updated": "Updated At",
     "url": "URL"
   },
   "eidtor": {
