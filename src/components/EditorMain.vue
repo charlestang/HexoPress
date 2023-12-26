@@ -90,7 +90,7 @@ function toggleAside() {
 }
 
 // fetch all categories from backend
-let categories = ref<Category[]>([])
+const categories = ref<Category[]>([])
 async function fetch() {
   categories.value = await window.site.getCategories()
 }
