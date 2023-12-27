@@ -110,10 +110,7 @@ async function updatePost(type: '_posts' | '_drafts') {
   // change js object to yaml string
   const blogContent = stringify(frontMatter.value, text.value)
 
-  if (
-    typeof sourcePath.value === 'undefined' ||
-    (typeof sourcePath.value === 'string' && sourcePath.value.length === 0)
-  ) {
+  if (typeof sourcePath.value === 'undefined' /* a new document has not sourcePath */) {
     // that means this is a new post or draft
     sourcePath.value = await window.site.createFile(
       type,
