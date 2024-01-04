@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   sourcePath: () => ''
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'success'])
 
 const showDialog = computed({
   get() {
@@ -70,7 +70,7 @@ async function onSave() {
   // that means this is an update request
   await window.site.saveContent(props.sourcePath, blogContent)
   ElMessage.success(t('editor.createSuccess'))
-
+  emit('success')
   loadingInstance.close()
   showDialog.value = false
 }

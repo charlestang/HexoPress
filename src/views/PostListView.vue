@@ -78,6 +78,9 @@ watch(selectedMonth, (value, oldValue) => {
     fetch(currentPage.value)
   }
 })
+function refresh() {
+  fetch(currentPage.value)
+}
 // open editor
 function onClick(sourcePath: string) {
   router.push({ path: '/frame', query: { sourcePath: sourcePath } })
@@ -279,7 +282,9 @@ function onClickEditMeta(sourcePath: string) {
             <el-link type="primary" @click="onClick(scope.row.source)"
               >{{ t('posts.edit') }} </el-link
             ><el-divider direction="vertical" />
-            <el-link type="primary" @click="onClickEditMeta(scope.row.source)">{{ t('posts.editMeta') }}</el-link
+            <el-link type="primary" @click="onClickEditMeta(scope.row.source)">{{
+              t('posts.editMeta')
+            }}</el-link
             ><el-divider direction="vertical" />
             <el-link type="danger" @click="onDelete(scope.row.title, scope.row.source)">{{
               t('posts.delete')
@@ -346,7 +351,9 @@ function onClickEditMeta(sourcePath: string) {
   />
   <meta-data-dialog
     v-model="showMetaEditDialog"
-    :source-path="currentEditingSourcePath"/>
+    :source-path="currentEditingSourcePath"
+    @success="refresh"
+  />
 </template>
 <style>
 .el-table .el-table__cell {
