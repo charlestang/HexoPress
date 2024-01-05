@@ -102,7 +102,7 @@ export interface ISite {
   getContent: (path: string) => Promise<string>
   saveContent: (path: string, content: string) => Promise<void>
   createFile: (type: string, title: string, slug: string, content: string) => Promise<string>
-  moveFile: (sourcePath: string, content: string) => Promise<void>
+  moveFile: (sourcePath: string, content: string) => Promise<string>
   deleteFile: (path: string) => Promise<void>
   getSystemLocale: () => Promise<string>
   getReadDir: (path: string) => Promise<FileEntry[]>

@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
 import type { Category } from '@/local.d.ts'
-import router from '@/router'
 import { lineNumbers } from '@codemirror/view'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { vim } from '@replit/codemirror-vim'
 import { MdEditor, config } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
@@ -15,10 +14,12 @@ const { t } = useI18n()
 const route = useRoute()
 const sourcePath = ref('')
 sourcePath.value = route.query.sourcePath as string
-const postPublished =
-  typeof sourcePath.value !== 'undefined' &&
-  typeof sourcePath.value === 'string' &&
-  sourcePath.value.startsWith('_posts')
+const postPublished = computed(
+  () =>
+    typeof sourcePath.value !== 'undefined' &&
+    typeof sourcePath.value === 'string' &&
+    sourcePath.value.startsWith('_posts')
+)
 
 const dirty = ref(false)
 const text = ref('')
@@ -96,40 +97,84 @@ async function fetch() {
 }
 fetch()
 
-async function updatePost(type: '_posts' | '_drafts') {
+async function _formValidate(): Promise<boolean> {
   if (!dirty.value) {
     ElMessage.info(t('editor.nothingChanged'))
-    return
+    return false
   }
+
   if (!frontMatter.value.title || frontMatter.value.title.length === 0) {
-    ElMessageBox.alert(t('editor.titleRequired'), t('editor.tipsTitle'), {
+    await ElMessageBox.alert(t('editor.titleRequired'), t('editor.tipsTitle'), {
       confirmButtonText: t('editor.ok')
     })
+    return false
   }
+  return true
+}
+function _getBlogContent(): string {
   frontMatter.value.updated = new Date()
   // change js object to yaml string
-  const blogContent = stringify(frontMatter.value, text.value)
+  return stringify(frontMatter.value, text.value)
+}
+async function updatePost() {
+  const check = await _formValidate()
+  if (!check) {
+    return
+  }
+  const blogContent = _getBlogContent()
+  // that means this is an update request
+  await window.site.saveContent(sourcePath.value, blogContent)
+  ElMessage.success(t('editor.createSuccess'))
+}
 
+async function upsertDraft() {
+  const check = await _formValidate()
+  if (!check) {
+    return
+  }
+  const blogContent = _getBlogContent()
   if (typeof sourcePath.value === 'undefined' /* a new document has not sourcePath */) {
     // that means this is a new post or draft
     sourcePath.value = await window.site.createFile(
-      type,
+      '_drafts',
       frontMatter.value.title ?? '',
       frontMatter.value.permalink ?? '',
       blogContent
     )
     dirty.value = false
-    ElMessage.success(t('editor.createSuccess'))
-    router.replace({ path: '/frame', query: { sourcePath: sourcePath.value } })
+    ElMessage.success(t('editor.draftSaveSuccess'))
   } else {
     // that means this is an update request
     await window.site.saveContent(sourcePath.value, blogContent)
-    ElMessage.success(t('editor.createSuccess'))
-    if (!postPublished) {
-      await window.site.moveFile(sourcePath.value, blogContent)
-      ElMessage.success(t('editor.publishedSuccess'))
-      router.replace({ path: '/frame', query: { sourcePath: sourcePath.value } })
+    ElMessage.success(t('editor.draftSaveSuccess'))
+  }
+}
+async function publishDraft() {
+  const check = await _formValidate()
+  if (!check) {
+    return
+  }
+  const blogContent = _getBlogContent()
+  if (typeof sourcePath.value === 'undefined' /* a new document has not sourcePath */) {
+    // that means this is a new post or draft
+    sourcePath.value = await window.site.createFile(
+      '_posts',
+      frontMatter.value.title ?? '',
+      frontMatter.value.permalink ?? '',
+      blogContent
+    )
+    dirty.value = false
+    ElMessage.success(t('editor.draftPublishSuccess'))
+  } else {
+    // that means this is an update request
+    const newPath = await window.site.moveFile(sourcePath.value, blogContent)
+    console.log('move file from: ', sourcePath.value, ' to newPath: ', newPath)
+    if (newPath.length == 0) {
+      ElMessage.error(t('editor.createFailed'))
+      return
     }
+    sourcePath.value = newPath
+    ElMessage.success(t('editor.draftPublishSuccess'))
   }
 }
 
@@ -161,13 +206,13 @@ function onClickAddCategory() {
                 type="primary"
                 v-if="!postPublished"
                 style="margin-right: 10px"
-                @click="updatePost('_drafts')"
+                @click="upsertDraft"
                 >{{ t('editor.saveDraft') }}
               </el-link>
-              <el-button v-if="postPublished" type="primary" @click="updatePost('_posts')">
+              <el-button v-if="postPublished" type="primary" @click="updatePost">
                 {{ t('editor.update') }}
               </el-button>
-              <el-button v-else type="primary" @click="updatePost('_posts')">
+              <el-button v-else type="primary" @click="publishDraft">
                 {{ t('editor.publish') }}
               </el-button>
 
