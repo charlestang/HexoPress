@@ -100,6 +100,7 @@
     "dashborad": "仪表盘",
     "expand": "展开导航栏",
     "mediaLibrary": "媒体库",
+    "preferences": "设置",
     "tags": "标签"
   },
   "posts": {
@@ -130,6 +131,9 @@
     "unknownError": "发生了未知错误。",
     "updatedDate": "更新于",
     "warning": "注意"
+  },
+  "preferences": {
+    "preferences": "设置"
   },
   "setup": {
     "baseDirTip": "请先选择您 Hexo 所在的目录：",

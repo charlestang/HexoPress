@@ -1,6 +1,7 @@
 import { useAppStoreWithout } from '@/stores/app'
 import DashboardView from '@/views/DashboardView.vue'
 import MainWindow from '@/views/MainWindow.vue'
+import PreferencesView from '@/views/PreferencesView.vue'
 import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import CategoriesView from '../views/CategoriesView.vue'
@@ -46,6 +47,11 @@ const router = createRouter({
           path: 'media-library',
           name: 'media-library',
           component: MediaLibraryView
+        },
+        {
+          path: 'preferences',
+          name: 'preferences',
+          component: PreferencesView
         }
       ]
     },

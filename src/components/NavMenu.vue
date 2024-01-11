@@ -1,17 +1,18 @@
 <script lang="ts" setup>
+import { useCache } from '@/hooks/useCache'
 import {
   Briefcase,
   CaretLeft,
   CaretRight,
   Flag,
   Menu as IconMenu,
-  TrendCharts,
-  PictureFilled
+  PictureFilled,
+  Tools,
+  TrendCharts
 } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
-import { useCache } from '@/hooks/useCache'
-import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 
 const { t } = useI18n()
 
@@ -69,6 +70,10 @@ const handleSelect = (key: string, keyPath: string[]) => {
     <el-menu-item index="/main/media-library">
       <el-icon><picture-filled /></el-icon>
       <template #title>{{ t('nav.mediaLibrary') }}</template>
+    </el-menu-item>
+    <el-menu-item index="/main/preferences">
+      <el-icon><tools /></el-icon>
+      <template #title>{{ t('nav.preferences') }}</template>
     </el-menu-item>
     <el-menu-item @click="isCollapse = !isCollapse">
       <el-icon v-if="isCollapse"><caret-right /></el-icon>

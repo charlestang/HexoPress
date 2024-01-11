@@ -98,6 +98,7 @@
     "dashborad": "Dashboard",
     "expand": "Expand menu",
     "mediaLibrary": "Media",
+    "preferences": "Preferences",
     "tags": "Tags"
   },
   "posts": {
@@ -128,6 +129,9 @@
     "unknownError": "Unknown error.",
     "updatedDate": "Updated",
     "warning": "Warning"
+  },
+  "preferences": {
+    "preferences": "Preferences"
   },
   "setup": {
     "baseDirTip": "Please select your hexo directory first:",
