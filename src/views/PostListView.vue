@@ -232,6 +232,8 @@ function onClickEditMeta(sourcePath: string) {
           size="small"
           :placeholder="t('posts.categorySearch')"
           :clearable="true"
+          style="width: 180px"
+          :fit-input-width="false"
         />
         <el-select
           v-model="selectedMonth"
@@ -239,6 +241,7 @@ function onClickEditMeta(sourcePath: string) {
           :placeholder="t('posts.monthFilter')"
           :filterable="true"
           :clearable="true"
+          style="width: 100px"
         >
           <el-option
             v-for="item in updatedMonths"
@@ -258,7 +261,7 @@ function onClickEditMeta(sourcePath: string) {
         :small="true"
         :disabled="false"
         :background="false"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="sizes, prev, pager, next, jumper"
         :total="total"
         :pager-count="5"
         @current-change="fetch"
