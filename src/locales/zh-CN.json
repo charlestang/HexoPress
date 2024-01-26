@@ -69,8 +69,10 @@
     "published": "已发布",
     "publishedSuccess": "您的文章发布成功！",
     "saveDraft": "保存草稿",
+    "selectTags": "选择标签",
     "status": "状态",
     "tags": "标签",
+    "tagsTip": "用逗号或回车分割。",
     "time": "时间",
     "tipsTitle": "提示",
     "title": "请输入标题",
@@ -79,10 +81,6 @@
     "update": "更新",
     "updated": "更新日期",
     "url": "URL"
-  },
-  "eidtor": {
-    "selectTags": "选择标签",
-    "tagsTip": "用逗号或回车分割。"
   },
   "filenameDialog": {
     "fileNotSaved": "文件未保存",
@@ -97,7 +95,7 @@
     "allPosts": "文章",
     "categories": "分类",
     "collapse": "折叠导航栏",
-    "dashborad": "仪表盘",
+    "dashboard": "仪表盘",
     "expand": "展开导航栏",
     "mediaLibrary": "媒体库",
     "preferences": "设置",
@@ -109,7 +107,6 @@
     "categories": "分类目录",
     "categorySearch": "选择分类",
     "confirm": "确认",
-    "datetime": "日期",
     "delete": "删除",
     "deleteCanceled": "取消删除",
     "deleteSuccess": "删除成功。",
@@ -122,6 +119,7 @@
     "monthFilter": "选择月份",
     "pageTitle": "文章",
     "published": "已发布",
+    "publishedAt": "发布时间",
     "publishedDate": "发表于",
     "questionMark": "？",
     "search": "搜索",
@@ -129,7 +127,7 @@
     "tags": "标签",
     "title": "标题",
     "unknownError": "发生了未知错误。",
-    "updatedDate": "更新于",
+    "updatedAt": "更新时间",
     "warning": "注意"
   },
   "preferences": {

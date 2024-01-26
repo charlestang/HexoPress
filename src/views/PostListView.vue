@@ -232,6 +232,7 @@ function onClickEditMeta(sourcePath: string) {
           size="small"
           :placeholder="t('posts.categorySearch')"
           :clearable="true"
+          check-strictly
           style="width: 180px"
           :fit-input-width="false"
         />
@@ -315,12 +316,11 @@ function onClickEditMeta(sourcePath: string) {
         </el-tag>
       </template>
     </el-table-column>
-    <el-table-column :label="t('posts.datetime')">
+    <el-table-column :label="t('posts.publishedAt')">
       <template #default="scope">
         <el-row>
           <el-col :span="24">
             <span v-if="scope.row.status == 'published'">{{ t('posts.published') }}</span>
-            <span v-else>{{ t('posts.updatedDate') }}</span>
           </el-col>
         </el-row>
         <el-row>
@@ -331,11 +331,19 @@ function onClickEditMeta(sourcePath: string) {
                 timeStyle: 'short'
               }).format(new Date(scope.row.date))
             }}</span>
-            <span v-else>{{
+          </el-col>
+        </el-row>
+      </template>
+    </el-table-column>
+    <el-table-column :label="t('posts.updatedAt')">
+      <template #default="scope">
+        <el-row>
+          <el-col :span="24">
+            <span v-if="scope.row.updated != ''">{{
               Intl.DateTimeFormat(appStore.locale, {
                 dateStyle: 'medium',
                 timeStyle: 'short'
-              }).format(new Date(scope.row.date))
+              }).format(new Date(scope.row.updated))
             }}</span>
           </el-col>
         </el-row>

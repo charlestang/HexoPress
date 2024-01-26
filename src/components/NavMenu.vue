@@ -53,7 +53,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   >
     <el-menu-item index="/main/dashboard">
       <el-icon><trend-charts /></el-icon>
-      <template #title>{{ t('nav.dashborad') }}</template>
+      <template #title>{{ t('nav.dashboard') }}</template>
     </el-menu-item>
     <el-menu-item index="/main/post-list">
       <el-icon><briefcase /></el-icon>
