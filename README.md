@@ -8,8 +8,8 @@
     <a href="https://github.com/charlestang/HexoPress/blob/main/LICENSE">
       <img src="https://img.shields.io/github/license/charlestang/HexoPress" alt="license">
     </a>
-    <img src="https://img.shields.io/github/downloads/charlestang/HexoPress/total" />
-    <img src="https://img.shields.io/github/v/release/charlestang/HexoPress" />
+    <img src="https://img.shields.io/github/downloads/charlestang/HexoPress/total" alt="downloads" />
+    <img src="https://img.shields.io/github/v/release/charlestang/HexoPress" alt="latest" />
   </p>
 </div>
 

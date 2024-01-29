@@ -6,10 +6,10 @@
   <p>支持Hexo的文章编辑和内容管理客户端软件！</p>
   <p align="center"><!-- some badges like version, release status, test coverage, license, etc.-->
     <a href="https://github.com/charlestang/HexoPress/blob/main/LICENSE">
-      <img src="https://img.shields.io/github/license/charlestang/HexoPress" alt="license">
+      <img src="https://img.shields.io/github/license/charlestang/HexoPress" alt="license" />
     </a>
-    <img src="https://img.shields.io/github/downloads/charlestang/HexoPress/total" />
-    <img src="https://img.shields.io/github/v/release/charlestang/HexoPress" />
+    <img src="https://img.shields.io/github/downloads/charlestang/HexoPress/total" alt="downloads" />
+    <img src="https://img.shields.io/github/v/release/charlestang/HexoPress" alt="latest" />
   </p>
 </div>
 
