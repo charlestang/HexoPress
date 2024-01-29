@@ -6,15 +6,17 @@
   <p>A client software designed specifically for editing blog articles and managing blog content that supports Hexo!</p>
   <p align="center"><!-- some badges like version, release status, test coverage, license, etc.-->
     <a href="https://github.com/charlestang/HexoPress/blob/main/LICENSE">
-      <img src="https://img.shields.io/github/license/charlestang/HexoPress?color=%232dce89&logo=github&style=flat-square" alt="license">
+      <img src="https://img.shields.io/github/license/charlestang/HexoPress" alt="license">
     </a>
+    <img src="https://img.shields.io/github/downloads/charlestang/HexoPress/total" />
+    <img src="https://img.shields.io/github/v/release/charlestang/HexoPress" />
   </p>
 </div>
 
 English | [简体中文](./README_zh.md)
 
 
-## Features
+## I. Features
 -----
 - [x] 📝 Display of the list of published articles and drafts;
 - [x] 🔍 Article categorization filter and sorting by time;
@@ -27,54 +29,48 @@ English | [简体中文](./README_zh.md)
 - [x] 📊 Editor supports dropdown selection for categories and tag search;
 - [x] ⚙️ Support for quickly editing metadata (FrontMatter) without opening the article.
 
+## II. Installation
+### 1. Mac
+### 2. Windows
 
-This template should help get you started developing with Vue 3 in Vite.
+## III. Screenshots
 
-## Recommended IDE Setup
+## IV. Getting Started from Source Code
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+### 1. Clone the source code
 
-## Type Support for `.vue` Imports in TS
+```bash
+git clone https://github.com/charlestang/HexoPress.git
+```
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+### 2. Running Environment
+- Node.js >= v21.1.0
+- npm >= v10.3.0
+- tcp port:5173 used by the internal webpage
+- tcp port:2357 HTTP service used to serve local images
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
+### 3. Install Dependencies
+```bash
 npm install
 ```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
+### 4. Run
+```bash
+npm run electron:run
+```
+### 5. Package
+```bash
+npm run forge:make
 ```
 
-### Type-Check, Compile and Minify for Production
+## V. Contribution
 
-```sh
-npm run build
-```
+### 1. Report Issues
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+Visit https://github.com/charlestang/HexoPress/issues to submit issues.
 
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+### 2. Contribute Code
+1. Fork this repository
+1. Create your feature branch: git checkout -b <feature-name>
+1. Commit your changes: git commit -am 'Add some feature'
+1. Push to the branch: git push origin <feature-name>
+1. Submit a pull request
