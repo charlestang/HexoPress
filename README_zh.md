@@ -37,6 +37,20 @@
 
 ## 三、截图
 
+### 1. 仪表盘
+![Dashborad](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard.png)
+
+### 2. 文章列表
+![Posts List](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png)
+
+### 3. 文章编辑器
+![Editor](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png)
+
+### 4. 分类管理
+![Categories Management](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png)
+
+### 5. 标签管理
+![Tags Management](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png)
 
 ## 四、从源码开始
 

@@ -35,6 +35,21 @@ English | [简体中文](./README_zh.md)
 
 ## III. Screenshots
 
+### 1. Dashboard
+![Dashborad](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard.png)
+
+### 2. Posts List
+![Posts List](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png)
+
+### 3. Editor
+![Editor](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png)
+
+### 4. Categories Management
+![Categories Management](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png)
+
+### 5. Tags Management
+![Tags Management](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png)
+
 ## IV. Getting Started from Source Code
 
 ### 1. Clone the source code
