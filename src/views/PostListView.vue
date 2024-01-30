@@ -270,7 +270,7 @@ function onClickEditMeta(sourcePath: string) {
     </el-col>
   </el-row>
   <el-table :data="posts" stripe style="width: 100%; margin-bottom: 10px">
-    <el-table-column type="index" label="#" width="55" />
+    <el-table-column type="index" label="#" width="45" />
     <el-table-column :label="t('posts.title')" width="360">
       <template #default="scope">
         <el-row>
@@ -307,6 +307,7 @@ function onClickEditMeta(sourcePath: string) {
         >
           {{ val }}
         </el-tag>
+        <el-text v-if="Object.keys(scope.row.categories).length == 0">--</el-text>
       </template>
     </el-table-column>
     <el-table-column prop="tags" :label="t('posts.tags')">
@@ -314,6 +315,7 @@ function onClickEditMeta(sourcePath: string) {
         <el-tag v-for="(val, k) in scope.row.tags" :key="k" size="small" style="margin-right: 5px">
           {{ val }}
         </el-tag>
+        <el-text v-if="Object.keys(scope.row.tags).length == 0">--</el-text>
       </template>
     </el-table-column>
     <el-table-column :label="t('posts.publishedAt')">

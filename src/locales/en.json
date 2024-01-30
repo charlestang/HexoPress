@@ -131,6 +131,17 @@
   "preferences": {
     "preferences": "Preferences"
   },
+  "settings": {
+    "dark": "Dark",
+    "darkMode": "Dark Mode",
+    "language": "Language",
+    "languages": {
+      "en": "English",
+      "zh-CN": "简体中文"
+    },
+    "light": "Light",
+    "system": "System"
+  },
   "setup": {
     "baseDirTip": "Please select your hexo directory first:",
     "choose": "Choose"

@@ -133,6 +133,17 @@
   "preferences": {
     "preferences": "设置"
   },
+  "settings": {
+    "dark": "深色模式",
+    "darkMode": "暗黑模式",
+    "language": "界面语言",
+    "languages": {
+      "en": "English",
+      "zh-CN": "简体中文"
+    },
+    "light": "浅色模式",
+    "system": "跟随系统"
+  },
   "setup": {
     "baseDirTip": "请先选择您 Hexo 所在的目录：",
     "choose": "选择"
