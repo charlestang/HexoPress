@@ -16,7 +16,8 @@ async function onSubmit() {
   console.log('base url is:', import.meta.env.BASE_URL)
   console.log(location.href)
   await window.site.setConfig('vaultPath', form.directory)
-  await router.push({ path: '/' })
+  const res = await router.push({ path: '/' })
+  console.log('router result: ', res)
   console.log(location.href)
 }
 

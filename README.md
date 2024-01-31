@@ -34,7 +34,7 @@ English | [简体中文](./README_zh.md)
 
 [Download for Apple Silicon: v1.0.0alpha](https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha/HexoPress-darwin-arm64-1.0.0-alpha.zip)
 
-[Download for Intel Chip: v1.0.0alpha](https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha/HexoPress-darwin-x64-1.0.0.zip)
+[Download for Intel Chip: v1.0.0alpha](https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha/HexoPress-darwin-x64-1.0.0-alpha.zip)
 
 ### 2. Windows
 

@@ -3,7 +3,7 @@ import DashboardView from '@/views/DashboardView.vue'
 import MainWindow from '@/views/MainWindow.vue'
 import PreferencesView from '@/views/PreferencesView.vue'
 import type { App } from 'vue'
-import { createRouter, createWebHashHistory, createMemoryHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import CategoriesView from '../views/CategoriesView.vue'
 import FrameView from '../views/FrameView.vue'
 import MediaLibraryView from '../views/MediaLibraryView.vue'
@@ -12,8 +12,7 @@ import SetupView from '../views/SetupView.vue'
 import TagsView from '../views/TagsView.vue'
 
 const router = createRouter({
-  //history: createWebHashHistory(import.meta.env.BASE_URL),
-  history: createMemoryHistory(),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
@@ -82,7 +81,6 @@ router.beforeEach(async (to, from, next) => {
 
 export const setupRouter = (app: App<Element>) => {
   app.use(router)
-  router.push({ path: '/' })
 }
 
 export default router

@@ -35,7 +35,7 @@
 
 [下载 苹果M1芯片版本: v1.0.0alpha](https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha/HexoPress-darwin-arm64-1.0.0-alpha.zip)
 
-[下载 Intel芯片版本: v1.0.0alpha](https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha/HexoPress-darwin-x64-1.0.0.zip)
+[下载 Intel芯片版本: v1.0.0alpha](https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha/HexoPress-darwin-x64-1.0.0-alpha.zip)
 
 ### 2. Windows
 

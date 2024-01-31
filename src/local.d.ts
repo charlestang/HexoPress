@@ -106,6 +106,7 @@ export interface ISite {
   deleteFile: (path: string) => Promise<void>
   getSystemLocale: () => Promise<string>
   getReadDir: (path: string) => Promise<FileEntry[]>
+  onVaultPathChanged: (callback: (newValue: string) => void) => void
 }
 
 declare global {

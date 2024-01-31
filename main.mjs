@@ -12,14 +12,6 @@ if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
   fsAgent.init(config.get('vaultPath'))
 }
 
-config.on('config:changed', async (key, value) => {
-  if (key === 'vaultPath') {
-    console.log('vaultPath is changed to: ', value)
-    agent.init(value)
-    fsAgent.init(value)
-  }
-})
-
 function createWindow() {
   const win = new BrowserWindow({
     icon: join(__dirname, 'src/assets/icon.png'),
@@ -30,6 +22,15 @@ function createWindow() {
     titleBarStyle: 'hidden',
     webPreferences: {
       preload: join(__dirname, 'preload.js')
+    }
+  })
+
+  config.on('config:changed', async (key, value) => {
+    if (key === 'vaultPath') {
+      console.log('vaultPath is changed to: ', value)
+      agent.init(value)
+      fsAgent.init(value)
+      win.webContents.send('configChanged:vaultPath', value)
     }
   })
 

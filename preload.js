@@ -28,5 +28,6 @@ contextBridge.exposeInMainWorld('site', {
   moveFile: (sourcePath, content) => ipcRenderer.invoke('post:move', sourcePath, content),
   deleteFile: (sourcePath) => ipcRenderer.invoke('post:delete', sourcePath),
   getSystemLocale: () => ipcRenderer.invoke('sys:locale'),
-  getReadDir: (path) => ipcRenderer.invoke('fs:readdir', path)
+  getReadDir: (path) => ipcRenderer.invoke('fs:readdir', path),
+  onVaultPathChanged: (callback) => ipcRenderer.on('configChanged:vaultPath', (_, value) => callback(value))
 })

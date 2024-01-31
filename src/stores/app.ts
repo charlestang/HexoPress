@@ -11,16 +11,29 @@ export const useAppStore = defineStore('app', () => {
   }
 
   // base path
-  const basePath = computed(async () => {
-    return (await window.site.getConfig('vaultPath')) as string
+  const basePath = ref('')
+
+  async function getBasePath() {
+    console.log('Actively get vault path from main process.')
+    basePath.value = (await window.site.getConfig('vaultPath')) as string
+  }
+
+  window.site.onVaultPathChanged((newValue) => {
+    console.log('vault path changed, new value is:', newValue)
+    basePath.value = newValue
   })
+
   const isBasePathSet = computed(async () => {
-    const basePathValue = await basePath.value
-    return basePathValue != null && basePathValue !== ''
+    if (basePath.value == '') {
+      await getBasePath()
+    }
+    return basePath.value !== null && basePath.value !== ''
   })
+
   const hexoConfig = computed(() => {
     return window.site.getHexoConfig()
   })
+
   const siteInfo = computed(() => {
     return window.site.getSiteInfo()
   })
