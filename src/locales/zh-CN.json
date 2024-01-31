@@ -136,6 +136,9 @@
   "settings": {
     "dark": "深色模式",
     "darkMode": "暗黑模式",
+    "editorMode": "编辑模式",
+    "editorNormal": "普通",
+    "editorVim": "Vim 模式",
     "language": "界面语言",
     "languages": {
       "en": "English",
@@ -145,8 +148,9 @@
     "system": "跟随系统"
   },
   "setup": {
-    "baseDirTip": "请先选择您 Hexo 所在的目录：",
-    "choose": "选择"
+    "choose": "选择",
+    "confirm": "确认",
+    "selectDirTips": "请输入您 Hexo 博客的根目录，HexoPress 会扫描其中包含的博客文章、草稿和包含在目录中的媒体文件。"
   },
   "time": {
     "long": "HH:mm:ss",

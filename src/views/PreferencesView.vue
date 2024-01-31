@@ -23,5 +23,11 @@ const { t } = useI18n()
         <el-option key="system" :label="t('settings.system')" value="system" />
       </el-select>
     </el-form-item>
+    <el-form-item :label="t('settings.editorMode')">
+      <el-radio-group>
+        <el-radio label="normal"> {{ t('settings.editorNormal') }}</el-radio>
+        <el-radio label="vim"> {{ t('settings.editorVim') }} </el-radio>
+      </el-radio-group>
+    </el-form-item>
   </el-form>
 </template>

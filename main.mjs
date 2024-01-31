@@ -14,7 +14,9 @@ if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
 
 config.on('config:changed', async (key, value) => {
   if (key === 'vaultPath') {
+    console.log('vaultPath is changed to: ', value)
     agent.init(value)
+    fsAgent.init(value)
   }
 })
 

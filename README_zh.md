@@ -88,6 +88,7 @@ npm run electron:run
 ### 5. 打包
 
 ```bash
+npm run build
 npm run forge:make 
 ```
 

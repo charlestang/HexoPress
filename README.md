@@ -81,6 +81,7 @@ npm run electron:run
 ```
 ### 5. Package
 ```bash
+npm run build
 npm run forge:make
 ```
 

@@ -15,7 +15,8 @@ export const useAppStore = defineStore('app', () => {
     return (await window.site.getConfig('vaultPath')) as string
   })
   const isBasePathSet = computed(async () => {
-    return (await basePath.value) !== ''
+    const basePathValue = await basePath.value
+    return basePathValue != null && basePathValue !== ''
   })
   const hexoConfig = computed(() => {
     return window.site.getHexoConfig()

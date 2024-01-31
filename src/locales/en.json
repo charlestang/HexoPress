@@ -134,6 +134,9 @@
   "settings": {
     "dark": "Dark",
     "darkMode": "Dark Mode",
+    "editorMode": "Editor Mode",
+    "editorNormal": "Normal",
+    "editorVim": "Vim Emulator",
     "language": "Language",
     "languages": {
       "en": "English",
@@ -143,8 +146,9 @@
     "system": "System"
   },
   "setup": {
-    "baseDirTip": "Please select your hexo directory first:",
-    "choose": "Choose"
+    "choose": "Choose",
+    "confirm": "Confirm",
+    "selectDirTips": "Please enter the root directory of your Hexo blog. HexoPress will scan for blog posts, drafts, and media files contained in the directory."
   },
   "time": {
     "long": "HH:mm:ss",
