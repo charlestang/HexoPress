@@ -134,8 +134,10 @@
     "preferences": "设置"
   },
   "settings": {
+    "alwaysTitle": "总是用标题做文件名",
     "dark": "深色模式",
     "darkMode": "暗黑模式",
+    "defaultFilename": "默认文件名",
     "editorMode": "编辑模式",
     "editorNormal": "普通",
     "editorVim": "Vim 模式",
@@ -145,6 +147,8 @@
       "zh-CN": "简体中文"
     },
     "light": "浅色模式",
+    "permalinkFirst": "如果设置了 permalink，优先用 permalink 做文件名",
+    "save": "保存",
     "system": "跟随系统"
   },
   "setup": {

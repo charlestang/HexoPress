@@ -5,7 +5,7 @@ const { t } = useI18n()
 </script>
 <template>
   <h2>{{ t('preferences.preferences') }}</h2>
-  <el-form>
+  <el-form label-width="180px" label-position="top" style="max-width: 750px">
     <el-form-item :label="t('settings.language')">
       <el-select>
         <el-option
@@ -28,6 +28,15 @@ const { t } = useI18n()
         <el-radio label="normal"> {{ t('settings.editorNormal') }}</el-radio>
         <el-radio label="vim"> {{ t('settings.editorVim') }} </el-radio>
       </el-radio-group>
+    </el-form-item>
+    <el-form-item :label="t('settings.defaultFilename')">
+      <el-radio-group>
+        <el-radio label="title"> {{ t('settings.alwaysTitle') }}</el-radio>
+        <el-radio label="permalink"> {{ t('settings.permalinkFirst') }} </el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary">{{ t('settings.save') }}</el-button>
     </el-form-item>
   </el-form>
 </template>

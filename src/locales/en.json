@@ -132,8 +132,10 @@
     "preferences": "Preferences"
   },
   "settings": {
+    "alwaysTitle": "Always use title as filename.",
     "dark": "Dark",
     "darkMode": "Dark Mode",
+    "defaultFilename": "Default filename",
     "editorMode": "Editor Mode",
     "editorNormal": "Normal",
     "editorVim": "Vim Emulator",
@@ -143,6 +145,8 @@
       "zh-CN": "简体中文"
     },
     "light": "Light",
+    "permalinkFirst": "Use permalink as filename if set.",
+    "save": "Save",
     "system": "System"
   },
   "setup": {

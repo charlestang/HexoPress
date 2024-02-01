@@ -134,6 +134,7 @@ async function upsertDraft() {
   }
   const blogContent = _getBlogContent()
   if (typeof sourcePath.value === 'undefined' /* a new document has not sourcePath */) {
+    console.log('upsertDraft: ', frontMatter.value)
     // that means this is a new post or draft
     sourcePath.value = await window.site.createFile(
       '_drafts',
