@@ -112,7 +112,7 @@ npm run forge:make
 [license-badge]: https://img.shields.io/github/license/charlestang/HexoPress
 [releases]: https://github.com/charlestang/HexoPress/releases
 [screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png
-[screenshot-dashboard]: https://github.com/charlestang/HexoPress/releases
+[screenshot-dashboard]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard.png
 [screenshot-editor]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png
 [screenshot-postlist]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png
 [screenshot-tags]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png
