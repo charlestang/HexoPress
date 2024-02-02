@@ -2,15 +2,14 @@
   <p align="center">
     <img style="width:500px" src="https://github.com/charlestang/HexoPress/blob/main/docs/logo.svg" alt="logo" />
   </p>
-  <h1>HexoPress</h1>
-  <p>支持Hexo的文章编辑和内容管理客户端软件！</p>
-  <p align="center"><!-- some badges like version, release status, test coverage, license, etc.-->
-    <a href="https://github.com/charlestang/HexoPress/blob/main/LICENSE">
-      <img src="https://img.shields.io/github/license/charlestang/HexoPress" alt="license" />
-    </a>
-    <img src="https://img.shields.io/github/downloads/charlestang/HexoPress/total" alt="downloads" />
-    <img src="https://img.shields.io/github/v/release/charlestang/HexoPress" alt="latest" />
-  </p>
+
+# HexoPress
+
+[![license][license-badge]][LICENSE]
+[![downloads][downloads-badge]][releases]
+
+支持Hexo的文章编辑和内容管理客户端软件！
+
 </div>
 
 [English](./README.md) | 简体中文
@@ -29,6 +28,8 @@
 - [x] 📊 编辑器支持分类的下拉选择和标签检索；
 - [x] ⚙️ 支持不打开文章快捷编辑元信息（FrontMatter）。
 
+:star: 在 GitHub 上给我们点个免费的小星星 —— 这对我们来说是很大的鼓励！
+
 ## 二、安装
 
 ### 1. Mac
@@ -44,19 +45,19 @@
 ## 三、截图
 
 ### 1. 仪表盘
-![Dashborad](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard.png)
+![Dashborad][screenshot-dashboard]
 
 ### 2. 文章列表
-![Posts List](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png)
+![Posts List][screenshot-postlist]
 
 ### 3. 文章编辑器
-![Editor](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png)
+![Editor][screenshot-editor]
 
 ### 4. 分类管理
-![Categories Management](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png)
+![Categories Management][screenshot-categories]
 
 ### 5. 标签管理
-![Tags Management](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png)
+![Tags Management][screenshot-tags]
 
 ## 四、从源码开始
 
@@ -106,3 +107,12 @@ npm run forge:make
 4. 推送到分支：`git push origin <feature-name>`
 5. 提交合并请求
 
+[downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
+[license]: https://github.com/charlestang/HexoPress/blob/main/LICENSE
+[license-badge]: https://img.shields.io/github/license/charlestang/HexoPress
+[releases]: https://github.com/charlestang/HexoPress/releases
+[screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png
+[screenshot-dashboard]: https://github.com/charlestang/HexoPress/releases
+[screenshot-editor]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png
+[screenshot-postlist]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png
+[screenshot-tags]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png

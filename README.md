@@ -2,15 +2,14 @@
   <p align="center">
     <img style="width:500px" src="https://github.com/charlestang/HexoPress/blob/main/docs/logo.svg" alt="logo" />
   </p>
-  <h1>HexoPress</h1>
-  <p>A client software designed specifically for editing blog articles and managing blog content that supports Hexo!</p>
-  <p align="center"><!-- some badges like version, release status, test coverage, license, etc.-->
-    <a href="https://github.com/charlestang/HexoPress/blob/main/LICENSE">
-      <img src="https://img.shields.io/github/license/charlestang/HexoPress" alt="license">
-    </a>
-    <img src="https://img.shields.io/github/downloads/charlestang/HexoPress/total" alt="downloads" />
-    <img src="https://img.shields.io/github/v/release/charlestang/HexoPress" alt="latest" />
-  </p>
+
+# HexoPress
+
+[![license][license-badge]][LICENSE]
+[![downloads][downloads-badge]][releases]
+
+A client software designed specifically for editing blog articles and managing blog content that supports Hexo!
+
 </div>
 
 English | [简体中文](./README_zh.md)
@@ -29,6 +28,8 @@ English | [简体中文](./README_zh.md)
 - [x] 📊 Editor supports dropdown selection for categories and tag search;
 - [x] ⚙️ Support for quickly editing metadata (FrontMatter) without opening the article.
 
+:star: Star us on GitHub — it motivates us a lot!
+
 ## II. Installation
 ### 1. Mac
 
@@ -43,19 +44,19 @@ Download to be provided.
 ## III. Screenshots
 
 ### 1. Dashboard
-![Dashborad](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard.png)
+![Dashborad][screenshot-dashboard]
 
 ### 2. Posts List
-![Posts List](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png)
+![Posts List][screenshot-postlist]
 
 ### 3. Editor
-![Editor](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png)
+![Editor][screenshot-editor]
 
 ### 4. Categories Management
-![Categories Management](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png)
+![Categories Management][screenshot-categories]
 
 ### 5. Tags Management
-![Tags Management](https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png)
+![Tags Management][screenshot-tags]
 
 ## IV. Getting Started from Source Code
 
@@ -97,3 +98,13 @@ Visit https://github.com/charlestang/HexoPress/issues to submit issues.
 1. Commit your changes: git commit -am 'Add some feature'
 1. Push to the branch: git push origin <feature-name>
 1. Submit a pull request
+
+[downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
+[license]: https://github.com/charlestang/HexoPress/blob/main/LICENSE
+[license-badge]: https://img.shields.io/github/license/charlestang/HexoPress
+[releases]: https://github.com/charlestang/HexoPress/releases
+[screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png
+[screenshot-dashboard]: https://github.com/charlestang/HexoPress/releases
+[screenshot-editor]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png
+[screenshot-postlist]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png
+[screenshot-tags]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png
