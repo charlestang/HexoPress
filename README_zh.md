@@ -1,7 +1,6 @@
 <div align="center">
-  <p align="center">
-    <img style="width:500px" src="https://github.com/charlestang/HexoPress/blob/main/docs/logo.svg" alt="logo" />
-  </p>
+
+<img style="width:500px" src="https://github.com/charlestang/HexoPress/blob/main/docs/logo.svg" alt="logo" />
 
 # HexoPress
 
@@ -10,9 +9,10 @@
 
 支持Hexo的文章编辑和内容管理客户端软件！
 
+[English](./README.md) | 简体中文
+
 </div>
 
-[English](./README.md) | 简体中文
 
 ## 一、特性
 -----
@@ -31,6 +31,10 @@
 :star: 在 GitHub 上给我们点个免费的小星星 —— 这对我们来说是很大的鼓励！
 
 ## 二、安装
+
+### 0. 兼容性
+
+客户端内部使用了 Hexo 7.1.1 版本的 API，v7.0.0 以上的 Hexo 版本博客是可以使用的，其他版本未经测试。使用前，确认博客的目录已经在 `git` 备份。
 
 ### 1. Mac
 

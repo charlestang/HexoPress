@@ -1,7 +1,6 @@
 <div align="center">
-  <p align="center">
-    <img style="width:500px" src="https://github.com/charlestang/HexoPress/blob/main/docs/logo.svg" alt="logo" />
-  </p>
+
+<img style="width:500px" src="https://github.com/charlestang/HexoPress/blob/main/docs/logo.svg" alt="logo" />
 
 # HexoPress
 
@@ -10,9 +9,10 @@
 
 A client software designed specifically for editing blog articles and managing blog content that supports Hexo!
 
+English | [简体中文](./README_zh.md)
+
 </div>
 
-English | [简体中文](./README_zh.md)
 
 
 ## I. Features
