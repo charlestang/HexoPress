@@ -10,5 +10,8 @@
   "i18n-ally.displayLanguage": "zh-CN",
   "i18n-ally.ignoredLocales": [],
   "i18n-ally.theme.annotationMissingBorder": "#d37070",
-  "i18n-ally.theme.annotationMissing": "#d37070"
+  "i18n-ally.theme.annotationMissing": "#d37070",
+  "cSpell.words": [
+    "Pinia"
+  ]
 }
