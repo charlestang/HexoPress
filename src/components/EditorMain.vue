@@ -11,23 +11,46 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 const { t } = useI18n()
-const route = useRoute()
-const sourcePath = ref('')
-sourcePath.value = route.query.sourcePath as string
-const postPublished = computed(
-  () =>
-    typeof sourcePath.value !== 'undefined' &&
-    typeof sourcePath.value === 'string' &&
-    sourcePath.value.startsWith('_posts')
-)
 
-const dirty = ref(false)
+/**
+ * @description The flag to indicate whether the post is new or not.
+ */
+const isNewPost = ref(false)
+
+/**
+ * @description The path of the source file, if it is a new post, the value is empty.
+ */
+const sourcePath = ref('')
+
+const route = useRoute()
+
+isNewPost.value = route.query.type != null && route.query.type === 'new'
+sourcePath.value = route.query.sourcePath as string
+if (
+  !isNewPost.value &&
+  (typeof sourcePath.value === 'undefined' || sourcePath.value.length === 0)
+) {
+  // The sourcePath is not provided, or not valid. It is also seen as a new post.
+  isNewPost.value = true
+}
+
+/**
+ * @description The flag to indicate whether the post is published or not.
+ */
+const postPublished = computed(() => !isNewPost.value && sourcePath.value.startsWith('_posts'))
+
+/**
+ * @description The flag to indicate whether the post is dirty or not.
+ */
+const isDirty = ref(false)
+
+/**
+ * @description The content of the blog post.
+ */
 const text = ref('')
 
 watch(text, (val, oldVal) => {
-  if (val !== oldVal) {
-    dirty.value = true
-  }
+  isDirty.value = val !== oldVal
 })
 
 const frontMatter = ref<FrontMatter>({
@@ -41,16 +64,12 @@ const frontMatter = ref<FrontMatter>({
 watch(
   frontMatter,
   () => {
-    dirty.value = true
+    isDirty.value = true
   },
   { deep: true }
 )
 
-if (
-  typeof sourcePath.value !== 'undefined' &&
-  typeof sourcePath.value === 'string' &&
-  sourcePath.value.length > 0
-) {
+if (!isNewPost.value) {
   // The blog post already exists, it is now being edited.
   window.site.getContent(sourcePath.value).then((content) => {
     const parseDown = parseFrontMatter(content)
@@ -60,10 +79,15 @@ if (
   })
 }
 
+/**
+ * Content sanitizer to help preview display images in content.
+ * @param html The HTML content of the blog post.
+ */
 function filterImage(html: string): string {
-  return addPrefixToImgSrc(html, 'http://127.0.0.1:2357/', frontMatter.value.permalink || '')
+  return _addPrefixToImgSrc(html, 'http://127.0.0.1:2357/', frontMatter.value.permalink || '')
 }
-function addPrefixToImgSrc(html: string, prefix: string, currentPath: string): string {
+
+function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): string {
   const regex = /(<img[^>]+src\s*=\s*["'])([^"']*)/gi
   return html.replace(regex, (match, p1, p2: string) => {
     if (p2.startsWith('http://') || p2.startsWith('https://')) {
@@ -98,7 +122,7 @@ async function fetch() {
 fetch()
 
 async function _formValidate(): Promise<boolean> {
-  if (!dirty.value) {
+  if (!isDirty.value) {
     ElMessage.info(t('editor.nothingChanged'))
     return false
   }
@@ -142,7 +166,8 @@ async function upsertDraft() {
       frontMatter.value.permalink ?? '',
       blogContent
     )
-    dirty.value = false
+    isDirty.value = false
+    isNewPost.value = false
     ElMessage.success(t('editor.draftSaveSuccess'))
   } else {
     // that means this is an update request
@@ -164,7 +189,8 @@ async function publishDraft() {
       frontMatter.value.permalink ?? '',
       blogContent
     )
-    dirty.value = false
+    isDirty.value = false
+    isNewPost.value = false
     ElMessage.success(t('editor.draftPublishSuccess'))
   } else {
     // that means this is an update request

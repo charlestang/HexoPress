@@ -5,8 +5,8 @@ import { RouterView } from 'vue-router'
 import NavMenu from '../components/NavMenu.vue'
 import router from '../router'
 const { t } = useI18n()
-const handleNewPost = () => {
-  router.push('/frame')
+const onNewPostButtonClicked = () => {
+  router.push({ path: '/frame', query: { type: 'new' } })
 }
 </script>
 
@@ -14,9 +14,14 @@ const handleNewPost = () => {
   <el-container>
     <el-header class="topbar">
       <header-bar>
-        <el-button key="new-post" :icon="EditPen" text class="new" @click="handleNewPost">{{
-          t('common.newPost')
-        }}</el-button>
+        <el-button
+          key="new-post"
+          :icon="EditPen"
+          text
+          class="new"
+          @click="onNewPostButtonClicked"
+          >{{ t('common.newPost') }}</el-button
+        >
       </header-bar>
     </el-header>
     <el-container class="main">
