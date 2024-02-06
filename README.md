@@ -31,6 +31,11 @@ English | [简体中文](./README_zh.md)
 :star: Star us on GitHub — it motivates us a lot!
 
 ## II. Installation
+
+### 0. Compatibility
+
+The client internally uses the API of Hexo version 7.1.1. Hexo blog versions above v7.0.0 can be used, while other versions have not been tested. Before using, make sure the blog directory has been backed up with `git`.
+
 ### 1. Mac
 
 [Download for Apple Silicon: v1.0.0alpha](https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha/HexoPress-darwin-arm64-1.0.0-alpha.zip)
@@ -44,7 +49,7 @@ Download to be provided.
 ## III. Screenshots
 
 ### 1. Dashboard
-![Dashborad][screenshot-dashboard]
+![Dashboard][screenshot-dashboard]
 
 ### 2. Posts List
 ![Posts List][screenshot-postlist]

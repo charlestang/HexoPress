@@ -34,7 +34,7 @@
 
 ### 0. 兼容性
 
-客户端内部使用了 Hexo 7.1.1 版本的 API，v7.0.0 以上的 Hexo 版本博客是可以使用的，其他版本未经测试。使用前，确认博客的目录已经在 `git` 备份。
+客户端内部使用了 Hexo 7.1.1 版本的 API，v7.0.0 以上的 Hexo 博客版本是可以使用的，其他版本未经测试。使用前，确认博客的目录已经在 `git` 备份。
 
 ### 1. Mac
 
@@ -49,7 +49,7 @@
 ## 三、截图
 
 ### 1. 仪表盘
-![Dashborad][screenshot-dashboard]
+![Dashboard][screenshot-dashboard]
 
 ### 2. 文章列表
 ![Posts List][screenshot-postlist]
