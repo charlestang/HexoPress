@@ -16,7 +16,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/main/dashboard'
+      redirect: '/main/dashboard',
     },
     {
       path: '/main',
@@ -26,56 +26,70 @@ const router = createRouter({
         {
           path: 'dashboard',
           name: 'dashboard',
-          component: DashboardView
+          component: DashboardView,
         },
         {
           path: 'tags',
           name: 'tags',
-          component: TagsView
+          component: TagsView,
         },
         {
           path: 'categories',
           name: 'categories',
-          component: CategoriesView
+          component: CategoriesView,
         },
         {
           path: 'post-list',
           name: 'post-list',
-          component: PostListView
+          component: PostListView,
         },
         {
           path: 'media-library',
           name: 'media-library',
-          component: MediaLibraryView
+          component: MediaLibraryView,
         },
         {
           path: 'preferences',
           name: 'preferences',
-          component: PreferencesView
-        }
-      ]
+          component: PreferencesView,
+        },
+      ],
     },
     {
       path: '/frame',
       name: 'frame',
       component: FrameView,
-      props: true
+      props: true,
     },
     {
       path: '/setup',
       name: 'setup',
-      component: SetupView
-    }
-  ]
+      component: SetupView,
+    },
+  ],
 })
 
 const appStore = useAppStoreWithout()
 
-router.beforeEach(async (to, from, next) => {
-  if (!(await appStore.isBasePathSet) && to.name !== 'setup') {
+router.beforeEach((to, from, next) => {
+  if (!appStore.isBasePathSet && to.name !== 'setup') {
     next('/setup')
   } else {
-    next()
+    if (!appStore.isAgentInitialized) {
+      window.site.initializeAgent(appStore.basePath).then(result => {
+        if (result) {
+          // initialzed successfully, set the flag
+          appStore.setAgentInitialized()
+          next()
+        } else {
+          // initialized failed, reset the basePath and redirect to setup
+          appStore.setBasePath('')
+          next('/setup')
+        }
+      })
+    } else {
+      next()
+    }
   }
 })
 

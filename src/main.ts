@@ -23,9 +23,9 @@ const setupAll = async () => {
 
   await setupI18n(app)
 
-  setupStore(app)
-
   setupRouter(app)
+
+  setupStore(app)
 
   app.mount('#app')
 

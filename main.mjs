@@ -1,4 +1,5 @@
-import { BrowserWindow, app, dialog, ipcMain } from 'electron'
+import { BrowserWindow, app, dialog, ipcMain, session } from 'electron'
+import { homedir } from 'os'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import config from './lib/config.mjs'
@@ -44,7 +45,7 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   ipcMain.handle('site:posts', (event, ...args) => agent.getPosts(...args))
   ipcMain.handle('site:categories', () => agent.getCategories())
   ipcMain.handle('site:tags', () => agent.getTags())
@@ -72,6 +73,14 @@ app.whenReady().then(() => {
       createWindow()
     }
   })
+
+  if (process.env.NODE_ENV === 'dev') {
+    const vueDevToolsPath = join(
+      homedir(),
+      '/Library/Application Support/Google/Chrome/Profile 1/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/6.5.1_0'
+    )
+    await session.defaultSession.loadExtension(vueDevToolsPath)
+  }
 })
 
 app.on('window-all-closed', () => {

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { store } from './index'
+import { useCache } from '@/hooks/useCache'
 
 export const useAppStore = defineStore('app', () => {
   // locale
@@ -13,22 +14,24 @@ export const useAppStore = defineStore('app', () => {
   // base path
   const basePath = ref('')
 
-  async function getBasePath() {
-    console.log('Actively get vault path from main process.')
-    basePath.value = (await window.site.getConfig('vaultPath')) as string
+  const { wsCache } = useCache('localStorage')
+  let basePathVal = wsCache.get('basePath')
+  if (basePathVal !== null) {
+    basePath.value = basePathVal as string
   }
 
-  window.site.onVaultPathChanged((newValue) => {
-    console.log('vault path changed, new value is:', newValue)
-    basePath.value = newValue
-  })
+  function setBasePath(newBasePath: string) {
+    wsCache.set('basePath', newBasePath)
+    basePath.value = newBasePath
+  }
 
-  const isBasePathSet = computed(async () => {
-    if (basePath.value == '') {
-      await getBasePath()
-    }
-    return basePath.value !== null && basePath.value !== ''
-  })
+  const isBasePathSet = computed(() => basePath.value.length > 0)
+
+  const isAgentInitialized = ref(false)
+
+  function setAgentInitialized() {
+    isAgentInitialized.value = true
+  }
 
   const hexoConfig = computed(() => {
     return window.site.getHexoConfig()
@@ -40,11 +43,14 @@ export const useAppStore = defineStore('app', () => {
 
   return {
     locale,
+    setLocale,
     basePath,
+    isBasePathSet,
+    setBasePath,
+    isAgentInitialized,
+    setAgentInitialized,
     hexoConfig,
     siteInfo,
-    isBasePathSet,
-    setLocale
   }
 })
 
