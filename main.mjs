@@ -4,6 +4,7 @@ import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import fsAgent from './lib/fs-agent.mjs'
 import agent from './lib/hexo-agent.mjs'
+import httpServer from './lib/http.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -53,6 +54,7 @@ app.whenReady().then(async () => {
     if (check) {
       agent.init(path)
       fsAgent.init(path)
+      httpServer.init(path)
     }
     return check
   })
