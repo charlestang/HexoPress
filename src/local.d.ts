@@ -88,16 +88,14 @@ export interface ISite {
     categoryId?: string,
     monthCode?: string,
     orderBy?: string,
-    order?: string
+    order?: string,
   ) => Promise<PostsResults>
   getCategories: () => Promise<Category[]>
   getTags: () => Promise<Tag[]>
   getStats: () => Promise<Stats>
-  getConfig: (key) => Promise<string | null | boolean | number | any[] | object>
   getSiteConfig: () => Promise<Object>
   getSiteInfo: () => Promise<SiteInfo>
   getHexoConfig: () => Promise<HexoConfig>
-  setConfig: (key, value) => Promise<any>
   openDirDialog: () => Promise<DialogResult>
   getContent: (path: string) => Promise<string>
   saveContent: (path: string, content: string) => Promise<void>
@@ -107,6 +105,7 @@ export interface ISite {
   getSystemLocale: () => Promise<string>
   getReadDir: (path: string) => Promise<FileEntry[]>
   onVaultPathChanged: (callback: (newValue: string) => void) => void
+  initializeAgent: (path: string) => Promise<boolean>
 }
 
 declare global {

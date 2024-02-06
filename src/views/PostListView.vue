@@ -35,7 +35,7 @@ fetchStats()
 const filters = {
   all: t('posts.all'),
   published: t('posts.published'),
-  draft: t('posts.draft')
+  draft: t('posts.draft'),
 }
 const currentFilter = ref(filters.all)
 const posts = ref<null | Post[]>(null)
@@ -57,7 +57,7 @@ async function fetch(curPage: number) {
     limit,
     offset,
     selectedCat.value,
-    selectedMonth.value
+    selectedMonth.value,
   )
   posts.value = data.posts
   total.value = data.total
@@ -92,34 +92,34 @@ function onDelete(articleName: string, articlePath: string) {
     {
       confirmButtonText: t('posts.confirm'),
       cancelButtonText: t('posts.cancel'),
-      type: 'warning'
-    }
+      type: 'warning',
+    },
   )
-    .then(async (a) => {
+    .then(async a => {
       console.log(a)
       await window.site.deleteFile(articlePath)
       ElMessage({
         type: 'success',
-        message: t('posts.deleteSuccess')
+        message: t('posts.deleteSuccess'),
       })
       fetch(currentPage.value)
     })
-    .catch((reason) => {
+    .catch(reason => {
       if (reason === 'cancel') {
         ElMessage({
           type: 'info',
-          message: t('posts.deleteCanceled')
+          message: t('posts.deleteCanceled'),
         })
       } else {
         if (typeof reason === 'object' && reason.name === 'Error') {
           ElMessage({
             type: 'error',
-            message: reason.message
+            message: reason.message,
           })
         } else {
           ElMessage({
             type: 'error',
-            message: t('posts.unknownError')
+            message: t('posts.unknownError'),
           })
         }
       }
@@ -144,7 +144,7 @@ const nodeMap = computed(() => {
       label: entry.name,
       children: [],
       length: entry.length,
-      permalink: entry.permalink
+      permalink: entry.permalink,
     }
   }
   return map
@@ -234,22 +234,19 @@ function onClickEditMeta(sourcePath: string) {
           :clearable="true"
           check-strictly
           style="width: 180px"
-          :fit-input-width="false"
-        />
+          :fit-input-width="false" />
         <el-select
           v-model="selectedMonth"
           size="small"
           :placeholder="t('posts.monthFilter')"
           :filterable="true"
           :clearable="true"
-          style="width: 100px"
-        >
+          style="width: 100px">
           <el-option
             v-for="item in updatedMonths"
             :key="item.value"
             :label="item.label"
-            :value="item.value"
-          />
+            :value="item.value" />
         </el-select>
 
         <el-button type="primary" size="small" plain>{{ t('posts.filter') }}</el-button>
@@ -265,8 +262,7 @@ function onClickEditMeta(sourcePath: string) {
         layout="sizes, prev, pager, next, jumper"
         :total="total"
         :pager-count="5"
-        @current-change="fetch"
-      />
+        @current-change="fetch" />
     </el-col>
   </el-row>
   <el-table :data="posts" stripe style="width: 100%; margin-bottom: 10px">
@@ -303,8 +299,7 @@ function onClickEditMeta(sourcePath: string) {
           v-for="(val, k) in scope.row.categories"
           :key="k"
           size="small"
-          style="margin-right: 5px"
-        >
+          style="margin-right: 5px">
           {{ val }}
         </el-tag>
         <el-text v-if="Object.keys(scope.row.categories).length == 0">--</el-text>
@@ -330,7 +325,7 @@ function onClickEditMeta(sourcePath: string) {
             <span v-if="scope.row.status == 'published'">{{
               Intl.DateTimeFormat(appStore.locale, {
                 dateStyle: 'medium',
-                timeStyle: 'short'
+                timeStyle: 'short',
               }).format(new Date(scope.row.date))
             }}</span>
           </el-col>
@@ -344,7 +339,7 @@ function onClickEditMeta(sourcePath: string) {
             <span v-if="scope.row.updated != ''">{{
               Intl.DateTimeFormat(appStore.locale, {
                 dateStyle: 'medium',
-                timeStyle: 'short'
+                timeStyle: 'short',
               }).format(new Date(scope.row.updated))
             }}</span>
           </el-col>
@@ -360,13 +355,11 @@ function onClickEditMeta(sourcePath: string) {
     :background="true"
     layout="prev, pager, next, jumper"
     :total="total"
-    @current-change="fetch"
-  />
+    @current-change="fetch" />
   <meta-data-dialog
     v-model="showMetaEditDialog"
     :source-path="currentEditingSourcePath"
-    @success="refresh"
-  />
+    @success="refresh" />
 </template>
 <style>
 .el-table .el-table__cell {

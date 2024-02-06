@@ -1,28 +1,29 @@
 <script lang="ts" setup>
 import router from '@/router'
+import { useAppStore } from '@/stores/app'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
 const form = reactive({
-  directory: ''
+  directory: '',
 })
+
+const appStore = useAppStore()
 
 async function onSubmit() {
   console.log('form directory:', form.directory)
   if (form.directory === '') return
   console.log('env is:', import.meta.env)
   console.log('base url is:', import.meta.env.BASE_URL)
-  console.log(location.href)
-  await window.site.setConfig('basePath', form.directory)
+  appStore.setBasePath(form.directory)
   const res = await router.push({ path: '/' })
   console.log('router result: ', res)
-  console.log(location.href)
 }
 
 function selectPath() {
-  window.site.openDirDialog().then((result) => {
+  window.site.openDirDialog().then(result => {
     form.directory = result['filePaths'][0]
   })
 }

@@ -72,13 +72,16 @@ const router = createRouter({
 const appStore = useAppStoreWithout()
 
 router.beforeEach((to, from, next) => {
+  console.log('router: beforeEach')
+  console.log('appStore.isBasePathSet: ', appStore.isBasePathSet)
+  console.log('appStore.isAgentInitialized: ', appStore.isAgentInitialized)
   if (!appStore.isBasePathSet && to.name !== 'setup') {
     next('/setup')
   } else {
-    if (!appStore.isAgentInitialized) {
+    if (appStore.isBasePathSet && !appStore.isAgentInitialized) {
       window.site.initializeAgent(appStore.basePath).then(result => {
         if (result) {
-          // initialzed successfully, set the flag
+          // initialized successfully, set the flag
           appStore.setAgentInitialized()
           next()
         } else {

@@ -2,16 +2,10 @@ import { BrowserWindow, app, dialog, ipcMain, session } from 'electron'
 import { homedir } from 'os'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import config from './lib/config.mjs'
 import fsAgent from './lib/fs-agent.mjs'
 import agent from './lib/hexo-agent.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-
-if (config.get('vaultPath') !== null && config.get('vaultPath') !== '') {
-  agent.init(config.get('vaultPath'))
-  fsAgent.init(config.get('vaultPath'))
-}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -23,15 +17,6 @@ function createWindow() {
     titleBarStyle: 'hidden',
     webPreferences: {
       preload: join(__dirname, 'preload.js')
-    }
-  })
-
-  config.on('config:changed', async (key, value) => {
-    if (key === 'vaultPath') {
-      console.log('vaultPath is changed to: ', value)
-      agent.init(value)
-      fsAgent.init(value)
-      win.webContents.send('configChanged:vaultPath', value)
     }
   })
 
@@ -53,8 +38,6 @@ app.whenReady().then(async () => {
   ipcMain.handle('site:config', () => agent.getConfig())
   ipcMain.handle('site:info', () => agent.getSiteInfo())
   ipcMain.handle('hexo:config', () => agent.getHexoConfig())
-  ipcMain.handle('config:get', (event, key) => config.get(key))
-  ipcMain.handle('config:set', (event, kv) => config.set(kv[0], kv[1]))
   ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
   ipcMain.handle('post:content', (event, path) => agent.getContent(path))
   ipcMain.handle('post:save', (event, path, content) => agent.saveContent(path, content))
@@ -65,6 +48,14 @@ app.whenReady().then(async () => {
   ipcMain.handle('post:delete', (event, path) => agent.deleteFile(path))
   ipcMain.handle('sys:locale', (event) => app.getSystemLocale())
   ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))
+  ipcMain.handle('agent:init', (event, path) => {
+    let check = agent.checkDir(path) && agent.checkHexoDir(path)
+    if (check) {
+      agent.init(path)
+      fsAgent.init(path)
+    }
+    return check
+  })
 
   createWindow()
 
