@@ -6,7 +6,7 @@
 
 [![license][license-badge]][LICENSE]
 [![downloads][downloads-badge]][releases]
-[![npm][npm-badge]]
+![npm][npm-badge]
 
 A client software designed specifically for editing blog articles and managing blog content that supports Hexo!
 

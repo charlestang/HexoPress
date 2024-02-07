@@ -6,7 +6,7 @@
 
 [![license][license-badge]][LICENSE]
 [![downloads][downloads-badge]][releases]
-[![npm][npm-badge]]
+![npm][npm-badge]
 
 支持Hexo的文章编辑和内容管理客户端软件！
 
