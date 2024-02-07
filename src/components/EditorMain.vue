@@ -58,7 +58,7 @@ const frontMatter = ref<FrontMatter>({
   date: new Date(),
   permalink: '',
   categories: [],
-  tags: []
+  tags: [],
 })
 
 watch(
@@ -66,12 +66,12 @@ watch(
   () => {
     isDirty.value = true
   },
-  { deep: true }
+  { deep: true },
 )
 
 if (!isNewPost.value) {
   // The blog post already exists, it is now being edited.
-  window.site.getContent(sourcePath.value).then((content) => {
+  window.site.getContent(sourcePath.value).then(content => {
     const parseDown = parseFrontMatter(content)
     frontMatter.value = parseDown.data as FrontMatter
     text.value = parseDown.content
@@ -93,8 +93,8 @@ function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): 
     if (p2.startsWith('http://') || p2.startsWith('https://')) {
       return match
     }
-    let curPath = currentPath.split('/').filter((p) => p !== '')
-    let imgPath = p2.split('/').filter((p) => p !== '')
+    let curPath = currentPath.split('/').filter(p => p !== '')
+    let imgPath = p2.split('/').filter(p => p !== '')
     while (curPath.length > 0 && imgPath[0] == '..') {
       imgPath.shift()
       curPath.pop()
@@ -129,7 +129,7 @@ async function _formValidate(): Promise<boolean> {
 
   if (!frontMatter.value.title || frontMatter.value.title.length === 0) {
     await ElMessageBox.alert(t('editor.titleRequired'), t('editor.tipsTitle'), {
-      confirmButtonText: t('editor.ok')
+      confirmButtonText: t('editor.ok'),
     })
     return false
   }
@@ -164,7 +164,7 @@ async function upsertDraft() {
       '_drafts',
       frontMatter.value.title ?? '',
       frontMatter.value.permalink ?? '',
-      blogContent
+      blogContent,
     )
     isDirty.value = false
     isNewPost.value = false
@@ -187,7 +187,7 @@ async function publishDraft() {
       '_posts',
       frontMatter.value.title ?? '',
       frontMatter.value.permalink ?? '',
-      blogContent
+      blogContent,
     )
     isDirty.value = false
     isNewPost.value = false
@@ -208,14 +208,14 @@ async function publishDraft() {
 config({
   codeMirrorExtensions(theme, extensions) {
     return [...extensions, lineNumbers(), vim()]
-  }
+  },
 })
 const activeAsidePanels = ref(['meta', 'cate', 'tags'])
 
 const showCreateCategory = ref(false)
 const createCategoryForm = ref({
   name: '',
-  parent: ''
+  parent: '',
 })
 function onClickAddCategory() {
   console.log('add new category: ')
@@ -289,44 +289,7 @@ function onClickAddCategory() {
               </el-row>
             </el-collapse-item>
             <el-collapse-item :title="t('editor.categories')" name="cate">
-              <el-scrollbar height="250px">
-                <categories-tree v-model="frontMatter.categories" :categories="categories" />
-              </el-scrollbar>
-              <el-popover
-                :visible="showCreateCategory"
-                :show-arrow="false"
-                width="250"
-                trigger="click"
-                placement="bottom"
-              >
-                <template #reference>
-                  <el-link type="warning" @click="showCreateCategory = true">{{
-                    t('editor.createNewCategory')
-                  }}</el-link>
-                </template>
-                <meta-entry-title @close="showCreateCategory = false">{{
-                  t('editor.createCategory')
-                }}</meta-entry-title>
-                <el-form :model="createCategoryForm">
-                  <el-form-item :label="t('editor.categoryName')">
-                    <el-input v-model="createCategoryForm.name"></el-input>
-                  </el-form-item>
-                  <el-form-item :label="t('editor.parentCategory')">
-                    <el-select v-model="createCategoryForm.parent" placeholder="请选择">
-                      <el-option
-                        v-for="item in categories"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.name"
-                      >
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-button type="primary" @click="onClickAddCategory">{{
-                    t('editor.add')
-                  }}</el-button>
-                </el-form>
-              </el-popover>
+              <categories-tree-panel v-model="frontMatter.categories" />
             </el-collapse-item>
             <el-collapse-item :title="t('editor.tags')" name="tags">
               <el-text type="info" size="small">{{ t('editor.selectTags') }}</el-text>
@@ -342,8 +305,7 @@ function onClickAddCategory() {
             :sanitize="filterImage"
             :preview="false"
             :htmlPreview="false"
-            :toolbarsExclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
-          ></MdEditor>
+            :toolbarsExclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"></MdEditor>
         </el-main>
       </el-container>
     </el-container>

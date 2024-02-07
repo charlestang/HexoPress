@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     CategoriesTree: typeof import('./src/components/CategoriesTree.vue')['default']
+    CategoriesTreePanel: typeof import('./src/components/CategoriesTreePanel.vue')['default']
     DateMetaEntry: typeof import('./src/components/DateMetaEntry.vue')['default']
     EditorMain: typeof import('./src/components/EditorMain.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']

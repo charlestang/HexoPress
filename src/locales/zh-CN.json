@@ -46,7 +46,7 @@
   "editor": {
     "add": "添加",
     "categories": "分类目录",
-    "categoryName": "新分类名",
+    "categoryName": "分类名称",
     "change": "更改",
     "createCategory": "新建分类",
     "createFailed": "您的草稿发布失败！",
