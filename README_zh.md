@@ -6,6 +6,7 @@
 
 [![license][license-badge]][LICENSE]
 [![downloads][downloads-badge]][releases]
+[![npm][npm-badge]]
 
 支持Hexo的文章编辑和内容管理客户端软件！
 
@@ -114,6 +115,7 @@ npm run forge:make
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
 [license]: https://github.com/charlestang/HexoPress/blob/main/LICENSE
 [license-badge]: https://img.shields.io/github/license/charlestang/HexoPress
+[npm-badge]: https://img.shields.io/npm/v/npm.svg?logo=nodedotjs
 [releases]: https://github.com/charlestang/HexoPress/releases
 [screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png
 [screenshot-dashboard]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard.png

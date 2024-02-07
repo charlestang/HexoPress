@@ -22,10 +22,11 @@
     "forge:publish": "electron-forge publish"
   },
   "dependencies": {
+    "@fastify/static": "^7.0.0",
     "@replit/codemirror-vim": "^6.1.0",
     "electron-squirrel-startup": "^1.0.0",
     "element-plus": "^2.5.4",
-    "express": "^4.18.2",
+    "fastify": "^4.26.0",
     "hexo": "^7.1.1",
     "hexo-front-matter": "^4.2.1",
     "hexo-fs": "^4.1.1",
