@@ -48,9 +48,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'latest' 
-      - run: cd blog
-      - run: npm install
-      - run: npm run build
+      - run: |
+          cd blog
+          npm install
+          npm run build
       # https://github.com/marketplace/actions/configure-github-pages
       - name: Setup Pages
         id: pages
