@@ -164,7 +164,6 @@ const treeData = computed(() => {
       tree.push(node)
     }
   }
-
   return tree
 })
 
@@ -175,16 +174,16 @@ const updatedMonths = computed(() => {
   }
   for (const post of posts.value) {
     if (post.date) {
-      const label = moment(post.date).format(t('date.month'))
-      const month = moment(post.date).format('YYYY-MM')
-      if (month == 'Invalid date-01') {
+      const value = moment(post.date).format(t('date.month'))
+      const key = moment(post.date).format('YYYY-MM')
+      if (key == 'Invalid date-01') {
         console.log('Invalid date: ', post.date)
       }
-      console.log('options ', month, '-', label)
-      months.set(month, label)
+      console.log('options ', key, '-', value)
+      months.set(key, value)
     }
   }
-  return Array.from(months).map(([value, label]) => ({ value, label }))
+  return Array.from(months).map(([k, v]) => ({ value: k, label: v }))
 })
 
 const showMetaEditDialog = ref(false)

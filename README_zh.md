@@ -6,7 +6,12 @@
 
 [![license][license-badge]][LICENSE]
 [![downloads][downloads-badge]][releases]
+![NodeJS][nodejs-badge]
 ![npm][npm-badge]
+![vue][vuejs-badge]
+![vite][vite-badge]
+![Fastify][fastify-badge]
+![Electron.js][electron-badge]
 
 支持Hexo的文章编辑和内容管理客户端软件！
 
@@ -113,12 +118,17 @@ npm run forge:make
 5. 提交合并请求
 
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
+[electron-badge]: https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white
+[fastify-badge]: https://img.shields.io/badge/fastify-%23000000.svg?logo=fastify&logoColor=white
 [license]: https://github.com/charlestang/HexoPress/blob/main/LICENSE
 [license-badge]: https://img.shields.io/github/license/charlestang/HexoPress
-[npm-badge]: https://img.shields.io/npm/v/npm.svg?logo=nodedotjs
+[nodejs-badge]: https://img.shields.io/badge/node.js-6DA55F?logo=node.js&logoColor=white
+[npm-badge]: https://img.shields.io/badge/NPM-%23CB3837.svg?logo=npm&logoColor=white
 [releases]: https://github.com/charlestang/HexoPress/releases
 [screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png
 [screenshot-dashboard]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard.png
 [screenshot-editor]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png
 [screenshot-postlist]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png
 [screenshot-tags]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png
+[vite-badge]: https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white
+[vuejs-badge]: https://img.shields.io/badge/Vue.js-35495E?logo=vue.js&logoColor=4FC08D

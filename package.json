@@ -34,7 +34,7 @@
     "md-editor-v3": "^4.8.1",
     "path-browserify": "^1.0.1",
     "pinia": "^2.1.7",
-    "vue": "^3.3.6",
+    "vue": "^3.4.15",
     "vue-i18n": "^9.6.2",
     "vue-router": "^4.2.5"
   },
