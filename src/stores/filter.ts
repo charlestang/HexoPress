@@ -1,17 +1,20 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { store } from './index'
+import { PostFilterType, PostStatusFilterChoice } from '@/components/PostListFilter'
 
 export const useFilterStore = defineStore('filter', () => {
-  const currentActiveFilter = ref('statusFilter')
-  function setCurrentActiveFilter(filter: 'statusFilter' | 'dateCategoryFilter' | 'searchFilter') {
+  const currentActiveFilter = ref(PostFilterType.StatusFilter)
+  function _setCurrentActiveFilter(filter: PostFilterType) {
     currentActiveFilter.value = filter
   }
 
-  const statusFilterVal = ref('all')
+  const statusFilterVal = ref(PostStatusFilterChoice.All)
 
-  function setStatusFilter(newVal: 'all' | 'published' | 'draft') {
+  function setStatusFilter(newVal: PostStatusFilterChoice, paginationConfig: any) {
     statusFilterVal.value = newVal
+    pagination.value = paginationConfig
+    _setCurrentActiveFilter(PostFilterType.StatusFilter)
   }
 
   const dateCategoryFilterVal = ref({
@@ -19,30 +22,34 @@ export const useFilterStore = defineStore('filter', () => {
     category: 'all',
   })
 
-  function setDateCategoryFilter(newVal: { date: string; category: string }) {
+  function setDateCategoryFilter(newVal: { date: string; category: string }, paginationConfig: any) {
     dateCategoryFilterVal.value = newVal
+    pagination.value = paginationConfig
+    _setCurrentActiveFilter(PostFilterType.DateCategoryFilter)
   }
 
   const searchFilterVal = ref('')
-  function setSearchFilter(newVal: string) {
+  function setSearchFilter(newVal: string, paginationConfig: any) {
     searchFilterVal.value = newVal
+    pagination.value = paginationConfig
+    _setCurrentActiveFilter(PostFilterType.SearchFilter)
   }
-  const currentPageIndex = ref(1)
-  function setCurrentPageIndex(newVal: number) {
-    currentPageIndex.value = newVal
-  }
+  
+  const pagination = ref({
+    total: 0,
+    currentPageIndx: 1,
+    pageSize: 20,
+  })
 
   return {
     currentActiveFilter,
-    setCurrentActiveFilter,
     statusFilterVal,
     setStatusFilter,
     dateCategoryFilterVal,
     setDateCategoryFilter,
     searchFilterVal,
     setSearchFilter,
-    currentPageIndex,
-    setCurrentPageIndex,
+    pagination,
   }
 })
 

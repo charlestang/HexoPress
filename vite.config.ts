@@ -14,17 +14,19 @@ export default defineConfig({
     vue(),
     AutoImport({
       eslintrc: {
-        enabled: true
+        enabled: true,
       },
-      resolvers: [ElementPlusResolver()]
+      resolvers: [ElementPlusResolver()],
+      dts: 'types/auto-imports.d.ts',
     }),
     Components({
-      resolvers: [ElementPlusResolver()]
-    })
+      resolvers: [ElementPlusResolver()],
+      dts: 'types/components.d.ts',
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
 })

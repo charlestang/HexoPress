@@ -19,18 +19,6 @@ interface TreeNode {
 const appStore = useAppStore()
 const { t } = useI18n()
 
-// stats info
-let allCount = ref<null | number>(null)
-let postCount = ref<null | number>(null)
-let draftCount = ref<null | number>(null)
-async function fetchStats() {
-  let data = await window.site.getStats()
-  allCount.value = data.postCount + data.postDraftCount
-  postCount.value = data.postCount
-  draftCount.value = data.postDraftCount
-}
-fetchStats()
-
 // posts list
 const filters = {
   all: t('posts.all'),
@@ -197,6 +185,7 @@ function onClickEditMeta(sourcePath: string) {
   <h2>{{ t('posts.pageTitle') }}</h2>
   <el-row :gutter="5" style="margin-bottom: 5px">
     <el-col :span="19">
+      <!--
       <el-space>
         <div v-for="(caption, k, idx) in filters" :key="k" style="float: left">
           <el-button
@@ -213,6 +202,8 @@ function onClickEditMeta(sourcePath: string) {
           <span v-if="idx < Object.keys(filters).length - 1"> | </span>
         </div>
       </el-space>
+      -->
+      <post-status-filter v-model="currentFilter" :active="true"/>
     </el-col>
     <el-col :span="5" style="display: flex; justify-content: flex-end">
       <el-space>
