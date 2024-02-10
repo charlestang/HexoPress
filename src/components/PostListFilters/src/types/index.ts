@@ -1,11 +1,11 @@
 export enum PostFilterType {
-  StatusFilter,
-  DateCategoryFilter,
-  SearchFilter,
+  StatusFilter = 'status',
+  DateCategoryFilter = 'dateCategory',
+  SearchFilter = 'search',
 }
 
 export enum PostStatusFilterChoice {
-  All,
-  Published,
-  Draft,
+  All = 'all',
+  Published = 'published',
+  Draft = 'draft',
 }

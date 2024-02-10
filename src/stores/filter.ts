@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { store } from './index'
-import { PostFilterType, PostStatusFilterChoice } from '@/components/PostListFilter'
+import { PostFilterType, PostStatusFilterChoice } from '@/components/PostListFilters'
 
 export const useFilterStore = defineStore('filter', () => {
   const currentActiveFilter = ref(PostFilterType.StatusFilter)

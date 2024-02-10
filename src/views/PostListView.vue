@@ -5,6 +5,8 @@ import { useAppStore } from '@/stores/app'
 import moment from 'moment'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useFilterStore } from '@/stores/filter'
+import { PostStatusFilterChoice } from '@/components/PostListFilters'
 
 interface TreeNode {
   id: string
@@ -17,16 +19,19 @@ interface TreeNode {
 }
 
 const appStore = useAppStore()
+const filterStore = useFilterStore()
 const { t } = useI18n()
 
 // posts list
-const filters = {
-  all: t('posts.all'),
-  published: t('posts.published'),
-  draft: t('posts.draft'),
-}
-const currentFilter = ref(filters.all)
-const posts = ref<null | Post[]>(null)
+const currentFilter = computed({
+  get: () => filterStore.statusFilterVal,
+  set: (val: PostStatusFilterChoice) => {
+    console.log('type of val is: ', typeof val)
+    console.log('value of val is: ', val)
+    filterStore.statusFilterVal = val
+  },
+})
+const posts = ref<undefined | Post[]>(undefined)
 const selectedCat = ref<string>('')
 const selectedMonth = ref<string>('')
 const total = ref(0)
@@ -34,8 +39,12 @@ const currentPage = ref(1)
 const pageSize = ref(20)
 async function fetch(curPage: number) {
   let data
-  let published = currentFilter.value === filters.published || currentFilter.value === filters.all
-  let draft = currentFilter.value === filters.draft || currentFilter.value === filters.all
+  let published =
+    currentFilter.value === PostStatusFilterChoice.Published ||
+    currentFilter.value === PostStatusFilterChoice.All
+  let draft =
+    currentFilter.value === PostStatusFilterChoice.Draft ||
+    currentFilter.value === PostStatusFilterChoice.All
   let limit = pageSize.value
   let offset = (curPage - 1) * limit
 
@@ -53,6 +62,7 @@ async function fetch(curPage: number) {
 fetch(currentPage.value)
 watch(currentFilter, (value, oldValue) => {
   if (value !== oldValue) {
+    console.log('currentFilter changed to: ', value)
     fetch(currentPage.value)
   }
 })
@@ -185,25 +195,7 @@ function onClickEditMeta(sourcePath: string) {
   <h2>{{ t('posts.pageTitle') }}</h2>
   <el-row :gutter="5" style="margin-bottom: 5px">
     <el-col :span="19">
-      <!--
-      <el-space>
-        <div v-for="(caption, k, idx) in filters" :key="k" style="float: left">
-          <el-button
-            link
-            type="primary"
-            @click="currentFilter = caption"
-            v-if="currentFilter !== caption"
-            >{{ caption }}</el-button
-          >
-          <span v-else>{{ caption }}</span>
-          <span v-if="k == 'all' && allCount != null">( {{ allCount }} )</span>
-          <span v-if="k == 'published' && postCount != null">( {{ postCount }} )</span>
-          <span v-if="k == 'draft' && draftCount != null">( {{ draftCount }} )</span>
-          <span v-if="idx < Object.keys(filters).length - 1"> | </span>
-        </div>
-      </el-space>
-      -->
-      <post-status-filter v-model="currentFilter" :active="true"/>
+      <post-status-filter v-model="currentFilter" :active="true" />
     </el-col>
     <el-col :span="5" style="display: flex; justify-content: flex-end">
       <el-space>
