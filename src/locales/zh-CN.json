@@ -103,6 +103,8 @@
   },
   "posts": {
     "all": "全部",
+    "allCategories": "全部分类",
+    "allMonths": "全部月份",
     "cancel": "取消",
     "categories": "分类目录",
     "categorySearch": "选择分类",

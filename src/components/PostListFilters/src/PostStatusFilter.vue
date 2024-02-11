@@ -2,16 +2,13 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { PostStatusFilterChoice } from './types'
-import { parse } from 'path'
 
 const { t } = useI18n()
 export interface Props {
   modelValue: PostStatusFilterChoice
-  active: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => PostStatusFilterChoice.All,
-  active: () => true,
 })
 const filterItems = {
   [PostStatusFilterChoice.All]: t('posts.all'),
@@ -33,7 +30,7 @@ async function fetchStats() {
 }
 fetchStats()
 function isActive(value: PostStatusFilterChoice): boolean {
-  return value === props.modelValue && props.active
+  return value === props.modelValue
 }
 </script>
 <template>

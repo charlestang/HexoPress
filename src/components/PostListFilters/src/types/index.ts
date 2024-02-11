@@ -9,3 +9,8 @@ export enum PostStatusFilterChoice {
   Published = 'published',
   Draft = 'draft',
 }
+
+export type DateCategoryFilterValue = {
+  date: string
+  category: string
+}

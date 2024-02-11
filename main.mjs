@@ -17,8 +17,8 @@ function createWindow() {
     minHeight: 800,
     titleBarStyle: 'hidden',
     webPreferences: {
-      preload: join(__dirname, 'preload.js')
-    }
+      preload: join(__dirname, 'preload.js'),
+    },
   })
 
   console.log('current env is: ', process.env.NODE_ENV)
@@ -33,6 +33,7 @@ function createWindow() {
 
 app.whenReady().then(async () => {
   ipcMain.handle('site:posts', (event, ...args) => agent.getPosts(...args))
+  ipcMain.handle('site:postMonth', () => agent.getPostMonths())
   ipcMain.handle('site:categories', () => agent.getCategories())
   ipcMain.handle('site:tags', () => agent.getTags())
   ipcMain.handle('site:stats', () => agent.getStats())
@@ -43,11 +44,11 @@ app.whenReady().then(async () => {
   ipcMain.handle('post:content', (event, path) => agent.getContent(path))
   ipcMain.handle('post:save', (event, path, content) => agent.saveContent(path, content))
   ipcMain.handle('post:create', (event, type, title, slug, content) =>
-    agent.createFile(type, title, slug, content)
+    agent.createFile(type, title, slug, content),
   )
   ipcMain.handle('post:move', (event, sourcePath, content) => agent.moveFile(sourcePath, content))
   ipcMain.handle('post:delete', (event, path) => agent.deleteFile(path))
-  ipcMain.handle('sys:locale', (event) => app.getSystemLocale())
+  ipcMain.handle('sys:locale', event => app.getSystemLocale())
   ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))
   ipcMain.handle('agent:init', (event, path) => {
     let check = agent.checkDir(path) && agent.checkHexoDir(path)
@@ -70,7 +71,7 @@ app.whenReady().then(async () => {
   if (process.env.NODE_ENV === 'dev') {
     const vueDevToolsPath = join(
       homedir(),
-      '/Library/Application Support/Google/Chrome/Profile 1/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/6.5.1_0'
+      '/Library/Application Support/Google/Chrome/Profile 1/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/6.5.1_0',
     )
     await session.defaultSession.loadExtension(vueDevToolsPath)
   }

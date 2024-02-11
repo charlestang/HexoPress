@@ -79,6 +79,16 @@ export type FileEntry = {
   type: string
 }
 
+export type TreeNode = {
+  id?: string
+  parent?: string | undefined
+  label: string
+  children?: TreeNode[]
+  length?: number
+  permalink?: string
+  value: string
+}
+
 export interface ISite {
   getPosts: (
     published?: boolean,
@@ -90,6 +100,7 @@ export interface ISite {
     orderBy?: string,
     order?: string,
   ) => Promise<PostsResults>
+  getPostMonths: () => Promise<string[]>
   getCategories: () => Promise<Category[]>
   getTags: () => Promise<Tag[]>
   getStats: () => Promise<Stats>

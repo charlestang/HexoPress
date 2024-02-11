@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     CategoriesTree: typeof import('./../src/components/CategoriesTree.vue')['default']
     CategoriesTreePanel: typeof import('./../src/components/CategoriesTreePanel.vue')['default']
+    DateCategoryFilter: typeof import('./../src/components/PostListFilters/src/DateCategoryFilter.vue')['default']
     DateMetaEntry: typeof import('./../src/components/DateMetaEntry.vue')['default']
     EditorMain: typeof import('./../src/components/EditorMain.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
@@ -66,5 +67,8 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     TagInput: typeof import('./../src/components/TagInput.vue')['default']
     UrlMetaEntry: typeof import('./../src/components/UrlMetaEntry.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

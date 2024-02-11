@@ -1,7 +1,7 @@
+import { PostFilterType, PostStatusFilterChoice } from '@/components/PostListFilters'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { store } from './index'
-import { PostFilterType, PostStatusFilterChoice } from '@/components/PostListFilters'
 
 export const useFilterStore = defineStore('filter', () => {
   const currentActiveFilter = ref(PostFilterType.StatusFilter)
@@ -22,7 +22,10 @@ export const useFilterStore = defineStore('filter', () => {
     category: 'all',
   })
 
-  function setDateCategoryFilter(newVal: { date: string; category: string }, paginationConfig: any) {
+  function setDateCategoryFilter(
+    newVal: { date: string; category: string },
+    paginationConfig: any,
+  ) {
     dateCategoryFilterVal.value = newVal
     pagination.value = paginationConfig
     _setCurrentActiveFilter(PostFilterType.DateCategoryFilter)
@@ -34,7 +37,7 @@ export const useFilterStore = defineStore('filter', () => {
     pagination.value = paginationConfig
     _setCurrentActiveFilter(PostFilterType.SearchFilter)
   }
-  
+
   const pagination = ref({
     total: 0,
     currentPageIndx: 1,

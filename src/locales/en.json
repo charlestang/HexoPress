@@ -101,6 +101,8 @@
   },
   "posts": {
     "all": "All",
+    "allCategories": "All Categories",
+    "allMonths": "All Months",
     "cancel": "Cancel",
     "categories": "Categories",
     "categorySearch": "Select Category",

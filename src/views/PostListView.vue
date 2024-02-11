@@ -1,81 +1,49 @@
 <script lang="ts" setup>
-import type { Category, Post } from '@/local.d.ts'
+import { PostStatusFilterChoice } from '@/components/PostListFilters'
+import type { Post } from '@/local.d.ts'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
-import moment from 'moment'
-import { computed, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useFilterStore } from '@/stores/filter'
-import { PostStatusFilterChoice } from '@/components/PostListFilters'
-
-interface TreeNode {
-  id: string
-  parent: string | undefined
-  label: string
-  children?: TreeNode[]
-  length: number
-  permalink: string
-  value: string
-}
+import { storeToRefs } from 'pinia'
+import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const appStore = useAppStore()
 const filterStore = useFilterStore()
 const { t } = useI18n()
 
 // posts list
-const currentFilter = computed({
-  get: () => filterStore.statusFilterVal,
-  set: (val: PostStatusFilterChoice) => {
-    console.log('type of val is: ', typeof val)
-    console.log('value of val is: ', val)
-    filterStore.statusFilterVal = val
-  },
-})
+const { statusFilterVal, dateCategoryFilterVal } = storeToRefs(filterStore)
 const posts = ref<undefined | Post[]>(undefined)
-const selectedCat = ref<string>('')
-const selectedMonth = ref<string>('')
 const total = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(20)
 async function fetch(curPage: number) {
   let data
-  let published =
-    currentFilter.value === PostStatusFilterChoice.Published ||
-    currentFilter.value === PostStatusFilterChoice.All
-  let draft =
-    currentFilter.value === PostStatusFilterChoice.Draft ||
-    currentFilter.value === PostStatusFilterChoice.All
+  let published = statusFilterVal.value !== PostStatusFilterChoice.Draft
+  let draft = statusFilterVal.value !== PostStatusFilterChoice.Published
   let limit = pageSize.value
   let offset = (curPage - 1) * limit
+  let selectedMonth = dateCategoryFilterVal.value.date
+  if (selectedMonth === 'all') {
+    selectedMonth = ''
+  }
+  let selectedCat = dateCategoryFilterVal.value.category
+  if (selectedCat === 'all') {
+    selectedCat = ''
+  }
 
-  data = await window.site.getPosts(
-    published,
-    draft,
-    limit,
-    offset,
-    selectedCat.value,
-    selectedMonth.value,
-  )
+  data = await window.site.getPosts(published, draft, limit, offset, selectedCat, selectedMonth)
   posts.value = data.posts
   total.value = data.total
 }
 fetch(currentPage.value)
-watch(currentFilter, (value, oldValue) => {
-  if (value !== oldValue) {
-    console.log('currentFilter changed to: ', value)
-    fetch(currentPage.value)
-  }
-})
-watch(selectedCat, (value, oldValue) => {
+watch(statusFilterVal, (value, oldValue) => {
   if (value !== oldValue) {
     fetch(currentPage.value)
   }
 })
-watch(selectedMonth, (value, oldValue) => {
-  if (value !== oldValue) {
-    fetch(currentPage.value)
-  }
-})
+
 function refresh() {
   fetch(currentPage.value)
 }
@@ -124,66 +92,6 @@ function onDelete(articleName: string, articlePath: string) {
     })
 }
 
-// fetch all categories from backend
-let categories = ref<Category[]>([])
-async function fetchCategories() {
-  categories.value = await window.site.getCategories()
-}
-fetchCategories()
-
-// put all category entries into a map
-const nodeMap = computed(() => {
-  const map: { [id: string]: TreeNode } = {}
-  for (const entry of categories.value) {
-    map[entry.id] = {
-      id: entry.id,
-      value: entry.id,
-      parent: entry.parent,
-      label: entry.name,
-      children: [],
-      length: entry.length,
-      permalink: entry.permalink,
-    }
-  }
-  return map
-})
-
-// build a tree to display category hierarchy
-const treeData = computed(() => {
-  let tree: TreeNode[] = []
-
-  for (const node of Object.values(nodeMap.value)) {
-    if (node.parent) {
-      const parent = nodeMap.value[node.parent]
-      if (parent) {
-        parent.children?.push(node)
-      }
-    } else {
-      tree.push(node)
-    }
-  }
-  return tree
-})
-
-const updatedMonths = computed(() => {
-  const months = new Map<string, string>()
-  if (posts.value == null) {
-    return []
-  }
-  for (const post of posts.value) {
-    if (post.date) {
-      const value = moment(post.date).format(t('date.month'))
-      const key = moment(post.date).format('YYYY-MM')
-      if (key == 'Invalid date-01') {
-        console.log('Invalid date: ', post.date)
-      }
-      console.log('options ', key, '-', value)
-      months.set(key, value)
-    }
-  }
-  return Array.from(months).map(([k, v]) => ({ value: k, label: v }))
-})
-
 const showMetaEditDialog = ref(false)
 const currentEditingSourcePath = ref('')
 function onClickEditMeta(sourcePath: string) {
@@ -195,7 +103,7 @@ function onClickEditMeta(sourcePath: string) {
   <h2>{{ t('posts.pageTitle') }}</h2>
   <el-row :gutter="5" style="margin-bottom: 5px">
     <el-col :span="19">
-      <post-status-filter v-model="currentFilter" :active="true" />
+      <post-status-filter v-model="statusFilterVal" />
     </el-col>
     <el-col :span="5" style="display: flex; justify-content: flex-end">
       <el-space>
@@ -206,33 +114,7 @@ function onClickEditMeta(sourcePath: string) {
   </el-row>
   <el-row :gutter="5">
     <el-col :span="12">
-      <el-space>
-        <el-tree-select
-          v-model="selectedCat"
-          :data="treeData"
-          :render-after-expand="false"
-          size="small"
-          :placeholder="t('posts.categorySearch')"
-          :clearable="true"
-          check-strictly
-          style="width: 180px"
-          :fit-input-width="false" />
-        <el-select
-          v-model="selectedMonth"
-          size="small"
-          :placeholder="t('posts.monthFilter')"
-          :filterable="true"
-          :clearable="true"
-          style="width: 100px">
-          <el-option
-            v-for="item in updatedMonths"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value" />
-        </el-select>
-
-        <el-button type="primary" size="small" plain>{{ t('posts.filter') }}</el-button>
-      </el-space>
+      <date-category-filter v-model="dateCategoryFilterVal" @filter="refresh" />
     </el-col>
     <el-col :span="12" style="display: flex; justify-content: flex-end">
       <el-pagination
