@@ -5,35 +5,36 @@ export interface Props {
   modelValue?: string[]
 }
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: () => []
+  modelValue: () => [],
 })
 
 const emit = defineEmits(['update:modelValue'])
 
 let tagsInputActive = ref('')
-let tagInputing = ref('')
+let tagInputting = ref('')
 
-function onTagInputingChange(tagName: string): void {
-  tagInputing.value = ''
+function onTagInputtingChange(tagName: string): void {
+  tagInputting.value = ''
   emit('update:modelValue', props.modelValue.concat(tagName))
 }
 
 function onTagClose(tag: string): void {
   emit(
     'update:modelValue',
-    props.modelValue.filter((item) => item !== tag)
+    props.modelValue.filter(item => item !== tag),
   )
 }
 
-function onTagInputingDel(event: KeyboardEvent) {
-  if (event.type == 'keydown' && event.key == 'Backspace' && tagInputing.value === '') {
+function onTagInputtingDel(evt: KeyboardEvent | Event) {
+  const event = evt as KeyboardEvent
+  if (event.type == 'keydown' && event.key == 'Backspace' && tagInputting.value === '') {
     emit('update:modelValue', props.modelValue.slice(0, -1))
   }
 }
 
-function onTagInputingChar(tag: string) {
+function onTagInputtingChar(tag: string) {
   if (tag.endsWith(',')) {
-    onTagInputingChange(tag.slice(0, -1))
+    onTagInputtingChange(tag.slice(0, -1))
   }
 }
 </script>
@@ -44,16 +45,15 @@ function onTagInputingChar(tag: string) {
         {{ tag }}
       </el-tag>
       <el-input
-        v-model="tagInputing"
+        v-model="tagInputting"
         type="text"
         autocomplete="off"
         class="tags-input"
         @focus="tagsInputActive = 'is-active'"
         @blur="tagsInputActive = ''"
-        @change="onTagInputingChange"
-        @input="onTagInputingChar"
-        @keydown.delete="onTagInputingDel"
-      />
+        @change="onTagInputtingChange"
+        @input="onTagInputtingChar"
+        @keydown.delete="onTagInputtingDel" />
     </div>
   </div>
 </template>

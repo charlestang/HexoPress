@@ -68,7 +68,4 @@ declare module 'vue' {
     TagInput: typeof import('./../src/components/TagInput.vue')['default']
     UrlMetaEntry: typeof import('./../src/components/UrlMetaEntry.vue')['default']
   }
-  export interface ComponentCustomProperties {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
-  }
 }
