@@ -48,11 +48,9 @@ The client internally uses the API of Hexo version 7.1.1. Hexo blog versions abo
 
 [Download for Intel Chip: v1.0.0-alpha.2][download-for-intel]
 
-[Download for Windows: v1.0.0-alpha.2][download-for-win]
-
 ### 2. Windows
 
-Download to be provided.
+[Download for Windows: v1.0.0-alpha.2][download-for-win]
 
 ## III. Screenshots
 

@@ -46,13 +46,11 @@
 
 [下载 苹果M1芯片版本: v1.0.0-alpha.2][download-for-apple]
 
-[下载 苹果Intel芯片版本: v1.0.0-alpha.2][download-for-intel]
-
-[下载 Windows版本: v1.0.0-alpha.2][download-for-win]
+[下载 Intel芯片版本: v1.0.0-alpha.2][download-for-intel]
 
 ### 2. Windows
 
-待提供
+[下载 Windows版本: v1.0.0-alpha.2][download-for-win]
 
 ## 三、截图
 
