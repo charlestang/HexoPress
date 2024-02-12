@@ -1,10 +1,29 @@
 <script lang="ts" setup>
+import router from '@/router'
+import { useAppStore } from '@/stores/app'
 import { useI18n } from 'vue-i18n'
 
+const appStore = useAppStore()
 const { t } = useI18n()
+
+function unbindBasePath() {
+  console.log('call unbind basePath')
+  appStore.setBasePath('')
+  console.log('call router.push, to /')
+  router.push({ path: '/', replace: true })
+}
 </script>
 <template>
   <h2>{{ t('preferences.preferences') }}</h2>
+  <el-form label-width="180px" label-position="top" style="max-width: 750px">
+    <el-form-item :label="t('settings.basePath')">
+      <el-input v-model="appStore.basePath" disabled />
+    </el-form-item>
+    <el-form-item>
+      <el-button type="danger" plain @click="unbindBasePath">{{ t('settings.unbind') }}</el-button>
+    </el-form-item>
+  </el-form>
+
   <el-form label-width="180px" label-position="top" style="max-width: 750px">
     <el-form-item :label="t('settings.language')">
       <el-select>
@@ -12,8 +31,7 @@ const { t } = useI18n()
           v-for="lang in $i18n.availableLocales"
           :key="lang"
           :label="$t(`settings.languages.${lang}`)"
-          :value="lang"
-        />
+          :value="lang" />
       </el-select>
     </el-form-item>
     <el-form-item :label="t('settings.darkMode')">

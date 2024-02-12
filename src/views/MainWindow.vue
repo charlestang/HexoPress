@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import NavMenu from '@/components/NavMenu.vue'
+import router from '@/router'
 import { EditPen } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
-import NavMenu from '../components/NavMenu.vue'
-import router from '../router'
 const { t } = useI18n()
 const onNewPostButtonClicked = () => {
   router.push({ path: '/frame', query: { type: 'new' } })

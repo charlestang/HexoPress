@@ -137,6 +137,7 @@
   },
   "settings": {
     "alwaysTitle": "Always use title as filename.",
+    "basePath": "Blog base path",
     "dark": "Dark",
     "darkMode": "Dark Mode",
     "defaultFilename": "Default filename",
@@ -151,7 +152,8 @@
     "light": "Light",
     "permalinkFirst": "Use permalink as filename if set.",
     "save": "Save",
-    "system": "System"
+    "system": "System",
+    "unbind": "Unbind or Change"
   },
   "setup": {
     "choose": "Choose",

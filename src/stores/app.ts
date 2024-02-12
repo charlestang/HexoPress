@@ -1,7 +1,8 @@
-import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
-import { store } from './index'
 import { useCache } from '@/hooks/useCache'
+import type { HexoConfig, SiteInfo } from '@/local'
+import { defineStore } from 'pinia'
+import { computed, ref, watch } from 'vue'
+import { store } from './index'
 
 export const useAppStore = defineStore('app', () => {
   // locale
@@ -21,8 +22,12 @@ export const useAppStore = defineStore('app', () => {
   }
 
   function setBasePath(newBasePath: string) {
+    console.log('call setBasePath: ', newBasePath)
     wsCache.set('basePath', newBasePath)
     basePath.value = newBasePath
+    if (newBasePath.length == 0) {
+      isAgentInitialized.value = false
+    }
   }
 
   const isBasePathSet = computed(() => basePath.value.length > 0)
@@ -33,12 +38,23 @@ export const useAppStore = defineStore('app', () => {
     isAgentInitialized.value = true
   }
 
-  const hexoConfig = computed(() => {
-    return window.site.getHexoConfig()
-  })
+  const hexoConfig = ref<HexoConfig>(null)
 
-  const siteInfo = computed(() => {
-    return window.site.getSiteInfo()
+  const siteInfo = ref<SiteInfo>(null)
+
+  watch(isAgentInitialized, (newVal, oldVal) => {
+    if (newVal && !oldVal) {
+      window.site.getHexoConfig().then(config => {
+        if (config != null) {
+          hexoConfig.value = config
+        }
+      })
+      window.site.getSiteInfo().then(info => {
+        if (info != null) {
+          siteInfo.value = info
+        }
+      })
+    }
   })
 
   return {

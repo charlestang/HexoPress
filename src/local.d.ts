@@ -55,7 +55,7 @@ export type SiteInfo = {
   name: string
   version: string
   hexoVersion: string
-}
+} | null
 
 export type HexoConfig = {
   title: string
@@ -71,7 +71,7 @@ export type HexoConfig = {
   time_format: string
   theme: string
   source_dir: string
-}
+} | null
 
 export type FileEntry = {
   name: string

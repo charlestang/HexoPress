@@ -139,6 +139,7 @@
   },
   "settings": {
     "alwaysTitle": "总是用标题做文件名",
+    "basePath": "博客根目录",
     "dark": "深色模式",
     "darkMode": "暗黑模式",
     "defaultFilename": "默认文件名",
@@ -153,7 +154,8 @@
     "light": "浅色模式",
     "permalinkFirst": "如果设置了 permalink，优先用 permalink 做文件名",
     "save": "保存",
-    "system": "跟随系统"
+    "system": "跟随系统",
+    "unbind": "解绑/变更"
   },
   "setup": {
     "choose": "选择",
