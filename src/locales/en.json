@@ -115,6 +115,7 @@
     "draft": "Draft",
     "edit": "Edit",
     "editMeta": "Edit meta",
+    "edited": "Edited",
     "filter": "Filter",
     "monthFilter": "Select Month",
     "pageTitle": "Posts",
@@ -127,6 +128,7 @@
     "tags": "Tags",
     "title": "Title",
     "unknownError": "Unknown error.",
+    "updated": "Updated At",
     "updatedAt": "Updated At",
     "warning": "Warning"
   },

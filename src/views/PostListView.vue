@@ -98,6 +98,8 @@ function onClickEditMeta(sourcePath: string) {
   currentEditingSourcePath.value = sourcePath
   showMetaEditDialog.value = true
 }
+
+const timeType = ref('publishedAt')
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -177,37 +179,58 @@ function onClickEditMeta(sourcePath: string) {
         <el-text v-if="Object.keys(scope.row.tags).length == 0">--</el-text>
       </template>
     </el-table-column>
-    <el-table-column :label="t('posts.publishedAt')">
-      <template #default="scope">
-        <el-row>
-          <el-col :span="24">
-            <span v-if="scope.row.status == 'published'">{{ t('posts.published') }}</span>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <span v-if="scope.row.status == 'published'">{{
-              Intl.DateTimeFormat(appStore.locale, {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              }).format(new Date(scope.row.date))
-            }}</span>
-          </el-col>
-        </el-row>
+    <el-table-column
+      :label="t('posts.publishedAt')"
+      sortable
+      :sort-by="timeType == 'publishedAt' ? 'date' : 'updated'">
+      <template #header>
+        <el-select v-model="timeType" size="small" style="width: 140px">
+          <el-option key="publishedAt" :label="t('posts.publishedAt')" value="publishedAt" />
+          <el-option key="updatedAt" :label="t('posts.updatedAt')" value="updatedAt" />
+        </el-select>
       </template>
-    </el-table-column>
-    <el-table-column :label="t('posts.updatedAt')">
       <template #default="scope">
-        <el-row>
-          <el-col :span="24">
-            <span v-if="scope.row.updated != ''">{{
-              Intl.DateTimeFormat(appStore.locale, {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              }).format(new Date(scope.row.updated))
-            }}</span>
-          </el-col>
-        </el-row>
+        <template v-if="timeType == 'publishedAt'">
+          <el-row>
+            <el-col :span="24">
+              <span v-if="scope.row.status == 'published'">{{ t('posts.published') }}</span>
+              <span v-else>{{ t('posts.edited') }}</span>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <span v-if="scope.row.status == 'published'">{{
+                Intl.DateTimeFormat(appStore.locale, {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                }).format(new Date(scope.row.date))
+              }}</span>
+              <span v-else>{{
+                Intl.DateTimeFormat(appStore.locale, {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                }).format(new Date(scope.row.updated))
+              }}</span>
+            </el-col>
+          </el-row>
+        </template>
+        <template v-else>
+          <el-row>
+            <el-col :span="24">
+              <span>{{ t('posts.updated') }}</span>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <span v-if="scope.row.updated != ''">{{
+                Intl.DateTimeFormat(appStore.locale, {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                }).format(new Date(scope.row.updated))
+              }}</span>
+            </el-col>
+          </el-row>
+        </template>
       </template>
     </el-table-column>
   </el-table>

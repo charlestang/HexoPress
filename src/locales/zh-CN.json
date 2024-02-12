@@ -117,6 +117,7 @@
     "draft": "草稿",
     "edit": "编辑",
     "editMeta": "编辑元信息",
+    "edited": "最后编辑",
     "filter": "过滤",
     "monthFilter": "选择月份",
     "pageTitle": "文章",
@@ -129,6 +130,7 @@
     "tags": "标签",
     "title": "标题",
     "unknownError": "发生了未知错误。",
+    "updated": "更新于",
     "updatedAt": "更新时间",
     "warning": "注意"
   },
