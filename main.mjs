@@ -23,7 +23,7 @@ function createWindow() {
 
   console.log('current env is: ', process.env.NODE_ENV)
   if (process.env.NODE_ENV === 'dev') {
-    win.loadURL('http://localhost:5173/Users/charles/Projects/HexoPress/dist')
+    win.loadURL('http://localhost:5173/')
 
     win.webContents.openDevTools()
   } else {
