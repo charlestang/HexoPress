@@ -16,6 +16,10 @@ function createWindow() {
     minWidth: 1280,
     minHeight: 800,
     titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#59524c',
+      symbolColor: '#ffffff',
+    },
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
     },

@@ -1,5 +1,7 @@
 {
   "name": "hexopress",
+  "author": "Charles",
+  "description": "A client software for Hexo blog.",
   "main": "main.mjs",
   "version": "1.0.0",
   "private": true,
@@ -16,6 +18,7 @@
     "start": "electron .",
     "electron:dev": "wait-on tcp:5173 && electron .",
     "electron:run": "NODE_ENV=dev concurrently -k \"npm run dev\" \"npm run electron:dev\"",
+    "electron:win:run": "set NODE_ENV=dev && concurrently -k \"npm run dev\" \"npm run electron:dev\"",
     "forge:start": "electron-forge start",
     "forge:package": "electron-forge package",
     "forge:make": "electron-forge make",

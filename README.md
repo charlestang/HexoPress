@@ -48,6 +48,8 @@ The client internally uses the API of Hexo version 7.1.1. Hexo blog versions abo
 
 [Download for Intel Chip: v1.0.0-alpha.2][download-for-intel]
 
+[Download for Windows: v1.0.0-alpha.2][download-for-win]
+
 ### 2. Windows
 
 Download to be provided.
@@ -110,8 +112,9 @@ Visit https://github.com/charlestang/HexoPress/issues to submit issues.
 1. Push to the branch: git push origin <feature-name>
 1. Submit a pull request
 
-[download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-x64-1.0.0-alpha.2.zip
 [download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-arm64-1.0.0-alpha.2.zip
+[download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-x64-1.0.0-alpha.2.zip
+[download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-win-x64-1.0.0-alpha.2.zip
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
 [electron-badge]: https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white
 [fastify-badge]: https://img.shields.io/badge/fastify-%23000000.svg?logo=fastify&logoColor=white

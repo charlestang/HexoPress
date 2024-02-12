@@ -46,7 +46,9 @@
 
 [下载 苹果M1芯片版本: v1.0.0-alpha.2][download-for-apple]
 
-[下载 Intel芯片版本: v1.0.0-alpha.2][download-for-intel]
+[下载 苹果Intel芯片版本: v1.0.0-alpha.2][download-for-intel]
+
+[下载 Windows版本: v1.0.0-alpha.2][download-for-win]
 
 ### 2. Windows
 
@@ -117,7 +119,9 @@ npm run forge:make
 4. 推送到分支：`git push origin <feature-name>`
 5. 提交合并请求
 
+[download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-arm64-1.0.0-alpha.2.zip
 [download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-x64-1.0.0-alpha.2.zip
+[download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-win-x64-1.0.0-alpha.2.zip
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
 [electron-badge]: https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white
 [fastify-badge]: https://img.shields.io/badge/fastify-%23000000.svg?logo=fastify&logoColor=white
