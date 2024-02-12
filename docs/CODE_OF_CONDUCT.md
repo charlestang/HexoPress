@@ -1,5 +1,7 @@
 # Contributor Covenant Code of Conduct
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
 ## Our Pledge
 
 In the interest of fostering an open and welcoming environment, we as

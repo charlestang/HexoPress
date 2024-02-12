@@ -21,6 +21,36 @@ English | [简体中文](./README_zh.md)
 
 
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [I. Features](#i-features)
+- [II. Installation](#ii-installation)
+  - [0. Compatibility](#0-compatibility)
+  - [1. Mac](#1-mac)
+  - [2. Windows](#2-windows)
+- [III. Screenshots](#iii-screenshots)
+  - [1. Dashboard](#1-dashboard)
+  - [2. Posts List](#2-posts-list)
+  - [3. Editor](#3-editor)
+  - [4. Categories Management](#4-categories-management)
+  - [5. Tags Management](#5-tags-management)
+- [IV. Getting Started from Source Code](#iv-getting-started-from-source-code)
+  - [1. Clone the source code](#1-clone-the-source-code)
+  - [2. Running Environment](#2-running-environment)
+  - [3. Install Dependencies](#3-install-dependencies)
+  - [4. Run](#4-run)
+  - [5. Package](#5-package)
+- [V. Contribution](#v-contribution)
+  - [1. Report Issues](#1-report-issues)
+  - [2. Contribute Code](#2-contribute-code)
+
+<!-- /code_chunk_output -->
+
+
+
+
 ## I. Features
 -----
 - [x] 📝 Display of the list of published articles and drafts;

@@ -1,7 +1,31 @@
-
-[TOC]
-
 # Coding Standard 
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=true} -->
+
+<!-- code_chunk_output -->
+
+1. [Use multi-word component names](#use-multi-word-component-names)
+2. [Use detailed prop definitions](#use-detailed-prop-definitions)
+3. [Use keyed v-for](#use-keyed-v-for)
+4. [Avoid `v-if` with `v-for`](#avoid-v-if-with-v-for)
+5. [Use component-scoped styling](#use-component-scoped-styling)
+6. [Component files](#component-files)
+7. [Single-file component filename casing](#single-file-component-filename-casing)
+8. [Base component names](#base-component-names)
+9. [Tightly coupled component names](#tightly-coupled-component-names)
+10. [Order of words in component names](#order-of-words-in-component-names)
+11. [Self-closing components](#self-closing-components)
+12. [Component name casing in templates](#component-name-casing-in-templates)
+13. [Component name casing in JS/JSX](#component-name-casing-in-jsjsx)
+14. [Full-word component names](#full-word-component-names)
+15. [Prop name casing](#prop-name-casing)
+16. [Multi-attribute elements](#multi-attribute-elements)
+17. [Simple expressions in templates](#simple-expressions-in-templates)
+18. [Simple computed properties](#simple-computed-properties)
+19. [Quoted attribute values](#quoted-attribute-values)
+20. [Directive shorthands](#directive-shorthands)
+
+<!-- /code_chunk_output -->
 
 ## Use multi-word component names
 
