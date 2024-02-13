@@ -40,6 +40,14 @@ export type Tag = {
   length: number
 }
 
+export type Asset = {
+  id: string
+  path: string
+  modified: boolean
+  renderable: boolean
+  source: string
+}
+
 export type Stats = {
   postCount: number
   postDraftCount: number
@@ -103,6 +111,7 @@ export interface ISite {
   getPostMonths: () => Promise<string[]>
   getCategories: () => Promise<Category[]>
   getTags: () => Promise<Tag[]>
+  getAssets: () => Promise<Asset[]>
   getStats: () => Promise<Stats>
   getSiteConfig: () => Promise<Object>
   getSiteInfo: () => Promise<SiteInfo>

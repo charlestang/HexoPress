@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('site', {
   getPostMonths: () => ipcRenderer.invoke('site:postMonth'),
   getCategories: (...args) => ipcRenderer.invoke('site:categories', ...args),
   getTags: (...args) => ipcRenderer.invoke('site:tags', ...args),
+  getAssets: () => ipcRenderer.invoke('site:assets'),
   getStats: () => ipcRenderer.invoke('site:stats'),
   getSiteConfig: () => ipcRenderer.invoke('site:config'),
   getSiteInfo: () => ipcRenderer.invoke('site:info'),

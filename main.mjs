@@ -40,6 +40,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('site:postMonth', () => agent.getPostMonths())
   ipcMain.handle('site:categories', () => agent.getCategories())
   ipcMain.handle('site:tags', () => agent.getTags())
+  ipcMain.handle('site:assets', () => agent.getAssets())
   ipcMain.handle('site:stats', () => agent.getStats())
   ipcMain.handle('site:config', () => agent.getConfig())
   ipcMain.handle('site:info', () => agent.getSiteInfo())
