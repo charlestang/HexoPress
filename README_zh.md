@@ -28,21 +28,23 @@
   - [0. 兼容性](#0-兼容性)
   - [1. Mac](#1-mac)
   - [2. Windows](#2-windows)
-- [三、截图](#三-截图)
+- [三、用户手册](#三-用户手册)
+- [四、截图](#四-截图)
   - [1. 仪表盘](#1-仪表盘)
   - [2. 文章列表](#2-文章列表)
   - [3. 文章编辑器](#3-文章编辑器)
   - [4. 分类管理](#4-分类管理)
   - [5. 标签管理](#5-标签管理)
-- [四、从源码开始](#四-从源码开始)
+- [五、从源码开始](#五-从源码开始)
   - [1. 克隆源代码](#1-克隆源代码)
   - [2. 运行环境](#2-运行环境)
   - [3. 安装依赖](#3-安装依赖)
   - [4. 运行](#4-运行)
   - [5. 打包](#5-打包)
-- [五、贡献](#五-贡献)
+- [六、贡献](#六-贡献)
   - [1. 发现问题](#1-发现问题)
   - [2. 贡献代码](#2-贡献代码)
+- [七、附录](#七-附录)
 
 <!-- /code_chunk_output -->
 
@@ -79,7 +81,11 @@
 
 [下载 Windows版本: v1.0.0-alpha.2][download-for-win]
 
-## 三、截图
+## 三、用户手册
+
+1. [如何使用 Hexo 建立一个博客？][docs-hexo-get-start]
+
+## 四、截图
 
 ### 1. 仪表盘
 ![Dashboard][screenshot-dashboard]
@@ -96,7 +102,7 @@
 ### 5. 标签管理
 ![Tags Management][screenshot-tags]
 
-## 四、从源码开始
+## 五、从源码开始
 
 ### 1. 克隆源代码
 
@@ -130,7 +136,7 @@ npm run build
 npm run forge:make 
 ```
 
-## 五、贡献
+## 六、贡献
 
 ### 1. 发现问题
 
@@ -144,6 +150,12 @@ npm run forge:make
 4. 推送到分支：`git push origin <feature-name>`
 5. 提交合并请求
 
+## 七、附录
+
+* [《我为什么构建了 HexoPress》][blog-why-hexopress]
+
+[blog-why-hexopress]: https://blog.charlestang.org/2023/how-to-use-hexo-and-github-actions-to-build-a-personal-blog/
+[docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/2024/02/07/HowTo-%E7%94%A8-Hexo-%E5%BB%BA%E7%AB%8B%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/
 [download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-arm64-1.0.0-alpha.2.zip
 [download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-x64-1.0.0-alpha.2.zip
 [download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-win-x64-1.0.0-alpha.2.zip

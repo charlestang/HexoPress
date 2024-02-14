@@ -30,19 +30,20 @@ English | [简体中文](./README_zh.md)
   - [0. Compatibility](#0-compatibility)
   - [1. Mac](#1-mac)
   - [2. Windows](#2-windows)
-- [III. Screenshots](#iii-screenshots)
+- [III. User Guides](#iii-user-guides)
+- [IV. Screenshots](#iv-screenshots)
   - [1. Dashboard](#1-dashboard)
   - [2. Posts List](#2-posts-list)
   - [3. Editor](#3-editor)
   - [4. Categories Management](#4-categories-management)
   - [5. Tags Management](#5-tags-management)
-- [IV. Getting Started from Source Code](#iv-getting-started-from-source-code)
+- [V. Getting Started from Source Code](#v-getting-started-from-source-code)
   - [1. Clone the source code](#1-clone-the-source-code)
   - [2. Running Environment](#2-running-environment)
   - [3. Install Dependencies](#3-install-dependencies)
   - [4. Run](#4-run)
   - [5. Package](#5-package)
-- [V. Contribution](#v-contribution)
+- [VI. Contribution](#vi-contribution)
   - [1. Report Issues](#1-report-issues)
   - [2. Contribute Code](#2-contribute-code)
 
@@ -82,7 +83,11 @@ The client internally uses the API of Hexo version 7.1.1. Hexo blog versions abo
 
 [Download for Windows: v1.0.0-alpha.2][download-for-win]
 
-## III. Screenshots
+## III. User Guides
+
+1. [How to build a blog with Hexo?][docs-hexo-get-start]
+
+## IV. Screenshots
 
 ### 1. Dashboard
 ![Dashboard][screenshot-dashboard]
@@ -99,7 +104,7 @@ The client internally uses the API of Hexo version 7.1.1. Hexo blog versions abo
 ### 5. Tags Management
 ![Tags Management][screenshot-tags]
 
-## IV. Getting Started from Source Code
+## V. Getting Started from Source Code
 
 ### 1. Clone the source code
 
@@ -127,7 +132,7 @@ npm run build
 npm run forge:make
 ```
 
-## V. Contribution
+## VI. Contribution
 
 ### 1. Report Issues
 
@@ -140,6 +145,7 @@ Visit https://github.com/charlestang/HexoPress/issues to submit issues.
 1. Push to the branch: git push origin <feature-name>
 1. Submit a pull request
 
+[docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/2024/02/07/How-to-create-a-blog-with-Hexo/
 [download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-arm64-1.0.0-alpha.2.zip
 [download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-x64-1.0.0-alpha.2.zip
 [download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-win-x64-1.0.0-alpha.2.zip
