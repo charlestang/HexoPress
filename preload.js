@@ -32,4 +32,6 @@ contextBridge.exposeInMainWorld('site', {
   onVaultPathChanged: callback =>
     ipcRenderer.on('configChanged:vaultPath', (_, value) => callback(value)),
   initializeAgent: path => ipcRenderer.invoke('agent:init', path),
+  getDarkMode: () => ipcRenderer.invoke('dark:get'),
+  setDarkMode: val => ipcRenderer.invoke('dark:set', val),
 })

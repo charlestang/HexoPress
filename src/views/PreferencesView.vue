@@ -2,6 +2,7 @@
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 const appStore = useAppStore()
 const { t } = useI18n()
@@ -12,6 +13,14 @@ function unbindBasePath() {
   console.log('call router.push, to /')
   router.push({ path: '/', replace: true })
 }
+
+const darkMode = computed({
+  get: () => appStore.darkMode,
+  set: val => {
+    console.log('preferences set darkMode as:', val)
+    appStore.setDarkMode(val)
+  },
+})
 </script>
 <template>
   <h2>{{ t('preferences.preferences') }}</h2>
@@ -35,7 +44,7 @@ function unbindBasePath() {
       </el-select>
     </el-form-item>
     <el-form-item :label="t('settings.darkMode')">
-      <el-select>
+      <el-select v-model="darkMode">
         <el-option key="light" :label="t('settings.light')" value="light" />
         <el-option key="dark" :label="t('settings.dark')" value="dark" />
         <el-option key="system" :label="t('settings.system')" value="system" />

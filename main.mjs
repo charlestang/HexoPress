@@ -1,4 +1,4 @@
-import { BrowserWindow, app, dialog, ipcMain, session } from 'electron'
+import { BrowserWindow, app, dialog, ipcMain, session, nativeTheme } from 'electron'
 import { homedir } from 'os'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -33,6 +33,14 @@ function createWindow() {
   } else {
     win.loadFile('dist/index.html')
   }
+
+  ipcMain.handle('dark:get', () => {
+    return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+  })
+  ipcMain.handle('dark:set', (event, val) => {
+    console.log('main.mjs dark:set is called, new value is: ', val)
+    nativeTheme.themeSource = val
+  })
 }
 
 app.whenReady().then(async () => {

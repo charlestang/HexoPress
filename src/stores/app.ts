@@ -12,11 +12,30 @@ export const useAppStore = defineStore('app', () => {
     locale.value = newLocale
   }
 
+  const { wsCache } = useCache('localStorage')
+
+  // dark mode
+  const darkMode = ref('')
+  const darkModeVal = wsCache.get('darkMode')
+  if (darkModeVal !== null) {
+    darkMode.value = darkModeVal as string
+  } else {
+    darkMode.value = 'system'
+  }
+  window.site.setDarkMode(darkMode.value)
+
+  function setDarkMode(newDarkMode: string) {
+    console.log('appStore setDarkMode called, newVal is: ', newDarkMode)
+    if (newDarkMode !== darkMode.value) {
+      wsCache.set('darkMode', newDarkMode)
+      darkMode.value = newDarkMode
+      window.site.setDarkMode(newDarkMode)
+    }
+  }
+
   // base path
   const basePath = ref('')
-
-  const { wsCache } = useCache('localStorage')
-  let basePathVal = wsCache.get('basePath')
+  const basePathVal = wsCache.get('basePath')
   if (basePathVal !== null) {
     basePath.value = basePathVal as string
   }
@@ -60,6 +79,8 @@ export const useAppStore = defineStore('app', () => {
   return {
     locale,
     setLocale,
+    darkMode,
+    setDarkMode,
     basePath,
     isBasePathSet,
     setBasePath,

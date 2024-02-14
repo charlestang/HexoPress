@@ -126,6 +126,8 @@ export interface ISite {
   getReadDir: (path: string) => Promise<FileEntry[]>
   onVaultPathChanged: (callback: (newValue: string) => void) => void
   initializeAgent: (path: string) => Promise<boolean>
+  setDarkMode: (darkMode: string) => Promise<void>
+  getDarkMode: () => Promise<string>
 }
 
 declare global {
