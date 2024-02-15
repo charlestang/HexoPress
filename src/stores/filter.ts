@@ -4,17 +4,11 @@ import { ref } from 'vue'
 import { store } from './index'
 
 export const useFilterStore = defineStore('filter', () => {
-  const currentActiveFilter = ref(PostFilterType.StatusFilter)
-  function _setCurrentActiveFilter(filter: PostFilterType) {
-    currentActiveFilter.value = filter
-  }
-
   const statusFilterVal = ref(PostStatusFilterChoice.All)
 
   function setStatusFilter(newVal: PostStatusFilterChoice, paginationConfig: any) {
     statusFilterVal.value = newVal
     pagination.value = paginationConfig
-    _setCurrentActiveFilter(PostFilterType.StatusFilter)
   }
 
   const dateCategoryFilterVal = ref({
@@ -28,14 +22,12 @@ export const useFilterStore = defineStore('filter', () => {
   ) {
     dateCategoryFilterVal.value = newVal
     pagination.value = paginationConfig
-    _setCurrentActiveFilter(PostFilterType.DateCategoryFilter)
   }
 
   const searchFilterVal = ref('')
   function setSearchFilter(newVal: string, paginationConfig: any) {
     searchFilterVal.value = newVal
     pagination.value = paginationConfig
-    _setCurrentActiveFilter(PostFilterType.SearchFilter)
   }
 
   const pagination = ref({
@@ -45,7 +37,6 @@ export const useFilterStore = defineStore('filter', () => {
   })
 
   return {
-    currentActiveFilter,
     statusFilterVal,
     setStatusFilter,
     dateCategoryFilterVal,

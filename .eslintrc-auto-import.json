@@ -1,6 +1,3 @@
 {
-  "globals": {
-    "ElMessage": true,
-    "ElMessageBox": true
-  }
+  "globals": {}
 }
