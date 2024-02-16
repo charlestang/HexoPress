@@ -76,6 +76,18 @@ export const useAppStore = defineStore('app', () => {
     }
   })
 
+  const editMode = ref('') // the other value is 'vim'
+  const editModeVal = wsCache.get('editMode')
+  if (editModeVal !== null) {
+    editMode.value = editModeVal as string
+  } else {
+    editMode.value = 'normal'
+  }
+
+  function setEditMode(newMode: string) {
+    editMode.value = newMode
+  }
+
   return {
     locale,
     setLocale,
@@ -88,6 +100,8 @@ export const useAppStore = defineStore('app', () => {
     setAgentInitialized,
     hexoConfig,
     siteInfo,
+    editMode,
+    setEditMode,
   }
 })
 

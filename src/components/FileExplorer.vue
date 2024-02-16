@@ -24,16 +24,20 @@ const breadcrumbs = ref<BreadcrumbItem[]>([])
 async function updateBreadcrumbs() {
   const hexoConfig = await appStore.hexoConfig
   breadcrumbs.value = []
-  breadcrumbs.value.push({
-    dir: 'source',
-    path: hexoConfig.source_dir
-  })
+  if (hexoConfig !== null) {
+    breadcrumbs.value.push({
+      dir: 'source',
+      path: hexoConfig.source_dir,
+    })
+  }
   if (currentPath.value !== '') {
     currentPath.value.split('/').forEach((dir: string, index: number, arr: string[]) => {
-      breadcrumbs.value.push({
-        dir: dir,
-        path: join(hexoConfig.source_dir, dir)
-      })
+      if (hexoConfig !== null) {
+        breadcrumbs.value.push({
+          dir: dir,
+          path: join(hexoConfig.source_dir, dir),
+        })
+      }
     })
   }
 }

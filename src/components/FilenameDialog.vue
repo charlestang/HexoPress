@@ -14,7 +14,7 @@ export interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => false,
-  sourcePath: () => ''
+  sourcePath: () => '',
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -25,14 +25,16 @@ const showDialog = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  }
+  },
 })
 const sourceDir = ref('')
 
 watchEffect(async () => {
   const base = await appStore.basePath
   const config = await appStore.hexoConfig
-  sourceDir.value = join(base, config.source_dir, '/')
+  if (config !== null) {
+    sourceDir.value = join(base, config.source_dir, '/')
+  }
 })
 </script>
 <template>

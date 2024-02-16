@@ -21,6 +21,14 @@ const darkMode = computed({
     appStore.setDarkMode(val)
   },
 })
+
+const editMode = computed({
+  get: () => appStore.editMode,
+  set: val => {
+    console.log('preferences set editMode as:', val)
+    appStore.setEditMode(val)
+  },
+})
 </script>
 <template>
   <h2>{{ t('preferences.preferences') }}</h2>
@@ -51,7 +59,7 @@ const darkMode = computed({
       </el-select>
     </el-form-item>
     <el-form-item :label="t('settings.editorMode')">
-      <el-radio-group>
+      <el-radio-group v-model="editMode">
         <el-radio label="normal"> {{ t('settings.editorNormal') }}</el-radio>
         <el-radio label="vim"> {{ t('settings.editorVim') }} </el-radio>
       </el-radio-group>

@@ -114,7 +114,7 @@ const timeType = ref('publishedAt')
       </el-space>
     </el-col>
   </el-row>
-  <el-row :gutter="5">
+  <el-row :gutter="5" style="margin-bottom: 5px">
     <el-col :span="12">
       <date-category-filter v-model="dateCategoryFilterVal" @filter="refresh" />
     </el-col>

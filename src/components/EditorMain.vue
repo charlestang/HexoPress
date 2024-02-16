@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
 import type { Category } from '@/local.d.ts'
+import { useAppStore } from '@/stores/app'
 import { lineNumbers } from '@codemirror/view'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { vim } from '@replit/codemirror-vim'
@@ -205,21 +206,16 @@ async function publishDraft() {
   }
 }
 
-config({
-  codeMirrorExtensions(theme, extensions) {
-    return [...extensions, lineNumbers(), vim()]
-  },
-})
-const activeAsidePanels = ref(['meta', 'cate', 'tags'])
+const appStore = useAppStore()
 
-const showCreateCategory = ref(false)
-const createCategoryForm = ref({
-  name: '',
-  parent: '',
-})
-function onClickAddCategory() {
-  console.log('add new category: ')
+if (appStore.editMode === 'vim') {
+  config({
+    codeMirrorExtensions(theme, extensions) {
+      return [...extensions, lineNumbers(), vim()]
+    },
+  })
 }
+const activeAsidePanels = ref(['meta', 'cate', 'tags'])
 </script>
 
 <template>
