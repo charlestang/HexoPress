@@ -87,7 +87,8 @@
     "title": "The actual filename of the document"
   },
   "mediaLibrary": {
-    "MediaLibrary": "Media Library"
+    "MediaLibrary": "Media Library",
+    "preview": "Preview"
   },
   "nav": {
     "allPosts": "All posts",

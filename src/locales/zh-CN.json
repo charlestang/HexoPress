@@ -89,7 +89,8 @@
     "title": "文档在磁盘上的实际文件名"
   },
   "mediaLibrary": {
-    "MediaLibrary": "媒体库"
+    "MediaLibrary": "媒体库",
+    "preview": "预览"
   },
   "nav": {
     "allPosts": "文章",
