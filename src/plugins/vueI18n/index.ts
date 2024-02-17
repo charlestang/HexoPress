@@ -1,34 +1,21 @@
 import { useAppStoreWithout } from '@/stores/app'
-import { watch, type App } from 'vue'
+import { type App } from 'vue'
 import { createI18n } from 'vue-i18n'
+import messages from '@intlify/unplugin-vue-i18n/messages'
 
 export const setupI18n = async (app: App) => {
   const currentLocale = await window.site.getSystemLocale()
   console.log('read system locale from backend: ' + currentLocale)
   const appStore = useAppStoreWithout()
   appStore.setLocale(currentLocale)
-  const messages = await import(`../../locales/${currentLocale}.json`)
   const options = {
     legacy: false,
     locale: currentLocale,
     fallbackLocale: 'en',
-    messages: {
-      [currentLocale]: messages.default
-    },
+    messages,
     sync: true,
-    silentFallbackWarn: true
+    silentFallbackWarn: true,
   }
   const i18n = createI18n(options)
-  // 监听用户的语言设置更改
-  watch(
-    () => appStore.locale,
-    async (newLocale) => {
-      const messages = await import(`../../locales/${newLocale}.json`)
-      i18n.global.setLocaleMessage(newLocale, messages.default)
-      i18n.global.locale = newLocale
-    },
-    { immediate: true }
-  )
-
   app.use(i18n)
 }

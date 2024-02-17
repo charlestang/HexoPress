@@ -1,13 +1,23 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["src", "types/**/*.d.ts"],
-  "exclude": ["src/**/__tests__/*"],
+  "include": [
+    "src",
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "src/**/__tests__/*"
+  ],
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
-    "types": ["@modyfi/vite-plugin-yaml/modules"]
+    "types": [
+      "@modyfi/vite-plugin-yaml/modules",
+      "@intlify/unplugin-vue-i18n/messages"
+    ]
   }
 }

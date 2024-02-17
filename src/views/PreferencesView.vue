@@ -29,6 +29,14 @@ const editMode = computed({
     appStore.setEditMode(val)
   },
 })
+
+const locale = computed({
+  get: () => appStore.locale,
+  set: val => {
+    console.log('preferences set locale as:', val)
+    appStore.setLocale(val)
+  },
+})
 </script>
 <template>
   <h2>{{ t('preferences.preferences') }}</h2>
@@ -43,14 +51,12 @@ const editMode = computed({
 
   <el-form label-width="180px" label-position="top" style="max-width: 750px">
     <el-form-item :label="t('settings.language')">
-      <el-select>
-        <el-option
-          v-for="lang in $i18n.availableLocales"
-          :key="lang"
-          :label="$t(`settings.languages.${lang}`)"
-          :value="lang" />
+      <el-select v-model="locale">
+        <el-option key="zh-CN" :label="t(`settings.languages.zh-CN`)" value="zh-CN" />
+        <el-option key="en" :label="t(`settings.languages.en`)" value="en" />
       </el-select>
     </el-form-item>
+    {{ console.log('$i18n', $i18n) }}
     <el-form-item :label="t('settings.darkMode')">
       <el-select v-model="darkMode">
         <el-option key="light" :label="t('settings.light')" value="light" />
