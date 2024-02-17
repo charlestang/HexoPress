@@ -35,7 +35,6 @@ watchEffect(async () => {
   hexoConfig.value = await appStore.hexoConfig
   siteInfo.value = await appStore.siteInfo
 })
-
 </script>
 <template>
   <h2>{{ t('common.dashboard') }}</h2>
@@ -69,8 +68,7 @@ watchEffect(async () => {
             <el-statistic
               :title="t('common.draft')"
               :value="stats?.postDraftCount"
-              :precision="0"
-            />
+              :precision="0" />
           </el-col>
           <el-col :span="8">
             <el-statistic :title="t('common.page')" :value="stats?.pageCount" :precision="0" />

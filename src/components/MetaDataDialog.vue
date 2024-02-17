@@ -13,7 +13,7 @@ export interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => false,
-  sourcePath: () => ''
+  sourcePath: () => '',
 })
 
 const emit = defineEmits(['update:modelValue', 'success'])
@@ -24,7 +24,7 @@ const showDialog = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  }
+  },
 })
 
 const frontMatter = ref<FrontMatter>({
@@ -34,13 +34,13 @@ const frontMatter = ref<FrontMatter>({
   updated: new Date(),
   tags: [],
   categories: [],
-  excerpt: ''
+  excerpt: '',
 })
 const content = ref('')
 async function onOpen() {
   const loadingInstance = ElLoading.service({ target: 'dialog' })
   // The blog post already exists, it is now being edited.
-  await window.site.getContent(props.sourcePath).then((data) => {
+  await window.site.getContent(props.sourcePath).then(data => {
     const parseDown = parseFrontMatter(data)
     frontMatter.value = parseDown.data as FrontMatter
     content.value = parseDown.content
@@ -50,7 +50,7 @@ async function onOpen() {
 
 const categories = ref<Category[]>([])
 watchEffect(() => {
-  window.site.getCategories().then((data) => {
+  window.site.getCategories().then(data => {
     categories.value = data
   })
 })
@@ -60,7 +60,7 @@ async function onSave() {
 
   if (!frontMatter.value.title || frontMatter.value.title.length === 0) {
     ElMessageBox.alert(t('editor.titleRequired'), t('editor.tipsTitle'), {
-      confirmButtonText: t('editor.ok')
+      confirmButtonText: t('editor.ok'),
     })
   }
   frontMatter.value.updated = new Date()

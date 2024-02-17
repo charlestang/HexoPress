@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { Tag } from '@/local.d.ts';
-import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
+import type { Tag } from '@/local.d.ts'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
@@ -48,8 +48,7 @@ let secondHalf = computed(() => {
         row-key="id"
         :border="false"
         :stripe="true"
-        default-expand-all
-      >
+        default-expand-all>
         <el-table-column prop="name" label="Name" sortable>
           <template #default="scope">
             <el-tag>{{ scope.row.name }}</el-tag>
@@ -70,8 +69,7 @@ let secondHalf = computed(() => {
         row-key="id"
         :border="false"
         :stripe="true"
-        default-expand-all
-      >
+        default-expand-all>
         <el-table-column prop="name" label="Name" sortable>
           <template #default="scope">
             <el-tag>{{ scope.row.name }}</el-tag>

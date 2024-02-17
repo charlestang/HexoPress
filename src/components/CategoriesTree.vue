@@ -20,7 +20,7 @@ export interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => [],
-  categories: () => []
+  categories: () => [],
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -35,7 +35,7 @@ const nodeMap = computed(() => {
       label: entry.name,
       children: [],
       length: entry.length,
-      permalink: entry.permalink
+      permalink: entry.permalink,
     }
   }
   return map
@@ -88,7 +88,7 @@ const defaultChecked = computed(() => computeCheckedKeys(normalizedCats.value))
 
 const defaultProps = {
   children: 'children',
-  label: 'label'
+  label: 'label',
 }
 
 function onNodeClick(node: TreeNode, treeNodeProp: any, treeNode: any, event: PointerEvent) {
@@ -100,7 +100,7 @@ function onNodeClick(node: TreeNode, treeNodeProp: any, treeNode: any, event: Po
     '\n treeNode: ',
     treeNode,
     '\n event: ',
-    event
+    event,
   )
 }
 function onCheckChange(node: TreeNode, selfChecked: boolean, childrenChecked: boolean) {
@@ -110,7 +110,7 @@ function onCheckChange(node: TreeNode, selfChecked: boolean, childrenChecked: bo
     '\n self-checked: ',
     selfChecked,
     '\n children-checked: ',
-    childrenChecked
+    childrenChecked,
   )
 }
 
@@ -143,7 +143,7 @@ function onCheck(node: TreeNode, selectedNodes: any) {
     emit('update:modelValue', [...normalizedCats.value, newCat])
   } else {
     const uncheckedCat = catLink(node)
-    const newCheckedCats = normalizedCats.value.filter((arr) => !startsWith(arr, uncheckedCat))
+    const newCheckedCats = normalizedCats.value.filter(arr => !startsWith(arr, uncheckedCat))
     treeRef.value!.setCheckedKeys(computeCheckedKeys(newCheckedCats))
     emit('update:modelValue', newCheckedCats)
   }
@@ -161,8 +161,7 @@ const treeRef = ref<InstanceType<typeof ElTree>>()
     :defaultCheckedKeys="defaultChecked"
     @nodeClick="onNodeClick"
     @checkChange="onCheckChange"
-    @check="onCheck"
-  />
+    @check="onCheck" />
 </template>
 
 <style scoped></style>

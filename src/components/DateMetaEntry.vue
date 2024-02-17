@@ -8,7 +8,7 @@ export interface Props {
   modelValue?: Date
 }
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: () => new Date()
+  modelValue: () => new Date(),
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -40,8 +40,7 @@ const visible = ref(false)
         :show-arrow="false"
         width="250"
         trigger="click"
-        placement="bottom"
-      >
+        placement="bottom">
         <template #reference>
           <el-link type="primary" @click="visible = true">{{
             moment(props.modelValue).format(t('datetime.short'))
@@ -53,15 +52,13 @@ const visible = ref(false)
             <el-time-picker
               v-model="publishTime"
               :format="t('time.short')"
-              @change="onTimeChange"
-            />
+              @change="onTimeChange" />
           </el-form-item>
           <el-form-item :label="t('editor.date')">
             <el-date-picker
               v-model="publishDate"
               :format="t('date.short')"
-              @change="onDateChange"
-            ></el-date-picker>
+              @change="onDateChange"></el-date-picker>
           </el-form-item>
         </el-form>
       </el-popover>

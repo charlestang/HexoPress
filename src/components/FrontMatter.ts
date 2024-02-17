@@ -2,7 +2,7 @@ import { parse, stringify as yStringify } from 'hexo-front-matter'
 export interface FrontMatter {
   layout?: string
   title?: string
-  date?: Date 
+  date?: Date
   updated?: Date
   comments?: boolean
   tags: string[]
@@ -35,7 +35,7 @@ export function parseFrontMatter(content: string): MDDocument {
 export function stringify(data: FrontMatter, content: string): string {
   data._content = content
   const options = {
-    prefixSeparator: true
+    prefixSeparator: true,
   }
   return yStringify(data, options) as string
 }

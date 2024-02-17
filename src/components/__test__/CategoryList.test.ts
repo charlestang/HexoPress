@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { normalizeList, simplifyList } from '../CategoryList'
 
 describe('normalizeList', () => {
-
   it('normalizeList with empty string', () => {
     const result = normalizeList('')
     expect(result).toEqual([])

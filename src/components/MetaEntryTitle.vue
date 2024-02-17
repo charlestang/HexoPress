@@ -5,7 +5,7 @@ export interface Props {
   showClose?: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
-  showClose: () => true
+  showClose: () => true,
 })
 
 const emit = defineEmits(['close'])
@@ -20,7 +20,7 @@ console.log('title props: show close: ', props.showClose, ' type:', typeof props
       <h2><slot></slot></h2>
     </el-col>
     <el-col :span="3" class="close">
-      <el-icon  @click="onClose"><close v-if="props.showClose" /></el-icon>
+      <el-icon @click="onClose"><close v-if="props.showClose" /></el-icon>
     </el-col>
   </el-row>
 </template>

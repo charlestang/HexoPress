@@ -7,7 +7,7 @@ export interface Props {
   modelValue?: string
 }
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: () => ''
+  modelValue: () => '',
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -33,8 +33,7 @@ watchEffect(() => {
         width="250px"
         placemen
         :hideAfter="0"
-        :visible="visible"
-      >
+        :visible="visible">
         <template #reference>
           <el-link type="primary" @click="visible = true" v-if="props.modelValue !== ''">{{
             props.modelValue

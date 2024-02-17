@@ -14,9 +14,9 @@ export function normalizeList(list: string | string[] | (string | string[])[]): 
       return []
     }
     // list is array
-    if (list.every((item) => typeof item === 'string')) {
+    if (list.every(item => typeof item === 'string')) {
       // list is a string array
-      const filtered = list.filter((item) => item !== '')
+      const filtered = list.filter(item => item !== '')
       return filtered.length > 0 ? [filtered as string[]] : []
     } else {
       // list is a mixed array or a string array array

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { Category } from '@/local.d.ts';
-import { ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
+import type { Category } from '@/local.d.ts'
+import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
@@ -25,7 +25,7 @@ interface TreeEntry {
 }
 
 let data1 = ref<TreeEntry[]>([])
-watch(categories, (newVal) => {
+watch(categories, newVal => {
   const nodeMap: { [id: string]: TreeEntry } = {}
 
   for (const entry of newVal!) {
@@ -36,7 +36,7 @@ watch(categories, (newVal) => {
       length: entry.length,
       path: entry.path,
       permalink: entry.permalink,
-      children: []
+      children: [],
     }
   }
 
@@ -61,8 +61,7 @@ watch(categories, (newVal) => {
     row-key="id"
     :border="false"
     :stripe="true"
-    default-expand-all
-  >
+    default-expand-all>
     <el-table-column prop="label" label="Name" sortable />
     <el-table-column prop="length" label="Total" sortable />
     <el-table-column label="Operation">

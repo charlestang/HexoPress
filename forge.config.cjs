@@ -2,14 +2,14 @@ module.exports = {
   packagerConfig: {
     asar: true,
     name: 'HexoPress',
-    icon: './src/assets/icon', 
+    icon: './src/assets/icon',
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        setupIcon: './src/assets/icon.ico'
+        setupIcon: './src/assets/icon.ico',
       },
     },
     {
@@ -20,8 +20,8 @@ module.exports = {
       name: '@electron-forge/maker-deb',
       config: {
         options: {
-          icon: './src/assets/icon.png' 
-        }
+          icon: './src/assets/icon.png',
+        },
       },
     },
     {
@@ -35,4 +35,4 @@ module.exports = {
       config: {},
     },
   ],
-};
+}

@@ -8,7 +8,7 @@ import {
   Menu as IconMenu,
   PictureFilled,
   Tools,
-  TrendCharts
+  TrendCharts,
 } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -49,8 +49,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
     :collapse-transition="true"
     @open="handleOpen"
     @close="handleClose"
-    @select="handleSelect"
-  >
+    @select="handleSelect">
     <el-menu-item index="/main/dashboard">
       <el-icon><trend-charts /></el-icon>
       <template #title>{{ t('nav.dashboard') }}</template>

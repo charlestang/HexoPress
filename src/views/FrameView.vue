@@ -22,7 +22,7 @@ interface Panels {
 }
 const panels: Panels = {
   fileTree: FileExplorer,
-  tocPanel: null
+  tocPanel: null,
 }
 const currentPanel = ref('fileTree')
 function handleToolbarClick(key: string) {
@@ -85,24 +85,21 @@ function handleMouseLeave() {
       <el-aside
         class="editor-aside"
         :class="editorAsideFold"
-        :style="{ width: currentWidth + 'px' }"
-      >
+        :style="{ width: currentWidth + 'px' }">
         <el-container class="full-height">
           <el-aside class="toolbar">
             <el-link
               key="fileTree"
               :underline="false"
               @click="handleToolbarClick('fileTree')"
-              :class="{ active: 'fileTree' === currentPanel }"
-            >
+              :class="{ active: 'fileTree' === currentPanel }">
               <el-icon size="22"><folder-opened /></el-icon>
             </el-link>
             <el-link
               key="tocPanel"
               :underline="false"
               @click="handleToolbarClick('tocPanel')"
-              :class="{ active: 'tocPanel' === currentPanel }"
-            >
+              :class="{ active: 'tocPanel' === currentPanel }">
               <el-icon size="22"><memo /></el-icon>
             </el-link>
             <!-- 添加更多按钮 -->
@@ -116,8 +113,7 @@ function handleMouseLeave() {
               :style="{ cursor: cursorStyle }"
               @mouseenter="handleMouseEnter"
               @mouseleave="handleMouseLeave"
-              @mousedown="handleMouseDown"
-            ></div>
+              @mousedown="handleMouseDown"></div>
           </el-main>
         </el-container>
       </el-aside>

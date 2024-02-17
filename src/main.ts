@@ -18,7 +18,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 const setupAll = async () => {
-
   const app = createApp(App)
 
   await setupI18n(app)
@@ -28,7 +27,6 @@ const setupAll = async () => {
   setupStore(app)
 
   app.mount('#app')
-
 }
 
 setupAll()

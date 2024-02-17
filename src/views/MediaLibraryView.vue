@@ -27,7 +27,7 @@ watchEffect(() => {
     <el-table-column :label="t('mediaLibrary.preview')">
       <template #default="scope">
         <template v-if="scope.row.path.endsWith('png') || scope.row.path.endsWith('jpg')">
-          <img :src="'http://127.0.0.1:2357/' + scope.row.path" width="100px"/>
+          <img :src="'http://127.0.0.1:2357/' + scope.row.path" width="100px" />
         </template>
       </template>
     </el-table-column>
