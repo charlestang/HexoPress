@@ -49,15 +49,15 @@ let secondHalf = computed(() => {
         :border="false"
         :stripe="true"
         default-expand-all>
-        <el-table-column prop="name" label="Name" sortable>
+        <el-table-column prop="name" :label="t('tags.name')" sortable>
           <template #default="scope">
             <el-tag>{{ scope.row.name }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="length" label="Total" sortable />
-        <el-table-column label="Operation">
+        <el-table-column prop="length" :label="t('tags.total')" sortable />
+        <el-table-column :label="t('tags.actions')">
           <template #default="scope">
-            <el-link type="primary" link :href="scope.row.permalink">{{ 'View' }}</el-link>
+            <el-link type="primary" link :href="scope.row.permalink">{{ t('tags.view') }}</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -70,15 +70,15 @@ let secondHalf = computed(() => {
         :border="false"
         :stripe="true"
         default-expand-all>
-        <el-table-column prop="name" label="Name" sortable>
+        <el-table-column prop="name" :label="t('tags.name')" sortable>
           <template #default="scope">
             <el-tag>{{ scope.row.name }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="length" label="Total" sortable />
-        <el-table-column label="Operation">
+        <el-table-column prop="length" :label="t('tags.total')" sortable />
+        <el-table-column :label="t('tags.actions')">
           <template #default="scope">
-            <el-link type="primary" link :href="scope.row.permalink">{{ 'View' }}</el-link>
+            <el-link type="primary" link :href="scope.row.permalink">{{ t('tags.view') }}</el-link>
           </template>
         </el-table-column>
       </el-table>

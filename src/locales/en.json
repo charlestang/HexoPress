@@ -1,4 +1,10 @@
 {
+  "cats": {
+    "actions": "Actions",
+    "name": "Category Name",
+    "total": "Total Posts",
+    "view": "View"
+  },
   "common": {
     "activities": "Activities",
     "back": "Back",
@@ -160,6 +166,12 @@
     "choose": "Choose",
     "confirm": "Confirm",
     "selectDirTips": "Please enter the root directory of your Hexo blog. HexoPress will scan for blog posts, drafts, and media files contained in the directory."
+  },
+  "tags": {
+    "actions": "Actions",
+    "name": "Tag",
+    "total": "Posts Total",
+    "view": "View"
   },
   "time": {
     "long": "HH:mm:ss",

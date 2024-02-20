@@ -20,7 +20,7 @@ export function normalizeList(list: string | string[] | (string | string[])[]): 
       return filtered.length > 0 ? [filtered as string[]] : []
     } else {
       // list is a mixed array or a string array array
-      const result = []
+      const result = <string[][]>[]
       for (const ele of list) {
         if (Array.isArray(ele) && ele.length > 0) {
           result.push(ele)
@@ -32,7 +32,7 @@ export function normalizeList(list: string | string[] | (string | string[])[]): 
     }
   }
 }
-
+type CatEntry = string | string[]
 export function simplifyList(list: string[][]): string | string[] | (string | string[])[] {
   if (list.length === 1) {
     if (list[0].length === 1) {
@@ -43,7 +43,7 @@ export function simplifyList(list: string[][]): string | string[] | (string | st
       return list[0]
     }
   } else {
-    const result = []
+    const result = <CatEntry[]>[]
     for (const ele of list) {
       if (ele.length === 1) {
         result.push(ele[0])

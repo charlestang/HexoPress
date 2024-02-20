@@ -62,11 +62,11 @@ watch(categories, newVal => {
     :border="false"
     :stripe="true"
     default-expand-all>
-    <el-table-column prop="label" label="Name" sortable />
-    <el-table-column prop="length" label="Total" sortable />
-    <el-table-column label="Operation">
+    <el-table-column prop="label" :label="t('cats.name')" sortable />
+    <el-table-column prop="length" :label="t('cats.total')" sortable />
+    <el-table-column :label="t('cats.actions')">
       <template #default="scope">
-        <el-link type="primary" link :href="scope.row.permalink">{{ 'View' }}</el-link>
+        <el-link type="primary" link :href="scope.row.permalink">{{ t('cats.view') }}</el-link>
       </template>
     </el-table-column>
   </el-table>

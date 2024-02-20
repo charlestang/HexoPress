@@ -3,16 +3,33 @@ import type { HexoConfig, SiteInfo } from '@/local'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { store } from './index'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import en from 'element-plus/es/locale/lang/en'
+
+const languages = {
+  'zh-CN': zhCn,
+  en: en,
+}
 
 export const useAppStore = defineStore('app', () => {
+  const { wsCache } = useCache('localStorage')
+
   // locale
-  const locale = ref('en')
+  const locale = ref(wsCache.get('locale') || 'en')
   // locale setter
   function setLocale(newLocale: string) {
+    console.log('appStore setLocale called, newVal is: ', newLocale)
     locale.value = newLocale
+    wsCache.set('locale', locale.value)
   }
-
-  const { wsCache } = useCache('localStorage')
+  const localeLang = computed(() => {
+    console.log('localeLang called, locale is: ', locale.value)
+    if (languages[locale.value as keyof typeof languages]) {
+      return languages[locale.value as keyof typeof languages]
+    } else {
+      return languages['en']
+    }
+  })
 
   // dark mode
   const darkMode = ref('')
@@ -91,6 +108,7 @@ export const useAppStore = defineStore('app', () => {
   return {
     locale,
     setLocale,
+    localeLang,
     darkMode,
     setDarkMode,
     basePath,

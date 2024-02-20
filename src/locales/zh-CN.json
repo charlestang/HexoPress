@@ -1,4 +1,10 @@
 {
+  "cats": {
+    "actions": "操作",
+    "name": "分类名",
+    "total": "文章总数",
+    "view": "查看"
+  },
   "common": {
     "activities": "动态",
     "back": "返回",
@@ -162,6 +168,12 @@
     "choose": "选择",
     "confirm": "确认",
     "selectDirTips": "请输入您 Hexo 博客的根目录，HexoPress 会扫描其中包含的博客文章、草稿和包含在目录中的媒体文件。"
+  },
+  "tags": {
+    "actions": "操作",
+    "name": "标签",
+    "total": "文章总数",
+    "view": "查看"
   },
   "time": {
     "long": "HH:mm:ss",
