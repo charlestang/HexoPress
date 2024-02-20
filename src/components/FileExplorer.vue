@@ -22,7 +22,8 @@ interface BreadcrumbItem {
 const breadcrumbs = ref<BreadcrumbItem[]>([])
 
 async function updateBreadcrumbs() {
-  const hexoConfig = await appStore.hexoConfig
+  console.log('updateBreadcrumbs, currentPath:', currentPath.value, ' sourcePath:', sourcePath)
+  const hexoConfig = appStore.hexoConfig
   breadcrumbs.value = []
   if (hexoConfig !== null) {
     breadcrumbs.value.push({
@@ -31,11 +32,13 @@ async function updateBreadcrumbs() {
     })
   }
   if (currentPath.value !== '') {
-    currentPath.value.split('/').forEach((dir: string, index: number, arr: string[]) => {
+    let preDir = ''
+    currentPath.value.split('/').forEach((dir: string) => {
       if (hexoConfig !== null) {
+        preDir = join(preDir, dir)
         breadcrumbs.value.push({
           dir: dir,
-          path: join(hexoConfig.source_dir, dir),
+          path: preDir,
         })
       }
     })
@@ -70,6 +73,7 @@ watchEffect(async () => {
   files.value = await window.site.getReadDir(currentPath.value)
 })
 function handleDoubleClick(path: string) {
+  console.log('sigle/double click, path:', path, ' before currentPath is:', currentPath.value)
   currentPath.value = path
   updateBreadcrumbs()
 }
@@ -79,7 +83,10 @@ function handleDoubleClick(path: string) {
     <div class="container" ref="container" @mousemove="handleMouseMove">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
-          {{ item.dir }}
+          <el-link v-if="item.dir != 'source'" @click="handleDoubleClick(item.path)">{{
+            item.dir
+          }}</el-link>
+          <el-text v-else>{{ item.dir }}</el-text>
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -87,7 +94,13 @@ function handleDoubleClick(path: string) {
       <li v-for="f in files" :key="f.name" class="file-item">
         <el-icon v-if="f.type == 'directory'"><folder /></el-icon>
         <el-icon v-else><document /></el-icon>
-        <span class="file-name" @dblclick="handleDoubleClick(f.relativePath)">{{ f.name }}</span>
+        <span
+          v-if="f.type == 'directory'"
+          class="file-name"
+          @dblclick="handleDoubleClick(f.relativePath)"
+          >{{ f.name }}</span
+        >
+        <span v-else class="file-name">{{ f.name }}</span>
       </li>
     </ul>
   </div>
