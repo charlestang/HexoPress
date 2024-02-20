@@ -127,27 +127,27 @@ git clone https://github.com/charlestang/HexoPress.git
 ### 2. 运行环境
 
 - Node.js >= v21.1.0
-- npm >= v10.3.0
+- pnpm >= v8.15.3
 - tcp port:5173 内部网页使用的端口号
 - tcp port:2357 HTTP 服务用来伺服本地图片
 
 ### 3. 安装依赖
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 4. 运行
 
 ```bash
-npm run electron:run
+pnpm dev
 ```
 
 ### 5. 打包
 
 ```bash
-npm run build
-npm run forge:make 
+pnpm build
+pnpm forge:make 
 ```
 
 ## 六、贡献

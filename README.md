@@ -126,22 +126,22 @@ git clone https://github.com/charlestang/HexoPress.git
 
 ### 2. Running Environment
 - Node.js >= v21.1.0
-- npm >= v10.3.0
+- pnpm >= v8.15.3
 - tcp port:5173 used by the internal webpage
 - tcp port:2357 HTTP service used to serve local images
 
 ### 3. Install Dependencies
 ```bash
-npm install
+pnpm install
 ```
 ### 4. Run
 ```bash
-npm run electron:run
+pnpm dev
 ```
 ### 5. Package
 ```bash
-npm run build
-npm run forge:make
+pnpm build
+pnpm forge:make
 ```
 
 ## VI. Contribution
