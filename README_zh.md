@@ -5,13 +5,14 @@
 # HexoPress
 
 [![license][license-badge]][LICENSE]
-[![downloads][downloads-badge]][releases]
+[![last-commit][last-commit-badge]](last-commit)
+![Electron.js][electron-badge]
+![vue][vuejs-badge]
 ![NodeJS][nodejs-badge]
 ![npm][npm-badge]
-![vue][vuejs-badge]
 ![vite][vite-badge]
 ![Fastify][fastify-badge]
-![Electron.js][electron-badge]
+[![downloads][downloads-badge]][releases]
 
 为基于`Hexo`的博客，提供友好易用的文章编辑界面和内容管理系统！
 
@@ -23,31 +24,30 @@
 
 <!-- code_chunk_output -->
 
-- [HexoPress](#hexopress)
-  - [一、简介](#一简介)
-    - [特性清单](#特性清单)
-    - [鸣谢](#鸣谢)
-  - [二、安装](#二安装)
-    - [0. 兼容性](#0-兼容性)
-    - [1. Mac](#1-mac)
-    - [2. Windows](#2-windows)
-  - [三、用户手册](#三用户手册)
-  - [四、截图](#四截图)
-    - [1. 仪表盘](#1-仪表盘)
-    - [2. 文章列表](#2-文章列表)
-    - [3. 文章编辑器](#3-文章编辑器)
-    - [4. 分类管理](#4-分类管理)
-    - [5. 标签管理](#5-标签管理)
-  - [五、从源码开始](#五从源码开始)
-    - [1. 克隆源代码](#1-克隆源代码)
-    - [2. 运行环境](#2-运行环境)
-    - [3. 安装依赖](#3-安装依赖)
-    - [4. 运行](#4-运行)
-    - [5. 打包](#5-打包)
-  - [六、贡献](#六贡献)
-    - [1. 发现问题](#1-发现问题)
-    - [2. 贡献代码](#2-贡献代码)
-  - [七、附录](#七附录)
+- [一、简介](#一-简介)
+  - [特性清单](#特性清单)
+  - [鸣谢](#鸣谢)
+- [二、安装](#二-安装)
+  - [0. 兼容性](#0-兼容性)
+  - [1. Mac](#1-mac)
+  - [2. Windows](#2-windows)
+- [三、用户手册](#三-用户手册)
+- [四、截图](#四-截图)
+  - [1. 仪表盘](#1-仪表盘)
+  - [2. 文章列表](#2-文章列表)
+  - [3. 文章编辑器](#3-文章编辑器)
+  - [4. 分类管理](#4-分类管理)
+  - [5. 标签管理](#5-标签管理)
+- [五、从源码开始](#五-从源码开始)
+  - [1. 克隆源代码](#1-克隆源代码)
+  - [2. 运行环境](#2-运行环境)
+  - [3. 安装依赖](#3-安装依赖)
+  - [4. 运行](#4-运行)
+  - [5. 打包](#5-打包)
+- [六、贡献](#六-贡献)
+  - [1. 发现问题](#1-发现问题)
+  - [2. 贡献代码](#2-贡献代码)
+- [七、附录](#七-附录)
 
 <!-- /code_chunk_output -->
 
@@ -176,6 +176,7 @@ yarn forge:make
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
 [electron-badge]: https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white
 [fastify-badge]: https://img.shields.io/badge/fastify-%23000000.svg?logo=fastify&logoColor=white
+[last-commit-badge]: https://img.shields.io/github/last-commit/charlestang/HexoPress.svg
 [license]: https://github.com/charlestang/HexoPress/blob/main/LICENSE
 [license-badge]: https://img.shields.io/github/license/charlestang/HexoPress
 [nodejs-badge]: https://img.shields.io/badge/node.js-6DA55F?logo=node.js&logoColor=white

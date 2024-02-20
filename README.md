@@ -5,13 +5,14 @@
 # HexoPress
 
 [![license][license-badge]][LICENSE]
-[![downloads][downloads-badge]][releases]
+[![last-commit][last-commit-badge]](last-commit)
+![Electron.js][electron-badge]
+![vue][vuejs-badge]
 ![NodeJS][nodejs-badge]
 ![npm][npm-badge]
-![vue][vuejs-badge]
 ![vite][vite-badge]
 ![Fastify][fastify-badge]
-![Electron.js][electron-badge]
+[![downloads][downloads-badge]][releases]
 
 An open-source blogging software that offers a user-friendly article editing interface and content management system for Hexo-based blogs.
 
@@ -23,30 +24,29 @@ English | [简体中文](./README_zh.md)
 
 <!-- code_chunk_output -->
 
-- [HexoPress](#hexopress)
-  - [I. Introduction](#i-introduction)
-    - [Features List](#features-list)
-    - [Acknowledgements](#acknowledgements)
-  - [II. Installation](#ii-installation)
-    - [0. Compatibility](#0-compatibility)
-    - [1. Mac](#1-mac)
-    - [2. Windows](#2-windows)
-  - [III. User Guides](#iii-user-guides)
-  - [IV. Screenshots](#iv-screenshots)
-    - [1. Dashboard](#1-dashboard)
-    - [2. Posts List](#2-posts-list)
-    - [3. Editor](#3-editor)
-    - [4. Categories Management](#4-categories-management)
-    - [5. Tags Management](#5-tags-management)
-  - [V. Getting Started from Source Code](#v-getting-started-from-source-code)
-    - [1. Clone the source code](#1-clone-the-source-code)
-    - [2. Running Environment](#2-running-environment)
-    - [3. Install Dependencies](#3-install-dependencies)
-    - [4. Run](#4-run)
-    - [5. Package](#5-package)
-  - [VI. Contribution](#vi-contribution)
-    - [1. Report Issues](#1-report-issues)
-    - [2. Contribute Code](#2-contribute-code)
+- [I. Introduction](#i-introduction)
+  - [Features List](#features-list)
+  - [Acknowledgements](#acknowledgements)
+- [II. Installation](#ii-installation)
+  - [0. Compatibility](#0-compatibility)
+  - [1. Mac](#1-mac)
+  - [2. Windows](#2-windows)
+- [III. User Guides](#iii-user-guides)
+- [IV. Screenshots](#iv-screenshots)
+  - [1. Dashboard](#1-dashboard)
+  - [2. Posts List](#2-posts-list)
+  - [3. Editor](#3-editor)
+  - [4. Categories Management](#4-categories-management)
+  - [5. Tags Management](#5-tags-management)
+- [V. Getting Started from Source Code](#v-getting-started-from-source-code)
+  - [1. Clone the source code](#1-clone-the-source-code)
+  - [2. Running Environment](#2-running-environment)
+  - [3. Install Dependencies](#3-install-dependencies)
+  - [4. Run](#4-run)
+  - [5. Package](#5-package)
+- [VI. Contribution](#vi-contribution)
+  - [1. Report Issues](#1-report-issues)
+  - [2. Contribute Code](#2-contribute-code)
 
 <!-- /code_chunk_output -->
 
@@ -164,6 +164,7 @@ Visit https://github.com/charlestang/HexoPress/issues to submit issues.
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
 [electron-badge]: https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white
 [fastify-badge]: https://img.shields.io/badge/fastify-%23000000.svg?logo=fastify&logoColor=white
+[last-commit-badge]: https://img.shields.io/github/last-commit/charlestang/HexoPress.svg
 [license]: https://github.com/charlestang/HexoPress/blob/main/LICENSE
 [license-badge]: https://img.shields.io/github/license/charlestang/HexoPress
 [nodejs-badge]: https://img.shields.io/badge/node.js-6DA55F?logo=node.js&logoColor=white
