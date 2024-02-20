@@ -126,22 +126,22 @@ git clone https://github.com/charlestang/HexoPress.git
 
 ### 2. Running Environment
 - Node.js >= v21.1.0
-- pnpm >= v8.15.3
+- yarn >= v1.22.21
 - tcp port:5173 used by the internal webpage
 - tcp port:2357 HTTP service used to serve local images
 
 ### 3. Install Dependencies
 ```bash
-pnpm install
+yarn install
 ```
 ### 4. Run
 ```bash
-pnpm dev
+yarn dev
 ```
 ### 5. Package
 ```bash
-pnpm build
-pnpm forge:make
+yarn build
+yarn forge:make
 ```
 
 ## VI. Contribution
