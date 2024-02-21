@@ -115,6 +115,7 @@ export interface ISite {
   getStats: () => Promise<Stats>
   getSiteConfig: () => Promise<Object>
   getSiteInfo: () => Promise<SiteInfo>
+  refreshSite: () => Promise<void>
   getHexoConfig: () => Promise<HexoConfig>
   openDirDialog: () => Promise<DialogResult>
   getContent: (path: string) => Promise<string>
@@ -124,6 +125,7 @@ export interface ISite {
   deleteFile: (path: string) => Promise<void>
   getSystemLocale: () => Promise<string>
   getReadDir: (path: string) => Promise<FileEntry[]>
+  mv: (from: string, to: string) => Promise<boolean>
   onVaultPathChanged: (callback: (newValue: string) => void) => void
   initializeAgent: (path: string) => Promise<boolean>
   setDarkMode: (darkMode: string) => Promise<void>

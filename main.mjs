@@ -52,6 +52,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('site:stats', () => agent.getStats())
   ipcMain.handle('site:config', () => agent.getConfig())
   ipcMain.handle('site:info', () => agent.getSiteInfo())
+  ipcMain.handle('site:refresh', () => agent.updateCache())
   ipcMain.handle('hexo:config', () => agent.getHexoConfig())
   ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
   ipcMain.handle('post:content', (event, path) => agent.getContent(path))
@@ -63,6 +64,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('post:delete', (event, path) => agent.deleteFile(path))
   ipcMain.handle('sys:locale', event => app.getSystemLocale())
   ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))
+  ipcMain.handle('fs:mv', (event, from, to) => fsAgent.mv(from, to))
   ipcMain.handle('agent:init', (event, path) => {
     let check = agent.checkDir(path) && agent.checkHexoDir(path)
     if (check) {

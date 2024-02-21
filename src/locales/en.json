@@ -87,7 +87,13 @@
     "url": "URL"
   },
   "filenameDialog": {
+    "changePath": "Change file path",
+    "changePathFailed": "File rename failed!",
+    "changePathSuccess": "File rename success!",
+    "confirm": "Confirm",
     "fileNotSaved": "File not saved",
+    "newFilePath": "Please input new file path:",
+    "newFilePathTitle": "Change File Path",
     "sourceDir": "Source directory",
     "sourcePath": "File path",
     "title": "The actual filename of the document"

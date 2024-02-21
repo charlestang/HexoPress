@@ -259,7 +259,7 @@ const activeAsidePanels = ref(['meta', 'cate', 'tags'])
                     </el-input>
                   </el-form-item>
                 </el-form>
-                <FilenameDialog v-model="dialogSourcePath" :sourcePath="sourcePath" />
+                <FilenameDialog v-model="dialogSourcePath" v-model:sourcePath="sourcePath" />
               </el-col>
             </el-row>
           </el-main>

@@ -39,6 +39,7 @@ export const useAppStore = defineStore('app', () => {
   } else {
     darkMode.value = 'system'
   }
+  console.log('window is:', window, window.site)
   window.site.setDarkMode(darkMode.value)
 
   function setDarkMode(newDarkMode: string) {

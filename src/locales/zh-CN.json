@@ -89,7 +89,13 @@
     "url": "URL"
   },
   "filenameDialog": {
+    "changePath": "修改文件名/路径",
+    "changePathFailed": "重命名失败！",
+    "changePathSuccess": "文件重命名成功！",
+    "confirm": "确认",
     "fileNotSaved": "文件未保存",
+    "newFilePath": "请输入新的文件路径和文件名：",
+    "newFilePathTitle": "修改文件路径",
     "sourceDir": "资源目录",
     "sourcePath": "文件路径",
     "title": "文档在磁盘上的实际文件名"

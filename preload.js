@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld('site', {
   getStats: () => ipcRenderer.invoke('site:stats'),
   getSiteConfig: () => ipcRenderer.invoke('site:config'),
   getSiteInfo: () => ipcRenderer.invoke('site:info'),
+  refreshSite: () => ipcRenderer.invoke('site:refresh'),
   getHexoConfig: () => ipcRenderer.invoke('hexo:config'),
   openDirDialog: () => ipcRenderer.invoke('dialog:dir'),
   getContent: sourcePath => ipcRenderer.invoke('post:content', sourcePath),
@@ -29,6 +30,7 @@ contextBridge.exposeInMainWorld('site', {
   deleteFile: sourcePath => ipcRenderer.invoke('post:delete', sourcePath),
   getSystemLocale: () => ipcRenderer.invoke('sys:locale'),
   getReadDir: path => ipcRenderer.invoke('fs:readdir', path),
+  mv: (from, to) => ipcRenderer.invoke('fs:mv', from, to),
   onVaultPathChanged: callback =>
     ipcRenderer.on('configChanged:vaultPath', (_, value) => callback(value)),
   initializeAgent: path => ipcRenderer.invoke('agent:init', path),

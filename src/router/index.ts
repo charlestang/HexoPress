@@ -71,12 +71,12 @@ const router = createRouter({
 
 const appStore = useAppStoreWithout()
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   console.log('router: beforeEach')
   console.log('appStore.isBasePathSet: ', appStore.isBasePathSet)
   console.log('appStore.isAgentInitialized: ', appStore.isAgentInitialized)
   if (!appStore.isBasePathSet && to.name !== 'setup') {
-    next('/setup')
+    return { name: '/setup' }
   } else {
     if (appStore.isBasePathSet && !appStore.isAgentInitialized) {
       console.log('basePath is set, but agent is not initialized, try to init ....')
@@ -87,15 +87,16 @@ router.beforeEach((to, from, next) => {
           appStore.setAgentInitialized()
           console.log('now destination: ', to)
           console.log('initialized status is:', appStore.isAgentInitialized)
-          next()
+          return true
         } else {
           // initialized failed, reset the basePath and redirect to setup
           appStore.setBasePath('')
-          next('/setup')
+          return { name: '/setup' }
         }
       })
     } else {
-      next()
+      console.log('route from: ', from, ' to: ', to)
+      return true
     }
   }
 })
