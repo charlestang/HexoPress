@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useAppStore } from '@/stores/app'
 import { join } from 'path-browserify'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -38,6 +38,12 @@ watchEffect(() => {
 })
 
 const newFilePath = ref(props.sourcePath)
+watch(
+  () => props.sourcePath,
+  newVal => {
+    newFilePath.value = newVal
+  },
+)
 const visible = ref(false)
 async function changePath() {
   console.log('change file path: from: ', props.sourcePath, ' to: ', newFilePath.value)

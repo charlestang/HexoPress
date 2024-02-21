@@ -76,7 +76,7 @@ router.beforeEach((to, from) => {
   console.log('appStore.isBasePathSet: ', appStore.isBasePathSet)
   console.log('appStore.isAgentInitialized: ', appStore.isAgentInitialized)
   if (!appStore.isBasePathSet && to.name !== 'setup') {
-    return { name: '/setup' }
+    return { path: '/setup' }
   } else {
     if (appStore.isBasePathSet && !appStore.isAgentInitialized) {
       console.log('basePath is set, but agent is not initialized, try to init ....')
@@ -91,7 +91,7 @@ router.beforeEach((to, from) => {
         } else {
           // initialized failed, reset the basePath and redirect to setup
           appStore.setBasePath('')
-          return { name: '/setup' }
+          return { path: '/setup' }
         }
       })
     } else {
