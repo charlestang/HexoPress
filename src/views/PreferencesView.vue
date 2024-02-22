@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
-import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const appStore = useAppStore()
 const { t } = useI18n()
@@ -37,6 +37,14 @@ const locale = computed({
     appStore.setLocale(val)
   },
 })
+
+const autoSave = computed({
+  get: () => appStore.autoSave,
+  set: val => {
+    console.log('preferences set autoSave as:', val)
+    appStore.setAutoSave(val)
+  },
+})
 </script>
 <template>
   <h2>{{ t('preferences.preferences') }}</h2>
@@ -64,6 +72,12 @@ const locale = computed({
         <el-option key="system" :label="t('settings.system')" value="system" />
       </el-select>
     </el-form-item>
+    <el-form-item :label="t('settings.autoSave')">
+      <el-radio-group v-model="autoSave">
+        <el-radio label="autoSaveOn"> {{ t('settings.autoSaveOn') }}</el-radio>
+        <el-radio label="autoSaveOff"> {{ t('settings.autoSaveOff') }} </el-radio>
+      </el-radio-group>
+    </el-form-item>
     <el-form-item :label="t('settings.editorMode')">
       <el-radio-group v-model="editMode">
         <el-radio label="normal"> {{ t('settings.editorNormal') }}</el-radio>
@@ -81,3 +95,8 @@ const locale = computed({
     </el-form-item>
   </el-form>
 </template>
+<style scoped>
+.el-form >>> .el-form-item__label {
+  font-weight: bold;
+}
+</style>

@@ -152,6 +152,9 @@
   },
   "settings": {
     "alwaysTitle": "总是用标题做文件名",
+    "autoSave": "编辑器自动保存",
+    "autoSaveOff": "关闭",
+    "autoSaveOn": "开启",
     "basePath": "博客根目录",
     "dark": "深色模式",
     "darkMode": "暗黑模式",

@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import type { HexoConfig, Post, SiteInfo, Stats } from '@/local.d.ts'
 import router from '@/router'
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
-import { watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -47,10 +46,8 @@ watchEffect(async () => {
         <h4>{{ t('common.recentPosts') }}</h4>
         <ul class="latest-posts">
           <li v-for="post in posts" :key="post.permalink">
+            <el-link link type="primary" @click="onClick(post.source)">{{ post.title }}</el-link>
             <span>{{ new Date(post.date).toLocaleString() }}</span>
-            <el-button link type="primary" @click="onClick(post.source)">{{
-              post.title
-            }}</el-button>
           </li>
         </ul>
       </el-card>
@@ -167,7 +164,7 @@ watchEffect(async () => {
 }
 .latest-posts li {
   display: grid;
-  grid-template-columns: clamp(200px, calc(2vw + 140px), 200px) auto;
+  grid-template-columns: auto clamp(160px, 165px, 200px);
   column-gap: 10px;
   padding: 6px 0;
   color: #646970;
@@ -175,7 +172,7 @@ watchEffect(async () => {
 .latest-posts li:nth-child(odd) {
   background-color: #f6f7f7;
 }
-.latest-posts .el-button {
+.latest-posts .el-link {
   justify-content: left;
 }
 ul.meta-info {

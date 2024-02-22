@@ -150,6 +150,9 @@
   },
   "settings": {
     "alwaysTitle": "Always use title as filename.",
+    "autoSave": "Editor Auto Save",
+    "autoSaveOff": "Off",
+    "autoSaveOn": "On",
     "basePath": "Blog base path",
     "dark": "Dark",
     "darkMode": "Dark Mode",

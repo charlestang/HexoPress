@@ -1,10 +1,10 @@
 import { useCache } from '@/hooks/useCache'
 import type { HexoConfig, SiteInfo } from '@/local'
+import en from 'element-plus/es/locale/lang/en'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { store } from './index'
-import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import en from 'element-plus/es/locale/lang/en'
 
 const languages = {
   'zh-CN': zhCn,
@@ -104,6 +104,18 @@ export const useAppStore = defineStore('app', () => {
 
   function setEditMode(newMode: string) {
     editMode.value = newMode
+    wsCache.set('editMode', editMode.value)
+  }
+
+  const autoSave = ref(false)
+  const autoSaveVal = wsCache.get('autoSave')
+  if (autoSaveVal !== null) {
+    autoSave.value = autoSaveVal as boolean
+  }
+
+  function setAutoSave(newVal: boolean) {
+    autoSave.value = newVal
+    wsCache.set('autoSave', autoSave.value)
   }
 
   return {
@@ -121,6 +133,8 @@ export const useAppStore = defineStore('app', () => {
     siteInfo,
     editMode,
     setEditMode,
+    autoSave,
+    setAutoSave,
   }
 })
 
