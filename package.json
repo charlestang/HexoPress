@@ -80,5 +80,6 @@
     "vue-tsc": "^1.8.27",
     "wait-on": "^7.2.0",
     "web-storage-cache": "^1.1.1"
-  }
+  },
+  "license": "MIT"
 }

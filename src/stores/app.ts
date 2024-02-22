@@ -107,13 +107,13 @@ export const useAppStore = defineStore('app', () => {
     wsCache.set('editMode', editMode.value)
   }
 
-  const autoSave = ref(false)
+  const autoSave = ref('autoSaveOff')
   const autoSaveVal = wsCache.get('autoSave')
   if (autoSaveVal !== null) {
-    autoSave.value = autoSaveVal as boolean
+    autoSave.value = autoSaveVal as string
   }
 
-  function setAutoSave(newVal: boolean) {
+  function setAutoSave(newVal: string) {
     autoSave.value = newVal
     wsCache.set('autoSave', autoSave.value)
   }

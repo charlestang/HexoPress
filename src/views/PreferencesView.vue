@@ -96,7 +96,7 @@ const autoSave = computed({
   </el-form>
 </template>
 <style scoped>
-.el-form >>> .el-form-item__label {
+.el-form:deep(.el-form-item__label) {
   font-weight: bold;
 }
 </style>
