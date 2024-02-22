@@ -32,14 +32,11 @@ export const useAppStore = defineStore('app', () => {
   })
 
   // dark mode
-  const darkMode = ref('')
+  const darkMode = ref('system')
   const darkModeVal = wsCache.get('darkMode')
   if (darkModeVal !== null) {
     darkMode.value = darkModeVal as string
-  } else {
-    darkMode.value = 'system'
   }
-  console.log('window is:', window, window.site)
   window.site.setDarkMode(darkMode.value)
 
   function setDarkMode(newDarkMode: string) {

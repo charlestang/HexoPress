@@ -62,7 +62,7 @@
     "@vue/test-utils": "^2.4.4",
     "@vue/tsconfig": "^0.5.1",
     "concurrently": "^8.2.2",
-    "electron": "^28.2.3",
+    "electron": "29.0.1",
     "eslint": "^8.56.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -81,5 +81,6 @@
     "wait-on": "^7.2.0",
     "web-storage-cache": "^1.1.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "packageManager": "yarn@4.1.0"
 }
