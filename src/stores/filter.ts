@@ -1,4 +1,4 @@
-import { PostFilterType, PostStatusFilterChoice } from '@/components/PostListFilters'
+import { PostStatusFilterChoice } from '@/components/PostListFilters'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { store } from './index'
