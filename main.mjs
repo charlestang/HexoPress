@@ -62,7 +62,7 @@ app.whenReady().then(async () => {
   )
   ipcMain.handle('post:move', (event, sourcePath, content) => agent.moveFile(sourcePath, content))
   ipcMain.handle('post:delete', (event, path) => agent.deleteFile(path))
-  ipcMain.handle('sys:locale', event => app.getSystemLocale())
+  ipcMain.handle('sys:locale', () => app.getSystemLocale())
   ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))
   ipcMain.handle('fs:mv', (event, from, to) => fsAgent.mv(from, to))
   ipcMain.handle('agent:init', (event, path) => {

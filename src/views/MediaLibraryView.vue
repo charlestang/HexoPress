@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { Asset } from '@/local'
-import { watchEffect } from 'vue'
 
 const { t } = useI18n()
 
