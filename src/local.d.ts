@@ -87,11 +87,11 @@ export type FileEntry = {
   type: string
 }
 
-export type TreeNode = {
+export type NodeData = {
   id?: string
   parent?: string | undefined
   label: string
-  children?: TreeNode[]
+  children?: NodeData[]
   length?: number
   permalink?: string
   value: string

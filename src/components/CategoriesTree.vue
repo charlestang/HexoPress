@@ -2,13 +2,16 @@
 import { normalizeList } from '@/components/CategoryList'
 import type { Category } from '@/local.d.ts'
 import type { ElTree } from 'element-plus'
+import type Node from 'element-plus/es/components/tree/src/model/node'
+import TreeNode from 'element-plus/es/components/tree/src/tree-node'
+import type { TreeData, TreeKey } from 'element-plus/es/components/tree/src/tree.type'
 import { computed, ref } from 'vue'
 
-interface TreeNode {
+interface NodeData {
   id: string
   parent: string | undefined
   label: string
-  children?: TreeNode[]
+  children?: NodeData[]
   length: number
   permalink: string
 }
@@ -27,7 +30,7 @@ const emit = defineEmits(['update:modelValue'])
 
 // put all category entries into a map
 const nodeMap = computed(() => {
-  const map: { [id: string]: TreeNode } = {}
+  const map: { [id: string]: NodeData } = {}
   for (const entry of props.categories) {
     map[entry.id] = {
       id: entry.id,
@@ -43,7 +46,7 @@ const nodeMap = computed(() => {
 
 // build a tree to display category hierarchy
 const treeData = computed(() => {
-  let tree: TreeNode[] = []
+  let tree: NodeData[] = []
 
   for (const node of Object.values(nodeMap.value)) {
     if (node.parent) {
@@ -91,7 +94,12 @@ const defaultProps = {
   label: 'label',
 }
 
-function onNodeClick(node: TreeNode, treeNodeProp: any, treeNode: any, event: PointerEvent) {
+function onNodeClick(
+  node: NodeData,
+  treeNodeProp: Node,
+  treeNode: InstanceType<typeof TreeNode>,
+  event: PointerEvent,
+) {
   console.log(
     'onNodeClick, node: ',
     node,
@@ -103,7 +111,7 @@ function onNodeClick(node: TreeNode, treeNodeProp: any, treeNode: any, event: Po
     event,
   )
 }
-function onCheckChange(node: TreeNode, selfChecked: boolean, childrenChecked: boolean) {
+function onCheckChange(node: NodeData, selfChecked: boolean, childrenChecked: boolean) {
   console.log(
     'onCheckChange, node: ',
     node,
@@ -114,9 +122,16 @@ function onCheckChange(node: TreeNode, selfChecked: boolean, childrenChecked: bo
   )
 }
 
-function onCheck(node: TreeNode, selectedNodes: any) {
+type TreeSelectedState = {
+  checkedNodes: TreeData
+  checkedKeys: TreeKey[]
+  halfCheckedNodes: TreeData
+  halfCheckedKeys: TreeKey[]
+}
+
+function onCheck(node: NodeData, selectedNodes: TreeSelectedState) {
   console.log('onCheck, node: ', node, '\n selectedNodes: ', selectedNodes)
-  function catLink(n: TreeNode) {
+  function catLink(n: NodeData) {
     // calculate the category link
     const l = [n.label]
     let p = n

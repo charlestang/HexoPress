@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Category, TreeNode } from '@/local.d.ts'
+import type { Category, NodeData } from '@/local.d.ts'
 import moment from 'moment'
 import { computed, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -74,7 +74,7 @@ watchEffect(() => {
 
 // put all category entries into a map
 const nodeMap = computed(() => {
-  const map: { [id: string]: TreeNode } = {}
+  const map: { [id: string]: NodeData } = {}
   for (const entry of categories.value) {
     map[entry.id] = {
       id: entry.id,
@@ -91,7 +91,7 @@ const nodeMap = computed(() => {
 
 // build a tree to display category hierarchy
 const treeData = computed(() => {
-  let tree: TreeNode[] = []
+  let tree: NodeData[] = []
 
   for (const node of Object.values(nodeMap.value)) {
     if (node.parent) {
