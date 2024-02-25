@@ -29,19 +29,23 @@ const createWindow = () => {
   })
 
   console.log('current env is: ', process.env.NODE_ENV)
-  if (process.env.NODE_ENV === 'dev') {
-    win.loadURL('http://localhost:5173/')
-
+  console.log('MAIN_WINDOW_VITE_DEV_SERVER_URL is: ', process.env.MAIN_WINDOW_VITE_DEV_SERVER_URL)
+  console.log('MAIN_WINDOW_VITE_NAME is: ', process.env.MAIN_WINDOW_VITE_NAME)
+  
+  // and load the index.html of the app.
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    win.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
     win.webContents.openDevTools()
   } else {
-    win.loadFile('dist/index.html')
+    win.loadFile(join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
+
 
   ipcMain.handle('dark:get', () => {
     return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
   })
   ipcMain.handle('dark:set', (event, val) => {
-    console.log('main.mjs dark:set is called, new value is: ', val)
+    console.log('main.ts dark:set is called, new value is: ', val)
     nativeTheme.themeSource = val
   })
 }

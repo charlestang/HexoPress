@@ -1,16 +1,25 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
+  "include": [
+    "main",
+    "forge.env.d.ts",
+    "vite.base.config.ts",
+    "vite.main.config.ts",
+    "vite.preload.config.ts",
+  ],
   "compilerOptions": {
     "composite": true,
-    "noEmit": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "target": "ESNext",
+    "module": "commonjs",
+    "allowJs": true,
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true
-  },
-  "include": [
-    "vite.config.ts",
-    "vitest.config.ts",
-  ]
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
 }

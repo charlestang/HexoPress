@@ -2,13 +2,19 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": [
     "src",
-    "types/**/*.d.ts"
+    "types/**/*.d.ts",
+    "forge.env.d.ts",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "vite.base.config.ts",
+    "vite.renderer.config.ts",
   ],
   "exclude": [
     "src/**/__tests__/*"
   ],
   "compilerOptions": {
     "composite": true,
+    "module": "ESNext",
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {

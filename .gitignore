@@ -14,6 +14,9 @@ dist-ssr
 coverage
 *.local
 
+# Vite
+.vite
+
 /cypress/videos/
 /cypress/screenshots/
 
@@ -28,6 +31,7 @@ coverage
 *.sln
 *.sw?
 
+# Electron-Forge
 out/
 
 # Yarn
