@@ -1,4 +1,4 @@
-import { BrowserWindow, app, dialog, ipcMain, nativeTheme, session } from 'electron'
+import { BrowserWindow, app, dialog, ipcMain, nativeTheme, session, shell } from 'electron'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import fsAgent from './lib/FsAgent'
@@ -31,16 +31,24 @@ const createWindow = () => {
   console.log('current env is: ', process.env.NODE_ENV)
   console.log('MAIN_WINDOW_VITE_DEV_SERVER_URL is: ', process.env.MAIN_WINDOW_VITE_DEV_SERVER_URL)
   console.log('MAIN_WINDOW_VITE_NAME is: ', process.env.MAIN_WINDOW_VITE_NAME)
-  
+
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    win.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+    win.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL)
     win.webContents.openDevTools()
   } else {
-    win.loadFile(join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    win.loadFile(join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
   }
 
-
+  win.once('ready-to-show', async () => {
+    if (process.env.NODE_ENV === 'development') {
+      const vueDevToolsPath = join(
+        homedir(),
+        '/Library/Application Support/Google/Chrome/Profile 1/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/6.5.1_0',
+      )
+      await session.defaultSession.loadExtension(vueDevToolsPath)
+    }
+  })
 }
 
 app.whenReady().then(async () => {
@@ -63,6 +71,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('post:move', (event, sourcePath, content) => agent.moveFile(sourcePath, content))
   ipcMain.handle('post:delete', (event, path) => agent.deleteFile(path))
   ipcMain.handle('sys:locale', () => app.getSystemLocale())
+  ipcMain.handle('shell:openUrl', (event, url) => shell.openExternal(url))
   ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))
   ipcMain.handle('fs:mv', (event, from, to) => fsAgent.mv(from, to))
   ipcMain.handle('agent:init', (event, path) => {
@@ -83,14 +92,6 @@ app.whenReady().then(async () => {
   })
 
   createWindow()
-
-  if (process.env.NODE_ENV === 'dev') {
-    const vueDevToolsPath = join(
-      homedir(),
-      '/Library/Application Support/Google/Chrome/Profile 1/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/6.5.1_0',
-    )
-    await session.defaultSession.loadExtension(vueDevToolsPath)
-  }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

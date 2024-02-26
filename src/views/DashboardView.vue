@@ -31,8 +31,8 @@ const siteInfo = ref<SiteInfo | null>(null)
 const hexoConfig = ref<HexoConfig | null>(null)
 
 watchEffect(async () => {
-  hexoConfig.value = await appStore.hexoConfig
-  siteInfo.value = await appStore.siteInfo
+  hexoConfig.value = appStore.hexoConfig
+  siteInfo.value = appStore.siteInfo
 })
 </script>
 <template>
@@ -43,10 +43,11 @@ watchEffect(async () => {
         <template #header>
           <h3>{{ t('common.activities') }}</h3>
         </template>
-        <h4>{{ t('common.recentPosts') }}</h4>
         <ul class="latest-posts">
           <li v-for="post in posts" :key="post.permalink">
-            <el-link link type="primary" @click="onClick(post.source)">{{ post.title }}</el-link>
+            <el-link link type="primary" :underline="false" @click="onClick(post.source)">{{
+              post.title
+            }}</el-link>
             <span>{{ new Date(post.date).toLocaleString() }}</span>
           </li>
         </ul>
@@ -168,9 +169,7 @@ watchEffect(async () => {
   column-gap: 10px;
   padding: 6px 0;
   color: #646970;
-}
-.latest-posts li:nth-child(odd) {
-  background-color: #f6f7f7;
+  padding-left: 10px;
 }
 .latest-posts .el-link {
   justify-content: left;

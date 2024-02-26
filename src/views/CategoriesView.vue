@@ -51,6 +51,10 @@ watch(categories, newVal => {
     }
   }
 })
+
+function onClickLink(url: string) {
+  window.site.openUrl(url)
+}
 </script>
 
 <template>
@@ -66,7 +70,9 @@ watch(categories, newVal => {
     <el-table-column prop="length" :label="t('cats.total')" sortable />
     <el-table-column :label="t('cats.actions')">
       <template #default="scope">
-        <el-link type="primary" link :href="scope.row.permalink">{{ t('cats.view') }}</el-link>
+        <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
+          t('cats.view')
+        }}</el-link>
       </template>
     </el-table-column>
   </el-table>

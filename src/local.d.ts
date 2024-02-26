@@ -124,6 +124,7 @@ export interface ISite {
   moveFile: (sourcePath: string, content: string) => Promise<string>
   deleteFile: (path: string) => Promise<void>
   getSystemLocale: () => Promise<string>
+  openUrl: (url: string) => Promise<void>
   getReadDir: (path: string) => Promise<FileEntry[]>
   mv: (from: string, to: string) => Promise<boolean>
   onVaultPathChanged: (callback: (newValue: string) => void) => void

@@ -5,15 +5,14 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-let tags = ref<null | Tag[]>(null)
+const tags = ref<null | Tag[]>(null)
 
 async function fetch() {
   tags.value = await window.site.getTags()
 }
-
 fetch()
 
-let sortedTags = computed(() => {
+const sortedTags = computed(() => {
   if (tags.value == null) {
     return []
   }
@@ -21,21 +20,25 @@ let sortedTags = computed(() => {
     return b.length - a.length
   })
 })
-let midIndex = computed(() => {
+const midIndex = computed(() => {
   return Math.ceil(sortedTags.value.length / 2)
 })
-let firstHalf = computed(() => {
+const firstHalf = computed(() => {
   if (tags.value == null) {
     return []
   }
   return sortedTags.value?.slice(0, midIndex.value)
 })
-let secondHalf = computed(() => {
+const secondHalf = computed(() => {
   if (tags.value == null) {
     return []
   }
   return sortedTags.value?.slice(midIndex.value)
 })
+
+function onClickLink(url: string) {
+  window.site.openUrl(url)
+}
 </script>
 
 <template>
@@ -57,7 +60,9 @@ let secondHalf = computed(() => {
         <el-table-column prop="length" :label="t('tags.total')" sortable />
         <el-table-column :label="t('tags.actions')">
           <template #default="scope">
-            <el-link type="primary" link :href="scope.row.permalink">{{ t('tags.view') }}</el-link>
+            <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
+              t('tags.view')
+            }}</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -78,7 +83,9 @@ let secondHalf = computed(() => {
         <el-table-column prop="length" :label="t('tags.total')" sortable />
         <el-table-column :label="t('tags.actions')">
           <template #default="scope">
-            <el-link type="primary" link :href="scope.row.permalink">{{ t('tags.view') }}</el-link>
+            <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
+              t('tags.view')
+            }}</el-link>
           </template>
         </el-table-column>
       </el-table>
