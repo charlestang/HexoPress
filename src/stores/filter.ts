@@ -6,7 +6,10 @@ import { store } from './index'
 export const useFilterStore = defineStore('filter', () => {
   const statusFilterVal = ref(PostStatusFilterChoice.All)
 
-  function setStatusFilter(newVal: PostStatusFilterChoice, paginationConfig: any) {
+  function setStatusFilter(
+    newVal: PostStatusFilterChoice,
+    paginationConfig: typeof pagination.value,
+  ) {
     statusFilterVal.value = newVal
     pagination.value = paginationConfig
   }
@@ -18,14 +21,14 @@ export const useFilterStore = defineStore('filter', () => {
 
   function setDateCategoryFilter(
     newVal: { date: string; category: string },
-    paginationConfig: any,
+    paginationConfig: typeof pagination.value,
   ) {
     dateCategoryFilterVal.value = newVal
     pagination.value = paginationConfig
   }
 
   const searchFilterVal = ref('')
-  function setSearchFilter(newVal: string, paginationConfig: any) {
+  function setSearchFilter(newVal: string, paginationConfig: typeof pagination.value) {
     searchFilterVal.value = newVal
     pagination.value = paginationConfig
   }

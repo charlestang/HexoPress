@@ -141,7 +141,7 @@ function onCheck(node: NodeData, selectedNodes: TreeSelectedState) {
     }
     return l
   }
-  function startsWith(array: any[], prefix: any[]): boolean {
+  function startsWith(array: string[], prefix: string[]): boolean {
     if (prefix.length > array.length) {
       return false
     }
