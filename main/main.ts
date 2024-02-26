@@ -41,13 +41,6 @@ const createWindow = () => {
   }
 
 
-  ipcMain.handle('dark:get', () => {
-    return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
-  })
-  ipcMain.handle('dark:set', (event, val) => {
-    console.log('main.ts dark:set is called, new value is: ', val)
-    nativeTheme.themeSource = val
-  })
 }
 
 app.whenReady().then(async () => {
@@ -80,6 +73,13 @@ app.whenReady().then(async () => {
       httpServer.init(path)
     }
     return check
+  })
+  ipcMain.handle('dark:get', () => {
+    return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+  })
+  ipcMain.handle('dark:set', (event, val) => {
+    console.log('main.ts dark:set is called, new value is: ', val)
+    nativeTheme.themeSource = val
   })
 
   createWindow()
