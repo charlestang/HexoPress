@@ -1,9 +1,9 @@
 {
   "name": "hexopress",
-  "productName": "HexoPress",
   "version": "1.0.0",
   "private": true,
   "description": "A client software for Hexo blog.",
+  "license": "MIT",
   "author": {
     "name": "Charles",
     "email": "charlestang@foxmail.com"
@@ -11,14 +11,14 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "dev": "electron-forge start",
-    "test": "vitest",
-    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-    "start": "electron-forge start",
-    "package": "electron-forge package",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "package": "electron-forge package",
+    "publish": "electron-forge publish",
+    "start": "electron-forge start",
+    "test": "vitest",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
     "@fastify/static": "^7.0.1",
@@ -44,19 +44,18 @@
     "@electron-forge/maker-squirrel": "^7.3.0",
     "@electron-forge/maker-zip": "^7.3.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.3.0",
-    "@electron-forge/plugin-vite": "^7.3.0",
     "@electron-forge/plugin-fuses": "^7.2.0",
+    "@electron-forge/plugin-vite": "^7.3.0",
     "@electron/fuses": "^1.7.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0",
     "@intlify/unplugin-vue-i18n": "^2.0.0",
-    "ts-node": "^10.0.0",
     "@rushstack/eslint-patch": "^1.7.2",
     "@tsconfig/node20": "^20.1.2",
     "@types/hexo-util": "^0.6.8",
     "@types/jsdom": "^21.1.6",
     "@types/node": "^20.11.20",
     "@types/path-browserify": "^1.0.2",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",
@@ -73,6 +72,7 @@
     "eslint-plugin-vue": "^9.21.1",
     "jsdom": "^24.0.0",
     "prettier": "^3.2.5",
+    "ts-node": "^10.0.0",
     "typescript": "^5.3.3",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
@@ -82,5 +82,5 @@
     "wait-on": "^7.2.0",
     "web-storage-cache": "^1.1.1"
   },
-  "license": "MIT"
+  "productName": "HexoPress"
 }

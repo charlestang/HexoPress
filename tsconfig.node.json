@@ -1,7 +1,7 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
   "include": [
-    "main",
+    "main/",
     "forge.env.d.ts",
     "vite.base.config.ts",
     "vite.main.config.ts",
@@ -9,8 +9,8 @@
   ],
   "compilerOptions": {
     "composite": true,
-    "target": "ESNext",
     "module": "commonjs",
+    "target": "ESNext",
     "allowJs": true,
     "skipLibCheck": true,
     "noImplicitAny": true,

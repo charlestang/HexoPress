@@ -21,7 +21,7 @@ function onTagInputtingChange(tagName: string): void {
 function onTagClose(tag: string): void {
   emit(
     'update:modelValue',
-    props.modelValue.filter(item => item !== tag),
+    props.modelValue.filter((item) => item !== tag),
   )
 }
 

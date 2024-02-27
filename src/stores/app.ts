@@ -78,12 +78,12 @@ export const useAppStore = defineStore('app', () => {
 
   watch(isAgentInitialized, (newVal, oldVal) => {
     if (newVal && !oldVal) {
-      window.site.getHexoConfig().then(config => {
+      window.site.getHexoConfig().then((config) => {
         if (config != null) {
           hexoConfig.value = config
         }
       })
-      window.site.getSiteInfo().then(info => {
+      window.site.getSiteInfo().then((info) => {
         if (info != null) {
           siteInfo.value = info
         }

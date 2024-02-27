@@ -4,20 +4,20 @@ import Fastify from 'fastify'
 import { join } from 'path'
 
 class HttpServer {
-  app: FastifyInstance
+  app?: FastifyInstance
   pathSet: boolean
   listening: boolean
 
   constructor() {
-    this.app = null
+    this.app = undefined
     this.pathSet = false
     this.listening = false
   }
 
-  init(path) {
+  init(path: string) {
     if (this.app !== null) {
-      this.app.close()
-      this.app = null
+      this.app?.close()
+      this.app = undefined
       this.pathSet = false
       this.listening = false
     }
@@ -34,7 +34,7 @@ class HttpServer {
     }
 
     if (!this.listening) {
-      this.app.listen({ port: 2357 }, (err, address) => {
+      this.app?.listen({ port: 2357 }, (err, address) => {
         console.log('Server is running on port 2357.')
         if (err) {
           console.error('Address is: ', address, ' and Error: ', err)
@@ -46,7 +46,7 @@ class HttpServer {
   }
 
   close() {
-    this.app.close()
+    this.app?.close()
   }
 }
 

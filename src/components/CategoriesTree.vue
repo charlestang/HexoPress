@@ -158,7 +158,7 @@ function onCheck(node: NodeData, selectedNodes: TreeSelectedState) {
     emit('update:modelValue', [...normalizedCats.value, newCat])
   } else {
     const uncheckedCat = catLink(node)
-    const newCheckedCats = normalizedCats.value.filter(arr => !startsWith(arr, uncheckedCat))
+    const newCheckedCats = normalizedCats.value.filter((arr) => !startsWith(arr, uncheckedCat))
     treeRef.value!.setCheckedKeys(computeCheckedKeys(newCheckedCats))
     emit('update:modelValue', newCheckedCats)
   }

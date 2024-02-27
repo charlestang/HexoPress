@@ -16,7 +16,7 @@ function unbindBasePath() {
 
 const darkMode = computed({
   get: () => appStore.darkMode,
-  set: val => {
+  set: (val) => {
     console.log('preferences set darkMode as:', val)
     appStore.setDarkMode(val)
   },
@@ -24,7 +24,7 @@ const darkMode = computed({
 
 const editMode = computed({
   get: () => appStore.editMode,
-  set: val => {
+  set: (val) => {
     console.log('preferences set editMode as:', val)
     appStore.setEditMode(val)
   },
@@ -32,7 +32,7 @@ const editMode = computed({
 
 const locale = computed({
   get: () => appStore.locale,
-  set: val => {
+  set: (val) => {
     console.log('preferences set locale as:', val)
     appStore.setLocale(val)
   },
@@ -40,7 +40,7 @@ const locale = computed({
 
 const autoSave = computed({
   get: () => appStore.autoSave,
-  set: val => {
+  set: (val) => {
     console.log('preferences set autoSave as:', val)
     appStore.setAutoSave(val)
   },

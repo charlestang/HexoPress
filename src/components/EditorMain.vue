@@ -72,7 +72,7 @@ watch(
 
 if (!isNewPost.value) {
   // The blog post already exists, it is now being edited.
-  window.site.getContent(sourcePath.value).then(content => {
+  window.site.getContent(sourcePath.value).then((content) => {
     const parseDown = parseFrontMatter(content)
     frontMatter.value = parseDown.data as FrontMatter
     text.value = parseDown.content
@@ -94,8 +94,8 @@ function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): 
     if (p2.startsWith('http://') || p2.startsWith('https://')) {
       return match
     }
-    let curPath = currentPath.split('/').filter(p => p !== '')
-    let imgPath = p2.split('/').filter(p => p !== '')
+    let curPath = currentPath.split('/').filter((p) => p !== '')
+    let imgPath = p2.split('/').filter((p) => p !== '')
     while (curPath.length > 0 && imgPath[0] == '..') {
       imgPath.shift()
       curPath.pop()

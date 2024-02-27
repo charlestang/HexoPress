@@ -1,7 +1,7 @@
 import { mkdirSync, rmSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { afterAll, beforeEach, describe, expect, it } from 'vitest'
-import { FsAgent } from '../fs-agent.mjs'
+import { FsAgent } from '../FsAgent'
 
 describe('FsAgent', () => {
   const testDir = join(__dirname, 'testDir/source')

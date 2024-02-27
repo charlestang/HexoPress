@@ -80,7 +80,7 @@ router.beforeEach((to, from) => {
   } else {
     if (appStore.isBasePathSet && !appStore.isAgentInitialized) {
       console.log('basePath is set, but agent is not initialized, try to init ....')
-      window.site.initializeAgent(appStore.basePath).then(result => {
+      window.site.initializeAgent(appStore.basePath).then((result) => {
         console.log('initializeAgent result: ', result)
         if (result) {
           // initialized successfully, set the flag

@@ -48,7 +48,7 @@ watchEffect(() => {
 })
 
 const updatedMonths = computed(() => {
-  const months = postMonths.value.map(month => {
+  const months = postMonths.value.map((month) => {
     return {
       label: moment(month).format(t('date.month')),
       value: month,

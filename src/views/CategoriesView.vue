@@ -25,7 +25,7 @@ interface TreeEntry {
 }
 
 let data1 = ref<TreeEntry[]>([])
-watch(categories, newVal => {
+watch(categories, (newVal) => {
   const nodeMap: { [id: string]: TreeEntry } = {}
 
   for (const entry of newVal!) {

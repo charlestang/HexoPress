@@ -26,7 +26,7 @@ export const setupI18n = async (app: App) => {
   // Watch for changes in `appStore.locale` and update `i18n.locale` accordingly
   watch(
     () => appStore.locale,
-    newLocale => {
+    (newLocale) => {
       i18n.global.locale.value = newLocale
     },
   )

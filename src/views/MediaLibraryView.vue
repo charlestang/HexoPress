@@ -8,7 +8,7 @@ const { t } = useI18n()
 const assets = ref<undefined | Asset[]>(undefined)
 
 function fetchAssets() {
-  window.site.getAssets().then(res => {
+  window.site.getAssets().then((res) => {
     assets.value = res
   })
 }

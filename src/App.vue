@@ -5,7 +5,7 @@ import { watch } from 'vue'
 
 const appStore = useAppStore()
 const { localeLang } = storeToRefs(appStore)
-watch(localeLang, val => {
+watch(localeLang, (val) => {
   console.log('localeLang changed:', val)
 })
 </script>

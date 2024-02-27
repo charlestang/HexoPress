@@ -40,7 +40,7 @@ watchEffect(() => {
 const newFilePath = ref(props.sourcePath)
 watch(
   () => props.sourcePath,
-  newVal => {
+  (newVal) => {
     newFilePath.value = newVal
   },
 )

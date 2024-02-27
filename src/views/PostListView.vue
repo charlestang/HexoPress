@@ -61,7 +61,7 @@ function onDelete(articleName: string, articlePath: string) {
       type: 'warning',
     },
   )
-    .then(async a => {
+    .then(async (a) => {
       console.log(a)
       await window.site.deleteFile(articlePath)
       ElMessage({
@@ -70,7 +70,7 @@ function onDelete(articleName: string, articlePath: string) {
       })
       fetch(currentPage.value)
     })
-    .catch(reason => {
+    .catch((reason) => {
       if (reason === 'cancel') {
         ElMessage({
           type: 'info',

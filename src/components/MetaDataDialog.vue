@@ -40,7 +40,7 @@ const content = ref('')
 async function onOpen() {
   const loadingInstance = ElLoading.service({ target: 'dialog' })
   // The blog post already exists, it is now being edited.
-  await window.site.getContent(props.sourcePath).then(data => {
+  await window.site.getContent(props.sourcePath).then((data) => {
     const parseDown = parseFrontMatter(data)
     frontMatter.value = parseDown.data as FrontMatter
     content.value = parseDown.content
@@ -50,7 +50,7 @@ async function onOpen() {
 
 const categories = ref<Category[]>([])
 watchEffect(() => {
-  window.site.getCategories().then(data => {
+  window.site.getCategories().then((data) => {
     categories.value = data
   })
 })

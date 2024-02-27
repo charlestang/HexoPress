@@ -1,16 +1,24 @@
 import { mkdir, readdir, rename, stat } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 
+interface DirentTransformed {
+  name: string;
+  relativePath: string;
+  type: 'directory' | 'file';
+}
+
 export class FsAgent {
-  sourceDir: string
+  private sourceDir: string
 
-  constructor() {}
+  constructor() {
+    this.sourceDir = ''
+  }
 
-  init(baseDirectory: string) {
+  init(baseDirectory: string): void {
     this.sourceDir = join(baseDirectory, 'source')
   }
 
-  async readdir(directory = '') {
+  async readdir(directory = ''): Promise<DirentTransformed[]> {
     const targetPath = join(this.sourceDir, directory)
     const contents = await readdir(targetPath, { withFileTypes: true })
 
@@ -20,12 +28,12 @@ export class FsAgent {
         name: dirent.name,
         relativePath: join(directory, dirent.name),
         type: dirent.isDirectory() ? 'directory' : 'file',
-      }))
+      } as DirentTransformed))
 
     return transformedContents
   }
 
-  async mv(from: string, to: string) {
+  async mv(from: string, to: string): Promise<boolean> {
     const fromPath = join(this.sourceDir, from)
     const toPath = join(this.sourceDir, to)
     const toDir = await stat(dirname(toPath))
@@ -41,10 +49,8 @@ export class FsAgent {
     try {
       await rename(fromPath, toPath)
     } catch (err) {
-      if (err) {
-        console.log(err)
-        return false
-      }
+      console.log(err)
+      return false
     }
 
     return true

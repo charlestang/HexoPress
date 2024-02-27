@@ -6,23 +6,22 @@ import { join, relative } from 'path'
 
 const { slugize } = util
 class HexoAgent {
-  hexo: Hexo
+  hexo?: Hexo
   rootPath: string
-  initPromise: Promise<void>
-  exitPromise: Promise<void>
+  initPromise?: Promise<void>
+  exitPromise?: Promise<void>
 
   constructor() {
-    this.hexo = null
     this.rootPath = ''
   }
 
   init(rootPath: string) {
     console.log('HexoAgent.init is called. rootPath is: ', rootPath)
     this.rootPath = rootPath
-    if (this.hexo !== null) {
+    if (this.hexo !== null && this.hexo !== undefined) {
       console.log('HexoAgent is not null, so exit it first.')
-      this.exitPromise = this.hexo.exit(null)
-      this.hexo = null
+      this.exitPromise = this.hexo.exit()
+      this.hexo = undefined 
     }
     this.hexo = new Hexo(rootPath, {
       safe: true,
@@ -32,16 +31,16 @@ class HexoAgent {
       .init()
       .then(() => {
         console.log('HexoAgent.init is done.')
-        return this.hexo.load()
+        return this.hexo?.load()
       })
       .then(() => {
         console.log('HexoAgent.load is done.')
         // register a dummy render for markdown files make db cache sync.
-        this.hexo.extend.renderer.register('md', 'html', data => data.text, true)
+        this.hexo?.extend.renderer.register('md', 'html', data => data.text, true)
       })
   }
 
-  checkDir(path) {
+  checkDir(path: string) {
     try {
       const stat = statSync(path)
       return stat.isDirectory()
@@ -50,7 +49,7 @@ class HexoAgent {
     }
   }
 
-  checkHexoDir(path) {
+  checkHexoDir(path: string) {
     return this.checkDir(join(path, 'source')) && this.checkDir(join(path, 'scaffolds'))
   }
 
@@ -87,9 +86,9 @@ class HexoAgent {
     )
     const results = {
       total: 0,
-      posts: [],
+      posts: <object[]>[],
     }
-    const postList = []
+    const postList = <object[]>[]
     let posts = this.hexo.locals.get('posts')
     if (orderBy && order) {
       posts = posts.sort(orderBy, order)
@@ -137,11 +136,11 @@ class HexoAgent {
         path: post.path,
         permalink: post.permalink,
         asset_dir: post.asset_dir,
-        tags: post.tags.data.reduce(function (acc, tag) {
+        tags: post.tags.data.reduce(function (acc: object, tag) {
           acc[tag._id] = tag.name
           return acc
         }, {}),
-        categories: post.categories.data.reduce(function (acc, cat) {
+        categories: post.categories.data.reduce(function (acc: object, cat) {
           acc[cat._id] = cat.name
           return acc
         }, {}),
@@ -203,7 +202,7 @@ class HexoAgent {
    */
   getCategories() {
     console.log('getCategories is called.')
-    const categories = []
+    const categories = <object[]>[]
     this.hexo.locals.get('categories').each(function (category) {
       const cat = {
         id: category._id,
@@ -227,7 +226,7 @@ class HexoAgent {
    */
   getTags() {
     console.log('getTags is called.')
-    const tags = []
+    const tags = <object[]>[]
     this.hexo.locals.get('tags').each(function (tag) {
       const t = {
         id: tag._id,
@@ -246,7 +245,7 @@ class HexoAgent {
 
   getAssets() {
     console.log('getAssets is called.')
-    const assets = []
+    const assets = <object[]>[]
     this.hexo.database.model('Asset').each(function (asset) {
       const a = {
         id: asset._id,
@@ -266,7 +265,7 @@ class HexoAgent {
    * @param {string} sourcePath
    * @returns
    */
-  getContent(sourcePath) {
+  getContent(sourcePath: string) {
     console.log('getContent is called.')
     console.log('path is: ', sourcePath)
     const filePath = join(this.hexo.source_dir, sourcePath)
@@ -274,7 +273,7 @@ class HexoAgent {
     return buffer.toString()
   }
 
-  async saveContent(sourcePath, content) {
+  async saveContent(sourcePath: string, content: string) {
     console.log('saveContent is called.')
     console.log('path is: ', sourcePath, ' content length is: ', content.length)
     const filePath = join(this.hexo.source_dir, sourcePath)
@@ -288,7 +287,7 @@ class HexoAgent {
     await this.hexo.database.save()
   }
 
-  async deleteFile(sourcePath) {
+  async deleteFile(sourcePath: string) {
     console.log('try to del the real file. path is: ', sourcePath)
     const filePath = join(this.hexo.source_dir, sourcePath)
     unlinkSync(filePath)
@@ -338,7 +337,7 @@ class HexoAgent {
   }
 
   // Move file from _drafts to _posts with content
-  async moveFile(sourcePath, content) {
+  async moveFile(sourcePath: string, content: string) {
     console.log(
       'moveFile is called. sourcePath is: ',
       sourcePath,
@@ -374,10 +373,10 @@ class HexoAgent {
     if (this.initPromise) {
       await this.initPromise
     }
-    const db = this.hexo.database
-    const postCount = db.model('Post').find({ published: true }).length
-    const postDraftCount = db.model('Post').find({ published: false }).length
-    const pageCount = db.model('Page').length
+    const db = this.hexo?.database
+    const postCount = db?.model('Post').find({ published: true }).length
+    const postDraftCount = db?.model('Post').find({ published: false }).length
+    const pageCount = db?.model('Page').length
     const stats = {
       postCount,
       postDraftCount,

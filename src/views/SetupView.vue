@@ -23,7 +23,7 @@ async function onSubmit() {
 }
 
 function selectPath() {
-  window.site.openDirDialog().then(result => {
+  window.site.openDirDialog().then((result) => {
     form.directory = result['filePaths'][0]
   })
 }
