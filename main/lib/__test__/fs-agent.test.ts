@@ -5,7 +5,7 @@ import { FsAgent } from '../FsAgent'
 
 describe('FsAgent', () => {
   const testDir = join(__dirname, 'testDir/source')
-  mkdirSync(testDir, {recursive: true})
+  mkdirSync(testDir, { recursive: true })
   writeFileSync(join(testDir, 'testFile.txt'), 'Hello, World!')
   writeFileSync(join(testDir, '.hiddenFile.txt'), 'Hello, World!')
   let fsAgent: FsAgent

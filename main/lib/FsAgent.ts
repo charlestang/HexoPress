@@ -2,9 +2,9 @@ import { mkdir, readdir, rename, stat } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 
 interface DirentTransformed {
-  name: string;
-  relativePath: string;
-  type: 'directory' | 'file';
+  name: string
+  relativePath: string
+  type: 'directory' | 'file'
 }
 
 export class FsAgent {
@@ -23,12 +23,15 @@ export class FsAgent {
     const contents = await readdir(targetPath, { withFileTypes: true })
 
     const transformedContents = contents
-      .filter(dirent => !dirent.name.startsWith('.'))
-      .map(dirent => ({
-        name: dirent.name,
-        relativePath: join(directory, dirent.name),
-        type: dirent.isDirectory() ? 'directory' : 'file',
-      } as DirentTransformed))
+      .filter((dirent) => !dirent.name.startsWith('.'))
+      .map(
+        (dirent) =>
+          ({
+            name: dirent.name,
+            relativePath: join(directory, dirent.name),
+            type: dirent.isDirectory() ? 'directory' : 'file',
+          }) as DirentTransformed,
+      )
 
     return transformedContents
   }

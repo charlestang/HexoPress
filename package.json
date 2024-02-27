@@ -11,7 +11,7 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "dev": "electron-forge start",
-    "format": "prettier --write src/",
+    "format": "prettier --write src/ main/ types/ *.ts *.json *.cjs",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "make": "electron-forge make",
     "package": "electron-forge package",

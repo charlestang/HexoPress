@@ -21,7 +21,7 @@ class HexoAgent {
     if (this.hexo !== null && this.hexo !== undefined) {
       console.log('HexoAgent is not null, so exit it first.')
       this.exitPromise = this.hexo.exit()
-      this.hexo = undefined 
+      this.hexo = undefined
     }
     this.hexo = new Hexo(rootPath, {
       safe: true,
@@ -36,7 +36,7 @@ class HexoAgent {
       .then(() => {
         console.log('HexoAgent.load is done.')
         // register a dummy render for markdown files make db cache sync.
-        this.hexo?.extend.renderer.register('md', 'html', data => data.text, true)
+        this.hexo?.extend.renderer.register('md', 'html', (data) => data.text, true)
       })
   }
 
@@ -94,25 +94,25 @@ class HexoAgent {
       posts = posts.sort(orderBy, order)
     }
     if (!published) {
-      posts = posts.filter(item => {
+      posts = posts.filter((item) => {
         return !item.published
       })
     }
     if (!draft) {
-      posts = posts.filter(item => {
+      posts = posts.filter((item) => {
         return item.published
       })
     }
     if (categoryId !== '') {
       console.log(categoryId)
-      posts = posts.filter(item => {
-        return item.categories.some(cat => {
+      posts = posts.filter((item) => {
+        return item.categories.some((cat) => {
           return cat._id === categoryId
         })
       })
     }
     if (monthCode !== '') {
-      posts = posts.filter(item => {
+      posts = posts.filter((item) => {
         return item.date.format('YYYY-MM') === monthCode
       })
     }

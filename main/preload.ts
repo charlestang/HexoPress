@@ -12,19 +12,19 @@ contextBridge.exposeInMainWorld('site', {
   refreshSite: () => ipcRenderer.invoke('site:refresh'),
   getHexoConfig: () => ipcRenderer.invoke('hexo:config'),
   openDirDialog: () => ipcRenderer.invoke('dialog:dir'),
-  getContent: sourcePath => ipcRenderer.invoke('post:content', sourcePath),
-  saveContent: (sourcePath, content) => ipcRenderer.invoke('post:save', sourcePath, content),
-  createFile: (type, title, slug, content) =>
+  getContent: (sourcePath: string) => ipcRenderer.invoke('post:content', sourcePath),
+  saveContent: (sourcePath: string, content: string) => ipcRenderer.invoke('post:save', sourcePath, content),
+  createFile: (type, title: string, slug: string, content: string) =>
     ipcRenderer.invoke('post:create', type, title, slug, content),
-  moveFile: (sourcePath, content) => ipcRenderer.invoke('post:move', sourcePath, content),
-  deleteFile: sourcePath => ipcRenderer.invoke('post:delete', sourcePath),
+  moveFile: (sourcePath: string, content: string) => ipcRenderer.invoke('post:move', sourcePath, content),
+  deleteFile: (sourcePath: string) => ipcRenderer.invoke('post:delete', sourcePath),
   getSystemLocale: () => ipcRenderer.invoke('sys:locale'),
-  openUrl: (url) => ipcRenderer.invoke('shell:openUrl', url),
-  getReadDir: path => ipcRenderer.invoke('fs:readdir', path),
-  mv: (from, to) => ipcRenderer.invoke('fs:mv', from, to),
-  onVaultPathChanged: callback =>
+  openUrl: (url: string) => ipcRenderer.invoke('shell:openUrl', url),
+  getReadDir: (path: string) => ipcRenderer.invoke('fs:readdir', path),
+  mv: (from: string, to: string) => ipcRenderer.invoke('fs:mv', from, to),
+  onVaultPathChanged: (callback) =>
     ipcRenderer.on('configChanged:vaultPath', (_, value) => callback(value)),
-  initializeAgent: path => ipcRenderer.invoke('agent:init', path),
+  initializeAgent: (path: string) => ipcRenderer.invoke('agent:init', path),
   getDarkMode: () => ipcRenderer.invoke('dark:get'),
-  setDarkMode: val => ipcRenderer.invoke('dark:set', val),
+  setDarkMode: (val: string) => ipcRenderer.invoke('dark:set', val),
 })

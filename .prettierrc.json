@@ -9,6 +9,5 @@
   "bracketSameLine": true,
   "arrowParens": "always",
   "bracketSpacing": true,
-  "jsxBracketSameLine": false,
   "endOfLine": "auto"
 }

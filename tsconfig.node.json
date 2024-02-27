@@ -5,7 +5,7 @@
     "forge.env.d.ts",
     "vite.base.config.ts",
     "vite.main.config.ts",
-    "vite.preload.config.ts",
+    "vite.preload.config.ts"
   ],
   "compilerOptions": {
     "composite": true,
