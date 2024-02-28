@@ -13,10 +13,12 @@ contextBridge.exposeInMainWorld('site', {
   getHexoConfig: () => ipcRenderer.invoke('hexo:config'),
   openDirDialog: () => ipcRenderer.invoke('dialog:dir'),
   getContent: (sourcePath: string) => ipcRenderer.invoke('post:content', sourcePath),
-  saveContent: (sourcePath: string, content: string) => ipcRenderer.invoke('post:save', sourcePath, content),
+  saveContent: (sourcePath: string, content: string) =>
+    ipcRenderer.invoke('post:save', sourcePath, content),
   createFile: (type, title: string, slug: string, content: string) =>
     ipcRenderer.invoke('post:create', type, title, slug, content),
-  moveFile: (sourcePath: string, content: string) => ipcRenderer.invoke('post:move', sourcePath, content),
+  moveFile: (sourcePath: string, content: string) =>
+    ipcRenderer.invoke('post:move', sourcePath, content),
   deleteFile: (sourcePath: string) => ipcRenderer.invoke('post:delete', sourcePath),
   getSystemLocale: () => ipcRenderer.invoke('sys:locale'),
   openUrl: (url: string) => ipcRenderer.invoke('shell:openUrl', url),

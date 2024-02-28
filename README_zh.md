@@ -51,7 +51,6 @@
 
 <!-- /code_chunk_output -->
 
-
 ## 一、简介
 
 Hexo 是一款快速、简洁且高效的博客框架。它通过在服务器上对文章进行编译、渲染，生成静态页面后再发布到互联网，从而提供了丝滑的读者阅读体验。然而，Hexo 基于配置和文本文件的内容管理方式，并不尽友好。例如，用于组织博客内容的元数据，如文章分类、标签等，是分散在每篇文章的开头部分的，因此不能提供一个实时且全局的管理界面。编辑单篇文章时，元数据（如分类、标签、更新时间、发布状态等）都需要手动编辑，且使用与 Markdown 语法不同的 Yaml 或 JSON 格式，这对不熟悉 Yaml/JSON 语法和 Front Matter 组织形式的作者来说，造成了相当的心智负担，即便是专业的程序员也不例外。
@@ -61,7 +60,9 @@ Hexo 是一款快速、简洁且高效的博客框架。它通过在服务器上
 我采用了流行的 Web 开发技术，如 Vue 3、Element Plus 和 Vite 5，并利用 Electron 将其打包成桌面应用，使其能够在 Windows、MacOS、Linux 等多个平台上运行。我希望这款开源软件能为您带来愉悦的博客创作体验。如果您喜欢此项目，请将其推荐给朋友，并在 GitHub 上给我们点一个小星星。您的支持对我们来说是极大的鼓励，谢谢您的❤️！
 
 ### 特性清单
------
+
+---
+
 - [x] 📝 已发布文章和草稿的列表显示；
 - [x] 🔍 文章分类筛选及按时间筛选、排序；
 - [x] 🌳 分类以树状形式展示和管理，包括文章数量统计；
@@ -102,18 +103,23 @@ Hexo 是一款快速、简洁且高效的博客框架。它通过在服务器上
 ## 四、截图
 
 ### 1. 仪表盘
+
 ![Dashboard][screenshot-dashboard]
 
 ### 2. 文章列表
+
 ![Posts List][screenshot-postlist]
 
 ### 3. 文章编辑器
+
 ![Editor][screenshot-editor]
 
 ### 4. 分类管理
+
 ![Categories Management][screenshot-categories]
 
 ### 5. 标签管理
+
 ![Tags Management][screenshot-tags]
 
 ## 五、从源码开始
@@ -147,7 +153,7 @@ yarn dev
 
 ```bash
 yarn build
-yarn forge:make 
+yarn forge:make
 ```
 
 ## 六、贡献
@@ -166,7 +172,7 @@ yarn forge:make
 
 ## 七、附录
 
-* [《我为什么构建了 HexoPress》][blog-why-hexopress]
+- [《我为什么构建了 HexoPress》][blog-why-hexopress]
 
 [blog-why-hexopress]: https://blog.charlestang.org/2023/how-to-use-hexo-and-github-actions-to-build-a-personal-blog/
 [docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/2024/02/07/HowTo-%E7%94%A8-Hexo-%E5%BB%BA%E7%AB%8B%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/

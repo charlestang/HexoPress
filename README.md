@@ -50,8 +50,6 @@ English | [简体中文](./README_zh.md)
 
 <!-- /code_chunk_output -->
 
-
-
 ## I. Introduction
 
 Hexo is a fast, simple, and efficient blogging framework. It compiles and renders articles on the server, generating static pages that are then published to the internet, providing a smooth reading experience for visitors. However, Hexo's content management approach, based on configuration and text files, is not particularly user-friendly for blog authors. For example, metadata used to organize blog content, such as categories and tags, is scattered at the beginning of each article, making it impossible to offer a real-time and global management interface. Editing metadata for a single article, such as categories, tags, update times, and publication statuses, requires manual editing in Yaml or JSON formats, which are different from Markdown syntax. This presents a significant mental burden for authors unfamiliar with Yaml/JSON syntax and the Front Matter organization format, including professional programmers.
@@ -61,7 +59,9 @@ To address these challenges, I designed **HexoPress**. Its core principle levera
 I used popular web development technologies such as Vue 3, Element Plus, and Vite 5, and packaged them into a desktop application with Electron, allowing it to run on multiple platforms including Windows, MacOS, and Linux. I hope this open-source software enhances your blogging experience. If you like this project, please recommend it to your friends and star us on GitHub. Your support is a great encouragement to us, thank you ❤️!
 
 ### Features List
------
+
+---
+
 - [x] 📝 Display of the list of published articles and drafts;
 - [x] 🔍 Article categorization filter and sorting by time;
 - [x] 🌳 Categorical tree display and management with article count statistics;
@@ -102,18 +102,23 @@ The client internally uses the API of Hexo version 7.1.1. Hexo blog versions abo
 ## IV. Screenshots
 
 ### 1. Dashboard
+
 ![Dashboard][screenshot-dashboard]
 
 ### 2. Posts List
+
 ![Posts List][screenshot-postlist]
 
 ### 3. Editor
+
 ![Editor][screenshot-editor]
 
 ### 4. Categories Management
+
 ![Categories Management][screenshot-categories]
 
 ### 5. Tags Management
+
 ![Tags Management][screenshot-tags]
 
 ## V. Getting Started from Source Code
@@ -125,20 +130,26 @@ git clone https://github.com/charlestang/HexoPress.git
 ```
 
 ### 2. Running Environment
+
 - Node.js >= v21.1.0
 - yarn >= v1.22.21
 - tcp port:5173 used by the internal webpage
 - tcp port:2357 HTTP service used to serve local images
 
 ### 3. Install Dependencies
+
 ```bash
 yarn install
 ```
+
 ### 4. Run
+
 ```bash
 yarn dev
 ```
+
 ### 5. Package
+
 ```bash
 yarn build
 yarn forge:make
@@ -151,6 +162,7 @@ yarn forge:make
 Visit https://github.com/charlestang/HexoPress/issues to submit issues.
 
 ### 2. Contribute Code
+
 1. Fork this repository
 1. Create your feature branch: git checkout -b <feature-name>
 1. Commit your changes: git commit -am 'Add some feature'
