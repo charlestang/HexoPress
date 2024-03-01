@@ -1,15 +1,15 @@
 import { useAppStoreWithout } from '@/stores/app'
+import CategoriesView from '@/views/CategoriesView.vue'
 import DashboardView from '@/views/DashboardView.vue'
+import FrameView from '@/views/FrameView.vue'
 import MainWindow from '@/views/MainWindow.vue'
+import MediaLibraryView from '@/views/MediaLibraryView.vue'
+import PostListView from '@/views/PostListView.vue'
 import PreferencesView from '@/views/PreferencesView.vue'
+import SetupView from '@/views/SetupView.vue'
+import TagsView from '@/views/TagsView.vue'
 import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import CategoriesView from '../views/CategoriesView.vue'
-import FrameView from '../views/FrameView.vue'
-import MediaLibraryView from '../views/MediaLibraryView.vue'
-import PostListView from '../views/PostListView.vue'
-import SetupView from '../views/SetupView.vue'
-import TagsView from '../views/TagsView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),

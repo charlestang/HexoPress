@@ -1,6 +1,5 @@
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import './assets/main.css'
-import './local.d.ts'
 
 // internationalization
 import { setupI18n } from '@/plugins/vueI18n'

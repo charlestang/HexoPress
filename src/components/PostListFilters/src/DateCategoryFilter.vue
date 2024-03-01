@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { Category, NodeData } from '@/local.d.ts'
 import moment from 'moment'
 import { computed, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'

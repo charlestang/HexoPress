@@ -13,12 +13,14 @@
   "i18n-ally.theme.annotationMissing": "#d37070",
   "cSpell.words": [
     "asar",
+    "browserify",
     "codemirror",
     "Fastify",
     "Hexo",
     "hexopress",
     "intlify",
     "Pinia",
+    "renderable",
     "rushstack",
     "unplugin"
   ]

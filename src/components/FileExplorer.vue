@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { FileEntry } from '@/local'
 import { useAppStore } from '@/stores/app'
 import { Document, Folder } from '@element-plus/icons-vue'
 import { dirname, join } from 'path-browserify'

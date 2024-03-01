@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
-import type { Category } from '@/local.d.ts'
 import { useAppStore } from '@/stores/app'
 import { lineNumbers } from '@codemirror/view'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'

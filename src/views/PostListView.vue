@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { PostStatusFilterChoice } from '@/components/PostListFilters'
-import type { Post } from '@/local.d.ts'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useFilterStore } from '@/stores/filter'

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { Category } from '@/local.d.ts'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 

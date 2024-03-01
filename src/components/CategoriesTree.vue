@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { normalizeList } from '@/components/CategoryList'
-import type { Category } from '@/local.d.ts'
 import type { ElTree } from 'element-plus'
 import type Node from 'element-plus/es/components/tree/src/model/node'
 import TreeNode from 'element-plus/es/components/tree/src/tree-node'

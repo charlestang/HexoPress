@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
-import type { Category } from '@/local'
 import { ElLoading } from 'element-plus'
 import { computed, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'

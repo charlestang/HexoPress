@@ -7,6 +7,7 @@
     "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "module": "CommonJS",
     "target": "ESNext",
+    "rootDir": "../main",
     "allowJs": true,
     "skipLibCheck": true,
     "noImplicitAny": false,

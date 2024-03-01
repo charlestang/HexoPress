@@ -24,29 +24,30 @@ English | [简体中文](./README_zh.md)
 
 <!-- code_chunk_output -->
 
-- [I. Introduction](#i-introduction)
-  - [Features List](#features-list)
-  - [Acknowledgements](#acknowledgements)
-- [II. Installation](#ii-installation)
-  - [0. Compatibility](#0-compatibility)
-  - [1. Mac](#1-mac)
-  - [2. Windows](#2-windows)
-- [III. User Guides](#iii-user-guides)
-- [IV. Screenshots](#iv-screenshots)
-  - [1. Dashboard](#1-dashboard)
-  - [2. Posts List](#2-posts-list)
-  - [3. Editor](#3-editor)
-  - [4. Categories Management](#4-categories-management)
-  - [5. Tags Management](#5-tags-management)
-- [V. Getting Started from Source Code](#v-getting-started-from-source-code)
-  - [1. Clone the source code](#1-clone-the-source-code)
-  - [2. Running Environment](#2-running-environment)
-  - [3. Install Dependencies](#3-install-dependencies)
-  - [4. Run](#4-run)
-  - [5. Package](#5-package)
-- [VI. Contribution](#vi-contribution)
-  - [1. Report Issues](#1-report-issues)
-  - [2. Contribute Code](#2-contribute-code)
+- [HexoPress](#hexopress)
+  - [I. Introduction](#i-introduction)
+    - [Features List](#features-list)
+    - [Acknowledgements](#acknowledgements)
+  - [II. Installation](#ii-installation)
+    - [0. Compatibility](#0-compatibility)
+    - [1. Mac](#1-mac)
+    - [2. Windows](#2-windows)
+  - [III. User Guides](#iii-user-guides)
+  - [IV. Screenshots](#iv-screenshots)
+    - [1. Dashboard](#1-dashboard)
+    - [2. Posts List](#2-posts-list)
+    - [3. Editor](#3-editor)
+    - [4. Categories Management](#4-categories-management)
+    - [5. Tags Management](#5-tags-management)
+  - [V. Getting Started from Source Code](#v-getting-started-from-source-code)
+    - [1. Clone the source code](#1-clone-the-source-code)
+    - [2. Running Environment](#2-running-environment)
+    - [3. Install Dependencies](#3-install-dependencies)
+    - [4. Run](#4-run)
+    - [5. Package](#5-package)
+  - [VI. Contribution](#vi-contribution)
+    - [1. Report Issues](#1-report-issues)
+    - [2. Contribute Code](#2-contribute-code)
 
 <!-- /code_chunk_output -->
 
@@ -62,15 +63,18 @@ I used popular web development technologies such as Vue 3, Element Plus, and Vit
 
 ---
 
-- [x] 📝 Display of the list of published articles and drafts;
-- [x] 🔍 Article categorization filter and sorting by time;
-- [x] 🌳 Categorical tree display and management with article count statistics;
-- [x] 🏷️ Display of tag list with article count statistics;
-- [ ] 🖼️ Display of media resources list such as images;
+- [x] 📝 Article list shows all posts and allows filtering by "Published" or "Draft";
+- [x] 📅 Filter or search the article list by **published month**;
+- [x] 🗂️ Filter or search the article list by **category**;
+- [ ] 🔍 Filter or search the article list by **key-words**;
+- [x] 🌳 Tree view for **categories list** with article count statistics;
+- [x] 🏷️ List view for **tags list** with article count statistics;
+- [x] 🖼️ Display of media resources list such as images;
 - [x] ✍️ Article editor with Markdown preview support;
-- [x] 🗂️ Editor supports an Outline panel for navigation;
+- [x] 📋 Editor supports an Outline panel for navigation;
 - [x] ⌨️ Editor supports Vim key bindings;
 - [x] 📊 Editor supports dropdown selection for categories and tag search;
+- [ ] 🔖 Batch edit the categories and tags for articles;
 - [x] ⚙️ Support for quickly editing metadata (FrontMatter) without opening the article.
 
 :star: Star us on GitHub — it motivates us a lot!

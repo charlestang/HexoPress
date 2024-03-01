@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { HexoConfig, Post, SiteInfo, Stats } from '@/local.d.ts'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { ref, watchEffect } from 'vue'
