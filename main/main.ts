@@ -2,7 +2,7 @@ import { BrowserWindow, app, dialog, ipcMain, nativeTheme, session, shell } from
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import fsAgent from './lib/FsAgent'
-import agent from './lib/HexoAgent'
+import agent, { HexoAgent } from './lib/HexoAgent'
 import httpServer from './lib/HttpServer'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -58,7 +58,6 @@ app.whenReady().then(async () => {
   ipcMain.handle('site:tags', () => agent.getTags())
   ipcMain.handle('site:assets', () => agent.getAssets())
   ipcMain.handle('site:stats', () => agent.getStats())
-  ipcMain.handle('site:config', () => agent.getConfig())
   ipcMain.handle('site:info', () => agent.getSiteInfo())
   ipcMain.handle('site:refresh', () => agent.updateCache())
   ipcMain.handle('hexo:config', () => agent.getHexoConfig())
@@ -75,7 +74,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))
   ipcMain.handle('fs:mv', (event, from, to) => fsAgent.mv(from, to))
   ipcMain.handle('agent:init', (event, path) => {
-    const check = agent.checkDir(path) && agent.checkHexoDir(path)
+    const check = HexoAgent.checkDir(path) && HexoAgent.checkHexoDir(path)
     if (check) {
       agent.init(path)
       fsAgent.init(path)

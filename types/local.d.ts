@@ -116,7 +116,6 @@ declare global {
     getTags: () => Promise<Tag[]>
     getAssets: () => Promise<Asset[]>
     getStats: () => Promise<Stats>
-    getSiteConfig: () => Promise<object>
     getSiteInfo: () => Promise<SiteInfo>
     refreshSite: () => Promise<void>
     getHexoConfig: () => Promise<HexoConfig>

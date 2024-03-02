@@ -2,7 +2,6 @@
 import { normalizeList } from '@/components/CategoryList'
 import type { ElTree } from 'element-plus'
 import type Node from 'element-plus/es/components/tree/src/model/node'
-import TreeNode from 'element-plus/es/components/tree/src/tree-node'
 import type { TreeData, TreeKey } from 'element-plus/es/components/tree/src/tree.type'
 import { computed, ref } from 'vue'
 
@@ -93,12 +92,7 @@ const defaultProps = {
   label: 'label',
 }
 
-function onNodeClick(
-  node: NodeData,
-  treeNodeProp: Node,
-  treeNode: InstanceType<typeof TreeNode>,
-  event: PointerEvent,
-) {
+function onNodeClick(node: NodeData, treeNodeProp: Node, treeNode: any, event: PointerEvent) {
   console.log(
     'onNodeClick, node: ',
     node,

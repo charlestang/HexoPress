@@ -22,6 +22,8 @@
     "Pinia",
     "renderable",
     "rushstack",
+    "slugize",
+    "tsbuildinfo",
     "unplugin"
   ]
 }

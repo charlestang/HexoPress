@@ -39,6 +39,7 @@ async function fetch(curPage: number) {
 fetch(currentPage.value)
 watch(statusFilterVal, (value, oldValue) => {
   if (value !== oldValue) {
+    currentPage.value = 1
     fetch(currentPage.value)
   }
 })

@@ -7,7 +7,6 @@ contextBridge.exposeInMainWorld('site', {
   getTags: (...args) => ipcRenderer.invoke('site:tags', ...args),
   getAssets: () => ipcRenderer.invoke('site:assets'),
   getStats: () => ipcRenderer.invoke('site:stats'),
-  getSiteConfig: () => ipcRenderer.invoke('site:config'),
   getSiteInfo: () => ipcRenderer.invoke('site:info'),
   refreshSite: () => ipcRenderer.invoke('site:refresh'),
   getHexoConfig: () => ipcRenderer.invoke('hexo:config'),

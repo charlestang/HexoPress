@@ -4,75 +4,77 @@ import Hexo from 'hexo'
 import util from 'hexo-util'
 import { join, relative } from 'path'
 
+type HexoInstance = InstanceType<typeof Hexo>
+type ConfigType = HexoInstance['config']
+
 const { slugize } = util
-class HexoAgent {
-  hexo?: Hexo
-  rootPath: string
-  initPromise?: Promise<void>
-  exitPromise?: Promise<void>
+export class HexoAgent {
+  private hexo!: Hexo
+  private rootPath!: string
+  private initPromise?: Promise<void>
+  private exitPromise?: Promise<void>
 
-  constructor() {
-    this.rootPath = ''
-  }
-
-  init(rootPath: string) {
+  public init(rootPath: string): void {
     console.log('HexoAgent.init is called. rootPath is: ', rootPath)
+
     this.rootPath = rootPath
-    if (this.hexo !== null && this.hexo !== undefined) {
-      console.log('HexoAgent is not null, so exit it first.')
+
+    // Users can unbind the agent with previous directory and bind it with a new one.
+    // In this case, we need to exit the previous hexo instance first.
+    if (typeof this.hexo !== 'undefined') {
+      console.log('The member hexo is already initialized.')
+
+      // @ts-ignore In the latest version of Hexo, the exit parameter can be empty.
       this.exitPromise = this.hexo.exit()
-      this.hexo = undefined
     }
-    this.hexo = new Hexo(rootPath, {
+
+    this.hexo = new Hexo(this.rootPath, {
       safe: true,
       draft: true,
     })
+
     this.initPromise = this.hexo
       .init()
       .then(() => {
-        console.log('HexoAgent.init is done.')
-        return this.hexo?.load()
+        console.log('A new instance of Hexo is initialized with rootPath: ', this.rootPath)
+
+        return this.hexo.load()
       })
       .then(() => {
-        console.log('HexoAgent.load is done.')
+        console.log('The instance of Hexo loading finished.')
+
         // register a dummy render for markdown files make db cache sync.
-        this.hexo?.extend.renderer.register('md', 'html', (data) => data.text, true)
+        this.hexo.extend.renderer.register('md', 'html', (data) => data.text, true)
       })
   }
 
-  checkDir(path: string) {
+  public static checkDir(path: string): boolean {
     try {
       const stat = statSync(path)
       return stat.isDirectory()
     } catch (error) {
+      console.log('Error checking directory: ', path, ' error is:', error)
+
       return false
     }
   }
 
-  checkHexoDir(path: string) {
-    return this.checkDir(join(path, 'source')) && this.checkDir(join(path, 'scaffolds'))
+  public static checkHexoDir(path: string): boolean {
+    return HexoAgent.checkDir(join(path, 'source')) && HexoAgent.checkDir(join(path, 'scaffolds'))
   }
 
   /**
    * Fetch all posts meet the conditions.
-   *
-   * @param {boolean} published
-   * @param {boolean} draft
-   * @param {number} limit
-   * @param {number} offset
-   * @param {string} orderBy
-   * @param {string} order
-   * @returns {Object[]}
    */
-  async getPosts(
-    published = true,
-    draft = true,
-    limit = -1,
-    offset = 0,
-    categoryId = '',
-    monthCode = '',
-    orderBy = 'date',
-    order = 'desc',
+  public async getPosts(
+    published: boolean = true,
+    isDraft: boolean = true,
+    limit: number = -1,
+    offset: number = 0,
+    categoryId: string = '',
+    monthCode: string = '',
+    orderBy: string = 'date',
+    order: string = 'desc',
   ) {
     if (this.exitPromise) {
       await this.exitPromise
@@ -82,13 +84,13 @@ class HexoAgent {
     }
     console.log(
       'HexoAgent.getPosts is called.',
-      `Getting posts with published=${published}, draft=${draft}, limit=${limit}, offset=${offset}, orderBy=${orderBy}, order=${order}`,
+      `Getting posts with published=${published}, draft=${isDraft}, limit=${limit}, offset=${offset}, orderBy=${orderBy}, order=${order}`,
     )
     const results = {
       total: 0,
-      posts: <object[]>[],
+      posts: <Post[]>[],
     }
-    const postList = <object[]>[]
+    const postList = <Post[]>[]
     let posts = this.hexo.locals.get('posts')
     if (orderBy && order) {
       posts = posts.sort(orderBy, order)
@@ -98,7 +100,7 @@ class HexoAgent {
         return !item.published
       })
     }
-    if (!draft) {
+    if (!isDraft) {
       posts = posts.filter((item) => {
         return item.published
       })
@@ -126,7 +128,7 @@ class HexoAgent {
     }
     const locale = app.getSystemLocale()
     posts.each(function (post) {
-      const onePost = {
+      const onePost = <Post>{
         title: post.title,
         date: post.date.locale(locale).format(),
         updated: post.updated.locale(locale).format(),
@@ -154,7 +156,7 @@ class HexoAgent {
   /**
    * Get all months that have posts.
    */
-  async getPostMonths() {
+  public async getPostMonths(): Promise<string[]> {
     if (this.exitPromise) {
       await this.exitPromise
     }
@@ -164,7 +166,7 @@ class HexoAgent {
     let posts = this.hexo.locals.get('posts')
     posts = posts.sort('date', 'desc')
 
-    const months = new Set()
+    const months = new Set<string>()
     posts.each(function (post) {
       months.add(post.date.format('YYYY-MM'))
     })
@@ -172,7 +174,7 @@ class HexoAgent {
     return [...months.values()]
   }
 
-  getSiteInfo() {
+  public getSiteInfo() {
     const pkgJsonPath = join(this.rootPath, 'package.json')
     const pkgJsonData = readFileSync(pkgJsonPath, 'utf-8')
     const pkgJson = JSON.parse(pkgJsonData)
@@ -183,14 +185,14 @@ class HexoAgent {
     }
   }
 
-  async getHexoConfig() {
+  public async getHexoConfig(): Promise<ConfigType | null> {
     if (this.exitPromise) {
       await this.exitPromise
     }
     if (this.initPromise) {
       await this.initPromise
     }
-    if (this.hexo == null) {
+    if (typeof this.hexo === 'undefined') {
       return null
     }
     return this.hexo.config
@@ -198,9 +200,8 @@ class HexoAgent {
 
   /**
    * Get all categories.
-   * @returns {[Object]}
    */
-  getCategories() {
+  public getCategories() {
     console.log('getCategories is called.')
     const categories = <object[]>[]
     this.hexo.locals.get('categories').each(function (category) {
@@ -220,11 +221,8 @@ class HexoAgent {
 
   /**
    * Get all tags.
-   * @param {*} event
-   * @param {*} args
-   * @returns
    */
-  getTags() {
+  public getTags() {
     console.log('getTags is called.')
     const tags = <object[]>[]
     this.hexo.locals.get('tags').each(function (tag) {
@@ -243,7 +241,7 @@ class HexoAgent {
     return tags
   }
 
-  getAssets() {
+  public getAssets() {
     console.log('getAssets is called.')
     const assets = <object[]>[]
     this.hexo.database.model('Asset').each(function (asset) {
@@ -262,10 +260,8 @@ class HexoAgent {
   }
   /**
    * 获取一篇文章的内容
-   * @param {string} sourcePath
-   * @returns
    */
-  getContent(sourcePath: string) {
+  public getContent(sourcePath: string): string {
     console.log('getContent is called.')
     console.log('path is: ', sourcePath)
     const filePath = join(this.hexo.source_dir, sourcePath)
@@ -273,7 +269,7 @@ class HexoAgent {
     return buffer.toString()
   }
 
-  async saveContent(sourcePath: string, content: string) {
+  public async saveContent(sourcePath: string, content: string): Promise<void> {
     console.log('saveContent is called.')
     console.log('path is: ', sourcePath, ' content length is: ', content.length)
     const filePath = join(this.hexo.source_dir, sourcePath)
@@ -281,13 +277,13 @@ class HexoAgent {
     await this.updateCache()
   }
 
-  async updateCache() {
+  public async updateCache(): Promise<void> {
     await this.hexo.source.process()
     await this.hexo.load()
     await this.hexo.database.save()
   }
 
-  async deleteFile(sourcePath: string) {
+  public async deleteFile(sourcePath: string): Promise<void> {
     console.log('try to del the real file. path is: ', sourcePath)
     const filePath = join(this.hexo.source_dir, sourcePath)
     unlinkSync(filePath)
@@ -300,7 +296,12 @@ class HexoAgent {
 
   // Create a new file with content in indicated directory
   // use filename if provided, otherwise use a default name
-  async createFile(directory, title, slug, content) {
+  public async createFile(
+    directory: string,
+    title: string,
+    slug: string,
+    content: string,
+  ): Promise<string> {
     console.log(
       'create a new blog post. directory: ',
       directory,
@@ -337,7 +338,7 @@ class HexoAgent {
   }
 
   // Move file from _drafts to _posts with content
-  async moveFile(sourcePath: string, content: string) {
+  public async moveFile(sourcePath: string, content: string): Promise<string> {
     console.log(
       'moveFile is called. sourcePath is: ',
       sourcePath,
@@ -366,7 +367,7 @@ class HexoAgent {
    * Statistic info about the site.
    * @returns
    */
-  async getStats() {
+  public async getStats() {
     if (this.exitPromise) {
       await this.exitPromise
     }
@@ -384,23 +385,6 @@ class HexoAgent {
     }
 
     return stats
-  }
-
-  /**
-   * Get the config of the site.
-   * @returns
-   */
-  async getConfig() {
-    if (this.exitPromise) {
-      await this.exitPromise
-    }
-    if (this.initPromise) {
-      await this.initPromise
-    }
-    if (this.hexo == null) {
-      return null
-    }
-    return this.hexo.config
   }
 }
 
