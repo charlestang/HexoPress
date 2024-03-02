@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { normalizeList } from '@/components/CategoryList'
 import type { ElTree } from 'element-plus'
 import type Node from 'element-plus/es/components/tree/src/model/node'
 import type { TreeData, TreeKey } from 'element-plus/es/components/tree/src/tree.type'
 import { computed, ref } from 'vue'
+import { normalizeList } from './CategoryList'
 
 interface NodeData {
   id: string

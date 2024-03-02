@@ -4,26 +4,22 @@ import Fastify from 'fastify'
 import { join } from 'path'
 
 class HttpServer {
-  app?: FastifyInstance
-  pathSet: boolean
-  listening: boolean
+  public app!: FastifyInstance
+  public pathSet: boolean = false
+  public listening: boolean = false
 
-  constructor() {
-    this.app = undefined
-    this.pathSet = false
-    this.listening = false
-  }
-
-  init(path: string) {
-    if (this.app !== null) {
-      this.app?.close()
-      this.app = undefined
+  public init(path: string) {
+    if (typeof this.app !== 'undefined') {
+      this.app.close()
       this.pathSet = false
-      this.listening = false
     }
+
     if (!this.pathSet) {
       this.app = Fastify()
+      this.listening = false
+
       console.log('Static file path set to: ', join(path, 'public'))
+
       this.app
         .register(fastifyStatic, {
           root: join(path, 'public'),
@@ -34,19 +30,20 @@ class HttpServer {
     }
 
     if (!this.listening) {
-      this.app?.listen({ port: 2357 }, (err, address) => {
+      this.app.listen({ port: 2357 }, (err, address) => {
         console.log('Server is running on port 2357.')
         if (err) {
           console.error('Address is: ', address, ' and Error: ', err)
           throw err
+        } else {
+          this.listening = true
         }
-        this.listening = true
       })
     }
   }
 
-  close() {
-    this.app?.close()
+  public close() {
+    this.app.close()
   }
 }
 

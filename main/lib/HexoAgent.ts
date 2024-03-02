@@ -75,7 +75,7 @@ export class HexoAgent {
     monthCode: string = '',
     orderBy: string = 'date',
     order: string = 'desc',
-  ) {
+  ): Promise<PostsResults> {
     if (this.exitPromise) {
       await this.exitPromise
     }
@@ -106,7 +106,6 @@ export class HexoAgent {
       })
     }
     if (categoryId !== '') {
-      console.log(categoryId)
       posts = posts.filter((item) => {
         return item.categories.some((cat) => {
           return cat._id === categoryId
@@ -119,14 +118,18 @@ export class HexoAgent {
       })
     }
     results.total = posts.length
+
     console.log('This query posts total is: ', results.total)
+
     if (offset > 0) {
       posts = posts.skip(offset)
     }
     if (limit > 0) {
       posts = posts.limit(limit)
     }
+
     const locale = app.getSystemLocale()
+
     posts.each(function (post) {
       const onePost = <Post>{
         title: post.title,
@@ -174,7 +177,10 @@ export class HexoAgent {
     return [...months.values()]
   }
 
-  public getSiteInfo() {
+  /**
+   * Get hexo site info from package.json
+   */
+  public getSiteInfo(): SiteInfo {
     const pkgJsonPath = join(this.rootPath, 'package.json')
     const pkgJsonData = readFileSync(pkgJsonPath, 'utf-8')
     const pkgJson = JSON.parse(pkgJsonData)
@@ -202,8 +208,8 @@ export class HexoAgent {
    * Get all categories.
    */
   public getCategories() {
-    console.log('getCategories is called.')
-    const categories = <object[]>[]
+    console.log('HexoAgent getCategories is called.')
+    const categories = <Category[]>[]
     this.hexo.locals.get('categories').each(function (category) {
       const cat = {
         id: category._id,
@@ -223,8 +229,8 @@ export class HexoAgent {
    * Get all tags.
    */
   public getTags() {
-    console.log('getTags is called.')
-    const tags = <object[]>[]
+    console.log('HexoAgent getTags is called.')
+    const tags = <Tag[]>[]
     this.hexo.locals.get('tags').each(function (tag) {
       const t = {
         id: tag._id,
@@ -241,8 +247,11 @@ export class HexoAgent {
     return tags
   }
 
+  /**
+   * Get all assets.
+   */
   public getAssets() {
-    console.log('getAssets is called.')
+    console.log('HexoAgent getAssets is called.')
     const assets = <object[]>[]
     this.hexo.database.model('Asset').each(function (asset) {
       const a = {
@@ -258,20 +267,21 @@ export class HexoAgent {
 
     return assets
   }
-  /**
-   * 获取一篇文章的内容
-   */
+
   public getContent(sourcePath: string): string {
-    console.log('getContent is called.')
-    console.log('path is: ', sourcePath)
+    console.log('HexoAgent getContent is called. The sourcePath is: ', sourcePath)
     const filePath = join(this.hexo.source_dir, sourcePath)
     const buffer = readFileSync(filePath)
     return buffer.toString()
   }
 
   public async saveContent(sourcePath: string, content: string): Promise<void> {
-    console.log('saveContent is called.')
-    console.log('path is: ', sourcePath, ' content length is: ', content.length)
+    console.log(
+      'HexoAgent saveContent is called. The sourcePath is: ',
+      sourcePath,
+      ' and content length is: ',
+      content.length,
+    )
     const filePath = join(this.hexo.source_dir, sourcePath)
     writeFileSync(filePath, content)
     await this.updateCache()
@@ -365,19 +375,18 @@ export class HexoAgent {
 
   /**
    * Statistic info about the site.
-   * @returns
    */
-  public async getStats() {
+  public async getStats(): Promise<Stats> {
     if (this.exitPromise) {
       await this.exitPromise
     }
     if (this.initPromise) {
       await this.initPromise
     }
-    const db = this.hexo?.database
-    const postCount = db?.model('Post').find({ published: true }).length
-    const postDraftCount = db?.model('Post').find({ published: false }).length
-    const pageCount = db?.model('Page').length
+    const db = this.hexo.database
+    const postCount = db.model('Post').find({ published: true }).length
+    const postDraftCount = db.model('Post').find({ published: false }).length
+    const pageCount = db.model('Page').length
     const stats = {
       postCount,
       postDraftCount,
