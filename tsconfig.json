@@ -9,6 +9,9 @@
     },
     {
       "path": "./tsconfig/tsconfig.vitest.json"
+    },
+    {
+      "path": "./tsconfig/tsconfig.tools.json"
     }
   ]
 }
