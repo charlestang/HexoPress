@@ -30,6 +30,7 @@ export default defineConfig((env) => {
       AutoImport({
         eslintrc: {
           enabled: true,
+          filepath: 'types/.eslintrc-auto-import.json',
         },
         resolvers: [ElementPlusResolver()],
         dts: 'types/auto-imports.d.ts',

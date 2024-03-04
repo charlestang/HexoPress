@@ -66,7 +66,7 @@ I used popular web development technologies such as Vue 3, Element Plus, and Vit
 - [x] 📝 Article list shows all posts and allows filtering by "Published" or "Draft";
 - [x] 📅 Filter or search the article list by **published month**;
 - [x] 🗂️ Filter or search the article list by **category**;
-- [ ] 🔍 Filter or search the article list by **key-words**;
+- [x] 🔍 Filter or search the article list by **key-words**;
 - [x] 🌳 Tree view for **categories list** with article count statistics;
 - [x] 🏷️ List view for **tags list** with article count statistics;
 - [x] 🖼️ Display of media resources list such as images;

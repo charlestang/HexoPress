@@ -17,22 +17,27 @@ const posts = ref<undefined | Post[]>(undefined)
 const total = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(20)
-async function fetch(curPage: number) {
-  let data
-  let published = statusFilterVal.value !== PostStatusFilterChoice.Draft
-  let draft = statusFilterVal.value !== PostStatusFilterChoice.Published
-  let limit = pageSize.value
-  let offset = (curPage - 1) * limit
-  let selectedMonth = dateCategoryFilterVal.value.date
-  if (selectedMonth === 'all') {
-    selectedMonth = ''
-  }
-  let selectedCat = dateCategoryFilterVal.value.category
-  if (selectedCat === 'all') {
-    selectedCat = ''
-  }
+const keywords = ref('')
 
-  data = await window.site.getPosts(published, draft, limit, offset, selectedCat, selectedMonth)
+async function fetch(curPage: number) {
+  const published = statusFilterVal.value !== PostStatusFilterChoice.Draft
+  const draft = statusFilterVal.value !== PostStatusFilterChoice.Published
+  const limit = pageSize.value
+  const offset = (curPage - 1) * limit
+  let selectedMonth =
+    dateCategoryFilterVal.value.date === 'all' ? '' : dateCategoryFilterVal.value.date
+  let selectedCat =
+    dateCategoryFilterVal.value.category === 'all' ? '' : dateCategoryFilterVal.value.category
+
+  const data = await window.site.getPosts(
+    published,
+    draft,
+    limit,
+    offset,
+    selectedCat,
+    selectedMonth,
+    keywords.value,
+  )
   posts.value = data.posts
   total.value = data.total
 }
@@ -100,6 +105,21 @@ function onClickEditMeta(sourcePath: string) {
 }
 
 const timeType = ref('publishedAt')
+
+function onSearchClick() {
+  currentPage.value = 1
+  fetch(currentPage.value)
+}
+
+function withKeywordsHight(text: string) {
+  if (keywords.value === '') {
+    return text
+  }
+  return text.replace(
+    new RegExp(keywords.value, 'gi'),
+    (match) => `<span style="background-color: #ff0">${match}</span>`,
+  )
+}
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -109,8 +129,14 @@ const timeType = ref('publishedAt')
     </el-col>
     <el-col :span="5" style="display: flex; justify-content: flex-end">
       <el-space>
-        <el-input placeholder="Search" size="small" />
-        <el-button type="primary" size="small" plain>{{ t('posts.search') }}</el-button>
+        <el-input
+          :placeholder="t('posts.keywords')"
+          v-model="keywords"
+          size="small"
+          :clearable="true" />
+        <el-button type="primary" size="small" plain @click="onSearchClick">{{
+          t('posts.search')
+        }}</el-button>
       </el-space>
     </el-col>
   </el-row>
@@ -137,7 +163,7 @@ const timeType = ref('publishedAt')
       <template #default="scope">
         <el-row>
           <el-col :span="24">
-            {{ scope.row.title }}
+            <span v-html="withKeywordsHight(scope.row.title)"></span>
             <span v-if="scope.row.status == 'draft'" class="draft-status">
               -- {{ t('posts.draft') }}</span
             >

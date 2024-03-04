@@ -108,6 +108,7 @@ declare global {
       offset?: number,
       categoryId?: string,
       monthCode?: string,
+      keywords?: string,
       orderBy?: string,
       order?: string,
     ) => Promise<PostsResults>

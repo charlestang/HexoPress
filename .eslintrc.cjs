@@ -14,7 +14,7 @@ module.exports = {
     'plugin:vue/vue3-essential',
     '@vue/eslint-config-typescript',
     '@vue/eslint-config-prettier/skip-formatting',
-    '.eslintrc-auto-import.json',
+    './types/.eslintrc-auto-import.json',
   ],
   parserOptions: {
     ecmaVersion: 'latest',
