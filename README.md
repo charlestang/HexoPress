@@ -91,9 +91,9 @@ The client internally uses the API of Hexo version 7.1.1. Hexo blog versions abo
 
 ### 1. Mac
 
-[Download for Apple Silicon: v1.0.0-alpha.2][download-for-apple]
+[Download for Apple Silicon: v1.1.0][download-for-apple]
 
-[Download for Intel Chip: v1.0.0-alpha.2][download-for-intel]
+[Download for Intel Chip: v1.1.0][download-for-intel]
 
 ### 2. Windows
 
@@ -174,8 +174,8 @@ Visit https://github.com/charlestang/HexoPress/issues to submit issues.
 1. Submit a pull request
 
 [docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/2024/02/07/How-to-create-a-blog-with-Hexo/
-[download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-arm64-1.0.0-alpha.2.zip
-[download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-darwin-x64-1.0.0-alpha.2.zip
+[download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.1.0/HexoPress-darwin-arm64-1.0.0.zip
+[download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.1.0/HexoPress-darwin-x64-1.1.0.zip
 [download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.0.0-alpha.2/HexoPress-win-x64-1.0.0-alpha.2.zip
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
 [electron-badge]: https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white
