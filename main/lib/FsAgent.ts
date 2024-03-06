@@ -8,11 +8,7 @@ interface DirentTransformed {
 }
 
 export class FsAgent {
-  private sourceDir: string
-
-  constructor() {
-    this.sourceDir = ''
-  }
+  private sourceDir: string = ''
 
   init(baseDirectory: string): void {
     this.sourceDir = join(baseDirectory, 'source')
@@ -44,7 +40,6 @@ export class FsAgent {
       try {
         await mkdir(dirname(toPath), { recursive: true })
       } catch (err) {
-        console.log(err)
         return false
       }
     }
@@ -52,7 +47,6 @@ export class FsAgent {
     try {
       await rename(fromPath, toPath)
     } catch (err) {
-      console.log(err)
       return false
     }
 

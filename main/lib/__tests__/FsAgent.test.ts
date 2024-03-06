@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync, writeFileSync } from 'fs'
+import { mkdirSync, rmSync, writeFileSync, existsSync } from 'fs'
 import { join } from 'path'
 import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 import { FsAgent } from '../FsAgent'
@@ -15,6 +15,10 @@ describe('FsAgent', () => {
     fsAgent.init(join(__dirname, 'testDir'))
   })
 
+  it('after init, sourceDir should be set', () => {
+    expect(fsAgent['sourceDir']).toBe(testDir)
+  })
+
   it('readdir should read non-hidden files', async () => {
     const contents = await fsAgent.readdir('')
 
@@ -22,6 +26,16 @@ describe('FsAgent', () => {
     expect(contents[0].name).toBe('testFile.txt')
     expect(contents[0].relativePath).toBe('testFile.txt')
     expect(contents[0].type).toBe('file')
+  })
+
+  it('mv should move a file', async () => {
+    const from = 'testFile.txt'
+    const to = 'movedFile.txt'
+
+    const result = await fsAgent.mv(from, to)
+
+    expect(result).toBe(true)
+    expect(existsSync(join(testDir, to))).toBe(true)
   })
 
   afterAll(() => {
