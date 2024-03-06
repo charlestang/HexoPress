@@ -136,28 +136,48 @@ git clone https://github.com/charlestang/HexoPress.git
 
 ### 2. 运行环境
 
-- Node.js >= v21.1.0
-- yarn >= v1.22.21
+- Node.js >= v20.8.1
+- npm >= v10.5.5
 - tcp port:5173 内部网页使用的端口号
 - tcp port:2357 HTTP 服务用来伺服本地图片
 
 ### 3. 安装依赖
 
 ```bash
-yarn install
+npm install
 ```
 
 ### 4. 运行
 
+启动本地开发环境：
+
 ```bash
-yarn dev
+npm run dev
+```
+
+运行 ESLint：
+
+```bash
+npm run lint
+```
+
+运行代码格式化：
+
+```bash
+npm run format
+```
+
+运行测试：
+
+```bash
+npm run test
 ```
 
 ### 5. 打包
 
 ```bash
-yarn build
-yarn forge:make
+npm run package
+npm run make
 ```
 
 ## 六、贡献

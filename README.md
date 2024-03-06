@@ -135,28 +135,48 @@ git clone https://github.com/charlestang/HexoPress.git
 
 ### 2. Running Environment
 
-- Node.js >= v21.1.0
-- yarn >= v1.22.21
+- Node.js >= v20.8.1
+- npm >= v10.5.5
 - tcp port:5173 used by the internal webpage
 - tcp port:2357 HTTP service used to serve local images
 
 ### 3. Install Dependencies
 
 ```bash
-yarn install
+npm install
 ```
 
 ### 4. Run
 
+Run local dev server:
+
 ```bash
-yarn dev
+npm run dev
+```
+
+Run ESLint：
+
+```bash
+npm run lint
+```
+
+Run code format with prettier：
+
+```bash
+npm run format
+```
+
+Run tests：
+
+```bash
+npm run test
 ```
 
 ### 5. Package
 
 ```bash
-yarn build
-yarn forge:make
+npm run package
+npm run make
 ```
 
 ## VI. Contribution
