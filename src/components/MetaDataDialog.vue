@@ -95,7 +95,7 @@ async function onSave() {
         <el-date-picker v-model="frontMatter.updated" type="datetime" />
       </el-form-item>
       <el-form-item :label="t('editor.categories')">
-        <categories-tree v-model="frontMatter.categories" :categories="categories" />
+        <categories-tree-panel v-model="frontMatter.categories" :categories="categories" />
       </el-form-item>
       <el-form-item :label="t('editor.tags')">
         <tag-input v-model="frontMatter.tags" />

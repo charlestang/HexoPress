@@ -52,7 +52,7 @@ function onClickAddCategory() {
     ' and parent id: ',
     newCategoryForm.value.parent,
   )
-  console.log('categories lenght: ', categories.value.length)
+  console.log('categories length: ', categories.value.length)
   const newCategory: Category = {
     id: 'new-category-' + _hashCode(newCategoryForm.value.name),
     name: newCategoryForm.value.name,
@@ -63,7 +63,7 @@ function onClickAddCategory() {
     length: 0,
   }
   categories.value.push(newCategory)
-  console.log('after add, categories lenght: ', categories.value.length)
+  console.log('after add, categories length: ', categories.value.length)
   showAddNewCategoryPop.value = false
   newCategoryForm.value = {
     name: '',
@@ -72,35 +72,56 @@ function onClickAddCategory() {
 }
 </script>
 <template>
-  <el-scrollbar height="250px">
-    <categories-tree v-model="selectedCategories" :categories="categories" />
-  </el-scrollbar>
-  <el-popover
-    :visible="showAddNewCategoryPop"
-    :show-arrow="false"
-    width="250"
-    trigger="click"
-    placement="bottom">
-    <template #reference>
-      <el-link type="warning" @click="showAddNewCategoryPop = true">{{
-        t('editor.createNewCategory')
-      }}</el-link>
-    </template>
-    <meta-entry-title @close="showAddNewCategoryPop = false">{{
-      t('editor.createCategory')
-    }}</meta-entry-title>
-    <el-form :model="newCategoryForm" label-position="top">
-      <el-form-item :label="t('editor.categoryName')">
-        <el-input v-model="newCategoryForm.name"></el-input>
-      </el-form-item>
-      <el-form-item :label="t('editor.parentCategory')">
-        <el-select v-model="newCategoryForm.parent" placeholder="请选择">
-          <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-button type="primary" @click="onClickAddCategory">{{ t('editor.add') }}</el-button>
-    </el-form>
-  </el-popover>
+  <div class="container">
+    <el-scrollbar>
+      <categories-tree v-model="selectedCategories" :categories="categories" />
+    </el-scrollbar>
+    <el-popover
+      :visible="showAddNewCategoryPop"
+      :show-arrow="false"
+      width="250"
+      trigger="click"
+      placement="bottom">
+      <template #reference>
+        <el-link type="warning" @click="showAddNewCategoryPop = true">{{
+          t('editor.createNewCategory')
+        }}</el-link>
+      </template>
+      <meta-entry-title @close="showAddNewCategoryPop = false">{{
+        t('editor.createCategory')
+      }}</meta-entry-title>
+      <el-form :model="newCategoryForm" label-position="top">
+        <el-form-item :label="t('editor.categoryName')">
+          <el-input v-model="newCategoryForm.name"></el-input>
+        </el-form-item>
+        <el-form-item :label="t('editor.parentCategory')">
+          <el-select v-model="newCategoryForm.parent" placeholder="请选择">
+            <el-option
+              v-for="item in categories"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-button type="primary" @click="onClickAddCategory">{{ t('editor.add') }}</el-button>
+      </el-form>
+    </el-popover>
+  </div>
 </template>
-<style scoped></style>
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 275px;
+}
+
+.el-scrollbar {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.el-link {
+  justify-content: flex-start;
+}
+</style>
