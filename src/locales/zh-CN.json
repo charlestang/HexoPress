@@ -2,6 +2,7 @@
   "cats": {
     "actions": "操作",
     "name": "分类名",
+    "stats": "（共 {count} 个）",
     "total": "文章总数",
     "view": "查看"
   },
@@ -181,6 +182,7 @@
   "tags": {
     "actions": "操作",
     "name": "标签",
+    "stats": "（共 {count} 个）",
     "total": "文章总数",
     "view": "查看"
   },

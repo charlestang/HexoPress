@@ -2,6 +2,7 @@
   "cats": {
     "actions": "Actions",
     "name": "Category Name",
+    "stats": "( {count} total )",
     "total": "Total Posts",
     "view": "View"
   },
@@ -179,6 +180,7 @@
   "tags": {
     "actions": "Actions",
     "name": "Tag",
+    "stats": "( {count} total )",
     "total": "Posts Total",
     "view": "View"
   },

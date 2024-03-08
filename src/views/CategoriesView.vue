@@ -4,11 +4,13 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-let categories = ref<null | Category[]>(null)
+const categories = ref<null | Category[]>(null)
+const catCount = ref(0)
 
 async function fetch() {
   categories.value = await window.site.getCategories()
-  console.log(categories.value)
+  catCount.value = categories.value.length
+  console.log('Categories fetched from API, length: ', catCount.value)
 }
 
 fetch()
@@ -23,7 +25,7 @@ interface TreeEntry {
   children?: TreeEntry[]
 }
 
-let data1 = ref<TreeEntry[]>([])
+const data1 = ref<TreeEntry[]>([])
 watch(categories, (newVal) => {
   const nodeMap: { [id: string]: TreeEntry } = {}
 
@@ -57,7 +59,7 @@ function onClickLink(url: string) {
 </script>
 
 <template>
-  <h2>{{ t('common.categories') }}</h2>
+  <h2>{{ t('common.categories') }} {{ t('cats.stats', { count: catCount }) }}</h2>
   <el-table
     :data="data1"
     style="width: 100%; margin-bottom: 20px"

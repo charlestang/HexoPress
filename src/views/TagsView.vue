@@ -5,9 +5,11 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const tags = ref<null | Tag[]>(null)
+const tagsCount = ref(0)
 
 async function fetch() {
   tags.value = await window.site.getTags()
+  tagsCount.value = tags.value.length
 }
 fetch()
 
@@ -41,7 +43,7 @@ function onClickLink(url: string) {
 </script>
 
 <template>
-  <h2>{{ t('common.tags') }}</h2>
+  <h2>{{ t('common.tags') }} {{ t('tags.stats', { count: tagsCount }) }}</h2>
   <el-row :gutter="20">
     <el-col :span="12">
       <el-table
