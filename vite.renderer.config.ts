@@ -52,5 +52,10 @@ export default defineConfig((env) => {
       },
     },
     clearScreen: false,
+    server: {
+      watch: {
+        ignored: ['**/blog/**'],
+      }
+    }
   } as UserConfig
 })

@@ -1,13 +1,13 @@
 ---
 title: '[HowTo] 用 Hexo 建立一个博客'
-permalink: ''
+permalink: howto-build-a-blog-with-hexo-cn/
 categories:
   - - Guide 手册
 tags:
   - guide
 excerpt: 怎样使用 Hexo 建立一个博客。
 date: 2024-02-07 10:44:28
-updated: 2024-02-13 21:14:07
+updated: 2024-03-09 17:18:54
 ---
 使用 Hexo 创建一个博客，需要您有一定的动手能力。这主要指的，需要在命令行界面上，键入指令并执行， 如果遇到错误，可以做出适当的应对。如果您有编程的基础知识，对您来说是非常简单的。
 

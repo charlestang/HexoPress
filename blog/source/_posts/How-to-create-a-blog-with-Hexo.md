@@ -1,13 +1,13 @@
 ---
 title: How to create a blog with Hexo?
-permalink: ''
+permalink: howto-build-a-blog-with-hexo/
 categories:
   - - Guide 手册
 tags:
   - guide
 excerpt: The guide to build a blog with Hexo.
 date: 2024-02-07 10:56:45
-updated: 2024-02-07 12:13:24
+updated: 2024-03-09 17:19:02
 ---
 Creating a blog with Hexo requires a certain level of hands-on ability. This primarily refers to the need to type and execute commands in the command-line interface, and to respond appropriately when encountering errors. If you have a basic understanding of programming, it's quite straightforward.
 
