@@ -213,7 +213,7 @@ npm run make
 [npm-badge]: https://img.shields.io/badge/NPM-%23CB3837.svg?logo=npm&logoColor=white
 [releases]: https://github.com/charlestang/HexoPress/releases
 [screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png
-[screenshot-dashboard]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard.png
+[screenshot-dashboard]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard-cn.png
 [screenshot-editor]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png
 [screenshot-postlist]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png
 [screenshot-tags]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png
