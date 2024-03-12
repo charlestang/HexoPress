@@ -189,5 +189,11 @@
   "time": {
     "long": "HH:mm:ss",
     "short": "HH:mm"
+  },
+  "uploadImage": {
+    "alt": "Alt",
+    "filename": "文件名",
+    "submit": "上传",
+    "upload": "上传图片"
   }
 }

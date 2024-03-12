@@ -215,6 +215,17 @@ if (appStore.editMode === 'vim') {
   })
 }
 const activeAsidePanels = ref(['meta', 'cate', 'tags'])
+
+const showUploadDialog = ref(false)
+const imageFile = ref<File>()
+async function onUploadImage(
+  files: File[],
+  callback: (urls: string[] | { url: string; alt: string; title: string }[]) => void,
+) {
+  console.log('onUploadImage: ', files)
+  imageFile.value = files[0]
+  showUploadDialog.value = true
+}
 </script>
 
 <template>
@@ -300,7 +311,9 @@ const activeAsidePanels = ref(['meta', 'cate', 'tags'])
             :sanitize="filterImage"
             :preview="false"
             :htmlPreview="false"
-            :toolbarsExclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"></MdEditor>
+            :toolbarsExclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
+            @uploadImg="onUploadImage"></MdEditor>
+          <UploadImageDialog v-model="showUploadDialog" v-model:imageFile="imageFile" />
         </el-main>
       </el-container>
     </el-container>

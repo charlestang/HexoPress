@@ -49,6 +49,13 @@ watch(statusFilterVal, (value, oldValue) => {
   }
 })
 
+watch(pageSize, (value, oldValue) => {
+  if (value !== oldValue) {
+    currentPage.value = 1
+    fetch(currentPage.value)
+  }
+})
+
 function refresh() {
   fetch(currentPage.value)
 }
@@ -158,7 +165,7 @@ function withKeywordsHight(text: string) {
     </el-col>
   </el-row>
   <el-table :data="posts" stripe style="width: 100%; margin-bottom: 10px">
-    <el-table-column type="index" label="#" width="45" />
+    <el-table-column type="index" label="#" width="48" />
     <el-table-column :label="t('posts.title')" width="360">
       <template #default="scope">
         <el-row>

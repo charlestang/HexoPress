@@ -55,7 +55,7 @@ export default defineConfig((env) => {
     server: {
       watch: {
         ignored: ['**/blog/**'],
-      }
-    }
+      },
+    },
   } as UserConfig
 })
