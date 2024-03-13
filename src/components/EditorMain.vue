@@ -3,7 +3,7 @@ import { parseFrontMatter, stringify, type FrontMatter } from '@/components/Fron
 import { useAppStore } from '@/stores/app'
 import { lineNumbers } from '@codemirror/view'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'
-import { vim } from '@replit/codemirror-vim'
+import { Vim, vim } from '@replit/codemirror-vim'
 import { MdEditor, config } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { computed, ref, watch } from 'vue'
@@ -175,6 +175,7 @@ async function upsertDraft() {
     ElMessage.success(t('editor.draftSaveSuccess'))
   }
 }
+
 async function publishDraft() {
   const check = await _formValidate()
   if (!check) {
@@ -213,6 +214,9 @@ if (appStore.editMode === 'vim') {
       return [...extensions, lineNumbers(), vim()]
     },
   })
+  Vim.defineEx('write', 'w', () => {
+    onSave()
+  })
 }
 const activeAsidePanels = ref(['meta', 'cate', 'tags'])
 
@@ -225,6 +229,15 @@ async function onUploadImage(
   console.log('onUploadImage: ', files)
   imageFile.value = files[0]
   showUploadDialog.value = true
+}
+
+function onSave() {
+  console.log('editor onSave triggered.')
+  if (postPublished.value) {
+    updatePost()
+  } else {
+    upsertDraft()
+  }
 }
 </script>
 
@@ -312,7 +325,8 @@ async function onUploadImage(
             :preview="false"
             :htmlPreview="false"
             :toolbarsExclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
-            @uploadImg="onUploadImage"></MdEditor>
+            @uploadImg="onUploadImage"
+            @onSave="onSave"></MdEditor>
           <UploadImageDialog v-model="showUploadDialog" v-model:imageFile="imageFile" />
         </el-main>
       </el-container>
