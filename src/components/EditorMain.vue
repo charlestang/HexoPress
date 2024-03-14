@@ -222,12 +222,29 @@ const activeAsidePanels = ref(['meta', 'cate', 'tags'])
 
 const showUploadDialog = ref(false)
 const imageFile = ref<File>()
+const filePath = ref('')
+const uploaded = ref(() => {})
 async function onUploadImage(
   files: File[],
   callback: (urls: string[] | { url: string; alt: string; title: string }[]) => void,
 ) {
   console.log('onUploadImage: ', files)
   imageFile.value = files[0]
+  function formatDate(date: Date) {
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const monthS = month < 10 ? '0' + month : month
+    return `${year}/${monthS}`
+  }
+  filePath.value = formatDate(frontMatter.value.date as Date) + '/' + files[0].name
+  uploaded.value = function () {
+    console.log('upload success')
+    // TODO: this is not so good, because it is relative to the permalink.
+    //       and the image cannot preview because the image has not been
+    //       moved to the `public` path.
+    const url = '../images/' + filePath.value
+    callback([url])
+  }
   showUploadDialog.value = true
 }
 
@@ -327,7 +344,11 @@ function onSave() {
             :toolbarsExclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
             @uploadImg="onUploadImage"
             @onSave="onSave"></MdEditor>
-          <UploadImageDialog v-model="showUploadDialog" v-model:imageFile="imageFile" />
+          <UploadImageDialog
+            v-model="showUploadDialog"
+            :imageFile="imageFile"
+            :filePath="filePath"
+            @uploadSuccess="uploaded" />
         </el-main>
       </el-container>
     </el-container>

@@ -23,6 +23,8 @@ contextBridge.exposeInMainWorld('site', {
   openUrl: (url: string) => ipcRenderer.invoke('shell:openUrl', url),
   getReadDir: (path: string) => ipcRenderer.invoke('fs:readdir', path),
   mv: (from: string, to: string) => ipcRenderer.invoke('fs:mv', from, to),
+  saveImage: (path: string, content: ArrayBuffer) =>
+    ipcRenderer.invoke('fs:saveImage', path, content),
   onVaultPathChanged: (callback) =>
     ipcRenderer.on('configChanged:vaultPath', (_, value) => callback(value)),
   initializeAgent: (path: string) => ipcRenderer.invoke('agent:init', path),

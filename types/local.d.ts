@@ -130,6 +130,7 @@ declare global {
     openUrl: (url: string) => Promise<void>
     getReadDir: (path: string) => Promise<FileEntry[]>
     mv: (from: string, to: string) => Promise<boolean>
+    saveImage: (path: string, content: ArrayBuffer) => Promise<void>
     onVaultPathChanged: (callback: (newValue: string) => void) => void
     initializeAgent: (path: string) => Promise<boolean>
     setDarkMode: (darkMode: string) => Promise<void>

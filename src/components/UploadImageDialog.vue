@@ -1,21 +1,19 @@
 <script lang="ts" setup>
-import { useAppStore } from '@/stores/app'
 import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const appStore = useAppStore()
-
 export interface Props {
   modelValue: boolean
+  filePath: string
   imageFile: File | undefined
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => false,
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'uploadSuccess'])
 
 const showDialog = computed({
   get() {
@@ -42,6 +40,21 @@ watch(
     }
   },
 )
+
+async function submit() {
+  console.log('submit')
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const target = e.target
+    if (target !== null && target.result !== null) {
+      window.site.saveImage(props.filePath, target.result as ArrayBuffer).then(() => {
+        emit('uploadSuccess')
+        showDialog.value = false
+      })
+    }
+  }
+  reader.readAsArrayBuffer(props.imageFile!)
+}
 </script>
 <template>
   <el-dialog v-model="showDialog" :title="t('uploadImage.upload')" @close="showDialog = false">
@@ -60,7 +73,7 @@ watch(
         </el-image>
       </div>
       <el-form-item>
-        <el-button>{{ t('uploadImage.submit') }}</el-button>
+        <el-button @click="submit">{{ t('uploadImage.submit') }}</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
