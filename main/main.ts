@@ -73,7 +73,10 @@ app.whenReady().then(async () => {
   ipcMain.handle('shell:openUrl', (event, url) => shell.openExternal(url))
   ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))
   ipcMain.handle('fs:mv', (event, from, to) => fsAgent.mv(from, to))
-  ipcMain.handle('fs:saveImage', (event, path, content) => fsAgent.saveImage(path, content))
+  ipcMain.handle('fs:saveImage', (event, path, content) => {
+    fsAgent.saveImage(path, content)
+    agent.generate()
+  })
   ipcMain.handle('agent:init', (event, path) => {
     const check = HexoAgent.checkDir(path) && HexoAgent.checkHexoDir(path)
     if (check) {

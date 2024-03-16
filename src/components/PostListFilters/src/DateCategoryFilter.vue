@@ -108,6 +108,16 @@ const treeData = computed(() => {
   })
   return tree
 })
+
+function onMonthClear() {
+  selectedMonth.value = 'all'
+  emit('filter')
+}
+
+function onCategoryClear() {
+  selectedCat.value = 'all'
+  emit('filter')
+}
 </script>
 <template>
   <el-space>
@@ -117,6 +127,7 @@ const treeData = computed(() => {
       :placeholder="t('posts.monthFilter')"
       :filterable="true"
       :clearable="true"
+      @clear="onMonthClear"
       style="width: 180px">
       <el-option
         v-for="item in updatedMonths"
@@ -131,6 +142,7 @@ const treeData = computed(() => {
       size="small"
       :placeholder="t('posts.categorySearch')"
       :clearable="true"
+      @clear="onCategoryClear"
       check-strictly
       style="width: 180px"
       :fit-input-width="false" />

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<Props>(), {
   modelValue: () => false,
 })
 
-const emit = defineEmits(['update:modelValue', 'uploadSuccess'])
+const emit = defineEmits(['update:modelValue', 'update:filePath', 'uploadSuccess'])
 
 const showDialog = computed({
   get() {
@@ -24,7 +24,17 @@ const showDialog = computed({
   },
 })
 
+const filePath = computed({
+  get() {
+    return props.filePath
+  },
+  set(value) {
+    emit('update:filePath', value)
+  },
+})
+
 const previewReader = new FileReader()
+const imageSrc = ref('')
 watch(
   () => props.imageFile,
   (newVal) => {
@@ -33,7 +43,8 @@ watch(
       previewReader.onload = (e) => {
         const target = e.target
         if (target !== null && target.result !== null) {
-          console.log(target.result)
+          imageSrc.value = target.result as string
+          console.log('image loaded from reader, length: ', imageSrc.value.length)
         }
       }
       previewReader.readAsDataURL(props.imageFile!)
@@ -47,7 +58,7 @@ async function submit() {
   reader.onload = (e) => {
     const target = e.target
     if (target !== null && target.result !== null) {
-      window.site.saveImage(props.filePath, target.result as ArrayBuffer).then(() => {
+      window.site.saveImage(filePath.value, target.result as ArrayBuffer).then(() => {
         emit('uploadSuccess')
         showDialog.value = false
       })
@@ -60,15 +71,12 @@ async function submit() {
   <el-dialog v-model="showDialog" :title="t('uploadImage.upload')" @close="showDialog = false">
     <el-form label-position="left" :label-width="100">
       <el-form-item :label="t('uploadImage.filename')">
-        <el-input></el-input>
-      </el-form-item>
-      <el-form-item :label="t('uploadImage.alt')">
-        <el-input></el-input>
+        <el-input v-model="filePath"></el-input>
       </el-form-item>
       <div class="flex justify-center">
         <el-image
           style="width: 400px; border: 1px solid #f00; margin-left: 100px"
-          :src="previewReader.result as string"
+          :src="imageSrc"
           fit="cover">
         </el-image>
       </div>

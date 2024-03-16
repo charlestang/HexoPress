@@ -140,7 +140,8 @@ function withKeywordsHight(text: string) {
           :placeholder="t('posts.keywords')"
           v-model="keywords"
           size="small"
-          :clearable="true" />
+          :clearable="true"
+          @clear="onSearchClick" />
         <el-button type="primary" size="small" plain @click="onSearchClick">{{
           t('posts.search')
         }}</el-button>

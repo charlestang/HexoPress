@@ -299,6 +299,10 @@ export class HexoAgent {
     await this.hexo.database.save()
   }
 
+  public async generate(): Promise<void> {
+    await this.hexo.call('generate')
+  }
+
   public async deleteFile(sourcePath: string): Promise<void> {
     console.log('try to del the real file. path is: ', sourcePath)
     const filePath = join(this.hexo.source_dir, sourcePath)

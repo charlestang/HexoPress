@@ -6,7 +6,7 @@ import { Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { Vim, vim } from '@replit/codemirror-vim'
 import { MdEditor, config } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
@@ -256,6 +256,21 @@ function onSave() {
     upsertDraft()
   }
 }
+
+let saveIntervalId: NodeJS.Timeout
+onMounted(() => {
+  saveIntervalId = setInterval(() => {
+    if (isDirty.value) {
+      onSave()
+    }
+  }, 1000 * 60)
+})
+
+onBeforeUnmount(() => {
+  if (saveIntervalId) {
+    clearInterval(saveIntervalId)
+  }
+})
 </script>
 
 <template>
@@ -346,8 +361,8 @@ function onSave() {
             @onSave="onSave"></MdEditor>
           <UploadImageDialog
             v-model="showUploadDialog"
+            v-model:filePath="filePath"
             :imageFile="imageFile"
-            :filePath="filePath"
             @uploadSuccess="uploaded" />
         </el-main>
       </el-container>
