@@ -3,6 +3,7 @@ import { PostStatusFilterChoice } from '@/components/PostListFilters'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useFilterStore } from '@/stores/filter'
+import { useStatsStore } from '@/stores/stats'
 import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -10,6 +11,7 @@ import { useI18n } from 'vue-i18n'
 const appStore = useAppStore()
 const filterStore = useFilterStore()
 const { t } = useI18n()
+const { updateStats } = useStatsStore()
 
 // posts list
 const { statusFilterVal, dateCategoryFilterVal } = storeToRefs(filterStore)
@@ -81,6 +83,7 @@ function onDelete(articleName: string, articlePath: string) {
         message: t('posts.deleteSuccess'),
       })
       fetch(currentPage.value)
+      await updateStats()
     })
     .catch((reason) => {
       if (reason === 'cancel') {

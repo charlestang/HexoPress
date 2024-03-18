@@ -393,10 +393,12 @@ export class HexoAgent {
     if (this.initPromise) {
       await this.initPromise
     }
-    const db = this.hexo.database
-    const postCount = db.model('Post').find({ published: true }).length
-    const postDraftCount = db.model('Post').find({ published: false }).length
-    const pageCount = db.model('Page').length
+    const postCount = this.hexo.locals.get('posts').find({ published: true }).length
+    const postDraftCount = this.hexo.locals.get('posts').find({ published: false }).length
+    const pageCount = this.hexo.locals.get('pages').length
+    console.log('post count: ', postCount)
+    console.log('draft count: ', postDraftCount)
+    console.log('page count: ', pageCount)
     const stats = {
       postCount,
       postDraftCount,

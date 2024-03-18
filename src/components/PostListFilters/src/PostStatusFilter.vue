@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { useStatsStore } from '@/stores/stats'
+import { storeToRefs } from 'pinia'
+import { onMounted, onUpdated } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { PostStatusFilterChoice } from './types'
 
@@ -19,16 +21,17 @@ const emit = defineEmits<{
   'update:modelValue': [status: PostStatusFilterChoice]
 }>()
 
-const allCount = ref<null | number>(null)
-const postCount = ref<null | number>(null)
-const draftCount = ref<null | number>(null)
-async function fetchStats() {
-  let data = await window.site.getStats()
-  allCount.value = data.postCount + data.postDraftCount
-  postCount.value = data.postCount
-  draftCount.value = data.postDraftCount
-}
-fetchStats()
+const store = useStatsStore()
+const { postTotal, draftTotal, publishedTotal } = storeToRefs(store)
+const { updateStats } = store
+
+onMounted(() => {
+  updateStats()
+})
+onUpdated(() => {
+  updateStats()
+})
+
 function isActive(value: PostStatusFilterChoice): boolean {
   return value === props.modelValue
 }
@@ -41,11 +44,11 @@ function isActive(value: PostStatusFilterChoice): boolean {
       :key="k"
       @click="emit('update:modelValue', k)">
       <a :class="{ active: isActive(k) }">{{ v }}</a>
-      <el-text v-if="k == PostStatusFilterChoice.All" type="info"> ( {{ allCount }} ) </el-text>
+      <el-text v-if="k == PostStatusFilterChoice.All" type="info"> ( {{ postTotal }} ) </el-text>
       <el-text v-if="k == PostStatusFilterChoice.Published" type="info">
-        ( {{ postCount }} )
+        ( {{ publishedTotal }} )
       </el-text>
-      <el-text v-if="k == PostStatusFilterChoice.Draft" type="info"> ( {{ draftCount }} ) </el-text>
+      <el-text v-if="k == PostStatusFilterChoice.Draft" type="info"> ( {{ draftTotal }} ) </el-text>
       <span v-if="k != PostStatusFilterChoice.Draft"> |</span>
     </li>
   </ul>
