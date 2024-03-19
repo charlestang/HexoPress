@@ -1,6 +1,6 @@
 <script lang="ts" setup>
+import { useAppStore } from '@/stores/app'
 import { storeToRefs } from 'pinia'
-import { useAppStore } from './stores/app'
 
 const appStore = useAppStore()
 const { localeLang } = storeToRefs(appStore)

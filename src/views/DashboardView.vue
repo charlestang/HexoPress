@@ -1,38 +1,29 @@
 <script lang="ts" setup>
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
-import { ref, watchEffect } from 'vue'
+import { useStatsStore } from '@/stores/stats'
+import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-const appStore = useAppStore()
 
 const posts = ref<Post[]>([])
-const stats = ref<Stats>({} as Stats)
-
 async function fetch() {
-  const data = await window.site.getPosts(true, false, 5)
-  posts.value = data.posts
+  const postData = await window.site.getPosts(true, false, 5)
+  posts.value = postData.posts
 }
 fetch()
 
-async function fetchStats() {
-  const data = await window.site.getStats()
-  stats.value = data
-}
-fetchStats()
+const appStore = useAppStore()
+const statsStore = useStatsStore()
+const { siteInfo, hexoConfig } = storeToRefs(appStore)
+const { publishedTotal, draftTotal, pageTotal } = storeToRefs(statsStore)
+statsStore.updateStats()
 
 function onClick(sourcePath: string) {
   router.push({ name: 'frame', query: { sourcePath: sourcePath } })
 }
-
-const siteInfo = ref<SiteInfo | null>(null)
-const hexoConfig = ref<HexoConfig | null>(null)
-
-watchEffect(async () => {
-  hexoConfig.value = appStore.hexoConfig
-  siteInfo.value = appStore.siteInfo
-})
 </script>
 <template>
   <h2>{{ t('common.dashboard') }}</h2>
@@ -59,16 +50,13 @@ watchEffect(async () => {
         </template>
         <el-row class="stats">
           <el-col :span="8">
-            <el-statistic :title="t('common.published')" :value="stats?.postCount" :precision="0" />
+            <el-statistic :title="t('common.published')" :value="publishedTotal" :precision="0" />
           </el-col>
           <el-col :span="8">
-            <el-statistic
-              :title="t('common.draft')"
-              :value="stats?.postDraftCount"
-              :precision="0" />
+            <el-statistic :title="t('common.draft')" :value="draftTotal" :precision="0" />
           </el-col>
           <el-col :span="8">
-            <el-statistic :title="t('common.page')" :value="stats?.pageCount" :precision="0" />
+            <el-statistic :title="t('common.page')" :value="pageTotal" :precision="0" />
           </el-col>
         </el-row>
         <el-divider border-style="dotted">

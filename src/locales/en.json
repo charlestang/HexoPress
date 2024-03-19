@@ -29,6 +29,7 @@
   "dashboard": {
     "metaAuthor": "Author",
     "metaDateFormat": "Date Format",
+    "metaDescription": "Description",
     "metaKeywords": "Keywords",
     "metaLanguage": "Language",
     "metaPermalink": "Permalink",
