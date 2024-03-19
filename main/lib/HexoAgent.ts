@@ -1,5 +1,5 @@
 import { app } from 'electron'
-import { readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'fs'
 import Hexo from 'hexo'
 import util from 'hexo-util'
 import { join, relative } from 'path'
@@ -48,15 +48,23 @@ export class HexoAgent {
       })
   }
 
+  /**
+   * Check if the directory exists.
+   * @param path string
+   * @returns boolean
+   */
   public static checkDir(path: string): boolean {
+    if (!existsSync(path)) {
+      return false
+    }
+
     try {
       const stat = statSync(path)
       return stat.isDirectory()
     } catch (error) {
       console.log('Error checking directory: ', path, ' error is:', error)
-
-      return false
     }
+    return false
   }
 
   public static checkHexoDir(path: string): boolean {
@@ -329,8 +337,8 @@ export class HexoAgent {
       title,
       ' slug: ',
       slug,
-      ' content: ',
-      content,
+      ' content length: ',
+      content.length,
     )
     const layout = directory === '_drafts' ? 'draft' : 'post'
 

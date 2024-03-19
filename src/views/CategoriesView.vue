@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const categories = ref<null | Category[]>(null)
+const categories = ref<Category[]>([])
 const catCount = ref(0)
 
 async function fetch() {

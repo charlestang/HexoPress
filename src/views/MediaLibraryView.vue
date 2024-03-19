@@ -4,7 +4,7 @@ import { ref, watchEffect } from 'vue'
 
 const { t } = useI18n()
 
-const assets = ref<undefined | Asset[]>(undefined)
+const assets = ref<Asset[]>([])
 
 function fetchAssets() {
   window.site.getAssets().then((res) => {

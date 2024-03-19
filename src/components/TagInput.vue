@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 export interface Props {
-  modelValue?: string[]
+  modelValue: string[]
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => [],

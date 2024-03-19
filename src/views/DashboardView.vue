@@ -7,17 +7,17 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const appStore = useAppStore()
 
-let posts = ref<null | Post[]>(null)
-let stats = ref<null | Stats>(null)
+const posts = ref<Post[]>([])
+const stats = ref<Stats>({} as Stats)
 
 async function fetch() {
-  let data = await window.site.getPosts(true, false, 5)
+  const data = await window.site.getPosts(true, false, 5)
   posts.value = data.posts
 }
 fetch()
 
 async function fetchStats() {
-  let data = await window.site.getStats()
+  const data = await window.site.getStats()
   stats.value = data
 }
 fetchStats()

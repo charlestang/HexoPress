@@ -15,7 +15,7 @@ const { updateStats } = useStatsStore()
 
 // posts list
 const { statusFilterVal, dateCategoryFilterVal } = storeToRefs(filterStore)
-const posts = ref<undefined | Post[]>(undefined)
+const posts = ref<Post[]>([])
 const total = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(20)

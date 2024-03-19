@@ -16,7 +16,7 @@ console.log('title props: show close: ', props.showClose, ' type:', typeof props
 </script>
 <template>
   <el-row class="titlebar">
-    <el-col :span="21" clsss="title">
+    <el-col :span="21" class="title">
       <h2><slot></slot></h2>
     </el-col>
     <el-col :span="3" class="close">

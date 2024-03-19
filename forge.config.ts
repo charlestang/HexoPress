@@ -9,11 +9,20 @@ import type { ForgeConfig } from '@electron-forge/shared-types'
 import { FuseV1Options, FuseVersion } from '@electron/fuses'
 
 const config: ForgeConfig = {
+  // Options sent to `electron-packager`. The options
+  // are documented at
+  // https://electron.github.io/packager/main/interfaces/Options.html
+  // NOTICE: You can not override the `dir`, `arch`,
+  // `platform`, `out` or `electronVersion` options
+  // as they are set by Electron Forge internally.
   packagerConfig: {
     asar: true,
     name: 'HexoPress',
     icon: './src/assets/icon',
   },
+  // The options sent to `electron-rebuild` during both
+  // the package and start step. The options are documented at
+  // https://github.com/electron/rebuild#how-can-i-integrate-this-into-grunt--gulp--whatever
   rebuildConfig: {},
   makers: [
     new MakerSquirrel({
@@ -25,7 +34,11 @@ const config: ForgeConfig = {
         icon: './src/assets/icon.png',
       },
     }),
-    new MakerRpm({}),
+    new MakerRpm({
+      options: {
+        homepage: 'https://github.com/charlestang/HexoPress',
+      },
+    }),
   ],
   plugins: [
     new AutoUnpackNativesPlugin({}),
