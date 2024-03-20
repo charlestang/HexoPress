@@ -48,6 +48,8 @@ const onNewPostButtonClicked = () => {
   height: calc(100vh - 62px);
   padding-top: 10px;
   padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
 }
 .new {
   height: 40px;

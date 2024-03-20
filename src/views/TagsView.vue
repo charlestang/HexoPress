@@ -44,52 +44,61 @@ function onClickLink(url: string) {
 
 <template>
   <h2>{{ t('common.tags') }} {{ t('tags.stats', { count: tagsCount }) }}</h2>
-  <el-row :gutter="20">
-    <el-col :span="12">
-      <el-table
-        :data="firstHalf"
-        style="width: 100%; margin-bottom: 20px"
-        row-key="id"
-        :border="false"
-        :stripe="true"
-        default-expand-all>
-        <el-table-column prop="name" :label="t('tags.name')" sortable>
-          <template #default="scope">
-            <el-tag>{{ scope.row.name }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="length" :label="t('tags.total')" sortable />
-        <el-table-column :label="t('tags.actions')">
-          <template #default="scope">
-            <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
-              t('tags.view')
-            }}</el-link>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-col>
-    <el-col :span="12">
-      <el-table
-        :data="secondHalf"
-        style="width: 100%; margin-bottom: 20px"
-        row-key="id"
-        :border="false"
-        :stripe="true"
-        default-expand-all>
-        <el-table-column prop="name" :label="t('tags.name')" sortable>
-          <template #default="scope">
-            <el-tag>{{ scope.row.name }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="length" :label="t('tags.total')" sortable />
-        <el-table-column :label="t('tags.actions')">
-          <template #default="scope">
-            <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
-              t('tags.view')
-            }}</el-link>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-col>
-  </el-row>
+  <div class="wrapper">
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-table
+          :data="firstHalf"
+          style="width: 100%; margin-bottom: 20px"
+          row-key="id"
+          :border="false"
+          :stripe="true"
+          default-expand-all>
+          <el-table-column prop="name" :label="t('tags.name')" sortable>
+            <template #default="scope">
+              <el-tag>{{ scope.row.name }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="length" :label="t('tags.total')" sortable />
+          <el-table-column :label="t('tags.actions')">
+            <template #default="scope">
+              <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
+                t('tags.view')
+              }}</el-link>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="12">
+        <el-table
+          :data="secondHalf"
+          style="width: 100%; margin-bottom: 20px"
+          row-key="id"
+          :border="false"
+          :stripe="true"
+          default-expand-all>
+          <el-table-column prop="name" :label="t('tags.name')" sortable>
+            <template #default="scope">
+              <el-tag>{{ scope.row.name }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="length" :label="t('tags.total')" sortable />
+          <el-table-column :label="t('tags.actions')">
+            <template #default="scope">
+              <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
+                t('tags.view')
+              }}</el-link>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+  </div>
 </template>
+<style scoped>
+.wrapper {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-right: -20px;
+}
+</style>

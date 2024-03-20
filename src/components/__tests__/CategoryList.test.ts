@@ -6,6 +6,7 @@ describe('normalizeList', () => {
     const result = normalizeList('')
     expect(result).toEqual([])
   })
+
   it('normalizeList with string', () => {
     const result = normalizeList('abc')
     expect(result).toEqual([['abc']])

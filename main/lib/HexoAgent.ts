@@ -29,7 +29,7 @@ export class HexoAgent {
     }
 
     this.hexo = new Hexo(this.rootPath, {
-      safe: true,
+      safe: false,
       draft: true,
     })
 

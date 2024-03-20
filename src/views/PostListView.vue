@@ -168,109 +168,115 @@ function withKeywordsHight(text: string) {
         @current-change="fetch" />
     </el-col>
   </el-row>
-  <el-table :data="posts" stripe style="width: 100%; margin-bottom: 10px">
-    <el-table-column type="index" label="#" width="48" />
-    <el-table-column :label="t('posts.title')" width="360">
-      <template #default="scope">
-        <el-row>
-          <el-col :span="24">
-            <span v-html="withKeywordsHight(scope.row.title)"></span>
-            <span v-if="scope.row.status == 'draft'" class="draft-status">
-              -- {{ t('posts.draft') }}</span
-            >
-          </el-col>
-        </el-row>
-        <el-row class="op">
-          <el-col :span="24">
-            <el-link type="primary" @click="onClick(scope.row.source)"
-              >{{ t('posts.edit') }} </el-link
-            ><el-divider direction="vertical" />
-            <el-link type="primary" @click="onClickEditMeta(scope.row.source)">{{
-              t('posts.editMeta')
-            }}</el-link
-            ><el-divider direction="vertical" />
-            <el-link type="danger" @click="onDelete(scope.row.title, scope.row.source)">{{
-              t('posts.delete')
-            }}</el-link>
-          </el-col>
-        </el-row>
-      </template>
-    </el-table-column>
-    <el-table-column prop="categories" :label="t('posts.categories')">
-      <template #default="scope">
-        <el-tag
-          v-for="(val, k) in scope.row.categories"
-          :key="k"
-          size="small"
-          style="margin-right: 5px">
-          {{ val }}
-        </el-tag>
-        <el-text v-if="Object.keys(scope.row.categories).length == 0">--</el-text>
-      </template>
-    </el-table-column>
-    <el-table-column prop="tags" :label="t('posts.tags')">
-      <template #default="scope">
-        <el-tag v-for="(val, k) in scope.row.tags" :key="k" size="small" style="margin-right: 5px">
-          {{ val }}
-        </el-tag>
-        <el-text v-if="Object.keys(scope.row.tags).length == 0">--</el-text>
-      </template>
-    </el-table-column>
-    <el-table-column
-      :label="t('posts.publishedAt')"
-      sortable
-      :sort-by="timeType == 'publishedAt' ? 'date' : 'updated'">
-      <template #header>
-        <el-select v-model="timeType" size="small" style="width: 140px">
-          <el-option key="publishedAt" :label="t('posts.publishedAt')" value="publishedAt" />
-          <el-option key="updatedAt" :label="t('posts.updatedAt')" value="updatedAt" />
-        </el-select>
-      </template>
-      <template #default="scope">
-        <template v-if="timeType == 'publishedAt'">
+  <div class="wrapper">
+    <el-table :data="posts" stripe class="post-list">
+      <el-table-column type="index" label="#" width="48" />
+      <el-table-column :label="t('posts.title')" width="360">
+        <template #default="scope">
           <el-row>
             <el-col :span="24">
-              <span v-if="scope.row.status == 'published'">{{ t('posts.published') }}</span>
-              <span v-else>{{ t('posts.edited') }}</span>
+              <span v-html="withKeywordsHight(scope.row.title)"></span>
+              <span v-if="scope.row.status == 'draft'" class="draft-status">
+                -- {{ t('posts.draft') }}</span
+              >
             </el-col>
           </el-row>
-          <el-row>
+          <el-row class="op">
             <el-col :span="24">
-              <span v-if="scope.row.status == 'published'">{{
-                Intl.DateTimeFormat(appStore.locale, {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(scope.row.date))
-              }}</span>
-              <span v-else>{{
-                Intl.DateTimeFormat(appStore.locale, {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(scope.row.updated))
-              }}</span>
+              <el-link type="primary" @click="onClick(scope.row.source)"
+                >{{ t('posts.edit') }} </el-link
+              ><el-divider direction="vertical" />
+              <el-link type="primary" @click="onClickEditMeta(scope.row.source)">{{
+                t('posts.editMeta')
+              }}</el-link
+              ><el-divider direction="vertical" />
+              <el-link type="danger" @click="onDelete(scope.row.title, scope.row.source)">{{
+                t('posts.delete')
+              }}</el-link>
             </el-col>
           </el-row>
         </template>
-        <template v-else>
-          <el-row>
-            <el-col :span="24">
-              <span>{{ t('posts.updated') }}</span>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <span v-if="scope.row.updated != ''">{{
-                Intl.DateTimeFormat(appStore.locale, {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(scope.row.updated))
-              }}</span>
-            </el-col>
-          </el-row>
+      </el-table-column>
+      <el-table-column prop="categories" :label="t('posts.categories')">
+        <template #default="scope">
+          <el-tag
+            v-for="(val, k) in scope.row.categories"
+            :key="k"
+            size="small"
+            style="margin-right: 5px">
+            {{ val }}
+          </el-tag>
+          <el-text v-if="Object.keys(scope.row.categories).length == 0">--</el-text>
         </template>
-      </template>
-    </el-table-column>
-  </el-table>
+      </el-table-column>
+      <el-table-column prop="tags" :label="t('posts.tags')">
+        <template #default="scope">
+          <el-tag
+            v-for="(val, k) in scope.row.tags"
+            :key="k"
+            size="small"
+            style="margin-right: 5px">
+            {{ val }}
+          </el-tag>
+          <el-text v-if="Object.keys(scope.row.tags).length == 0">--</el-text>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="t('posts.publishedAt')"
+        sortable
+        :sort-by="timeType == 'publishedAt' ? 'date' : 'updated'">
+        <template #header>
+          <el-select v-model="timeType" size="small" style="width: 140px">
+            <el-option key="publishedAt" :label="t('posts.publishedAt')" value="publishedAt" />
+            <el-option key="updatedAt" :label="t('posts.updatedAt')" value="updatedAt" />
+          </el-select>
+        </template>
+        <template #default="scope">
+          <template v-if="timeType == 'publishedAt'">
+            <el-row>
+              <el-col :span="24">
+                <span v-if="scope.row.status == 'published'">{{ t('posts.published') }}</span>
+                <span v-else>{{ t('posts.edited') }}</span>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <span v-if="scope.row.status == 'published'">{{
+                  Intl.DateTimeFormat(appStore.locale, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  }).format(new Date(scope.row.date))
+                }}</span>
+                <span v-else>{{
+                  Intl.DateTimeFormat(appStore.locale, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  }).format(new Date(scope.row.updated))
+                }}</span>
+              </el-col>
+            </el-row>
+          </template>
+          <template v-else>
+            <el-row>
+              <el-col :span="24">
+                <span>{{ t('posts.updated') }}</span>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <span v-if="scope.row.updated != ''">{{
+                  Intl.DateTimeFormat(appStore.locale, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  }).format(new Date(scope.row.updated))
+                }}</span>
+              </el-col>
+            </el-row>
+          </template>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
   <el-pagination
     v-model:current-page="currentPage"
     v-model:page-size="pageSize"
@@ -285,7 +291,16 @@ function withKeywordsHight(text: string) {
     :source-path="currentEditingSourcePath"
     @success="refresh" />
 </template>
-<style>
+<style scoped>
+.wrapper {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-right: -20px;
+}
+.post-list {
+  width: 100%;
+  margin-bottom: 10px;
+}
 .el-table .el-table__cell {
   vertical-align: top;
 }
