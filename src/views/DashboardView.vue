@@ -5,6 +5,8 @@ import { useStatsStore } from '@/stores/stats'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { CalendarHeatmap } from 'vue3-calendar-heatmap'
+import 'vue3-calendar-heatmap/dist/style.css'
 
 const { t } = useI18n()
 
@@ -27,6 +29,40 @@ function onClick(sourcePath: string) {
 </script>
 <template>
   <h2>{{ t('common.dashboard') }}</h2>
+  <el-row :gutter="20">
+    <el-col :span="24">
+      <el-card>
+        <template #header>
+          <h3>{{ t('common.activities') }}</h3>
+        </template>
+        <div style="display: flex; justify-content: center; align-items: center">
+          <CalendarHeatmap
+            :style="{ 'max-width': '900px', width: '90%' }"
+            :locale="{
+              months: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec',
+              ],
+              days: ['日', '一', '二', '三', '四', '五', '六'],
+              on: '于',
+            }"
+            :max="5"
+            :values="[{ date: '2024-03-12', count: 3 }]"
+            :end-date="'2024-03-21'"></CalendarHeatmap>
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
   <el-row :gutter="20">
     <el-col :span="12">
       <el-card>
