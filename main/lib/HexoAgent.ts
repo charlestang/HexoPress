@@ -404,9 +404,6 @@ export class HexoAgent {
     const postCount = this.hexo.locals.get('posts').find({ published: true }).length
     const postDraftCount = this.hexo.locals.get('posts').find({ published: false }).length
     const pageCount = this.hexo.locals.get('pages').length
-    console.log('post count: ', postCount)
-    console.log('draft count: ', postDraftCount)
-    console.log('page count: ', pageCount)
     const stats = {
       postCount,
       postDraftCount,
