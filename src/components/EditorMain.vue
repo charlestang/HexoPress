@@ -9,6 +9,7 @@ import 'md-editor-v3/lib/style.css'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+import router from '@/router'
 
 const { t } = useI18n()
 
@@ -271,6 +272,49 @@ onBeforeUnmount(() => {
     clearInterval(saveIntervalId)
   }
 })
+
+function onDelete() {
+  const articleName = frontMatter.value.title
+  const articlePath = sourcePath.value
+  ElMessageBox.confirm(
+    t('posts.doubleConfirmDeleteContent') + articleName + t('posts.questionMark'),
+    t('posts.warning'),
+    {
+      confirmButtonText: t('posts.confirm'),
+      cancelButtonText: t('posts.cancel'),
+      type: 'warning',
+    },
+  )
+    .then(async (a) => {
+      console.log(a)
+      await window.site.deleteFile(articlePath)
+      ElMessage({
+        type: 'success',
+        message: t('posts.deleteSuccess'),
+      })
+      router.go(-1)
+    })
+    .catch((reason) => {
+      if (reason === 'cancel') {
+        ElMessage({
+          type: 'info',
+          message: t('posts.deleteCanceled'),
+        })
+      } else {
+        if (typeof reason === 'object' && reason.name === 'Error') {
+          ElMessage({
+            type: 'error',
+            message: reason.message,
+          })
+        } else {
+          ElMessage({
+            type: 'error',
+            message: t('posts.unknownError'),
+          })
+        }
+      }
+    })
+}
 </script>
 
 <template>
@@ -333,9 +377,14 @@ onBeforeUnmount(() => {
                   }}</el-button>
                 </el-col>
                 <el-col :span="14">
-                  <el-button type="danger" plain size="small" style="width: 100%">{{
-                    t('editor.moveToTrash')
-                  }}</el-button>
+                  <el-button
+                    type="danger"
+                    plain
+                    size="small"
+                    style="width: 100%"
+                    @click="onDelete"
+                    >{{ t('editor.moveToTrash') }}</el-button
+                  >
                 </el-col>
               </el-row>
             </el-collapse-item>
