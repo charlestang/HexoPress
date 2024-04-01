@@ -13,7 +13,24 @@
     "dashboard": "Dashboard",
     "draft": "Draft",
     "hexoVersion": "Hexo Version",
+    "month": {
+      "short": {
+        "April": "Apr",
+        "August": "Aug",
+        "December": "Dec",
+        "February": "Feb",
+        "January": "Jan",
+        "July": "Jul",
+        "June": "Jun",
+        "March": "Mar",
+        "May": "May",
+        "November": "Nov",
+        "October": "Oct",
+        "September": "Sep"
+      }
+    },
     "newPost": "New Post",
+    "on": "on",
     "overview": "Overview",
     "packageName": "Package Name",
     "packageVersion": "Package Version",
@@ -24,7 +41,18 @@
     "setup": "Settings",
     "site": "Site Config",
     "system": "System",
-    "tags": "Tags"
+    "tags": "Tags",
+    "weekday": {
+      "short": {
+        "Friday": "Fri",
+        "Monday": "Mon",
+        "Saturday": "Sat",
+        "Sunday": "Sun",
+        "Thursday": "Thu",
+        "Tuesday": "Tue",
+        "Wednesday": "Wed"
+      }
+    }
   },
   "dashboard": {
     "metaAuthor": "Author",

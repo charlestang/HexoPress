@@ -40,21 +40,29 @@ function onClick(sourcePath: string) {
             :style="{ 'max-width': '900px', width: '90%' }"
             :locale="{
               months: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
+                t('common.month.short.January'),
+                t('common.month.short.February'),
+                t('common.month.short.March'),
+                t('common.month.short.April'),
+                t('common.month.short.May'),
+                t('common.month.short.June'),
+                t('common.month.short.July'),
+                t('common.month.short.August'),
+                t('common.month.short.September'),
+                t('common.month.short.October'),
+                t('common.month.short.November'),
+                t('common.month.short.December'),
               ],
-              days: ['日', '一', '二', '三', '四', '五', '六'],
-              on: '于',
+              days: [
+                t('common.weekday.short.Sunday'),
+                t('common.weekday.short.Monday'),
+                t('common.weekday.short.Tuesday'),
+                t('common.weekday.short.Wednesday'),
+                t('common.weekday.short.Thursday'),
+                t('common.weekday.short.Friday'),
+                t('common.weekday.short.Saturday'),
+              ],
+              on: t('common.on'),
             }"
             :max="5"
             :values="[{ date: '2024-03-12', count: 3 }]"

@@ -13,7 +13,24 @@
     "dashboard": "仪表盘",
     "draft": "草稿",
     "hexoVersion": "Hexo 版本",
+    "month": {
+      "short": {
+        "April": "4 月",
+        "August": "8 月",
+        "December": "12 月",
+        "February": "2 月",
+        "January": "1 月",
+        "July": "7 月",
+        "June": "6 月",
+        "March": "3 月",
+        "May": "5 月",
+        "November": "11 月",
+        "October": "10 月",
+        "September": "9 月"
+      }
+    },
     "newPost": "新建",
+    "on": "于",
     "overview": "概览",
     "packageName": "包名",
     "packageVersion": "包版本号",
@@ -24,7 +41,18 @@
     "setup": "设置",
     "site": "站点配置",
     "system": "系统",
-    "tags": "标签"
+    "tags": "标签",
+    "weekday": {
+      "short": {
+        "Friday": "五",
+        "Monday": "一",
+        "Saturday": "六",
+        "Sunday": "日",
+        "Thursday": "四",
+        "Tuesday": "二",
+        "Wednesday": "三"
+      }
+    }
   },
   "dashboard": {
     "metaAuthor": "作者",
