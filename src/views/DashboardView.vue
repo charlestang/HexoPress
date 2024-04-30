@@ -7,6 +7,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CalendarHeatmap } from 'vue3-calendar-heatmap'
 import 'vue3-calendar-heatmap/dist/style.css'
+import { formatISO8601Date } from '@/utils/date'
 
 const { t } = useI18n()
 
@@ -26,6 +27,15 @@ statsStore.updateStats()
 function onClick(sourcePath: string) {
   router.push({ name: 'frame', query: { sourcePath: sourcePath } })
 }
+
+const todayDate = formatISO8601Date(new Date())
+const heatMap = ref<DateEntry[]>([])
+async function fetchHeatMap() {
+  const data = await window.site.getHeatMap()
+  heatMap.value = data
+}
+
+fetchHeatMap()
 </script>
 <template>
   <h2>{{ t('common.dashboard') }}</h2>
@@ -65,8 +75,8 @@ function onClick(sourcePath: string) {
               on: t('common.on'),
             }"
             :max="5"
-            :values="[{ date: '2024-03-12', count: 3 }]"
-            :end-date="'2024-03-21'"></CalendarHeatmap>
+            :values="heatMap"
+            :end-date="todayDate"></CalendarHeatmap>
         </div>
       </el-card>
     </el-col>

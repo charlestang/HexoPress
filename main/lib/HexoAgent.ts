@@ -170,6 +170,24 @@ export class HexoAgent {
     return results
   }
 
+  public async getHeatMap() {
+    const postsList = await this.getPosts(true, false)
+
+    const heatMap = postsList.posts.reduce((acc, post) => {
+      const date = new Date(post.date)
+      const year = String(date.getFullYear())
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      const dateKey = `${year}-${month}-${day}`
+      acc[dateKey] = (acc[dateKey] || 0) + 1
+
+      return acc
+    }, {})
+
+    const heatMapArray = Object.entries(heatMap).map(([date, count]) => ({ date, count }))
+
+    return heatMapArray
+  }
   /**
    * Get all months that have posts.
    */

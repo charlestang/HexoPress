@@ -100,6 +100,11 @@ declare global {
     filePaths: string[]
   }
 
+  type DateEntry = {
+    date: string
+    count: number
+  }
+
   interface ISite {
     getPosts: (
       published?: boolean,
@@ -118,6 +123,7 @@ declare global {
     getAssets: () => Promise<Asset[]>
     getStats: () => Promise<Stats>
     getSiteInfo: () => Promise<SiteInfo>
+    getHeatMap: () => Promise<DateEntry[]>
     refreshSite: () => Promise<void>
     getHexoConfig: () => Promise<HexoConfig>
     openDirDialog: () => Promise<DialogResult>

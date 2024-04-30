@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('site', {
   getStats: () => ipcRenderer.invoke('site:stats'),
   getSiteInfo: () => ipcRenderer.invoke('site:info'),
   refreshSite: () => ipcRenderer.invoke('site:refresh'),
+  getHeatMap: () => ipcRenderer.invoke('site:heatMap'),
   getHexoConfig: () => ipcRenderer.invoke('hexo:config'),
   openDirDialog: () => ipcRenderer.invoke('dialog:dir'),
   getContent: (sourcePath: string) => ipcRenderer.invoke('post:content', sourcePath),

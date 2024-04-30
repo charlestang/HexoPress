@@ -60,6 +60,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('site:stats', () => agent.getStats())
   ipcMain.handle('site:info', () => agent.getSiteInfo())
   ipcMain.handle('site:refresh', () => agent.updateCache())
+  ipcMain.handle('site:heatMap', () => agent.getHeatMap())
   ipcMain.handle('hexo:config', () => agent.getHexoConfig())
   ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
   ipcMain.handle('post:content', (event, path) => agent.getContent(path))
