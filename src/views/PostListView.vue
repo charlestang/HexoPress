@@ -4,8 +4,9 @@ import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useFilterStore } from '@/stores/filter'
 import { useStatsStore } from '@/stores/stats'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
-import { ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const appStore = useAppStore()
@@ -130,6 +131,24 @@ function withKeywordsHight(text: string) {
     (match) => `<span style="background-color: #ff0">${match}</span>`,
   )
 }
+
+const tableHeight = ref(0)
+const wrapper = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+  updateTableHeight()
+  window.addEventListener('resize', updateTableHeight)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateTableHeight)
+})
+
+function updateTableHeight() {
+  if (wrapper.value) {
+    tableHeight.value = wrapper.value.clientHeight - 10
+  }
+}
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -168,8 +187,8 @@ function withKeywordsHight(text: string) {
         @current-change="fetch" />
     </el-col>
   </el-row>
-  <div class="wrapper">
-    <el-table :data="posts" stripe class="post-list">
+  <div ref="wrapper" class="wrapper">
+    <el-table :data="posts" stripe :height="tableHeight" class="post-list">
       <el-table-column type="index" label="#" width="48" />
       <el-table-column :label="t('posts.title')" width="360">
         <template #default="scope">
