@@ -325,8 +325,8 @@ function onDelete() {
           <el-aside width="240px">
             <div class="op-buttons">
               <el-link
-                type="primary"
                 v-if="!postPublished"
+                type="primary"
                 style="margin-right: 10px"
                 @click="upsertDraft"
                 >{{ t('editor.saveDraft') }}
@@ -400,19 +400,19 @@ function onDelete() {
         </el-aside>
         <el-main class="editor-wrapper">
           <MdEditor
-            class="editor"
             v-model="text"
+            class="editor"
             :sanitize="filterImage"
             :preview="false"
-            :htmlPreview="false"
-            :toolbarsExclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
-            @uploadImg="onUploadImage"
-            @onSave="onSave"></MdEditor>
+            :html-preview="false"
+            :toolbars-exclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
+            @upload-img="onUploadImage"
+            @on-save="onSave"></MdEditor>
           <UploadImageDialog
             v-model="showUploadDialog"
             v-model:filePath="filePath"
-            :imageFile="imageFile"
-            @uploadSuccess="uploaded" />
+            :image-file="imageFile"
+            @upload-success="uploaded" />
         </el-main>
       </el-container>
     </el-container>

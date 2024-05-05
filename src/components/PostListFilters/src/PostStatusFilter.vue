@@ -39,9 +39,9 @@ function isActive(value: PostStatusFilterChoice): boolean {
 <template>
   <ul class="status-filter">
     <li
-      class="status-filter-item"
       v-for="(v, k) in filterItems"
       :key="k"
+      class="status-filter-item"
       @click="emit('update:modelValue', k)">
       <a :class="{ active: isActive(k) }">{{ v }}</a>
       <el-text v-if="k == PostStatusFilterChoice.All" type="info"> ( {{ postTotal }} ) </el-text>

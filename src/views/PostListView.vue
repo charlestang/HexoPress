@@ -140,8 +140,8 @@ function withKeywordsHight(text: string) {
     <el-col :span="5" style="display: flex; justify-content: flex-end">
       <el-space>
         <el-input
-          :placeholder="t('posts.keywords')"
           v-model="keywords"
+          :placeholder="t('posts.keywords')"
           size="small"
           :clearable="true"
           @clear="onSearchClick" />

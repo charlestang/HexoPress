@@ -29,16 +29,16 @@ watchEffect(() => {
     <el-col :span="16">
       <el-popover
         trigger="click"
-        :showArrow="false"
+        :show-arrow="false"
         width="250px"
         placemen
-        :hideAfter="0"
+        :hide-after="0"
         :visible="visible">
         <template #reference>
-          <el-link type="primary" @click="visible = true" v-if="props.modelValue !== ''">{{
+          <el-link v-if="props.modelValue !== ''" type="primary" @click="visible = true">{{
             props.modelValue
           }}</el-link>
-          <el-link type="primary" @click="visible = true" v-else>{{ t('editor.notSet') }}</el-link>
+          <el-link v-else type="primary" @click="visible = true">{{ t('editor.notSet') }}</el-link>
         </template>
         <meta-entry-title @close="visible = false">{{ t('editor.url') }}</meta-entry-title>
         <el-form label-position="top">

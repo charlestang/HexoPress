@@ -127,8 +127,8 @@ function onCategoryClear() {
       :placeholder="t('posts.monthFilter')"
       :filterable="true"
       :clearable="true"
-      @clear="onMonthClear"
-      style="width: 180px">
+      style="width: 180px"
+      @clear="onMonthClear">
       <el-option
         v-for="item in updatedMonths"
         :key="item.value"
@@ -142,10 +142,10 @@ function onCategoryClear() {
       size="small"
       :placeholder="t('posts.categorySearch')"
       :clearable="true"
-      @clear="onCategoryClear"
       check-strictly
       style="width: 180px"
-      :fit-input-width="false" />
+      :fit-input-width="false"
+      @clear="onCategoryClear" />
     <el-button type="primary" size="small" plain @click="emit('filter')">{{
       t('posts.filter')
     }}</el-button>

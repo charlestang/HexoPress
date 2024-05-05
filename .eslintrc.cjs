@@ -11,7 +11,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:vue/vue3-essential',
+    'plugin:vue/vue3-recommended',
     '@vue/eslint-config-typescript',
     '@vue/eslint-config-prettier/skip-formatting',
     './types/.eslintrc-auto-import.json',

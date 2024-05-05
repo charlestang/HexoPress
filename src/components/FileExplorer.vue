@@ -79,7 +79,7 @@ function handleDoubleClick(path: string) {
 </script>
 <template>
   <div class="wrapper">
-    <div class="container" ref="container" @mousemove="handleMouseMove">
+    <div ref="container" class="container" @mousemove="handleMouseMove">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
           <el-link v-if="item.dir != 'source'" @click="handleDoubleClick(item.path)">{{

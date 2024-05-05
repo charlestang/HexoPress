@@ -79,7 +79,7 @@ async function onSave() {
     <template #header>{{ props.sourcePath }}</template>
     <template #footer>
       <el-button @click="showDialog = false">{{ t('common.back') }}</el-button>
-      <el-button @click="onSave" type="primary">{{ t('common.save') }}</el-button>
+      <el-button type="primary" @click="onSave">{{ t('common.save') }}</el-button>
     </template>
     <el-form label-width="140px">
       <el-form-item :label="t('editor.title')">

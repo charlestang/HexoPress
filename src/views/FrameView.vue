@@ -91,15 +91,15 @@ function handleMouseLeave() {
             <el-link
               key="fileTree"
               :underline="false"
-              @click="handleToolbarClick('fileTree')"
-              :class="{ active: 'fileTree' === currentPanel }">
+              :class="{ active: 'fileTree' === currentPanel }"
+              @click="handleToolbarClick('fileTree')">
               <el-icon size="22"><folder-opened /></el-icon>
             </el-link>
             <el-link
               key="tocPanel"
               :underline="false"
-              @click="handleToolbarClick('tocPanel')"
-              :class="{ active: 'tocPanel' === currentPanel }">
+              :class="{ active: 'tocPanel' === currentPanel }"
+              @click="handleToolbarClick('tocPanel')">
               <el-icon size="22"><memo /></el-icon>
             </el-link>
             <!-- 添加更多按钮 -->

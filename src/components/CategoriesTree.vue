@@ -165,10 +165,10 @@ const treeRef = ref<InstanceType<typeof ElTree>>()
     :props="defaultProps"
     node-key="id"
     show-checkbox
-    :checkStrictly="true"
-    :defaultCheckedKeys="defaultChecked"
-    @nodeClick="onNodeClick"
-    @checkChange="onCheckChange"
+    :check-strictly="true"
+    :default-checked-keys="defaultChecked"
+    @node-click="onNodeClick"
+    @check-change="onCheckChange"
     @check="onCheck" />
 </template>
 
