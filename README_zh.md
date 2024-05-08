@@ -92,7 +92,7 @@ Hexo 是一款快速、简洁且高效的博客框架。它通过在服务器上
 
 ### 1. Mac
 
-[下载 苹果M1芯片版本: v1.1.0][download-for-apple]
+[下载 苹果M1芯片版本: v1.2.0][download-for-apple]
 
 [下载 Intel芯片版本: v1.1.0][download-for-intel]
 
@@ -199,8 +199,8 @@ npm run make
 - [《我为什么构建了 HexoPress》][blog-why-hexopress]
 
 [blog-why-hexopress]: https://blog.charlestang.org/2023/how-to-use-hexo-and-github-actions-to-build-a-personal-blog/
-[docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/2024/02/07/HowTo-%E7%94%A8-Hexo-%E5%BB%BA%E7%AB%8B%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/
-[download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.1.0/HexoPress-darwin-arm64-1.0.0.zip
+[docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/howto-build-a-blog-with-hexo-cn/
+[download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.2.0/HexoPress-darwin-arm64-1.2.0.zip
 [download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.1.0/HexoPress-darwin-x64-1.1.0.zip
 [download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.1.0/HexoPress-squirrel.windows-x64-1.1.0.zip
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
