@@ -174,18 +174,7 @@ function updateTableHeight() {
     <el-col :span="12">
       <date-category-filter v-model="dateCategoryFilterVal" @filter="refresh" />
     </el-col>
-    <el-col :span="12" style="display: flex; justify-content: flex-end">
-      <el-pagination
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        :small="true"
-        :disabled="false"
-        :background="false"
-        layout="sizes, prev, pager, next, jumper"
-        :total="total"
-        :pager-count="5"
-        @current-change="fetch" />
-    </el-col>
+    <el-col :span="12" style="display: flex; justify-content: flex-end"></el-col>
   </el-row>
   <div ref="wrapper" class="wrapper">
     <el-table :data="posts" stripe :height="tableHeight" class="post-list">
@@ -299,10 +288,10 @@ function updateTableHeight() {
   <el-pagination
     v-model:current-page="currentPage"
     v-model:page-size="pageSize"
-    :small="false"
+    :small="true"
     :disabled="false"
     :background="true"
-    layout="prev, pager, next, jumper"
+    layout="prev, pager, next, jumper, ->, sizes, total"
     :total="total"
     @current-change="fetch" />
   <meta-data-dialog
