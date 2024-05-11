@@ -122,16 +122,6 @@ function onSearchClick() {
   fetch(currentPage.value)
 }
 
-function withKeywordsHight(text: string) {
-  if (keywords.value === '') {
-    return text
-  }
-  return text.replace(
-    new RegExp(keywords.value, 'gi'),
-    (match) => `<span style="background-color: #ff0">${match}</span>`,
-  )
-}
-
 const tableHeight = ref(0)
 const wrapper = ref<HTMLElement | null>(null)
 
@@ -183,7 +173,7 @@ function updateTableHeight() {
         <template #default="scope">
           <el-row>
             <el-col :span="24">
-              <span v-html="withKeywordsHight(scope.row.title)"></span>
+              <keyword-span :keywords="[keywords]" :text="scope.row.title" />
               <span v-if="scope.row.status == 'draft'" class="draft-status">
                 -- {{ t('posts.draft') }}</span
               >

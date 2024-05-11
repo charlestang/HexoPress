@@ -79,11 +79,11 @@
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "unplugin-auto-import": "^0.17.5",
+    "unplugin-auto-import": "^0.17.6",
     "unplugin-vue-components": "^0.27.0",
     "vite": "^5.2.11",
     "vitest": "^1.6.0",
-    "vue-tsc": "^2.0.16",
+    "vue-tsc": "^2.0.17",
     "web-storage-cache": "^1.1.1"
   },
   "productName": "HexoPress"

@@ -56,6 +56,7 @@ declare module 'vue' {
     FileExplorer: typeof import('./../src/components/FileExplorer.vue')['default']
     FilenameDialog: typeof import('./../src/components/FilenameDialog.vue')['default']
     HeaderBar: typeof import('./../src/components/HeaderBar.vue')['default']
+    KeywordSpan: typeof import('./../src/components/KeywordSpan.vue')['default']
     MetaDataDialog: typeof import('./../src/components/MetaDataDialog.vue')['default']
     MetaEntryTitle: typeof import('./../src/components/MetaEntryTitle.vue')['default']
     NavMenu: typeof import('./../src/components/NavMenu.vue')['default']
