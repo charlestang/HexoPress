@@ -93,11 +93,11 @@ The client internally uses the API of Hexo version 7.1.1. Hexo blog versions abo
 
 [Download for Apple Silicon: v1.2.0][download-for-apple]
 
-[Download for Intel Chip: v1.1.0][download-for-intel]
+[Download for Intel Chip: v1.2.0][download-for-intel]
 
 ### 2. Windows
 
-[Download for Windows: v1.1.0][download-for-win]
+[Download for Windows: v1.2.0][download-for-win]
 
 ## III. User Guides
 
@@ -195,8 +195,8 @@ Visit https://github.com/charlestang/HexoPress/issues to submit issues.
 
 [docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/howto-build-a-blog-with-hexo/
 [download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.2.0/HexoPress-darwin-arm64-1.2.0.zip
-[download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.1.0/HexoPress-darwin-x64-1.1.0.zip
-[download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.1.0/HexoPress-squirrel.windows-x64-1.1.0.zip
+[download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.2.0/HexoPress-darwin-x64-1.2.0.zip
+[download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.2.0/HexoPress-squirrel.windows-x64-1.2.0.zip
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
 [electron-badge]: https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white
 [fastify-badge]: https://img.shields.io/badge/fastify-%23000000.svg?logo=fastify&logoColor=white
