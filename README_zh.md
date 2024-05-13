@@ -215,7 +215,7 @@ npm run make
 [screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png
 [screenshot-dashboard]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard-cn.png
 [screenshot-editor]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png
-[screenshot-postlist]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png
-[screenshot-tags]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png
+[screenshot-postlist]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist-cn.png
+[screenshot-tags]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags-cn.png
 [vite-badge]: https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white
 [vuejs-badge]: https://img.shields.io/badge/Vue.js-35495E?logo=vue.js&logoColor=4FC08D
