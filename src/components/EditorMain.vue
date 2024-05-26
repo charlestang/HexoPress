@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
+import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { lineNumbers } from '@codemirror/view'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { Vim, vim } from '@replit/codemirror-vim'
-import { MdEditor, config } from 'md-editor-v3'
+import { MdEditor, NormalToolbar, config, type ExposeParam, type ToolbarNames } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import router from '@/router'
 
 const { t } = useI18n()
 
@@ -315,6 +315,69 @@ function onDelete() {
       }
     })
 }
+
+const toolbars = ref<ToolbarNames[]>([
+  'bold',
+  'underline',
+  'italic',
+  'strikeThrough',
+  '-',
+  'title',
+  'sub',
+  'sup',
+  'quote',
+  'unorderedList',
+  'orderedList',
+  'task',
+  '-',
+  'codeRow',
+  'code',
+  'link',
+  'image',
+  'table',
+  'mermaid',
+  'katex',
+  '-',
+  'revoke',
+  'next',
+  'save',
+  '-',
+  0,
+  1,
+  '=',
+  'prettier',
+  'preview',
+  'previewOnly',
+  'catalog',
+])
+
+const editorRef = ref<ExposeParam>()
+
+const editorMaxWidth = ref(1100)
+onMounted(() => {
+  editorRef.value?.on('catalog', console.log)
+  editorRef.value?.on('preview', (status) => {
+    if (status) {
+      editorMaxWidth.value = 2200
+    } else {
+      editorMaxWidth.value = 1100
+    }
+  })
+})
+
+
+const fontSize = ref(14)
+const lineHeight = ref(20)
+function onFontSmall() {
+  console.log('onFontSmall')
+  fontSize.value = 14
+  lineHeight.value = 20
+}
+function onFontBig() {
+  console.log('onFontSmall')
+  fontSize.value = 18
+  lineHeight.value = 26
+}
 </script>
 
 <template>
@@ -398,16 +461,40 @@ function onDelete() {
             </el-collapse-item>
           </el-collapse>
         </el-aside>
-        <el-main class="editor-wrapper">
+        <el-main class="editor-wrapper" :style="`--font-size: ${fontSize}px; --line-height: ${lineHeight}px`">
           <MdEditor
+            ref="editorRef"
             v-model="text"
             class="editor"
+            :style="{ maxWidth: `${editorMaxWidth}px` }"
+            :toolbars="toolbars"
             :sanitize="filterImage"
             :preview="false"
             :html-preview="false"
             :toolbars-exclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
             @upload-img="onUploadImage"
-            @on-save="onSave"></MdEditor>
+            @on-save="onSave">
+            <template #defToolbars>
+              <NormalToolbar :title="t('editor.fontIncrease')" @on-click="onFontBig">
+                <template #trigger>
+                  <img
+                    class="md-editor-icon"
+                    src="@/assets/font-size-increase.svg"
+                    alt="font increase"
+                    style="width: 19px; height: 19px" />
+                </template>
+              </NormalToolbar>
+              <NormalToolbar :title="t('editor.fontDecrease')" @on-click="onFontSmall">
+                <template #trigger>
+                  <img
+                    class="md-editor-icon"
+                    src="@/assets/font-size-decrease.svg"
+                    alt="font increase"
+                    style="width: 18px; height: 18px" />
+                </template>
+              </NormalToolbar>
+            </template>
+          </MdEditor>
           <UploadImageDialog
             v-model="showUploadDialog"
             v-model:filePath="filePath"
@@ -456,9 +543,17 @@ function onDelete() {
 .editor-wrapper {
   padding: 10px;
   padding-top: 0;
+  display: flex;
+  justify-content: center;
 }
 .editor {
   height: calc(100vh - 62px - 40px - 60px + 30px);
+}
+.editor :deep(.cm-editor) {
+  font-size: var(--font-size) !important;
+}
+.editor :deep(.cm-scroller) {
+  line-height: var(--line-height) !important;
 }
 .meta-entry {
   margin-bottom: 7px;

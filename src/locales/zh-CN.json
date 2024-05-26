@@ -91,6 +91,8 @@
     "draftPublishSuccess": "您的草稿发布成功！",
     "draftSaveSuccess": "您的草稿保存成功！",
     "excerpt": "摘要",
+    "fontDecrease": "减小字体",
+    "fontIncrease": "增大字体",
     "meta": "基础信息",
     "moveToTrash": "移至回收站",
     "notSet": "未设置（默认规则生成）",

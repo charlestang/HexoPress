@@ -91,6 +91,8 @@
     "draftPublishSuccess": "Your draft has been successfully published!",
     "draftSaveSuccess": "Your draft has been successfully saved!",
     "excerpt": "Excerpt",
+    "fontDecrease": "Font Decrease",
+    "fontIncrease": "Font Increase",
     "meta": "Meta",
     "moveToTrash": "Move to Trash",
     "notSet": " not set(generated default)",
