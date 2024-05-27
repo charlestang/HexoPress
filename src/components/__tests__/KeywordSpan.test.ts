@@ -7,8 +7,8 @@ describe('KeywordSpan.vue', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: 'Hello world',
-        keywords: ['world']
-      }
+        keywords: ['world'],
+      },
     })
 
     const keywordSpan = wrapper.find('span.title-kw')
@@ -19,8 +19,8 @@ describe('KeywordSpan.vue', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: 'Hello world',
-        keywords: ['world']
-      }
+        keywords: ['world'],
+      },
     })
 
     const nonKeywordSpan = wrapper.find('span:not([style])')

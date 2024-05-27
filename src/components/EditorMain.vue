@@ -365,7 +365,6 @@ onMounted(() => {
   })
 })
 
-
 const fontSize = ref(14)
 const lineHeight = ref(20)
 function onFontSmall() {
@@ -461,7 +460,9 @@ function onFontBig() {
             </el-collapse-item>
           </el-collapse>
         </el-aside>
-        <el-main class="editor-wrapper" :style="`--font-size: ${fontSize}px; --line-height: ${lineHeight}px`">
+        <el-main
+          class="editor-wrapper"
+          :style="`--font-size: ${fontSize}px; --line-height: ${lineHeight}px`">
           <MdEditor
             ref="editorRef"
             v-model="text"
@@ -554,6 +555,9 @@ function onFontBig() {
 }
 .editor :deep(.cm-scroller) {
   line-height: var(--line-height) !important;
+}
+.editor :deep(.cm-lineNumbers) {
+  color: #bbb;
 }
 .meta-entry {
   margin-bottom: 7px;
