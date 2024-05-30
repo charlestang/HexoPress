@@ -154,7 +154,7 @@ function updateTableHeight() {
           size="small"
           :clearable="true"
           @clear="onSearchClick" />
-        <el-button type="primary" size="small" plain @click="onSearchClick">{{
+        <el-button type="primary" size="small" @click="onSearchClick">{{
           t('posts.search')
         }}</el-button>
       </el-space>
@@ -299,7 +299,7 @@ function updateTableHeight() {
   width: 100%;
   margin-bottom: 10px;
 }
-.el-table .el-table__cell {
+.el-table :deep(.el-table__cell) {
   vertical-align: top;
 }
 .draft-status {

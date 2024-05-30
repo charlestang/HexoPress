@@ -49,7 +49,7 @@ function isActive(value: PostStatusFilterChoice): boolean {
         ( {{ publishedTotal }} )
       </el-text>
       <el-text v-if="k == PostStatusFilterChoice.Draft" type="info"> ( {{ draftTotal }} ) </el-text>
-      <span v-if="k != PostStatusFilterChoice.Draft"> |</span>
+      <span v-if="k != PostStatusFilterChoice.Draft" style="color:#ccc"> | </span>
     </li>
   </ul>
 </template>

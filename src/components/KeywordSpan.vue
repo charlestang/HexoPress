@@ -37,15 +37,19 @@ const parts = computed((): TextPart[] => {
 </script>
 <template>
   <template v-for="(part, index) in parts">
-    <span v-if="part.isKeyword" :key="index" class="title-kw">
+    <span v-if="part.isKeyword" :key="index" class="title title-kw">
       {{ part.text }}
     </span>
-    <span v-else :key="-index">{{ part.text }}</span>
+    <span v-else :key="-index" class="title">{{ part.text }}</span>
   </template>
 </template>
 <style>
 .title-kw {
   /* keywords in title */
   background-color: #ff0;
+}
+.title{
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
