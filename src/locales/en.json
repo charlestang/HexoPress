@@ -131,7 +131,12 @@
   },
   "mediaLibrary": {
     "MediaLibrary": "Media Library",
-    "preview": "Preview"
+    "id": "ID",
+    "modified": "Modified At",
+    "path": "Path",
+    "preview": "Preview",
+    "rederable": "Renderable",
+    "source": "Source File"
   },
   "nav": {
     "allPosts": "All posts",

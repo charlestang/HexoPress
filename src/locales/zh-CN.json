@@ -132,7 +132,12 @@
   },
   "mediaLibrary": {
     "MediaLibrary": "媒体库",
-    "preview": "预览"
+    "id": "ID",
+    "modified": "更新时间",
+    "path": "路径",
+    "preview": "预览",
+    "rederable": "可渲染的",
+    "source": "源文件"
   },
   "nav": {
     "allPosts": "文章",

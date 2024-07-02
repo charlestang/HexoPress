@@ -20,8 +20,8 @@ watchEffect(() => {
   <h2>{{ t('mediaLibrary.MediaLibrary') }}</h2>
 
   <el-table :data="assets" stripe style="width: 100%; margin-bottom: 10px">
-    <el-table-column prop="id" label="id"></el-table-column>
-    <el-table-column prop="path" label="path"></el-table-column>
+    <el-table-column prop="id" :label="t('mediaLibrary.id')"></el-table-column>
+    <el-table-column prop="path" :label="t('mediaLibrary.path')"></el-table-column>
     <el-table-column :label="t('mediaLibrary.preview')">
       <template #default="scope">
         <template v-if="scope.row.path.endsWith('png') || scope.row.path.endsWith('jpg')">
@@ -29,8 +29,8 @@ watchEffect(() => {
         </template>
       </template>
     </el-table-column>
-    <el-table-column prop="modified" label="modified"></el-table-column>
-    <el-table-column prop="renderable" label="renderable"></el-table-column>
-    <el-table-column prop="source" label="source"></el-table-column>
+    <el-table-column prop="modified" :label="t('mediaLibrary.modified')"></el-table-column>
+    <el-table-column prop="renderable" :label="t('mediaLibrary.rederable')"></el-table-column>
+    <el-table-column prop="source" :label="t('mediaLibrary.source')"></el-table-column>
   </el-table>
 </template>
