@@ -48,7 +48,7 @@ const parts = computed((): TextPart[] => {
   /* keywords in title */
   background-color: #ff0;
 }
-.title{
+.title {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
