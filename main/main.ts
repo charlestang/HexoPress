@@ -44,7 +44,7 @@ const createWindow = () => {
     if (process.env.NODE_ENV === 'development') {
       const vueDevToolsPath = join(
         homedir(),
-        '/Library/Application Support/Google/Chrome/Profile 1/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/6.6.1_0',
+        '/Library/Application Support/Google/Chrome/Profile 1/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/6.6.3_0',
       )
       await session.defaultSession.loadExtension(vueDevToolsPath)
     }
