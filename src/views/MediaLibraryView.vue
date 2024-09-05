@@ -1,16 +1,29 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, computed } from 'vue'
 
 const { t } = useI18n()
 
 const assets = ref<Asset[]>([])
+const fileTypeFilter = ref('all')
 
 function fetchAssets() {
   window.site.getAssets().then((res) => {
     assets.value = res
   })
 }
+
+const fileTypes = computed(() => {
+  const types = new Set(assets.value.map(asset => asset.path.split('.').pop() || ''))
+  return ['all', ...Array.from(types)]
+})
+
+const filteredAssets = computed(() => {
+  if (fileTypeFilter.value === 'all') {
+    return assets.value
+  }
+  return assets.value.filter(asset => asset.path.endsWith(fileTypeFilter.value))
+})
 
 watchEffect(() => {
   fetchAssets()
@@ -19,7 +32,16 @@ watchEffect(() => {
 <template>
   <h2>{{ t('mediaLibrary.MediaLibrary') }}</h2>
 
-  <el-table :data="assets" stripe style="width: 100%; margin-bottom: 10px">
+  <el-select v-model="fileTypeFilter" style="margin-bottom: 20px;">
+    <el-option
+      v-for="type in fileTypes"
+      :key="type"
+      :label="type === 'all' ? t('mediaLibrary.allTypes') : type"
+      :value="type"
+    ></el-option>
+  </el-select>
+
+  <el-table :data="filteredAssets" stripe style="width: 100%; margin-bottom: 10px">
     <el-table-column prop="id" :label="t('mediaLibrary.id')"></el-table-column>
     <el-table-column prop="path" :label="t('mediaLibrary.path')"></el-table-column>
     <el-table-column :label="t('mediaLibrary.preview')">

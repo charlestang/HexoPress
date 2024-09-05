@@ -132,6 +132,7 @@
   },
   "mediaLibrary": {
     "MediaLibrary": "媒体库",
+    "allTypes": "所有类型",
     "id": "ID",
     "modified": "更新时间",
     "path": "路径",

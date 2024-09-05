@@ -131,6 +131,7 @@
   },
   "mediaLibrary": {
     "MediaLibrary": "Media Library",
+    "allTypes": "All Types",
     "id": "ID",
     "modified": "Modified At",
     "path": "Path",
