@@ -5,10 +5,15 @@ export interface TextPart {
   isKeyword: boolean
 }
 
-const props = defineProps<{
-  text: string
-  keywords: string[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    text: string
+    keywords: string[]
+  }>(),
+  {
+    keywords: () => [],
+  },
+)
 
 const keywords = computed(() => props.keywords.filter((keyword) => keyword.length > 0))
 
@@ -37,19 +42,22 @@ const parts = computed((): TextPart[] => {
 </script>
 <template>
   <template v-for="(part, index) in parts">
-    <span v-if="part.isKeyword" :key="index" class="title title-kw">
+    <mark v-if="part.isKeyword" :key="index" class="title title-kw">
       {{ part.text }}
-    </span>
+    </mark>
     <span v-else :key="-index" class="title">{{ part.text }}</span>
   </template>
 </template>
 <style>
 .title-kw {
-  /* keywords in title */
   background-color: #ff0;
+  color: #000; /* 确保文本颜色与背景形成对比 */
 }
 .title {
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+  display: inline-block;
 }
 </style>

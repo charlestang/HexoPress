@@ -14,7 +14,7 @@ function fetchAssets() {
 }
 
 const fileTypes = computed(() => {
-  const types = new Set(assets.value.map(asset => asset.path.split('.').pop() || ''))
+  const types = new Set(assets.value.map((asset) => asset.path.split('.').pop() || ''))
   return ['all', ...Array.from(types)]
 })
 
@@ -22,7 +22,7 @@ const filteredAssets = computed(() => {
   if (fileTypeFilter.value === 'all') {
     return assets.value
   }
-  return assets.value.filter(asset => asset.path.endsWith(fileTypeFilter.value))
+  return assets.value.filter((asset) => asset.path.endsWith(fileTypeFilter.value))
 })
 
 watchEffect(() => {
@@ -32,13 +32,12 @@ watchEffect(() => {
 <template>
   <h2>{{ t('mediaLibrary.MediaLibrary') }}</h2>
 
-  <el-select v-model="fileTypeFilter" style="margin-bottom: 20px;">
+  <el-select v-model="fileTypeFilter" style="margin-bottom: 20px">
     <el-option
       v-for="type in fileTypes"
       :key="type"
       :label="type === 'all' ? t('mediaLibrary.allTypes') : type"
-      :value="type"
-    ></el-option>
+      :value="type"></el-option>
   </el-select>
 
   <el-table :data="filteredAssets" stripe style="width: 100%; margin-bottom: 10px">

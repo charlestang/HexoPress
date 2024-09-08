@@ -6,7 +6,7 @@ import { useFilterStore } from '@/stores/filter'
 import { useStatsStore } from '@/stores/stats'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const appStore = useAppStore()
@@ -139,6 +139,13 @@ function updateTableHeight() {
     tableHeight.value = wrapper.value.clientHeight - 10
   }
 }
+
+const formattedDate = computed(() => (date: string) => {
+  return Intl.DateTimeFormat(appStore.locale, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(date))
+})
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -174,7 +181,7 @@ function updateTableHeight() {
           <el-row>
             <el-col :span="24">
               <keyword-span :keywords="[keywords]" :text="scope.row.title" />
-              <span v-if="scope.row.status == 'draft'" class="draft-status">
+              <span v-show="scope.row.status == 'draft'" class="draft-status">
                 -- {{ t('posts.draft') }}</span
               >
             </el-col>
@@ -240,17 +247,9 @@ function updateTableHeight() {
             <el-row>
               <el-col :span="24">
                 <span v-if="scope.row.status == 'published'">{{
-                  Intl.DateTimeFormat(appStore.locale, {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  }).format(new Date(scope.row.date))
+                  formattedDate(scope.row.date)
                 }}</span>
-                <span v-else>{{
-                  Intl.DateTimeFormat(appStore.locale, {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  }).format(new Date(scope.row.updated))
-                }}</span>
+                <span v-else>{{ formattedDate(scope.row.updated) }}</span>
               </el-col>
             </el-row>
           </template>
@@ -262,12 +261,7 @@ function updateTableHeight() {
             </el-row>
             <el-row>
               <el-col :span="24">
-                <span v-if="scope.row.updated != ''">{{
-                  Intl.DateTimeFormat(appStore.locale, {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  }).format(new Date(scope.row.updated))
-                }}</span>
+                <span v-if="scope.row.updated != ''">{{ formattedDate(scope.row.updated) }}</span>
               </el-col>
             </el-row>
           </template>
@@ -278,7 +272,7 @@ function updateTableHeight() {
   <el-pagination
     v-model:current-page="currentPage"
     v-model:page-size="pageSize"
-    :small="true"
+    size="small"
     :disabled="false"
     :background="true"
     layout="prev, pager, next, jumper, ->, sizes, total"
