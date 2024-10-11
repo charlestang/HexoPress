@@ -420,7 +420,7 @@ function onFontBig() {
                     </el-input>
                   </el-form-item>
                 </el-form>
-                <FilenameDialog v-model="dialogSourcePath" v-model:sourcePath="sourcePath" />
+                <FilenameDialog v-model="dialogSourcePath" v-model:source-path="sourcePath" />
               </el-col>
             </el-row>
           </el-main>
@@ -498,7 +498,7 @@ function onFontBig() {
           </MdEditor>
           <UploadImageDialog
             v-model="showUploadDialog"
-            v-model:filePath="filePath"
+            v-model:file-path="filePath"
             :image-file="imageFile"
             @upload-success="uploaded" />
         </el-main>
