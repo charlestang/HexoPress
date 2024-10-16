@@ -27,9 +27,9 @@ async function fetch(curPage: number) {
   const draft = statusFilterVal.value !== PostStatusFilterChoice.Published
   const limit = pageSize.value
   const offset = (curPage - 1) * limit
-  let selectedMonth =
+  const selectedMonth =
     dateCategoryFilterVal.value.date === 'all' ? '' : dateCategoryFilterVal.value.date
-  let selectedCat =
+  const selectedCat =
     dateCategoryFilterVal.value.category === 'all' ? '' : dateCategoryFilterVal.value.category
 
   const data = await window.site.getPosts(

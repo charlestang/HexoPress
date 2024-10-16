@@ -39,7 +39,7 @@ function _hashCode(s: string) {
     return hash
   }
   for (let i = 0; i < s.length; i++) {
-    let char = s.charCodeAt(i)
+    const char = s.charCodeAt(i)
     hash = (hash << 5) - hash + char
     hash = hash & hash // Convert to 32bit integer
   }

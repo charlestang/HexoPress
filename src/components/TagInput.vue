@@ -10,8 +10,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:modelValue'])
 
-let tagsInputActive = ref('')
-let tagInputting = ref('')
+const tagsInputActive = ref('')
+const tagInputting = ref('')
 
 function onTagInputtingChange(tagName: string): void {
   tagInputting.value = ''

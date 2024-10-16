@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:modelValue'])
 
-let visible = ref(false)
+const visible = ref(false)
 function onClickChange() {
   emit('update:modelValue', permalink)
   visible.value = false

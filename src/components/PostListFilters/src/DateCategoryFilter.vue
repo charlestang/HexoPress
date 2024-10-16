@@ -61,7 +61,7 @@ const updatedMonths = computed(() => {
  * Category filter data.
  */
 // fetch all categories from backend
-let categories = ref<Category[]>([])
+const categories = ref<Category[]>([])
 
 async function fetchCategories() {
   categories.value = await window.site.getCategories()
@@ -90,7 +90,7 @@ const nodeMap = computed(() => {
 
 // build a tree to display category hierarchy
 const treeData = computed(() => {
-  let tree: NodeData[] = []
+  const tree: NodeData[] = []
 
   for (const node of Object.values(nodeMap.value)) {
     if (node.parent) {

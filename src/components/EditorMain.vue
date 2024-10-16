@@ -94,8 +94,8 @@ function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): 
     if (p2.startsWith('http://') || p2.startsWith('https://')) {
       return match
     }
-    let curPath = currentPath.split('/').filter((p) => p !== '')
-    let imgPath = p2.split('/').filter((p) => p !== '')
+    const curPath = currentPath.split('/').filter((p) => p !== '')
+    const imgPath = p2.split('/').filter((p) => p !== '')
     while (curPath.length > 0 && imgPath[0] == '..') {
       imgPath.shift()
       curPath.pop()
@@ -105,8 +105,8 @@ function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): 
   })
 }
 
-let dialogSourcePath = ref(false)
-let asideExpand = ref('aside-expand')
+const dialogSourcePath = ref(false)
+const asideExpand = ref('aside-expand')
 function toggleAside() {
   if (asideExpand.value === 'aside-expand') {
     asideExpand.value = 'aside-collapsed'
