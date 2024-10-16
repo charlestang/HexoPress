@@ -1,6 +1,6 @@
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig } from 'vite'
-import { pluginExposeRenderer } from './vite.base.config'
+import { pluginExposeRenderer } from './vite.config.base'
 
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
