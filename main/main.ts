@@ -1,5 +1,4 @@
-import { BrowserWindow, app, dialog, ipcMain, nativeTheme, session, shell } from 'electron'
-import { homedir } from 'node:os'
+import { BrowserWindow, app, dialog, ipcMain, nativeTheme, shell } from 'electron'
 import { join } from 'node:path'
 import fsAgent from './lib/FsAgent'
 import agent, { HexoAgent } from './lib/HexoAgent'
@@ -40,15 +39,6 @@ const createWindow = () => {
     win.loadFile(join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
   }
 
-  win.once('ready-to-show', async () => {
-    if (process.env.NODE_ENV === 'development') {
-      const vueDevToolsPath = join(
-        homedir(),
-        '/Library/Application Support/Google/Chrome/Profile 1/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/6.6.3_0',
-      )
-      await session.defaultSession.loadExtension(vueDevToolsPath)
-    }
-  })
 }
 
 app.whenReady().then(async () => {
