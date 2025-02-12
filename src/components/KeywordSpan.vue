@@ -49,15 +49,16 @@ const parts = computed((): TextPart[] => {
   </template>
 </template>
 <style>
-.title-kw {
-  background-color: #ff0;
-  color: #000; /* 确保文本颜色与背景形成对比 */
-}
 .title {
+  display: inline;
+  vertical-align: baseline;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   max-width: 100%;
-  display: inline-block;
+}
+.title-kw {
+  background-color: #ff0;
+  color: #000; /* 确保文本颜色与背景形成对比 */
 }
 </style>
