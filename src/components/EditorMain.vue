@@ -570,4 +570,7 @@ function onFontBig() {
 :deep(.ͼ1 .cm-vim-panel input) {
   color: white;
 }
+:deep(.md-editor svg) {
+  box-sizing: content-box;
+}
 </style>
