@@ -41,6 +41,7 @@ export class FsAgent {
     try {
       await rename(fromPath, toPath)
     } catch (err) {
+      console.error('mv, err: ', err)
       return false
     }
 
@@ -52,6 +53,7 @@ export class FsAgent {
     try {
       await access(dirname(path))
     } catch (err) {
+      console.error('assureDir, err: ', err)
       console.log('assureDir, creating dir: ', dirname(path))
       await mkdir(dirname(path), { recursive: true })
     }

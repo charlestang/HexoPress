@@ -104,6 +104,7 @@ function onNodeClick(node: NodeData, treeNodeProp: Node, treeNode: any, event: P
     event,
   )
 }
+
 function onCheckChange(node: NodeData, selfChecked: boolean, childrenChecked: boolean) {
   console.log(
     'onCheckChange, node: ',

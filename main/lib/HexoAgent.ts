@@ -24,7 +24,7 @@ export class HexoAgent {
     if (typeof this.hexo !== 'undefined') {
       console.log('The member hexo is already initialized.')
 
-      // @ts-ignore In the latest version of Hexo, the exit parameter can be empty.
+      // @ts-expect-error In the latest version of Hexo, the exit parameter can be empty.
       this.exitPromise = this.hexo.exit()
     }
 
