@@ -182,7 +182,8 @@ const formattedDate = computed(() => (date: string) => {
             <el-col :span="24">
               <keyword-span :keywords="[keywords]" :text="scope.row.title" />
               <span v-show="scope.row.status == 'draft'" class="draft-status">
-                -- {{ t('posts.draft') }}</span>
+                -- {{ t('posts.draft') }}</span
+              >
             </el-col>
           </el-row>
           <el-row class="op">

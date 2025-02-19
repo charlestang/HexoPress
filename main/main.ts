@@ -3,9 +3,10 @@ import { join } from 'node:path'
 import fsAgent from './lib/FsAgent'
 import agent, { HexoAgent } from './lib/HexoAgent'
 import httpServer from './lib/HttpServer'
+import electronSquirrelStartup from 'electron-squirrel-startup'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
+if (electronSquirrelStartup) {
   app.quit()
 }
 
@@ -38,7 +39,6 @@ const createWindow = () => {
   } else {
     win.loadFile(join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
   }
-
 }
 
 app.whenReady().then(async () => {
