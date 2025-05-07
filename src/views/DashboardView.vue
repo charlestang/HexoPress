@@ -89,7 +89,7 @@ fetchHeatMap()
         </template>
         <ul class="latest-posts">
           <li v-for="post in posts" :key="post.permalink">
-            <el-link link type="primary" :underline="false" @click="onClick(post.source)">{{
+            <el-link link type="primary" underline="never" @click="onClick(post.source)">{{
               post.title
             }}</el-link>
             <span>{{ new Date(post.date).toLocaleString() }}</span>
