@@ -7,7 +7,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CalendarHeatmap } from 'vue3-calendar-heatmap'
 import 'vue3-calendar-heatmap/dist/style.css'
-import { formatISO8601Date } from '@/utils/date'
+import { format } from 'date-fns'
 
 const { t } = useI18n()
 
@@ -28,7 +28,7 @@ function onClick(sourcePath: string) {
   router.push({ name: 'frame', query: { sourcePath: sourcePath } })
 }
 
-const todayDate = formatISO8601Date(new Date())
+const todayDate = format(new Date(), 'yyyy-MM-dd')
 const heatMap = ref<DateEntry[]>([])
 async function fetchHeatMap() {
   const data = await window.site.getHeatMap()

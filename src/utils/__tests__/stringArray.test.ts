@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { normalizeList, simplifyList } from '../CategoryList'
+import { normalizeList } from '../stringArray'
 
 describe('normalizeList', () => {
   it('normalizeList with empty string', () => {
@@ -41,21 +41,24 @@ describe('normalizeList', () => {
     const result = normalizeList(['abc', ['def', 'ghi']])
     expect(result).toEqual([['abc'], ['def', 'ghi']])
   })
-})
 
-describe('simplifyList', () => {
-  it('simplifyList with single string', () => {
-    const result = simplifyList([['abc']])
-    expect(result).toBe('abc')
+  it('normalizeList with duplicate values', () => {
+    const result = normalizeList(['abc', 'abc'])
+    expect(result).toEqual([['abc', 'abc']])
   })
 
-  it('simplifyList with single string array', () => {
-    const result = simplifyList([['abc', 'def']])
-    expect(result).toEqual(['abc', 'def'])
+  it('normalizeList with special characters', () => {
+    const result = normalizeList(['a-b', 'c_d'])
+    expect(result).toEqual([['a-b', 'c_d']])
   })
 
-  it('simplifyList with multiple string arrays', () => {
-    const result = simplifyList([['abc'], ['def', 'ghi']])
-    expect(result).toEqual(['abc', ['def', 'ghi']])
+  it('normalizeList with complex mixed array', () => {
+    const result = normalizeList(['abc', ['def', 'ghi'], 'jkl', ['mno', 'pqr']])
+    expect(result).toEqual([['abc'], ['def', 'ghi'], ['jkl'], ['mno', 'pqr']])
+  })
+
+  it('normalizeList with empty strings in mixed array', () => {
+    const result = normalizeList(['abc', '', ['def', '']])
+    expect(result).toEqual([['abc'], ['def']])
   })
 })

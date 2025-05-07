@@ -3,7 +3,7 @@ import type { ElTree } from 'element-plus'
 import type Node from 'element-plus/es/components/tree/src/model/node'
 import type { TreeData, TreeKey } from 'element-plus/es/components/tree/src/tree.type'
 import { computed, ref } from 'vue'
-import { normalizeList } from './CategoryList'
+import { normalizeList } from '@/utils/stringArray'
 
 interface NodeData {
   id: string
