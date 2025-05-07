@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
 import { ElLoading } from 'element-plus'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -47,13 +47,6 @@ async function onOpen() {
   loadingInstance.close()
 }
 
-const categories = ref<Category[]>([])
-watchEffect(() => {
-  window.site.getCategories().then((data) => {
-    categories.value = data
-  })
-})
-
 async function onSave() {
   const loadingInstance = ElLoading.service({ target: 'dialog' })
 
@@ -75,7 +68,7 @@ async function onSave() {
 }
 </script>
 <template>
-  <el-dialog v-model="showDialog" class="dialog" @open="onOpen">
+  <el-dialog v-model="showDialog" class="dialog" @open="onOpen" :destroy-on-close="true">
     <template #header>{{ props.sourcePath }}</template>
     <template #footer>
       <el-button @click="showDialog = false">{{ t('common.back') }}</el-button>
@@ -95,7 +88,9 @@ async function onSave() {
         <el-date-picker v-model="frontMatter.updated" type="datetime" />
       </el-form-item>
       <el-form-item :label="t('editor.categories')">
-        <categories-tree-panel v-model="frontMatter.categories" :categories="categories" />
+        <div style="width: 100%;">
+          <categories-tree-panel v-model="frontMatter.categories" />
+        </div>
       </el-form-item>
       <el-form-item :label="t('editor.tags')">
         <tag-input v-model="frontMatter.tags" />

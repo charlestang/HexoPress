@@ -46,12 +46,6 @@ function _hashCode(s: string) {
   return hash
 }
 function onClickAddCategory() {
-  console.log(
-    'add new category, name: ',
-    newCategoryForm.value.name,
-    ' and parent id: ',
-    newCategoryForm.value.parent,
-  )
   console.log('categories length: ', categories.value.length)
   const newCategory: Category = {
     id: 'new-category-' + _hashCode(newCategoryForm.value.name),

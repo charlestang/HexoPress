@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { ElTree } from 'element-plus'
-import type Node from 'element-plus/es/components/tree/src/model/node'
 import type { TreeData, TreeKey } from 'element-plus/es/components/tree/src/tree.type'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { normalizeList } from '@/utils/stringArray'
 
 interface NodeData {
@@ -14,7 +13,7 @@ interface NodeData {
   permalink: string
 }
 
-export interface Props {
+interface Props {
   modelValue?: string | string[] | (string | string[])[]
   categories?: Category[]
 }
@@ -85,36 +84,24 @@ function computeCheckedKeys(catsArr: string[][]) {
   return checkedKeys
 }
 
-const defaultChecked = computed(() => computeCheckedKeys(normalizedCats.value))
 
 const defaultProps = {
   children: 'children',
   label: 'label',
 }
 
-function onNodeClick(node: NodeData, treeNodeProp: Node, treeNode: any, event: PointerEvent) {
-  console.log(
-    'onNodeClick, node: ',
-    node,
-    '\n treeNodeProp: ',
-    treeNodeProp,
-    '\n treeNode: ',
-    treeNode,
-    '\n event: ',
-    event,
-  )
-}
+const treeRef = ref<InstanceType<typeof ElTree>>()
 
-function onCheckChange(node: NodeData, selfChecked: boolean, childrenChecked: boolean) {
-  console.log(
-    'onCheckChange, node: ',
-    node,
-    '\n self-checked: ',
-    selfChecked,
-    '\n children-checked: ',
-    childrenChecked,
-  )
-}
+// monitor the changes of categories, update the tree's checked state
+watch(
+  [() => props.categories, () => props.modelValue],
+  () => {
+    if (treeRef.value) {
+      treeRef.value.setCheckedKeys(computeCheckedKeys(normalizedCats.value))
+    }
+  },
+  { deep: true }
+)
 
 type TreeSelectedState = {
   checkedNodes: TreeData
@@ -157,7 +144,6 @@ function onCheck(node: NodeData, selectedNodes: TreeSelectedState) {
     emit('update:modelValue', newCheckedCats)
   }
 }
-const treeRef = ref<InstanceType<typeof ElTree>>()
 </script>
 <template>
   <el-tree
@@ -167,9 +153,6 @@ const treeRef = ref<InstanceType<typeof ElTree>>()
     node-key="id"
     show-checkbox
     :check-strictly="true"
-    :default-checked-keys="defaultChecked"
-    @node-click="onNodeClick"
-    @check-change="onCheckChange"
     @check="onCheck" />
 </template>
 
