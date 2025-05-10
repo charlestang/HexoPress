@@ -51,7 +51,9 @@ const isDirty = ref(false)
 const text = ref('')
 
 watch(text, (val, oldVal) => {
-  isDirty.value = val !== oldVal
+  if (val !== oldVal) {
+    isDirty.value = true
+  }
 })
 
 const frontMatter = ref<FrontMatter>({
@@ -115,13 +117,6 @@ function toggleAside() {
   }
 }
 
-// fetch all categories from backend
-const categories = ref<Category[]>([])
-async function fetch() {
-  categories.value = await window.site.getCategories()
-}
-fetch()
-
 async function _formValidate(): Promise<boolean> {
   if (!isDirty.value) {
     ElMessage.info(t('editor.nothingChanged'))
@@ -137,7 +132,10 @@ async function _formValidate(): Promise<boolean> {
   return true
 }
 function _getBlogContent(): string {
-  frontMatter.value.updated = new Date()
+  if (isDirty.value) {
+    // Only update frontMatter time if article content has changed
+    frontMatter.value.updated = new Date()
+  }
   // change js object to yaml string
   return stringify(frontMatter.value, text.value)
 }
@@ -249,13 +247,13 @@ async function onUploadImage(
   showUploadDialog.value = true
 }
 
-function onSave() {
-  console.log('editor onSave triggered.')
+async function onSave() {
   if (postPublished.value) {
-    updatePost()
+    await updatePost()
   } else {
-    upsertDraft()
+    await upsertDraft()
   }
+  isDirty.value = false
 }
 
 let saveIntervalId: NodeJS.Timeout
@@ -264,7 +262,7 @@ onMounted(() => {
     if (isDirty.value) {
       onSave()
     }
-  }, 1000 * 60)
+  }, 1000 * 30)
 })
 
 onBeforeUnmount(() => {
@@ -430,8 +428,8 @@ function onFontBig() {
         <el-aside :class="asideExpand">
           <el-collapse v-model="activeAsidePanels">
             <el-collapse-item :title="t('editor.meta')" name="meta">
-              <DateMetaEntry v-model="frontMatter.date" class="meta-entry" />
-              <UrlMetaEntry v-model="frontMatter.permalink" class="meta-entry" />
+              <date-meta-entry v-model="frontMatter.date" class="meta-entry" />
+              <url-meta-entry v-model="frontMatter.permalink" class="meta-entry" />
               <el-row v-if="postPublished" :gutter="20">
                 <el-col :span="10">
                   <el-button type="warning" plain size="small" style="width: 100%">{{

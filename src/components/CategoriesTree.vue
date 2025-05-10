@@ -3,6 +3,7 @@ import type { ElTree } from 'element-plus'
 import type { TreeData, TreeKey } from 'element-plus/es/components/tree/src/tree.type'
 import { computed, ref, watch } from 'vue'
 import { normalizeList } from '@/utils/stringArray'
+import { useCategoryTree } from '@/composables/useCategoryTree'
 
 interface Props {
   modelValue?: string | string[] | (string | string[])[]
@@ -16,39 +17,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:modelValue'])
 
-// put all category entries into a map
-const nodeMap = computed(() => {
-  const map: { [id: string]: NodeData } = {}
-  for (const entry of props.categories) {
-    map[entry.id] = {
-      id: entry.id,
-      parent: entry.parent,
-      label: entry.name,
-      children: [],
-      length: entry.length,
-      permalink: entry.permalink,
-    }
-  }
-  return map
-})
+console.log('categories is: ', props.categories)
+// Create a computed property that responds to changes in props.categories
+const categoriesRef = computed(() => props.categories)
 
-// build a tree to display category hierarchy
-const treeData = computed(() => {
-  const tree: NodeData[] = []
-
-  for (const node of Object.values(nodeMap.value)) {
-    if (node.parent) {
-      const parent = nodeMap.value[node.parent]
-      if (parent) {
-        parent.children?.push(node)
-      }
-    } else {
-      tree.push(node)
-    }
-  }
-
-  return tree
-})
+// Use the computed property as a parameter for useCategoryTree
+const { nodeMap, treeData } = useCategoryTree(categoriesRef)
 
 // normalize selected categories
 const normalizedCats = computed(() => {
@@ -63,11 +37,10 @@ function computeCheckedKeys(catsArr: string[][]) {
   for (const cat of catsArr) {
     for (const catName of cat) {
       for (const node of Object.values(nodeMap.value)) {
-        if (node.label == catName) {
-          if (checkedKeys.includes(node.id)) {
-            continue
+        if (node.label == catName && node.id) {
+          if (!checkedKeys.includes(node.id)) {
+            checkedKeys.push(node.id)
           }
-          checkedKeys.push(node.id)
         }
       }
     }

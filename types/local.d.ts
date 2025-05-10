@@ -41,6 +41,7 @@ declare global {
     length?: number
     permalink?: string
     value: string
+    path?: string
   }
 
   type FileEntry = {

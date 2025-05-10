@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import moment from 'moment'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, onMounted} from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { DateCategoryFilterValue } from './types'
+import { useCategoryTree } from '@/composables/useCategoryTree'
 
 const { t } = useI18n()
 
@@ -36,26 +37,18 @@ const selectedCat = computed({
 /**
  * Date filter data.
  */
-const postMonths = ref<string[]>([])
+const postMonths = ref<{ label: string; value: string }[]>([])
 
 async function fetchPostMonths() {
-  postMonths.value = await window.site.getPostMonths()
-}
-
-watchEffect(() => {
-  fetchPostMonths()
-})
-
-const updatedMonths = computed(() => {
-  const months = postMonths.value.map((month) => {
-    return {
+  const months = await window.site.getPostMonths()
+  postMonths.value = [
+    { label: t('posts.allMonths'), value: 'all' },
+    ...months.map((month: string) => ({
       label: moment(month).format(t('date.month')),
       value: month,
-    }
-  })
-  months.unshift({ label: t('posts.allMonths'), value: 'all' })
-  return months
-})
+    })),
+  ]
+}
 
 /**
  * Category filter data.
@@ -67,41 +60,17 @@ async function fetchCategories() {
   categories.value = await window.site.getCategories()
 }
 
-watchEffect(() => {
+onMounted(() => {
+  fetchPostMonths()
   fetchCategories()
 })
 
-// put all category entries into a map
-const nodeMap = computed(() => {
-  const map: { [id: string]: NodeData } = {}
-  for (const entry of categories.value) {
-    map[entry.id] = {
-      id: entry.id,
-      value: entry.id,
-      parent: entry.parent,
-      label: entry.name,
-      children: [],
-      length: entry.length,
-      permalink: entry.permalink,
-    }
-  }
-  return map
-})
+// Use useCategoryTree composition function
+const { treeData } = useCategoryTree(categories)
 
-// build a tree to display category hierarchy
-const treeData = computed(() => {
-  const tree: NodeData[] = []
-
-  for (const node of Object.values(nodeMap.value)) {
-    if (node.parent) {
-      const parent = nodeMap.value[node.parent]
-      if (parent) {
-        parent.children?.push(node)
-      }
-    } else {
-      tree.push(node)
-    }
-  }
+// Create a new computed property to handle the 'all' option
+const treeDataWithAllOption = computed(() => {
+  const tree = [...treeData.value]
   tree.unshift({
     value: 'all',
     label: t('posts.allCategories'),
@@ -130,14 +99,14 @@ function onCategoryClear() {
       style="width: 180px"
       @clear="onMonthClear">
       <el-option
-        v-for="item in updatedMonths"
+        v-for="item in postMonths"
         :key="item.value"
         :label="item.label"
         :value="item.value" />
     </el-select>
     <el-tree-select
       v-model="selectedCat"
-      :data="treeData"
+      :data="treeDataWithAllOption"
       :render-after-expand="false"
       size="small"
       :placeholder="t('posts.categorySearch')"
