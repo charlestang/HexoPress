@@ -4,15 +4,6 @@ import type { TreeData, TreeKey } from 'element-plus/es/components/tree/src/tree
 import { computed, ref, watch } from 'vue'
 import { normalizeList } from '@/utils/stringArray'
 
-interface NodeData {
-  id: string
-  parent: string | undefined
-  label: string
-  children?: NodeData[]
-  length: number
-  permalink: string
-}
-
 interface Props {
   modelValue?: string | string[] | (string | string[])[]
   categories?: Category[]

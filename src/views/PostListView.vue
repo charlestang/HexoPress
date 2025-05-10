@@ -4,6 +4,7 @@ import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useFilterStore } from '@/stores/filter'
 import { useStatsStore } from '@/stores/stats'
+import { formatDate } from '@/utils/date'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import { onBeforeUnmount, onMounted, ref, watch, computed } from 'vue'
@@ -141,19 +142,16 @@ function updateTableHeight() {
 }
 
 const formattedDate = computed(() => (date: string) => {
-  return Intl.DateTimeFormat(appStore.locale, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(date))
+  return formatDate(date, appStore.locale)
 })
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
-  <el-row :gutter="5" style="margin-bottom: 5px">
+  <el-row :gutter="5" class="filter-row">
     <el-col :span="19">
       <post-status-filter v-model="statusFilterVal" />
     </el-col>
-    <el-col :span="5" style="display: flex; justify-content: flex-end">
+    <el-col :span="5" class="flex-end">
       <el-space>
         <el-input
           v-model="keywords"
@@ -167,11 +165,11 @@ const formattedDate = computed(() => (date: string) => {
       </el-space>
     </el-col>
   </el-row>
-  <el-row :gutter="5" style="margin-bottom: 5px">
+  <el-row :gutter="5" class="filter-row">
     <el-col :span="12">
       <date-category-filter v-model="dateCategoryFilterVal" @filter="refresh" />
     </el-col>
-    <el-col :span="12" style="display: flex; justify-content: flex-end"></el-col>
+    <el-col :span="12" class="flex-end"></el-col>
   </el-row>
   <div ref="wrapper" class="wrapper">
     <el-table :data="posts" stripe :height="tableHeight" class="post-list">
@@ -208,7 +206,7 @@ const formattedDate = computed(() => (date: string) => {
             v-for="(val, k) in scope.row.categories"
             :key="k"
             size="small"
-            style="margin-right: 5px">
+            class="tag-item">
             {{ val }}
           </el-tag>
           <el-text v-if="Object.keys(scope.row.categories).length == 0">--</el-text>
@@ -220,7 +218,7 @@ const formattedDate = computed(() => (date: string) => {
             v-for="(val, k) in scope.row.tags"
             :key="k"
             size="small"
-            style="margin-right: 5px">
+            class="tag-item">
             {{ val }}
           </el-tag>
           <el-text v-if="Object.keys(scope.row.tags).length == 0">--</el-text>
@@ -231,7 +229,7 @@ const formattedDate = computed(() => (date: string) => {
         sortable
         :sort-by="timeType == 'publishedAt' ? 'date' : 'updated'">
         <template #header>
-          <el-select v-model="timeType" size="small" style="width: 140px">
+          <el-select v-model="timeType" size="small" class="time-type-select">
             <el-option key="publishedAt" :label="t('posts.publishedAt')" value="publishedAt" />
             <el-option key="updatedAt" :label="t('posts.updatedAt')" value="updatedAt" />
           </el-select>
@@ -305,5 +303,18 @@ const formattedDate = computed(() => (date: string) => {
 }
 .el-table__cell:hover .op {
   display: block;
+}
+.filter-row {
+  margin-bottom: 5px;
+}
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+.tag-item {
+  margin-right: 5px;
+}
+.time-type-select {
+  width: 140px;
 }
 </style>

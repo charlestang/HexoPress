@@ -90,14 +90,14 @@ function handleMouseLeave() {
           <el-aside class="toolbar">
             <el-link
               key="fileTree"
-              :underline="false"
+              underline="never"
               :class="{ active: 'fileTree' === currentPanel }"
               @click="handleToolbarClick('fileTree')">
               <el-icon size="22"><folder-opened /></el-icon>
             </el-link>
             <el-link
               key="tocPanel"
-              :underline="false"
+              underline="never"
               :class="{ active: 'tocPanel' === currentPanel }"
               @click="handleToolbarClick('tocPanel')">
               <el-icon size="22"><memo /></el-icon>

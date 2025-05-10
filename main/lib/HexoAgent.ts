@@ -300,87 +300,211 @@ export class HexoAgent {
     return assets
   }
 
+  /**
+   * Read the content of a blog post by its source path
+   * @param sourcePath The relative path of the post in the source directory
+   * @returns The content of the post as a string
+   * @throws Error if the file doesn't exist or cannot be read
+   */
   public getContent(sourcePath: string): string {
-    console.log('HexoAgent getContent is called. The sourcePath is: ', sourcePath)
-    const filePath = join(this.hexo.source_dir, sourcePath)
-    const buffer = readFileSync(filePath)
-    return buffer.toString()
-  }
-
-  public async saveContent(sourcePath: string, content: string): Promise<void> {
-    console.log(
-      'HexoAgent saveContent is called. The sourcePath is: ',
-      sourcePath,
-      ' and content length is: ',
-      content.length,
-    )
-    const filePath = join(this.hexo.source_dir, sourcePath)
-    writeFileSync(filePath, content)
-    await this.updateCache()
-  }
-
-  public async updateCache(): Promise<void> {
-    await this.hexo.source.process()
-    await this.hexo.load()
-    await this.hexo.database.save()
-  }
-
-  public async generate(): Promise<void> {
-    await this.hexo.call('generate')
-  }
-
-  public async deleteFile(sourcePath: string): Promise<void> {
-    console.log('try to del the real file. path is: ', sourcePath)
-    const filePath = join(this.hexo.source_dir, sourcePath)
-    unlinkSync(filePath)
-    const doc = this.hexo.model('Post').findOne({ source: sourcePath })
-    if (doc) {
-      doc.remove()
+    if (!sourcePath) {
+      throw new Error('Source path cannot be empty')
     }
-    await this.updateCache()
+
+    try {
+      const filePath = join(this.hexo.source_dir, sourcePath)
+
+      if (!existsSync(filePath)) {
+        throw new Error(`File not found: ${filePath}`)
+      }
+
+      const buffer = readFileSync(filePath)
+      return buffer.toString()
+    } catch (error) {
+      console.error(`Error reading file at ${sourcePath}:`, error)
+      throw error
+    }
   }
 
-  // Create a new file with content in indicated directory
-  // use filename if provided, otherwise use a default name
+  /**
+   * Save content to a blog post file
+   * @param sourcePath The relative path of the post in the source directory
+   * @param content The content to save to the file
+   * @throws Error if the file cannot be written
+   */
+  public async saveContent(sourcePath: string, content: string): Promise<void> {
+    if (!sourcePath) {
+      throw new Error('Source path cannot be empty')
+    }
+
+    if (content === undefined) {
+      throw new Error('Content cannot be undefined')
+    }
+
+    try {
+      console.log('Saving content to file. Path:', sourcePath, 'Content length:', content.length)
+
+      const filePath = join(this.hexo.source_dir, sourcePath)
+      const dirPath = filePath.substring(0, filePath.lastIndexOf('/'))
+
+      // Ensure the directory exists
+      if (!existsSync(dirPath)) {
+        throw new Error(`Directory does not exist: ${dirPath}`)
+      }
+
+      writeFileSync(filePath, content)
+      await this.updateCache()
+    } catch (error) {
+      console.error(`Error saving content to ${sourcePath}:`, error)
+      throw error
+    }
+  }
+
+  /**
+   * Update Hexo cache after file changes
+   * This method processes source files, reloads Hexo, and saves the database
+   * @throws Error if any of the cache update operations fail
+   */
+  public async updateCache(): Promise<void> {
+    if (!this.hexo) {
+      throw new Error('Hexo instance is not initialized')
+    }
+
+    try {
+      console.log('Updating Hexo cache...')
+      await this.hexo.source.process()
+      await this.hexo.load()
+      await this.hexo.database.save()
+      console.log('Hexo cache updated successfully')
+    } catch (error) {
+      console.error('Failed to update Hexo cache:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Generate static files for the Hexo site
+   * @throws Error if the generation process fails
+   */
+  public async generate(): Promise<void> {
+    if (!this.hexo) {
+      throw new Error('Hexo instance is not initialized')
+    }
+
+    try {
+      console.log('Generating static files...')
+      await this.hexo.call('generate')
+      console.log('Static files generated successfully')
+    } catch (error) {
+      console.error('Failed to generate static files:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Delete a file from the source directory and remove it from the database
+   * @param sourcePath The relative path of the file to delete
+   * @throws Error if the file cannot be deleted or does not exist
+   */
+  public async deleteFile(sourcePath: string): Promise<void> {
+    if (!sourcePath) {
+      throw new Error('Source path cannot be empty')
+    }
+
+    try {
+      console.log('Deleting file:', sourcePath)
+      const filePath = join(this.hexo.source_dir, sourcePath)
+
+      if (!existsSync(filePath)) {
+        throw new Error(`File not found: ${filePath}`)
+      }
+
+      unlinkSync(filePath)
+
+      // Remove from database if it's a post
+      const doc = this.hexo.model('Post').findOne({ source: sourcePath })
+      if (doc) {
+        doc.remove()
+      }
+
+      await this.updateCache()
+      console.log('File deleted successfully:', sourcePath)
+    } catch (error) {
+      console.error(`Error deleting file ${sourcePath}:`, error)
+      throw error
+    }
+  }
+
+  /**
+   * Create a new blog post file in the specified directory
+   * @param directory The directory to create the file in ('_drafts' or '_posts')
+   * @param title The title of the blog post
+   * @param slug The slug for the URL (optional, will be generated from title if empty)
+   * @param content The content to write to the file
+   * @returns The relative path of the created file
+   * @throws Error if the file cannot be created
+   */
   public async createFile(
     directory: string,
     title: string,
     slug: string,
     content: string,
   ): Promise<string> {
-    console.log(
-      'create a new blog post. directory: ',
-      directory,
-      ' title: ',
-      title,
-      ' slug: ',
-      slug,
-      ' content length: ',
-      content.length,
-    )
-    const layout = directory === '_drafts' ? 'draft' : 'post'
-
-    const data = {
-      path: '',
-      slug: '',
-      layout,
-    }
-    if (slug !== '') {
-      data.slug = slug
-    } else {
-      data.slug = slugize(title.toString())
+    if (!this.hexo) {
+      throw new Error('Hexo instance is not initialized')
     }
 
-    const post = await this.hexo.post.create(data, true)
-    console.log('hexo.post.create is called. post is: ', post)
-    const relativePath = post.path.replace(this.hexo.source_dir, '')
-    if (content !== '') {
-      await this.saveContent(relativePath, content)
-    } else {
-      await this.updateCache()
+    if (!directory) {
+      throw new Error('Directory cannot be empty')
     }
 
-    return relativePath
+    if (!title) {
+      throw new Error('Title cannot be empty')
+    }
+
+    try {
+      console.log(
+        'Creating new blog post:',
+        'Directory:',
+        directory,
+        'Title:',
+        title,
+        'Slug:',
+        slug || '(will be generated)',
+        'Content length:',
+        content?.length || 0,
+      )
+
+      const layout = directory === '_drafts' ? 'draft' : 'post'
+
+      const data = {
+        path: '',
+        slug: '',
+        layout,
+      }
+
+      if (slug && slug !== '') {
+        data.slug = slug
+      } else {
+        data.slug = slugize(title.toString())
+      }
+
+      const post = await this.hexo.post.create(data, true)
+      console.log('Post created:', post.path)
+
+      const relativePath = post.path.replace(this.hexo.source_dir, '')
+
+      if (content && content !== '') {
+        await this.saveContent(relativePath, content)
+      } else {
+        await this.updateCache()
+      }
+
+      return relativePath
+    } catch (error) {
+      console.error('Error creating file:', error)
+      throw error
+    }
   }
 
   // Move file from _drafts to _posts with content
