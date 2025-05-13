@@ -61,11 +61,15 @@ declare module 'vue' {
     MetaDataDialog: typeof import('./../src/components/MetaDataDialog.vue')['default']
     MetaEntryTitle: typeof import('./../src/components/MetaEntryTitle.vue')['default']
     NavMenu: typeof import('./../src/components/NavMenu.vue')['default']
+    PostPreviewDialog: typeof import('./../src/components/PostPreviewDialog.vue')['default']
     PostStatusFilter: typeof import('./../src/components/PostListFilters/src/PostStatusFilter.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TagInput: typeof import('./../src/components/TagInput.vue')['default']
     UploadImageDialog: typeof import('./../src/components/UploadImageDialog.vue')['default']
     UrlMetaEntry: typeof import('./../src/components/UrlMetaEntry.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

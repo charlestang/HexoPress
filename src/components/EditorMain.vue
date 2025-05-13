@@ -87,6 +87,7 @@ if (!isNewPost.value) {
  * @param html The HTML content of the blog post.
  */
 function filterImage(html: string): string {
+  console.log('filterImage: ', frontMatter.value.permalink)
   return _addPrefixToImgSrc(html, 'http://127.0.0.1:2357/', frontMatter.value.permalink || '')
 }
 

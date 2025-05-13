@@ -7,8 +7,10 @@ import { useStatsStore } from '@/stores/stats'
 import { formatDate } from '@/utils/date'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
-import { onBeforeUnmount, onMounted, ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useTableHeight } from '@/composables/useTableHeight'
+import PostPreviewDialog from '@/components/PostPreviewDialog.vue'
 
 const appStore = useAppStore()
 const filterStore = useFilterStore()
@@ -116,34 +118,25 @@ function onClickEditMeta(sourcePath: string) {
   showMetaEditDialog.value = true
 }
 
-const timeType = ref('publishedAt')
+const showPreviewDialog = ref(false)
+const currentPreviewSourcePath = ref('')
+const currentPreviewPermalink = ref('')
+function onClickPreview(sourcePath: string, permalink: string) {
+  currentPreviewSourcePath.value = sourcePath
+  currentPreviewPermalink.value = permalink
+  showPreviewDialog.value = true
+}
+
+// sort the posts by date or updated
+const sortedBy = ref('date')
 
 function onSearchClick() {
   currentPage.value = 1
   fetch(currentPage.value)
 }
 
-const tableHeight = ref(0)
-const wrapper = ref<HTMLElement | null>(null)
+const { tableHeight, wrapper } = useTableHeight()
 
-onMounted(() => {
-  updateTableHeight()
-  window.addEventListener('resize', updateTableHeight)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateTableHeight)
-})
-
-function updateTableHeight() {
-  if (wrapper.value) {
-    tableHeight.value = wrapper.value.clientHeight - 10
-  }
-}
-
-const formattedDate = computed(() => (date: string) => {
-  return formatDate(date, appStore.locale)
-})
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -186,6 +179,10 @@ const formattedDate = computed(() => (date: string) => {
           </el-row>
           <el-row class="op">
             <el-col :span="24">
+              <el-link type="primary" @click="onClickPreview(scope.row.source, scope.row.permalink)">{{
+                t('posts.preview')
+              }}</el-link
+              ><el-divider direction="vertical" />
               <el-link type="primary" @click="onClick(scope.row.source)"
                 >{{ t('posts.edit') }} </el-link
               ><el-divider direction="vertical" />
@@ -227,15 +224,15 @@ const formattedDate = computed(() => (date: string) => {
       <el-table-column
         :label="t('posts.publishedAt')"
         sortable
-        :sort-by="timeType == 'publishedAt' ? 'date' : 'updated'">
+        :sort-by="sortedBy">
         <template #header>
-          <el-select v-model="timeType" size="small" class="time-type-select">
-            <el-option key="publishedAt" :label="t('posts.publishedAt')" value="publishedAt" />
-            <el-option key="updatedAt" :label="t('posts.updatedAt')" value="updatedAt" />
+          <el-select v-model="sortedBy" size="small" class="time-type-select">
+            <el-option key="publishedAt" :label="t('posts.publishedAt')" value="date" />
+            <el-option key="updatedAt" :label="t('posts.updatedAt')" value="updated" />
           </el-select>
         </template>
         <template #default="scope">
-          <template v-if="timeType == 'publishedAt'">
+          <template v-if="sortedBy == 'date'">
             <el-row>
               <el-col :span="24">
                 <span v-if="scope.row.status == 'published'">{{ t('posts.published') }}</span>
@@ -244,10 +241,10 @@ const formattedDate = computed(() => (date: string) => {
             </el-row>
             <el-row>
               <el-col :span="24">
-                <span v-if="scope.row.status == 'published'">{{
-                  formattedDate(scope.row.date)
-                }}</span>
-                <span v-else>{{ formattedDate(scope.row.updated) }}</span>
+                <span v-if="scope.row.status == 'published'">
+                  {{ formatDate(scope.row.date, appStore.locale) }}
+                </span>
+                <span v-else>{{ formatDate(scope.row.updated, appStore.locale) }}</span>
               </el-col>
             </el-row>
           </template>
@@ -259,7 +256,7 @@ const formattedDate = computed(() => (date: string) => {
             </el-row>
             <el-row>
               <el-col :span="24">
-                <span v-if="scope.row.updated != ''">{{ formattedDate(scope.row.updated) }}</span>
+                <span v-if="scope.row.updated != ''">{{ formatDate(scope.row.updated, appStore.locale) }}</span>
               </el-col>
             </el-row>
           </template>
@@ -280,6 +277,10 @@ const formattedDate = computed(() => (date: string) => {
     v-model="showMetaEditDialog"
     :source-path="currentEditingSourcePath"
     @success="refresh" />
+  <post-preview-dialog
+    v-model="showPreviewDialog"
+    :source-path="currentPreviewSourcePath"
+    :permalink="currentPreviewPermalink" />
 </template>
 <style scoped>
 .wrapper {
