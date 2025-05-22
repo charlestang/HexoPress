@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import router from '@/router'
 import { Back, FolderOpened, Memo } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue' // Added computed
 import { useI18n } from 'vue-i18n'
 import EditorMain from '../components/EditorMain.vue'
 import FileExplorer from '../components/FileExplorer.vue'
+import TocPanel from '../components/TocPanel.vue'
+import { useEditorStore } from '@/stores/editorStore' // Import the editor store
 
 const { t } = useI18n()
+const editorStore = useEditorStore() // Initialize the store
 const editorAsideFold = ref('aside-fold') // or aside-fold
 const currentWidth = ref(0)
 let startX = 0
@@ -22,9 +25,19 @@ interface Panels {
 }
 const panels: Panels = {
   fileTree: FileExplorer,
-  tocPanel: null,
+  tocPanel: TocPanel,
 }
 const currentPanel = ref('fileTree')
+
+// Get headings from the store
+const tocHeadings = computed(() => editorStore.currentHeadings)
+
+function handleScrollToHeading(headingId: string) {
+  editorStore.setActiveHeadingId(headingId)
+  // Optional: switch to editor view or ensure editor is visible if not already
+  // For now, just setting the active ID, EditorMain will handle scrolling.
+}
+
 function handleToolbarClick(key: string) {
   if (editorAsideFold.value == 'aside-expand') {
     if (currentPanel.value == key) {
@@ -106,7 +119,11 @@ function handleMouseLeave() {
           </el-aside>
           <el-main class="toolbar-panel">
             <keep-alive>
-              <component :is="panels[currentPanel]" />
+              <component 
+                :is="panels[currentPanel]" 
+                :headings="currentPanel === 'tocPanel' ? tocHeadings : undefined"
+                @scrollToHeading="currentPanel === 'tocPanel' ? handleScrollToHeading : undefined"
+              />
             </keep-alive>
             <div
               class="resize-handle"
