@@ -20,20 +20,18 @@ if (editorAsideFold.value == 'aside-fold') {
 } else {
   currentWidth.value = 280
 }
-interface Panels {
-  [key: string]: any
-}
-const panels: Panels = {
+
+const panels = {
   fileTree: FileExplorer,
   tocPanel: TocPanel,
 }
-const currentPanel = ref('fileTree')
+type PanelType = keyof typeof panels
+const currentPanel = ref<PanelType>('fileTree')
 
 // Get headings from the store
 const tocHeadings = computed(() => editorStore.currentHeadings)
 
-
-function handleToolbarClick(key: string) {
+function handleToolbarClick(key: PanelType) {
   if (editorAsideFold.value == 'aside-expand') {
     if (currentPanel.value == key) {
       editorAsideFold.value = 'aside-fold'
