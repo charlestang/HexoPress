@@ -1,29 +1,29 @@
 import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import { store } from './index';
 
-interface Heading {
-  id: string;
-  text: string;
-  level: number;
-}
+export const useEditorStore = defineStore('editor', () => {
+  const currentHeadings = ref<Heading[]>([]);
+  const activeHeading = ref<Heading | null>(null);
 
-interface EditorState {
-  currentHeadings: Heading[];
-  activeHeadingId: string | null;
-}
+  function setHeadings(headings: Heading[]) {
+    currentHeadings.value = headings;
+  }
 
-export const useEditorStore = defineStore('editor', {
-  state: (): EditorState => ({
-    currentHeadings: [],
-    activeHeadingId: null,
-  }),
-  actions: {
-    setHeadings(headings: Heading[]) {
-      this.currentHeadings = headings;
-    },
-    setActiveHeadingId(id: string | null) {
-      this.activeHeadingId = id;
-      // Optionally, scroll to the heading here if direct editor access is too complex from outside
-      // However, the plan is for EditorMain.vue to watch this and scroll.
-    },
-  },
+  function setActiveHeading(heading: Heading | null) {
+    activeHeading.value = heading;
+    // Optionally, scroll to the heading here if direct editor access is too complex from outside
+    // However, the plan is for EditorMain.vue to watch this and scroll.
+  }
+
+  return {
+    currentHeadings,
+    activeHeading,
+    setHeadings,
+    setActiveHeading,
+  };
 });
+
+export const useEditorStoreWithout = () => {
+  return useEditorStore(store);
+};

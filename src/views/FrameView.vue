@@ -32,11 +32,6 @@ const currentPanel = ref('fileTree')
 // Get headings from the store
 const tocHeadings = computed(() => editorStore.currentHeadings)
 
-function handleScrollToHeading(headingId: string) {
-  editorStore.setActiveHeadingId(headingId)
-  // Optional: switch to editor view or ensure editor is visible if not already
-  // For now, just setting the active ID, EditorMain will handle scrolling.
-}
 
 function handleToolbarClick(key: string) {
   if (editorAsideFold.value == 'aside-expand') {
@@ -119,10 +114,9 @@ function handleMouseLeave() {
           </el-aside>
           <el-main class="toolbar-panel">
             <keep-alive>
-              <component 
-                :is="panels[currentPanel]" 
+              <component
+                :is="panels[currentPanel]"
                 :headings="currentPanel === 'tocPanel' ? tocHeadings : undefined"
-                @scrollToHeading="currentPanel === 'tocPanel' ? handleScrollToHeading : undefined"
               />
             </keep-alive>
             <div

@@ -6,11 +6,13 @@ import { useEditorStore } from '@/stores/editorStore' // Import the editor store
 import { lineNumbers } from '@codemirror/view'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { Vim, vim } from '@replit/codemirror-vim'
-import { MdEditor, NormalToolbar, config, type ExposeParam, type ToolbarNames, type CatalogLink } from 'md-editor-v3' // Import CatalogLink
+import { MdEditor, NormalToolbar, config, type ExposeParam, type ToolbarNames, type HeadList} from 'md-editor-v3' // Import CatalogLink
 import 'md-editor-v3/lib/style.css'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+import { createSmoothScroll } from '@vavt/util';
+
 
 const { t } = useI18n()
 const editorStore = useEditorStore() // Initialize the store
@@ -361,30 +363,31 @@ const generateHeadingId = (text: string, level: number, index: number) => {
   return `heading-${level}-${index}-${sanitizedText}`;
 };
 
-onMounted(() => {
-  editorRef.value?.on('catalog', (catalogLinks: CatalogLink[]) => {
-    console.log('Catalog event triggered:', catalogLinks);
-    const transformedHeadings = catalogLinks.map((h, index) => ({
-      text: h.text,
-      level: h.level,
-      id: generateHeadingId(h.text, h.level, index) // md-editor-v3 catalog doesn't provide IDs, so we generate them
-    }));
-    editorStore.setHeadings(transformedHeadings);
-  });
 
-  editorRef.value?.on('catalog', (catalogLinks: CatalogLink[]) => {
-    console.log('Catalog event triggered (second listener, ensure this is intended or consolidate):', catalogLinks);
-    // This is likely a duplicate if the above catalog listener is also active.
-    // For now, I'll assume the first one is the primary one for updating the store.
-    // If this was for a different purpose, it should be clarified.
-    // To avoid double-processing, I'll comment out the store update here.
-    // const transformedHeadings = catalogLinks.map((h, index) => ({
-    //   text: h.text,
-    //   level: h.level,
-    //   id: generateHeadingId(h.text, h.level, index)
-    // }));
-    // editorStore.setHeadings(transformedHeadings);
-  });
+const handleGetCatalog = (headList: HeadList[]) => {
+  console.log('handleGetCatalog', headList);
+  const transformedHeadings = headList.map((h, index) => ({
+    text: h.text,
+    level: h.level,
+    id: generateHeadingId(h.text, h.level, index),
+    line: h.line,
+  }));
+  editorStore.setHeadings(transformedHeadings);
+}
+
+const smoothScroll = createSmoothScroll();
+const scrollToLine = (lineNumber: number) => {
+  const view = editorRef.value?.getEditorView();
+  if (view) {
+    const line = view.state.doc.line(lineNumber + 1);
+    const top = view.lineBlockAt(line.from)?.top;
+    const scroller = view.scrollDOM;
+    smoothScroll(scroller, top);
+  }
+};
+
+onMounted(() => {
+
   editorRef.value?.on('preview', (status) => {
     if (status) {
       editorMaxWidth.value = 2200
@@ -394,25 +397,9 @@ onMounted(() => {
   });
 
   // Watch for changes in activeHeadingId from the store and scroll the editor
-  watch(() => editorStore.activeHeadingId, (newId) => {
-    if (newId && editorRef.value) {
-      // md-editor-v3's scrollTo method uses the heading text (anchor) by default if ID is not directly on the element
-      // OR, if the editor automatically adds IDs based on text, this ID should match.
-      // The IDs we generate (e.g., `heading-1-0-introduction`) must be actual `id` attributes on the
-      // rendered H1, H2, etc. elements in the editor's preview.
-      // We need to ensure md-editor-v3's preview rendering includes these IDs.
-      // If md-editor-v3 does not add these specific IDs, we might need to find a different way to scroll,
-      // or adjust ID generation to match what md-editor-v3 produces.
-      // For now, we assume `scrollTo({ anchor: newId })` will work if `newId` is the ID of the element.
-      // The catalog from md-editor-v3 provides `text` and `level`. The `id` we create needs to be present on the DOM element.
-      // Let's assume `md-editor-v3` might use the raw text for anchors if an ID attribute isn't found.
-      // The prompt says `scrollTo({ anchor: newId })`. Let's try to find the heading text corresponding to newId.
-      const headingToScroll = editorStore.currentHeadings.find(h => h.id === newId);
-      if (headingToScroll) {
-         // editorRef.value?.scrollTo({ anchor: headingToScroll.text }); // Option 1: Scroll by text
-         editorRef.value?.scrollTo({ anchor: newId }); // Option 2: Scroll by ID (assuming md-editor-v3 adds these IDs)
-         console.log(`Attempting to scroll to heading ID: ${newId}, Text: ${headingToScroll.text}`);
-      }
+  watch(() => editorStore.activeHeading, (heading) => {
+    if (heading && editorRef.value) {
+      scrollToLine(heading.line);
     }
   });
 })
@@ -526,7 +513,8 @@ function onFontBig() {
             :html-preview="false"
             :toolbars-exclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
             @upload-img="onUploadImage"
-            @on-save="onSave">
+            @on-save="onSave"
+            @get-catalog="handleGetCatalog">
             <template #defToolbars>
               <NormalToolbar :title="t('editor.fontIncrease')" @on-click="onFontBig">
                 <template #trigger>

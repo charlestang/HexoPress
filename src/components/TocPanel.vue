@@ -4,23 +4,23 @@
       <li
         v-for="h1 in processedHeadings"
         :key="h1.id || h1.text"
-        :class="['toc-item', `toc-level-${h1.level}`, { 'active-heading': h1.id === activeHeadingId }]"
+        :class="['toc-item', `toc-level-${h1.level}`, { 'active-heading': h1.id === activeHeading?.id }]"
         @click="handleClick(h1)"
       >
         {{ h1.text }}
-        <ul v-if="h1.children && h1.children.length > 0" class="toc-nested-list">
+        <ul v-if="h1.children?.length > 0" class="toc-nested-list">
           <li
             v-for="h2 in h1.children"
             :key="h2.id || h2.text"
-            :class="['toc-item', `toc-level-${h2.level}`, { 'active-heading': h2.id === activeHeadingId }]"
-            @click.stop="handleClick(h2)" 
+            :class="['toc-item', `toc-level-${h2.level}`, { 'active-heading': h2.id === activeHeading?.id }]"
+            @click.stop="handleClick(h2)"
           >
             {{ h2.text }}
-            <ul v-if="h2.children && h2.children.length > 0" class="toc-nested-list">
+            <ul v-if="h2.children?.length > 0" class="toc-nested-list">
               <li
                 v-for="h3 in h2.children"
                 :key="h3.id || h3.text"
-                :class="['toc-item', `toc-level-${h3.level}`, { 'active-heading': h3.id === activeHeadingId }]"
+                :class="['toc-item', `toc-level-${h3.level}`, { 'active-heading': h3.id === activeHeading?.id }]"
                 @click.stop="handleClick(h3)"
               >
                 {{ h3.text }}
@@ -33,74 +33,71 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { useEditorStore } from '@/stores/editorStore';
 import { computed } from 'vue';
 
-export default {
-  name: 'TocPanel',
-  setup() {
-    const editorStore = useEditorStore();
-    const activeHeadingId = computed(() => editorStore.activeHeadingId);
-    return { activeHeadingId };
-  },
-  props: {
-    headings: {
-      type: Array,
-      required: true,
-      validator: (headings) => {
-        return headings.every(h => 
-          typeof h.text === 'string' &&
-          typeof h.level === 'number' && (h.level >= 1 && h.level <= 3) &&
-          (typeof h.id === 'string' || typeof h.id === 'undefined')
-        );
-      }
-    }
-  },
-  computed: {
-    processedHeadings() {
-      const headings = this.headings;
-      if (!headings || headings.length === 0) {
-        return [];
-      }
+interface HeadingWithChildren extends Heading {
+  children: HeadingWithChildren[];
+}
 
-      const result = [];
-      let currentH1 = null;
-      let currentH2 = null;
+interface Props {
+  headings: Heading[];
+}
 
-      for (const heading of headings) {
-        if (heading.level === 1) {
-          currentH1 = { ...heading, children: [] };
-          result.push(currentH1);
-          currentH2 = null; // Reset H2 when a new H1 is encountered
-        } else if (heading.level === 2) {
-          if (currentH1) {
-            currentH2 = { ...heading, children: [] };
-            currentH1.children.push(currentH2);
-          } else {
-            currentH2 = { ...heading, children: [] };
-            result.push(currentH2); 
-            currentH1 = null; 
-          }
-        } else if (heading.level === 3) {
-          if (currentH2) {
-            currentH2.children.push({ ...heading });
-          } else if (currentH1) {
-             if (!currentH1.children) currentH1.children = [];
-             currentH1.children.push({ ...heading }); 
-          } else {
-             result.push({ ...heading }); 
-          }
-        }
+const props = defineProps<Props>();
+const emit = defineEmits<{
+  (e: 'scrollToHeading', heading: Heading): void;
+}>();
+
+const editorStore = useEditorStore();
+const activeHeading = computed(() => editorStore.activeHeading);
+
+const processedHeadings = computed(() => {
+  const headings = props.headings;
+  if (!headings || headings.length === 0) {
+    return [];
+  }
+
+  const result: HeadingWithChildren[] = [];
+  let currentH1: HeadingWithChildren | null = null;
+  let currentH2: HeadingWithChildren | null = null;
+
+  for (const heading of headings) {
+    const headingWithChildren: HeadingWithChildren = {
+      ...heading,
+      children: []
+    };
+
+    if (heading.level === 1) {
+      currentH1 = headingWithChildren;
+      result.push(currentH1);
+      currentH2 = null;
+    } else if (heading.level === 2) {
+      if (currentH1) {
+        currentH2 = headingWithChildren;
+        currentH1.children.push(currentH2);
+      } else {
+        currentH2 = headingWithChildren;
+        result.push(currentH2);
+        currentH1 = null;
       }
-      return result;
-    }
-  },
-  methods: {
-    handleClick(heading) {
-      this.$emit('scrollToHeading', heading.id || heading.text);
+    } else if (heading.level === 3) {
+      if (currentH2) {
+        currentH2.children.push(headingWithChildren);
+      } else if (currentH1) {
+        currentH1.children.push(headingWithChildren);
+      } else {
+        result.push(headingWithChildren);
+      }
     }
   }
+  return result;
+});
+
+const handleClick = (heading: Heading) => {
+  editorStore.setActiveHeading(heading);
+  emit('scrollToHeading', heading);
 };
 </script>
 
@@ -161,7 +158,7 @@ export default {
 
 .toc-nested-list {
   list-style-type: none;
-  padding-left: 0; 
+  padding-left: 0;
   margin-top: 2px; /* Reduced space for tighter nesting */
   margin-bottom: 2px;
 }

@@ -106,6 +106,12 @@ declare global {
     count: number
   }
 
+  type Heading = {
+    id: string;
+    text: string;
+    level: number;
+    line: number;
+  }
   interface ISite {
     getPosts: (
       published?: boolean,

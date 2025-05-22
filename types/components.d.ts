@@ -66,6 +66,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TagInput: typeof import('./../src/components/TagInput.vue')['default']
+    TocPanel: typeof import('./../src/components/TocPanel.vue')['default']
     UploadImageDialog: typeof import('./../src/components/UploadImageDialog.vue')['default']
     UrlMetaEntry: typeof import('./../src/components/UrlMetaEntry.vue')['default']
   }
