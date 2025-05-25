@@ -494,7 +494,7 @@ function onFontBig() {
             </el-collapse-item>
             <el-collapse-item :title="t('editor.tags')" name="tags">
               <el-text type="info" size="small">{{ t('editor.selectTags') }}</el-text>
-              <tag-input v-model="frontMatter.tags" />
+              <el-input-tag v-model="frontMatter.tags" tag-type="success" delimiter=","/>
               <el-text type="info">{{ t('editor.tagsTip') }}</el-text>
             </el-collapse-item>
           </el-collapse>

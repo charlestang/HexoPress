@@ -93,7 +93,7 @@ async function onSave() {
         </div>
       </el-form-item>
       <el-form-item :label="t('editor.tags')">
-        <tag-input v-model="frontMatter.tags" />
+        <el-input-tag v-model="frontMatter.tags" tag-type="success" delimiter=","/>
       </el-form-item>
       <el-form-item :label="t('editor.excerpt')">
         <el-input v-model="frontMatter.excerpt" type="textarea" />
