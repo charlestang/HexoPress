@@ -1,165 +1,166 @@
-<template>
-  <div class="toc-wrapper">
-    <ul class="toc-panel">
-      <li
-        v-for="h1 in processedHeadings"
-        :key="h1.id || h1.text"
-        :class="['toc-item', `toc-level-${h1.level}`, { 'active-heading': h1.id === activeHeading?.id }]"
-        @click="handleClick(h1)"
-      >
-        {{ h1.text }}
-        <ul v-if="h1.children?.length > 0" class="toc-nested-list">
-          <li
-            v-for="h2 in h1.children"
-            :key="h2.id || h2.text"
-            :class="['toc-item', `toc-level-${h2.level}`, { 'active-heading': h2.id === activeHeading?.id }]"
-            @click.stop="handleClick(h2)"
-          >
-            {{ h2.text }}
-            <ul v-if="h2.children?.length > 0" class="toc-nested-list">
-              <li
-                v-for="h3 in h2.children"
-                :key="h3.id || h3.text"
-                :class="['toc-item', `toc-level-${h3.level}`, { 'active-heading': h3.id === activeHeading?.id }]"
-                @click.stop="handleClick(h3)"
-              >
-                {{ h3.text }}
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { useEditorStore } from '@/stores/editorStore';
-import { computed } from 'vue';
+import { useEditorStore } from '@/stores/editorStore'
+import { computed, ref, watch, nextTick } from 'vue'
+import type { ElTree } from 'element-plus'
 
-interface HeadingWithChildren extends Heading {
-  children: HeadingWithChildren[];
+interface TreeNode {
+  id: string
+  text: string
+  level: number
+  line: number
+  children?: TreeNode[]
 }
 
 interface Props {
-  headings: Heading[];
+  headings: Heading[]
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 const emit = defineEmits<{
-  (e: 'scrollToHeading', heading: Heading): void;
-}>();
+  (e: 'scrollToHeading', heading: Heading): void
+}>()
 
-const editorStore = useEditorStore();
-const activeHeading = computed(() => editorStore.activeHeading);
+const editorStore = useEditorStore()
+const activeHeading = computed(() => editorStore.activeHeading)
+const treeRef = ref<InstanceType<typeof ElTree>>()
 
-const processedHeadings = computed(() => {
-  const headings = props.headings;
+const defaultProps = {
+  children: 'children',
+  label: 'text',
+}
+
+const treeData = computed(() => {
+  const headings = props.headings
   if (!headings || headings.length === 0) {
-    return [];
+    return []
   }
 
-  const result: HeadingWithChildren[] = [];
-  let currentH1: HeadingWithChildren | null = null;
-  let currentH2: HeadingWithChildren | null = null;
+  const result: TreeNode[] = []
+  let currentH1: TreeNode | null = null
+  let currentH2: TreeNode | null = null
 
   for (const heading of headings) {
-    const headingWithChildren: HeadingWithChildren = {
-      ...heading,
-      children: []
-    };
+    const treeNode: TreeNode = {
+      id: heading.id,
+      text: heading.text,
+      level: heading.level,
+      line: heading.line,
+      children: [],
+    }
 
     if (heading.level === 1) {
-      currentH1 = headingWithChildren;
-      result.push(currentH1);
-      currentH2 = null;
+      currentH1 = treeNode
+      result.push(currentH1)
+      currentH2 = null
     } else if (heading.level === 2) {
       if (currentH1) {
-        currentH2 = headingWithChildren;
-        currentH1.children.push(currentH2);
+        currentH2 = treeNode
+        currentH1.children!.push(currentH2)
       } else {
-        currentH2 = headingWithChildren;
-        result.push(currentH2);
-        currentH1 = null;
+        currentH2 = treeNode
+        result.push(currentH2)
+        currentH1 = null
       }
     } else if (heading.level === 3) {
       if (currentH2) {
-        currentH2.children.push(headingWithChildren);
+        currentH2.children!.push(treeNode)
       } else if (currentH1) {
-        currentH1.children.push(headingWithChildren);
+        currentH1.children!.push(treeNode)
       } else {
-        result.push(headingWithChildren);
+        result.push(treeNode)
       }
     }
   }
-  return result;
-});
+  return result
+})
 
-const handleClick = (heading: Heading) => {
-  editorStore.setActiveHeading(heading);
-  emit('scrollToHeading', heading);
-};
+const handleNodeClick = (data: TreeNode) => {
+  const heading: Heading = {
+    id: data.id,
+    text: data.text,
+    level: data.level,
+    line: data.line,
+  }
+  editorStore.setActiveHeading(heading)
+  emit('scrollToHeading', heading)
+}
+
+// 监听 activeHeading 变化，更新树的当前选中节点
+watch(
+  () => activeHeading.value,
+  (newActiveHeading) => {
+    if (newActiveHeading && treeRef.value) {
+      nextTick(() => {
+        treeRef.value?.setCurrentKey(newActiveHeading.id)
+      })
+    }
+  },
+  { immediate: true },
+)
 </script>
+
+<template>
+  <div class="toc-wrapper">
+    <el-tree
+      ref="treeRef"
+      :data="treeData"
+      :props="defaultProps"
+      node-key="id"
+      :highlight-current="true"
+      :current-node-key="activeHeading?.id"
+      :expand-on-click-node="false"
+      default-expand-all
+      @node-click="handleNodeClick"
+      class="toc-tree">
+      <template #default="{ data }">
+        <span :class="['toc-node-label', `toc-level-${data.level}`]" :title="data.text">
+          {{ data.text }}
+        </span>
+      </template>
+    </el-tree>
+  </div>
+</template>
 
 <style scoped>
 .toc-wrapper {
-  padding: 5px 8px; /* Consistent with FileExplorer-like padding */
-  height: 100%; /* Ensure wrapper takes full height of its container */
+  padding: 8px;
+  height: 100%;
   box-sizing: border-box;
 }
 
-.toc-panel {
-  list-style-type: none;
-  padding-left: 0;
-  /* font-family: sans-serif; Removed to inherit global styles */
-  height: 100%; /* Allow panel to fill wrapper */
-  overflow-y: auto; /* Enable scrolling for long lists */
-  box-sizing: border-box;
+.toc-tree {
+  height: 100%;
+  overflow-y: auto;
 }
 
-.toc-item {
-  padding: 10px 12px; /* Increased padding, closer to FileExplorer */
-  cursor: pointer;
-  border-radius: 4px;
-  /* margin-bottom: 4px; Removed for potentially tighter packing, or can be adjusted */
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
-  line-height: 1.4; /* Improved line height */
-  word-wrap: break-word; /* Ensure long headings wrap */
-  white-space: normal; /* Allow text to wrap */
-}
-
-.toc-item:hover {
-  background-color: #e9ecef; /* Subtle hover effect */
+/* 不同级别标题的样式 */
+.toc-node-label {
+  display: block;
+  width: 100%;
+  word-wrap: break-word;
+  white-space: normal;
+  line-height: 1.4;
 }
 
 .toc-level-1 {
-  font-weight: 600; /* Slightly bolder for H1 */
-  /* margin-left: 0; Default, no specific margin needed unless overriding */
-}
-
-.toc-level-2 {
-  margin-left: 18px; /* Adjusted indentation */
-}
-
-.toc-level-3 {
-  margin-left: 36px; /* Adjusted indentation */
-}
-
-.active-heading {
-  background-color: #007bff; /* Element Plus primary color */
-  color: #ffffff;
   font-weight: 600;
 }
 
-.active-heading:hover {
-  background-color: #0069d9; /* Darker shade for hover on active */
-  color: #ffffff;
+.toc-level-2 {
+  font-weight: 500;
 }
 
-.toc-nested-list {
-  list-style-type: none;
-  padding-left: 0;
-  margin-top: 2px; /* Reduced space for tighter nesting */
-  margin-bottom: 2px;
+.toc-level-3 {
+  font-weight: 400;
+}
+
+/* 移除默认的展开/折叠图标，因为我们不需要手动折叠 */
+.toc-tree :deep(.el-tree-node__expand-icon) {
+  display: none;
+}
+
+/* 调整缩进 */
+.toc-tree :deep(.el-tree-node__children) {
+  padding-left: 18px;
 }
 </style>

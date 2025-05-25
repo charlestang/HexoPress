@@ -88,7 +88,7 @@ watch(
           <el-link v-else type="primary" @click="visible = true">{{ t('editor.notSet') }}</el-link>
         </template>
         <!-- Popover title with close button -->
-        <meta-entry-title @close="visible = false">{{ t('editor.url') }}</meta-entry-title>
+        <MetaEntryTitle @close="visible = false">{{ t('editor.url') }}</MetaEntryTitle>
         <!-- Permalink edit form -->
         <el-form label-position="top">
           <!-- Permalink input field -->

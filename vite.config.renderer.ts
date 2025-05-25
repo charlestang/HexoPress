@@ -1,4 +1,5 @@
 import type { ConfigEnv, UserConfig } from 'vite'
+import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vite'
 import { pluginExposeRenderer } from './vite.config.base'
 
@@ -27,6 +28,7 @@ export default defineConfig((env) => {
     plugins: [
       pluginExposeRenderer(name),
       Vue(),
+      UnoCSS(),
       AutoImport({
         eslintrc: {
           enabled: true,

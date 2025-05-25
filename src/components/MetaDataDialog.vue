@@ -89,7 +89,7 @@ async function onSave() {
       </el-form-item>
       <el-form-item :label="t('editor.categories')">
         <div style="width: 100%;">
-          <categories-tree-panel v-model="frontMatter.categories" />
+          <CategoriesTreePanel v-model="frontMatter.categories" />
         </div>
       </el-form-item>
       <el-form-item :label="t('editor.tags')">

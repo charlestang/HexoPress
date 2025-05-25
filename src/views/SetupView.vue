@@ -32,7 +32,7 @@ function selectPath() {
 <template>
   <el-container>
     <el-header class="topbar">
-      <header-bar></header-bar>
+      <HeaderBar></HeaderBar>
     </el-header>
     <el-container class="main">
       <el-aside class="nav" width="collapse"></el-aside>

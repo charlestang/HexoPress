@@ -469,8 +469,8 @@ function onFontBig() {
         <el-aside :class="asideExpand">
           <el-collapse v-model="activeAsidePanels">
             <el-collapse-item :title="t('editor.meta')" name="meta">
-              <date-meta-entry v-model="frontMatter.date" class="meta-entry" />
-              <url-meta-entry v-model="frontMatter.permalink" class="meta-entry" />
+              <DateMetaEntry v-model="frontMatter.date" class="meta-entry" />
+              <UrlMetaEntry v-model="frontMatter.permalink" class="meta-entry" />
               <el-row v-if="postPublished" :gutter="20">
                 <el-col :span="10">
                   <el-button type="warning" plain size="small" style="width: 100%">{{
@@ -490,7 +490,7 @@ function onFontBig() {
               </el-row>
             </el-collapse-item>
             <el-collapse-item :title="t('editor.categories')" name="cate">
-              <categories-tree-panel v-model="frontMatter.categories" />
+              <CategoriesTreePanel v-model="frontMatter.categories" />
             </el-collapse-item>
             <el-collapse-item :title="t('editor.tags')" name="tags">
               <el-text type="info" size="small">{{ t('editor.selectTags') }}</el-text>

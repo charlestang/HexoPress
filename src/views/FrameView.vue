@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import router from '@/router'
 import { Back, FolderOpened, Memo } from '@element-plus/icons-vue'
-import { computed, ref } from 'vue' // Added computed
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import EditorMain from '../components/EditorMain.vue'
 import FileExplorer from '../components/FileExplorer.vue'
 import TocPanel from '../components/TocPanel.vue'
-import { useEditorStore } from '@/stores/editorStore' // Import the editor store
+import { useEditorStore } from '@/stores/editorStore'
 
 const { t } = useI18n()
-const editorStore = useEditorStore() // Initialize the store
-const editorAsideFold = ref('aside-fold') // or aside-fold
+const editorStore = useEditorStore()
+const editorAsideFold = ref('aside-fold')
 const currentWidth = ref(0)
 let startX = 0
 let startWidth = 0
@@ -81,11 +81,11 @@ function handleMouseLeave() {
 <template>
   <el-container>
     <el-header class="topbar">
-      <header-bar>
+      <HeaderBar>
         <el-button key="back" class="back" text :icon="Back" @click="router.go(-1)">{{
           t('common.back')
         }}</el-button>
-      </header-bar>
+      </HeaderBar>
     </el-header>
     <el-container>
       <el-aside

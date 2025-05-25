@@ -68,7 +68,7 @@ function onClickAddCategory() {
 <template>
   <div class="container">
     <el-scrollbar>
-      <categories-tree v-model="selectedCategories" :categories="categories" />
+      <CategoriesTree v-model="selectedCategories" :categories="categories" />
     </el-scrollbar>
     <el-popover
       :visible="showAddNewCategoryPop"
@@ -81,9 +81,9 @@ function onClickAddCategory() {
           t('editor.createNewCategory')
         }}</el-link>
       </template>
-      <meta-entry-title @close="showAddNewCategoryPop = false">{{
+      <MetaEntryTitle @close="showAddNewCategoryPop = false">{{
         t('editor.createCategory')
-      }}</meta-entry-title>
+      }}</MetaEntryTitle>
       <el-form :model="newCategoryForm" label-position="top">
         <el-form-item :label="t('editor.categoryName')">
           <el-input v-model="newCategoryForm.name"></el-input>

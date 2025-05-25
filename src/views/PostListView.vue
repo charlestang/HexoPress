@@ -142,7 +142,7 @@ const { tableHeight, wrapper } = useTableHeight()
   <h2>{{ t('posts.pageTitle') }}</h2>
   <el-row :gutter="5" class="filter-row">
     <el-col :span="19">
-      <post-status-filter v-model="statusFilterVal" />
+      <PostStatusFilter v-model="statusFilterVal" />
     </el-col>
     <el-col :span="5" class="flex-end">
       <el-space>
@@ -160,7 +160,7 @@ const { tableHeight, wrapper } = useTableHeight()
   </el-row>
   <el-row :gutter="5" class="filter-row">
     <el-col :span="12">
-      <date-category-filter v-model="dateCategoryFilterVal" @filter="refresh" />
+      <DateCategoryFilter v-model="dateCategoryFilterVal" @filter="refresh" />
     </el-col>
     <el-col :span="12" class="flex-end"></el-col>
   </el-row>
@@ -171,7 +171,7 @@ const { tableHeight, wrapper } = useTableHeight()
         <template #default="scope">
           <el-row>
             <el-col :span="24">
-              <keyword-span :keywords="[keywords]" :text="scope.row.title" />
+              <KeywordSpan :keywords="[keywords]" :text="scope.row.title" />
               <span v-show="scope.row.status == 'draft'" class="draft-status">
                 -- {{ t('posts.draft') }}</span
               >
@@ -273,11 +273,11 @@ const { tableHeight, wrapper } = useTableHeight()
     layout="prev, pager, next, jumper, ->, sizes, total"
     :total="total"
     @current-change="fetch" />
-  <meta-data-dialog
+  <MetaDataDialog
     v-model="showMetaEditDialog"
     :source-path="currentEditingSourcePath"
     @success="refresh" />
-  <post-preview-dialog
+  <PostPreviewDialog
     v-model="showPreviewDialog"
     :source-path="currentPreviewSourcePath"
     :permalink="currentPreviewPermalink" />

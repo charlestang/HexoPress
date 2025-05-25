@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import moment from 'moment'
-import { computed, ref, onMounted} from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { DateCategoryFilterValue } from './types'
 import { useCategoryTree } from '@/composables/useCategoryTree'
@@ -25,6 +25,7 @@ const selectedMonth = computed({
   get: () => props.modelValue.date,
   set: (value: string) => {
     emit('update:modelValue', { date: value, category: props.modelValue.category })
+    emit('filter')
   },
 })
 
@@ -32,22 +33,35 @@ const selectedCat = computed({
   get: () => props.modelValue.category,
   set: (value: string) => {
     emit('update:modelValue', { date: props.modelValue.date, category: value })
+    emit('filter')
   },
 })
+
+const isLoadingMonths = ref(false)
+const isLoadingCategories = ref(false)
 /**
  * Date filter data.
  */
 const postMonths = ref<{ label: string; value: string }[]>([])
 
 async function fetchPostMonths() {
-  const months = await window.site.getPostMonths()
-  postMonths.value = [
-    { label: t('posts.allMonths'), value: 'all' },
-    ...months.map((month: string) => ({
-      label: moment(month).format(t('date.month')),
-      value: month,
-    })),
-  ]
+  isLoadingMonths.value = true
+  try {
+    const months = await window.site.getPostMonths()
+    postMonths.value = [
+      { label: t('posts.allMonths'), value: 'all' },
+      ...months.map((month: string) => ({
+        label: moment(month).format(t('date.month')),
+        value: month,
+      })),
+    ]
+  } catch (error) {
+    console.error('Failed to fetch post months:', error)
+    // 可选：向用户显示错误提示，或者设置 postMonths 为包含错误信息的状态
+    postMonths.value = [{ label: t('common.errorLoadingData'), value: 'all' }]
+  } finally {
+    isLoadingMonths.value = false
+  }
 }
 
 /**
@@ -57,7 +71,16 @@ async function fetchPostMonths() {
 const categories = ref<Category[]>([])
 
 async function fetchCategories() {
-  categories.value = await window.site.getCategories()
+  isLoadingCategories.value = true
+  try {
+    categories.value = await window.site.getCategories()
+  } catch (error) {
+    console.error('Failed to fetch categories:', error)
+    // 可选：向用户显示错误提示
+    categories.value = []
+  } finally {
+    isLoadingCategories.value = false
+  }
 }
 
 onMounted(() => {
@@ -97,6 +120,7 @@ function onCategoryClear() {
       :filterable="true"
       :clearable="true"
       style="width: 180px"
+      :loading="isLoadingMonths"
       @clear="onMonthClear">
       <el-option
         v-for="item in postMonths"
@@ -114,6 +138,7 @@ function onCategoryClear() {
       check-strictly
       style="width: 180px"
       :fit-input-width="false"
+      :loading="isLoadingCategories"
       @clear="onCategoryClear" />
     <el-button type="primary" size="small" plain @click="emit('filter')">{{
       t('posts.filter')

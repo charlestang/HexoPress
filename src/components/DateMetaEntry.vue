@@ -104,7 +104,7 @@ function onDateChange(val: Date) {
           }}</el-link>
         </template>
         <!-- Popover title with close button -->
-        <meta-entry-title @close="visible = false">{{ t('editor.publish') }}</meta-entry-title>
+        <MetaEntryTitle @close="visible = false">{{ t('editor.publish') }}</MetaEntryTitle>
         <!-- Date/time edit form -->
         <el-form label-position="top">
           <!-- Time picker field -->

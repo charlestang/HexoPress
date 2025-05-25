@@ -13,7 +13,7 @@ const onNewPostButtonClicked = () => {
 <template>
   <el-container>
     <el-header class="topbar">
-      <header-bar>
+      <HeaderBar>
         <el-button
           key="new-post"
           :icon="EditPen"
@@ -22,11 +22,11 @@ const onNewPostButtonClicked = () => {
           @click="onNewPostButtonClicked"
           >{{ t('common.newPost') }}</el-button
         >
-      </header-bar>
+      </HeaderBar>
     </el-header>
     <el-container class="main">
       <el-aside class="nav" width="collapse">
-        <nav-menu />
+        <NavMenu />
       </el-aside>
       <el-main class="main-content">
         <router-view />
