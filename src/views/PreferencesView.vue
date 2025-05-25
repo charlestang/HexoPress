@@ -74,20 +74,20 @@ const autoSave = computed({
     </el-form-item>
     <el-form-item :label="t('settings.autoSave')">
       <el-radio-group v-model="autoSave">
-        <el-radio label="autoSaveOn"> {{ t('settings.autoSaveOn') }}</el-radio>
-        <el-radio label="autoSaveOff"> {{ t('settings.autoSaveOff') }} </el-radio>
+        <el-radio value="autoSaveOn"> {{ t('settings.autoSaveOn') }}</el-radio>
+        <el-radio value="autoSaveOff"> {{ t('settings.autoSaveOff') }} </el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item :label="t('settings.editorMode')">
       <el-radio-group v-model="editMode">
-        <el-radio label="normal"> {{ t('settings.editorNormal') }}</el-radio>
-        <el-radio label="vim"> {{ t('settings.editorVim') }} </el-radio>
+        <el-radio value="normal"> {{ t('settings.editorNormal') }}</el-radio>
+        <el-radio value="vim"> {{ t('settings.editorVim') }} </el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item :label="t('settings.defaultFilename')">
       <el-radio-group>
-        <el-radio label="title"> {{ t('settings.alwaysTitle') }}</el-radio>
-        <el-radio label="permalink"> {{ t('settings.permalinkFirst') }} </el-radio>
+        <el-radio value="title"> {{ t('settings.alwaysTitle') }}</el-radio>
+        <el-radio value="permalink"> {{ t('settings.permalinkFirst') }} </el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item>
