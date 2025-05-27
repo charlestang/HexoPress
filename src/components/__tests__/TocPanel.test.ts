@@ -1,35 +1,68 @@
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia, type Pinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { nextTick, reactive } from 'vue'
 
 // Mock the editorStore
-const mockEditorStore = {
+const mockEditorStore = reactive({
   activeHeading: null as Heading | null,
   setActiveHeading: vi.fn(),
-}
+})
 
 vi.mock('@/stores/editorStore', () => ({
   useEditorStore: () => mockEditorStore,
 }))
 
+const setCurrentKey = vi.fn()
+
 // Mock Element Plus Tree component
 const MockElTree = {
   name: 'ElTree',
   template: '<div class="mock-el-tree"><slot /></div>',
-  props: [
-    'data',
-    'props',
-    'nodeKey',
-    'highlightCurrent',
-    'currentNodeKey',
-    'expandOnClickNode',
-    'defaultExpandAll',
-  ],
+  props: {
+    data: {
+      type: Array,
+      required: true
+    },
+    props: {
+      type: Object,
+      required: true
+    },
+    nodeKey: {
+      type: String,
+      required: true
+    },
+    highlightCurrent: {
+      type: Boolean,
+      required: true
+    },
+    currentNodeKey: {
+      type: String,
+      default: undefined
+    },
+    expandOnClickNode: {
+      type: Boolean,
+      required: true
+    },
+    defaultExpandAll: {
+      type: Boolean,
+      required: true
+    }
+  },
   emits: ['node-click'],
   methods: {
-    setCurrentKey: vi.fn(),
+    setCurrentKey: setCurrentKey,
   },
+  watch: {
+    currentNodeKey: {
+      handler(this: {setCurrentKey: typeof setCurrentKey}, newVal: string | undefined) {
+        if (newVal) {
+          this.setCurrentKey(newVal)
+        }
+      },
+      immediate: true
+    }
+  }
 }
 
 import TocPanel from '../TocPanel.vue' // Must be imported after the mock
@@ -58,6 +91,7 @@ describe('TocPanel.vue', () => {
     // Reset the mock store state before each test
     mockEditorStore.activeHeading = null
     vi.clearAllMocks()
+    setCurrentKey.mockClear()
   })
 
   const sampleHeadings: Heading[] = [
@@ -225,8 +259,16 @@ describe('TocPanel.vue', () => {
     await nextTick()
     await wrapper.vm.$nextTick()
 
-    const elTree = wrapper.findComponent(MockElTree)
-    expect(elTree.props('currentNodeKey')).toBe('h2-1')
+    expect(setCurrentKey).toHaveBeenCalledWith('h2-1')
+
+    // Test changing to a different heading
+    mockEditorStore.activeHeading = { id: 'h1-1', text: 'Chapter 1', level: 1, line: 1 }
+
+    // Trigger reactivity again
+    await nextTick()
+    await wrapper.vm.$nextTick()
+    expect(setCurrentKey).toHaveBeenCalledWith('h1-1')
+
   })
 
   it('handles null activeHeading correctly', async () => {

@@ -7,7 +7,7 @@ describe('KeywordSpan.vue', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: 'Hello world',
-        keywords: ['world'],
+        keywords: 'world',
       },
     })
 
@@ -23,7 +23,7 @@ describe('KeywordSpan.vue', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: 'Hello',
-        keywords: ['Hello'],
+        keywords: 'Hello',
       },
     })
 
@@ -35,11 +35,11 @@ describe('KeywordSpan.vue', () => {
     expect(spans).toHaveLength(0)
   })
 
-  it('handles special characters in keywords', () => {
+  it('handles special characters in keyword', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: 'Price: $100.50',
-        keywords: ['$100.50'],
+        keywords: '$100.50',
       },
     })
 
@@ -55,21 +55,23 @@ describe('KeywordSpan.vue', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: '你好世界 Hello',
-        keywords: ['你好', 'Hello'],
+        keywords: '你好',
       },
     })
 
     const marks = wrapper.findAll('mark')
-    expect(marks).toHaveLength(2)
+    const spans = wrapper.findAll('span')
+    expect(marks).toHaveLength(1)
     expect(marks[0].text()).toBe('你好')
-    expect(marks[1].text()).toBe('Hello')
+    expect(spans).toHaveLength(1)
+    expect(spans[0].text()).toBe('世界 Hello')
   })
 
-  it('applies correct CSS classes', () => {
+  it('applies correct UnoCSS classes', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: 'Hello world',
-        keywords: ['world'],
+        keywords: 'world',
       },
     })
 
@@ -77,19 +79,19 @@ describe('KeywordSpan.vue', () => {
     const span = wrapper.find('span')
 
     // Check keyword styling
-    expect(mark.classes()).toContain('title')
-    expect(mark.classes()).toContain('title-kw')
+    expect(mark.classes()).toContain('bg-yellow-400')
+    expect(mark.classes()).toContain('text-black')
 
     // Check non-keyword styling
-    expect(span.classes()).toContain('title')
-    expect(span.classes()).not.toContain('title-kw')
+    expect(span.classes()).toContain('inline')
+    expect(span.classes()).toContain('align-baseline')
   })
 
-  it('uses default empty array for keywords prop', () => {
+  it('handles empty keyword', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: 'Hello world',
-        keywords: [], // 显式传递空数组来测试默认行为
+        keywords: '',
       },
     })
 
@@ -101,60 +103,55 @@ describe('KeywordSpan.vue', () => {
     expect(spans[0].text()).toBe('Hello world')
   })
 
-  it('handles adjacent keywords', () => {
+  it('handles whitespace in keyword', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
-        text: 'HelloWorld',
-        keywords: ['Hello', 'World'],
+        text: 'Hello world',
+        keywords: '  world  ',
       },
     })
 
     const marks = wrapper.findAll('mark')
-    expect(marks).toHaveLength(2)
-    expect(marks[0].text()).toBe('Hello')
-    expect(marks[1].text()).toBe('World')
+    expect(marks).toHaveLength(1)
+    expect(marks[0].text()).toBe('world')
   })
 
   it('maintains correct order of text parts', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: 'A B C D E',
-        keywords: ['B', 'D'],
+        keywords: 'B',
       },
     })
 
     const allElements = wrapper.findAll('span, mark')
-    expect(allElements).toHaveLength(5)
+    expect(allElements).toHaveLength(3)
 
-    // Check order: A, B, C, D, E
-    expect(allElements[0].text()).toBe('A ')
+    // Check order: A, B, C D E
+    expect(allElements[0].text()).toBe('A')
     expect(allElements[1].text()).toBe('B')
-    expect(allElements[2].text()).toBe(' C ')
-    expect(allElements[3].text()).toBe('D')
+    expect(allElements[2].text()).toBe('C D E')
   })
 
   it('computes parts correctly with complex text', () => {
     const wrapper = mount(KeywordSpan, {
       props: {
         text: 'The quick brown fox jumps over the lazy dog',
-        keywords: ['quick', 'fox', 'lazy'],
+        keywords: 'fox',
       },
     })
 
     const marks = wrapper.findAll('mark')
     const spans = wrapper.findAll('span')
 
-    expect(marks).toHaveLength(3)
-    expect(spans).toHaveLength(3)
+    expect(marks).toHaveLength(1)
+    expect(spans).toHaveLength(2)
 
-    // Verify keywords are highlighted
-    expect(marks[0].text()).toBe('quick')
-    expect(marks[1].text()).toBe('fox')
-    expect(marks[2].text()).toBe('lazy')
+    // Verify keyword is highlighted
+    expect(marks[0].text()).toBe('fox')
 
     // Verify non-keyword parts
-    expect(spans[0].text()).toBe('The ')
-    expect(spans[1].text()).toBe(' brown ')
-    expect(spans[2].text()).toBe(' jumps over the ')
+    expect(spans[0].text()).toBe('The quick brown')
+    expect(spans[1].text()).toBe('jumps over the lazy dog')
   })
 })

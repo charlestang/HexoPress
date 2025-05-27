@@ -171,7 +171,7 @@ const { tableHeight, wrapper } = useTableHeight()
         <template #default="scope">
           <el-row>
             <el-col :span="24">
-              <KeywordSpan :keywords="[keywords]" :text="scope.row.title" />
+              <KeywordSpan :keywords="keywords" :text="scope.row.title" />
               <span v-show="scope.row.status == 'draft'" class="draft-status">
                 -- {{ t('posts.draft') }}</span
               >

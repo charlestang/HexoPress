@@ -113,7 +113,7 @@ watch(
       @node-click="handleNodeClick"
       class="toc-tree">
       <template #default="{ data }">
-        <span :class="['toc-node-label', `toc-level-${data.level}`]" :title="data.text">
+        <span v-if="data" :class="['toc-node-label', `toc-level-${data.level}`]" :title="data.text">
           {{ data.text }}
         </span>
       </template>
