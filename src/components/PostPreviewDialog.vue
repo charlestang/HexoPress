@@ -3,6 +3,8 @@ import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/preview.css'
+import { parseFrontMatter, type FrontMatter } from '@/components/FrontMatter'
+import { Folder, PriceTag, Timer } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -50,12 +52,22 @@ function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): 
   })
 }
 
+const frontMatter = ref<FrontMatter>({
+  title: '',
+  date: new Date(),
+  permalink: '',
+  categories: [] as string[],
+  tags: [] as string[],
+})
+
 async function fetchContent() {
   if (!props.sourcePath) return
   loading.value = true
   try {
     const result = await window.site.getContent(props.sourcePath)
-    content.value = result
+    const parseDown = parseFrontMatter(result)
+    frontMatter.value = parseDown.data as FrontMatter
+    content.value = parseDown.content
   } catch (error) {
     console.error('Failed to fetch post content:', error)
   } finally {
@@ -63,17 +75,23 @@ async function fetchContent() {
   }
 }
 
-watch(() => props.modelValue, (newVal) => {
-  if (newVal) {
-    fetchContent()
-  }
-})
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (newVal) {
+      fetchContent()
+    }
+  },
+)
 
-watch(() => props.sourcePath, () => {
-  if (props.modelValue) {
-    fetchContent()
-  }
-})
+watch(
+  () => props.sourcePath,
+  () => {
+    if (props.modelValue) {
+      fetchContent()
+    }
+  },
+)
 </script>
 
 <template>
@@ -83,28 +101,29 @@ watch(() => props.sourcePath, () => {
     width="960px"
     :close-on-click-modal="false"
     @update:modelValue="(val) => emit('update:modelValue', val)">
-    <div v-loading="loading" class="preview-content">
-      <div class="preview-inner">
+    <div v-loading="loading" class="min-h-400px max-h-70vh overflow-y-auto p-5 flex flex-col gap-6">
+      <div class="max-w-880px mx-auto w-full pb-5 border-b border-gray-200">
+        <h1 class="text-28px font-600 m-0 mb-4 text-left leading-1.4">{{ frontMatter.title }}</h1>
+        <div class="text-14px text-gray-600">
+          <div class="flex gap-4 mb-2">
+            <div v-if="frontMatter.categories.length" class="flex items-center gap-1">
+              <el-icon class="text-16px text-gray-600"><Folder /></el-icon>
+              <span class="text-gray-800">{{ Array.isArray(frontMatter.categories) ? frontMatter.categories.join(' / ') : frontMatter.categories }}</span>
+            </div>
+            <div v-if="frontMatter.tags.length" class="flex items-center gap-1">
+              <el-icon class="text-16px text-gray-600"><PriceTag /></el-icon>
+              <span class="text-gray-800">{{ frontMatter.tags.join('、') }}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1">
+            <el-icon class="text-16px text-gray-600"><Timer /></el-icon>
+            <span class="text-gray-800">{{ frontMatter.date ? new Date(frontMatter.date).toLocaleString() : '' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="max-w-880px mx-auto leading-1.6 text-16px w-full">
         <MdPreview :modelValue="content" :sanitize="filterImage" />
       </div>
     </div>
   </el-dialog>
 </template>
-
-<style scoped>
-.preview-content {
-  min-height: 400px;
-  max-height: 70vh;
-  overflow-y: auto;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.preview-inner {
-  max-width: 880px;
-  margin: 0 auto;
-  line-height: 1.6;
-  font-size: 16px;
-}
-</style>

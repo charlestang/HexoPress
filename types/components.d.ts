@@ -71,7 +71,7 @@ declare module 'vue' {
     UploadImageDialog: typeof import('./../src/components/UploadImageDialog.vue')['default']
     UrlMetaEntry: typeof import('./../src/components/UrlMetaEntry.vue')['default']
   }
-  export interface ComponentCustomProperties {
+  export interface GlobalDirectives {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
