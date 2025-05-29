@@ -4,9 +4,6 @@ import Hexo from 'hexo'
 import util from 'hexo-util'
 import { join, relative } from 'path'
 
-type HexoInstance = InstanceType<typeof Hexo>
-type ConfigType = HexoInstance['config']
-
 const { slugize } = util
 export class HexoAgent {
   private hexo!: Hexo
@@ -24,7 +21,6 @@ export class HexoAgent {
     if (typeof this.hexo !== 'undefined') {
       console.log('The member hexo is already initialized.')
 
-      // @ts-expect-error In the latest version of Hexo, the exit parameter can be empty.
       this.exitPromise = this.hexo.exit()
     }
 
@@ -223,7 +219,7 @@ export class HexoAgent {
     }
   }
 
-  public async getHexoConfig(): Promise<ConfigType | null> {
+  public async getHexoConfig(): Promise<Record<string, unknown> | null> {
     if (this.exitPromise) {
       await this.exitPromise
     }
@@ -233,7 +229,27 @@ export class HexoAgent {
     if (typeof this.hexo === 'undefined') {
       return null
     }
-    return this.hexo.config
+
+    // Create a clean, serializable config object by copying only primitive values
+    const config = this.hexo.config
+    const cleanConfig: Record<string, unknown> = {}
+
+    // Copy safe properties
+    const safeProperties = [
+      'title', 'subtitle', 'description', 'keywords', 'author', 'language',
+      'timezone', 'url', 'permalink', 'date_format', 'time_format', 'theme',
+      'source_dir', 'public_dir', 'tag_dir', 'archive_dir', 'category_dir',
+      'code_dir', 'i18n_dir', 'per_page', 'pagination_dir', 'new_post_name',
+      'default_layout'
+    ]
+
+    for (const prop of safeProperties) {
+      if (config[prop] !== undefined) {
+        cleanConfig[prop] = config[prop]
+      }
+    }
+
+    return cleanConfig
   }
 
   /**
