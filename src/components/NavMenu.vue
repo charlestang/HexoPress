@@ -31,33 +31,33 @@ const menuItems = computed(() => [
   {
     index: '/main/dashboard',
     icon: TrendCharts,
-    title: t('nav.dashboard')
+    title: t('nav.dashboard'),
   },
   {
     index: '/main/post-list',
     icon: Briefcase,
-    title: t('nav.allPosts')
+    title: t('nav.allPosts'),
   },
   {
     index: '/main/categories',
     icon: IconMenu,
-    title: t('nav.categories')
+    title: t('nav.categories'),
   },
   {
     index: '/main/tags',
     icon: Flag,
-    title: t('nav.tags')
+    title: t('nav.tags'),
   },
   {
     index: '/main/media-library',
     icon: PictureFilled,
-    title: t('nav.mediaLibrary')
+    title: t('nav.mediaLibrary'),
   },
   {
     index: '/main/preferences',
     icon: Tools,
-    title: t('nav.preferences')
-  }
+    title: t('nav.preferences'),
+  },
 ])
 
 const handleOpen = (key: string, keyPath: string[]) => {
@@ -69,8 +69,14 @@ const handleClose = (key: string, keyPath: string[]) => {
 console.log('Read current path from route: ', route.fullPath)
 const activeIndex = ref(route.fullPath)
 const handleSelect = (key: string, keyPath: string[]) => {
-  activeIndex.value = key
+  if (key !== '__toggle__') {
+    activeIndex.value = key
+  }
   console.log(key, keyPath)
+}
+
+const toggleCollapse = () => {
+  isCollapse.value = !isCollapse.value
 }
 </script>
 
@@ -84,7 +90,6 @@ const handleSelect = (key: string, keyPath: string[]) => {
     @open="handleOpen"
     @close="handleClose"
     @select="handleSelect">
-
     <el-menu-item
       v-for="item in menuItems"
       :key="item.index"
@@ -94,8 +99,12 @@ const handleSelect = (key: string, keyPath: string[]) => {
       <template #title>{{ item.title }}</template>
     </el-menu-item>
 
-    <!-- 折叠/展开按钮 -->
-    <el-menu-item @click="isCollapse = !isCollapse" class="!text-white hover:!bg-[#c7a589]">
+    <!-- 折叠/展开按钮（Element Plus 要求 el-menu-item 必须有 index） -->
+    <el-menu-item
+      index="__toggle__"
+      :route="activeIndex"
+      @click="toggleCollapse"
+      class="!text-white hover:!bg-[#c7a589] toggle-item">
       <el-icon v-if="isCollapse"><caret-right /></el-icon>
       <el-icon v-else><caret-left /></el-icon>
       <template #title>{{ isCollapse ? t('nav.expand') : t('nav.collapse') }}</template>
@@ -106,5 +115,10 @@ const handleSelect = (key: string, keyPath: string[]) => {
 <style scoped>
 .is-active {
   background-color: #c7a589;
+}
+
+.toggle-item.is-active {
+  /* 取消高亮 */
+  background-color: transparent !important;
 }
 </style>
