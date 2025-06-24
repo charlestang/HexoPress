@@ -209,6 +209,7 @@ npm run make
 
 ## 九、附录
 
+- [《HexoPress：一款能管理 Hexo 博客文章的客户端》][blog-hexopress]
 - [《我为什么构建了 HexoPress》][blog-why-hexopress]
 
 ---
@@ -217,6 +218,7 @@ npm run make
 
 ---
 
+[blog-hexopress]: https://blog.charlestang.org/2024/hexopress-blog-client/
 [blog-why-hexopress]: https://blog.charlestang.org/2023/how-to-use-hexo-and-github-actions-to-build-a-personal-blog/
 [docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/howto-build-a-blog-with-hexo-cn/
 [download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.3.0/HexoPress-darwin-arm64-1.3.0.zip

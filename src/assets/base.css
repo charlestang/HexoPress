@@ -55,6 +55,10 @@
 *::after {
   box-sizing: border-box;
   margin: 0;
+}
+
+/* 排除需要保留默认样式的标签 */
+*:not(strong, b, sup, sub, del, ins, em, i, u, mark) {
   font-weight: normal;
 }
 

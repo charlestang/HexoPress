@@ -211,6 +211,7 @@ npm run make
 
 ## IX. Appendix
 
+- [HexoPress：Introduction of a blog client for Hexo][blog-hexopress]
 - [Why I built HexoPress][blog-why-hexopress]
 
 ---
@@ -219,6 +220,7 @@ npm run make
 
 ---
 
+[blog-hexopress]: https://blog.charlestang.org/2024/hexopress-blog-client/
 [blog-why-hexopress]: https://blog.charlestang.org/2023/how-to-use-hexo-and-github-actions-to-build-a-personal-blog/
 [docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/howto-build-a-blog-with-hexo/
 [download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.3.0/HexoPress-darwin-arm64-1.3.0.zip
