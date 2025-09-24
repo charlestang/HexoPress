@@ -151,6 +151,8 @@ _Clear tag overview and statistics_
 
 ## VI. Getting Started from Source Code
 
+Get familiar with the project using the docs in `docs/`: [Architecture & Data Flow](./docs/architecture-overview.md), [window.site / IPC API Reference](./docs/ipc-api-reference.md), and [Developer Onboarding Guide](./docs/developer-onboarding.md).
+
 ### 1. Clone the source code
 
 ```bash

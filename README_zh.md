@@ -149,6 +149,8 @@ _标签一览，统计清晰_
 
 ## 六、从源码开始
 
+在阅读源码前，先查阅 `docs/` 目录的配套文档：[架构与数据流指南](./docs/architecture-overview.md)、[window.site / IPC API 参考](./docs/ipc-api-reference.md) 和 [开发者上手手册](./docs/developer-onboarding.md)，可快速建立整体认知。
+
 ### 1. 克隆源代码
 
 ```bash
