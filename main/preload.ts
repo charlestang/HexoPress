@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('site', {
   getCategories: (...args) => ipcRenderer.invoke('site:categories', ...args),
   getTags: (...args) => ipcRenderer.invoke('site:tags', ...args),
   getAssets: () => ipcRenderer.invoke('site:assets'),
+  deleteAsset: (assetId: string) => ipcRenderer.invoke('site:assetDelete', assetId),
   getStats: () => ipcRenderer.invoke('site:stats'),
   getSiteInfo: () => ipcRenderer.invoke('site:info'),
   refreshSite: () => ipcRenderer.invoke('site:refresh'),

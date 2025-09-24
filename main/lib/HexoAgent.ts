@@ -347,6 +347,53 @@ export class HexoAgent {
   }
 
   /**
+   * Delete an asset file and remove its record from Hexo's database.
+   * @param assetId The asset identifier (_id in Hexo DB)
+   */
+  public async deleteAsset(assetId: string): Promise<void> {
+    if (!assetId) {
+      throw new Error('Asset id cannot be empty')
+    }
+
+    if (this.exitPromise) {
+      await this.exitPromise
+    }
+    if (this.initPromise) {
+      await this.initPromise
+    }
+    if (typeof this.hexo === 'undefined') {
+      throw new Error('Hexo instance is not initialized')
+    }
+
+    const assetModel = this.hexo.database.model('Asset')
+    const asset = assetModel.get(assetId)
+
+    if (!asset) {
+      throw new Error(`Asset not found: ${assetId}`)
+    }
+
+    const assetPath = join(this.hexo.base_dir, asset._id)
+
+    if (!existsSync(assetPath)) {
+      throw new Error(`Asset file not found: ${assetPath}`)
+    }
+
+    try {
+      unlinkSync(assetPath)
+      await asset.remove()
+      await this.hexo.database.save()
+    } catch (error) {
+      console.error(`Failed to delete asset ${assetId}:`, error)
+      throw error
+    }
+
+    // In certain scenarios Hexo may keep stale cache; reload if the record persists.
+    if (assetModel.get(assetId)) {
+      await this.hexo.load()
+    }
+  }
+
+  /**
    * Read the content of a blog post by its source path
    * @param sourcePath The relative path of the post in the source directory
    * @returns The content of the post as a string

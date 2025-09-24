@@ -10,6 +10,7 @@
 | `getCategories()` | `site:categories` | `Promise<Category[]>` | 读取分类树，包含父子关系、路径及文章数量，可用于树状导航。【F:main/main.ts†L40-L41】【F:main/lib/HexoAgent.ts†L171-L220】 |
 | `getTags()` | `site:tags` | `Promise<Tag[]>` | 返回站点所有标签及关联文章数量。【F:main/main.ts†L41-L42】【F:main/lib/HexoAgent.ts†L222-L246】 |
 | `getAssets()` | `site:assets` | `Promise<Asset[]>` | 列出 Hexo 资源（如 `source/_posts` 下的图片）。【F:main/main.ts†L42-L43】【F:main/lib/HexoAgent.ts†L248-L282】 |
+| `deleteAsset(assetId)` | `site:assetDelete` | `Promise<void>` | 删除指定资源文件并同步 Hexo 资产缓存，删除失败会抛出详细异常。【F:main/main.ts†L43-L44】【F:main/lib/HexoAgent.ts†L348-L394】 |
 | `getStats()` | `site:stats` | `Promise<Stats>` | 统计文章、草稿、页面数量，用于仪表盘总览。【F:main/main.ts†L43-L44】【F:main/lib/HexoAgent.ts†L284-L313】 |
 | `getSiteInfo()` | `site:info` | `Promise<SiteInfo>` | 返回 HexoPress 与 Hexo 版本等基础信息，在设置页或关于页展示。【F:main/main.ts†L44-L45】【F:main/lib/HexoAgent.ts†L315-L339】 |
 | `getHeatMap()` | `site:heatMap` | `Promise<DateEntry[]>` | 统计每日发文数量，为热力图组件提供数据。【F:main/main.ts†L46-L47】【F:main/lib/HexoAgent.ts†L108-L136】 |

@@ -108,6 +108,7 @@ HexoPress makes Hexo blogging as easy as WordPress! No more manual Front Matter 
 - 🌳 Tree view for categories with article count
 - 🏷️ Tag list with article count
 - 🖼️ Media resource management
+- 🗑️ Delete unused media assets (png/jpg/jpeg) with confirmation
 - ✍️ Markdown editor with preview
 - 📋 Outline panel
 - ⌨️ Vim key bindings

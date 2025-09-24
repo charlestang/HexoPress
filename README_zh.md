@@ -106,6 +106,7 @@ HexoPress 让 Hexo 博客创作像 WordPress 一样简单！无需手动编辑 F
 - 🌳 分类树形展示，含文章数统计
 - 🏷️ 标签列表，含文章数统计
 - 🖼️ 媒体资源管理
+- 🗑️ 支持对 png/jpg/jpeg 图片安全删除并带二次确认
 - ✍️ Markdown 编辑器，支持预览
 - 📋 目录 Outline 面板
 - ⌨️ Vim 键位支持

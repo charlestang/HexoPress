@@ -47,6 +47,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('site:categories', () => agent.getCategories())
   ipcMain.handle('site:tags', () => agent.getTags())
   ipcMain.handle('site:assets', () => agent.getAssets())
+  ipcMain.handle('site:assetDelete', (event, assetId: string) => agent.deleteAsset(assetId))
   ipcMain.handle('site:stats', () => agent.getStats())
   ipcMain.handle('site:info', () => agent.getSiteInfo())
   ipcMain.handle('site:refresh', () => agent.updateCache())

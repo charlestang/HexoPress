@@ -1,5 +1,7 @@
 # 媒体库图片删除
 
+> 状态：已完成（提交 47b33ac），归档于 2025-09-25。
+
 ## 背景
 - 媒体库页面（`MediaLibraryView`）展示 Hexo 项目中的所有资源文件，很多图片文件是之前从 WordPress 博客的资源文件迁移过来的，很多没有用的图片。
 - 目前界面只支持浏览，无法直接删除图片，用户需要手动切换到文件管理器删除，效率低且容易误删。
@@ -28,7 +30,7 @@
 - 需要在 `HexoAgent` 中新增删除能力（例如 `deleteAsset(path: string)`），内部应：
   - 将资源的相对路径转换为磁盘绝对路径并删除文件。
   - 使用 `hexo.database.model('Asset')` 更新或移除对应记录，然后调用 `hexo.database.save()`；若仍读取到旧数据，可回退为调用 `await this.hexo.load()` 重新构建资产缓存。
-- 新增 IPC 信道（如 `site:assets-delete`）暴露给渲染进程，返回 Promise，失败时抛出详尽错误信息。
+- 新增 IPC 信道（如 `site:assetDelete`）暴露给渲染进程，返回 Promise，失败时抛出详尽错误信息。
 - 前端建议在 `MediaLibraryView.vue` 中扩展 `ElTable` 列定义，使用 `ElMessageBox.confirm` 弹窗，并在操作完成后复用现有的 `getAssets()` 刷新逻辑。
 - 注意处理同时删除多个文件的情况：接口应串行执行，前端可在完成一次删除后自动刷新列表以保持数据一致。
 

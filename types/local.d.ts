@@ -128,6 +128,7 @@ declare global {
     getCategories: () => Promise<Category[]>
     getTags: () => Promise<Tag[]>
     getAssets: () => Promise<Asset[]>
+    deleteAsset: (assetId: string) => Promise<void>
     getStats: () => Promise<Stats>
     getSiteInfo: () => Promise<SiteInfo>
     getHeatMap: () => Promise<DateEntry[]>
