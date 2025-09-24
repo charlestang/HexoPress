@@ -40,6 +40,7 @@ watchEffect(() => {
       :value="type"></el-option>
   </el-select>
 
+  <!-- Media file list. -->
   <el-table :data="filteredAssets" stripe style="width: 100%; margin-bottom: 10px">
     <el-table-column prop="id" :label="t('mediaLibrary.id')"></el-table-column>
     <el-table-column prop="path" :label="t('mediaLibrary.path')"></el-table-column>

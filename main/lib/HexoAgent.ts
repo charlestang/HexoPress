@@ -255,8 +255,18 @@ export class HexoAgent {
   /**
    * Get all categories.
    */
-  public getCategories() {
+  public async getCategories(): Promise<Category[]> {
     console.log('HexoAgent getCategories is called.')
+    if (this.exitPromise) {
+      await this.exitPromise
+    }
+    if (this.initPromise) {
+      await this.initPromise
+    }
+    if (typeof this.hexo === 'undefined') {
+      throw new Error('Hexo instance is not initialized')
+    }
+
     const categories = <Category[]>[]
     this.hexo.locals.get('categories').each(function (category) {
       const cat = {
@@ -276,8 +286,18 @@ export class HexoAgent {
   /**
    * Get all tags.
    */
-  public getTags() {
+  public async getTags(): Promise<Tag[]> {
     console.log('HexoAgent getTags is called.')
+    if (this.exitPromise) {
+      await this.exitPromise
+    }
+    if (this.initPromise) {
+      await this.initPromise
+    }
+    if (typeof this.hexo === 'undefined') {
+      throw new Error('Hexo instance is not initialized')
+    }
+
     const tags = <Tag[]>[]
     this.hexo.locals.get('tags').each(function (tag) {
       const t = {
@@ -298,9 +318,19 @@ export class HexoAgent {
   /**
    * Get all assets.
    */
-  public getAssets() {
+  public async getAssets(): Promise<Asset[]> {
     console.log('HexoAgent getAssets is called.')
-    const assets = <object[]>[]
+    if (this.exitPromise) {
+      await this.exitPromise
+    }
+    if (this.initPromise) {
+      await this.initPromise
+    }
+    if (typeof this.hexo === 'undefined') {
+      throw new Error('Hexo instance is not initialized')
+    }
+
+    const assets = <Asset[]>[]
     this.hexo.database.model('Asset').each(function (asset) {
       const a = {
         id: asset._id,
