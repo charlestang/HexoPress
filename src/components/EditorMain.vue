@@ -6,13 +6,20 @@ import { useEditorStore } from '@/stores/editorStore' // Import the editor store
 import { lineNumbers } from '@codemirror/view'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'
 import { Vim, vim } from '@replit/codemirror-vim'
-import { MdEditor, NormalToolbar, config, type ExposeParam, type ToolbarNames, type HeadList} from 'md-editor-v3' // Import CatalogLink
+import {
+  MdEditor,
+  NormalToolbar,
+  config,
+  type ExposeParam,
+  type ToolbarNames,
+  type HeadList,
+  type CodeMirrorExtension,
+} from 'md-editor-v3' // Import CatalogLink
 import 'md-editor-v3/lib/style.css'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import { createSmoothScroll } from '@vavt/util';
-
+import { createSmoothScroll } from '@vavt/util'
 
 const { t } = useI18n()
 const editorStore = useEditorStore() // Initialize the store
@@ -214,8 +221,12 @@ const appStore = useAppStore()
 
 if (appStore.editMode === 'vim') {
   config({
-    codeMirrorExtensions(theme, extensions) {
-      return [...extensions, lineNumbers(), vim()]
+    codeMirrorExtensions(extensions: CodeMirrorExtension[]) {
+      const extra: CodeMirrorExtension[] = [
+        { type: 'lineNumbers', extension: lineNumbers() },
+        { type: 'vim', extension: vim() },
+      ]
+      return [...extensions, ...extra]
     },
   })
   Vim.defineEx('write', 'w', () => {
@@ -233,14 +244,21 @@ async function onUploadImage(
   callback: (urls: string[] | { url: string; alt: string; title: string }[]) => void,
 ) {
   console.log('onUploadImage: ', files)
-  imageFile.value = files[0]
+  if (!files || files.length === 0) {
+    return
+  }
+  const [firstFile] = files
+  if (!firstFile) {
+    return
+  }
+  imageFile.value = firstFile
   function formatDate(date: Date) {
     const year = date.getFullYear()
     const month = date.getMonth() + 1
     const monthS = month < 10 ? '0' + month : month
     return `${year}/${monthS}`
   }
-  filePath.value = formatDate(frontMatter.value.date as Date) + '/' + files[0].name
+  filePath.value = formatDate(frontMatter.value.date as Date) + '/' + firstFile.name
   uploaded.value = function () {
     console.log('upload success')
     // TODO: this is not so good, because it is relative to the permalink.
@@ -359,49 +377,53 @@ const editorRef = ref<ExposeParam>()
 const editorMaxWidth = ref(1100)
 // Helper to generate slug-like IDs
 const generateHeadingId = (text: string, level: number, index: number) => {
-  const sanitizedText = text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
-  return `heading-${level}-${index}-${sanitizedText}`;
-};
-
+  const sanitizedText = text
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+  return `heading-${level}-${index}-${sanitizedText}`
+}
 
 const handleGetCatalog = (headList: HeadList[]) => {
-  console.log('handleGetCatalog', headList);
+  console.log('handleGetCatalog', headList)
   const transformedHeadings = headList.map((h, index) => ({
     text: h.text,
     level: h.level,
     id: generateHeadingId(h.text, h.level, index),
     line: h.line,
-  }));
-  editorStore.setHeadings(transformedHeadings);
+  }))
+  editorStore.setHeadings(transformedHeadings)
 }
 
-const smoothScroll = createSmoothScroll();
+const smoothScroll = createSmoothScroll()
 const scrollToLine = (lineNumber: number) => {
-  const view = editorRef.value?.getEditorView();
+  const view = editorRef.value?.getEditorView()
   if (view) {
-    const line = view.state.doc.line(lineNumber + 1);
-    const top = view.lineBlockAt(line.from)?.top;
-    const scroller = view.scrollDOM;
-    smoothScroll(scroller, top);
+    const line = view.state.doc.line(lineNumber + 1)
+    const top = view.lineBlockAt(line.from)?.top
+    const scroller = view.scrollDOM
+    smoothScroll(scroller, top)
   }
-};
+}
 
 onMounted(() => {
-
   editorRef.value?.on('preview', (status) => {
     if (status) {
       editorMaxWidth.value = 2200
     } else {
       editorMaxWidth.value = 1100
     }
-  });
+  })
 
   // Watch for changes in activeHeadingId from the store and scroll the editor
-  watch(() => editorStore.activeHeading, (heading) => {
-    if (heading && editorRef.value) {
-      scrollToLine(heading.line);
-    }
-  });
+  watch(
+    () => editorStore.activeHeading,
+    (heading) => {
+      if (heading && editorRef.value) {
+        scrollToLine(heading.line)
+      }
+    },
+  )
 })
 
 const fontSize = ref(14)
@@ -494,7 +516,7 @@ function onFontBig() {
             </el-collapse-item>
             <el-collapse-item :title="t('editor.tags')" name="tags">
               <el-text type="info" size="small">{{ t('editor.selectTags') }}</el-text>
-              <el-input-tag v-model="frontMatter.tags" tag-type="success" delimiter=","/>
+              <el-input-tag v-model="frontMatter.tags" tag-type="success" delimiter="," />
               <el-text type="info">{{ t('editor.tagsTip') }}</el-text>
             </el-collapse-item>
           </el-collapse>
