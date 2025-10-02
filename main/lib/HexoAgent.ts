@@ -180,25 +180,33 @@ export class HexoAgent {
   private async getCategoryPathById(categoryId: string): Promise<CategoryPath> {
     await this.ensureReady()
     const categoryModel = this.hexo.database.model('Category')
-    const category = categoryModel.get(categoryId) as HexoCategoryRecord | undefined
+    const category = categoryModel.findById(categoryId, { lean: true }) as
+      | HexoCategoryRecord
+      | undefined
 
     if (!category) {
       throw new Error(`Category not found: ${categoryId}`)
     }
 
     const path: string[] = []
-    let current = category
-    while (current) {
+    let current: HexoCategoryRecord | undefined = category
+
+    while (typeof current !== 'undefined') {
       path.unshift(current.name)
-      if (!current.parent) {
+
+      const parentId: string | undefined = current.parent
+      if (!parentId) {
         break
       }
-      current = current.parent
-        ? (categoryModel.get(current.parent) as HexoCategoryRecord | undefined)
-        : undefined
-      if (!current) {
+
+      const parent = categoryModel.findById(parentId, { lean: true }) as
+        | HexoCategoryRecord
+        | undefined
+      if (!parent) {
         break
       }
+
+      current = parent
     }
 
     return path
