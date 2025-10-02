@@ -1,5 +1,6 @@
 import { useAppStoreWithout } from '@/stores/app'
 import CategoriesView from '@/views/CategoriesView.vue'
+import CategoryPostsView from '@/views/CategoryPostsView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import FrameView from '@/views/FrameView.vue'
 import MainWindow from '@/views/MainWindow.vue'
@@ -37,6 +38,12 @@ const router = createRouter({
           path: 'categories',
           name: 'categories',
           component: CategoriesView,
+        },
+        {
+          path: 'categories/:categoryId',
+          name: 'category-detail',
+          component: CategoryPostsView,
+          props: true,
         },
         {
           path: 'post-list',

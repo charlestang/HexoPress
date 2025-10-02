@@ -25,6 +25,56 @@ const currentPage = ref(1)
 const pageSize = ref(20)
 const keywords = ref('')
 
+function buildCategoryPathLabels(categories: CategoryList | undefined): string[] {
+  if (!categories || categories.length === 0) {
+    return []
+  }
+  const map = new Map<string, PostCategory>()
+  const parentIds = new Set<string>()
+
+  categories.forEach((cat) => {
+    map.set(cat._id, cat)
+    if (cat.parent) {
+      parentIds.add(cat.parent)
+    }
+  })
+
+  const labels: string[] = []
+  categories.forEach((cat) => {
+    if (parentIds.has(cat._id)) {
+      return
+    }
+    const segments: string[] = []
+    const seen = new Set<string>()
+    let current: PostCategory | undefined = cat
+    while (current && !seen.has(current._id)) {
+      seen.add(current._id)
+      segments.unshift(current.name)
+      if (!current.parent) {
+        break
+      }
+      current = map.get(current.parent)
+    }
+    if (segments.length > 0) {
+      labels.push(segments.join(' > '))
+    }
+  })
+
+  return labels
+}
+
+const categoryLabelCache = new WeakMap<Post, string[]>()
+
+function categoryLabelsForPost(post: Post): string[] {
+  const cached = categoryLabelCache.get(post)
+  if (cached) {
+    return cached
+  }
+  const labels = buildCategoryPathLabels(post.categories)
+  categoryLabelCache.set(post, labels)
+  return labels
+}
+
 async function fetch(curPage: number) {
   const published = statusFilterVal.value !== PostStatusFilterChoice.Draft
   const draft = statusFilterVal.value !== PostStatusFilterChoice.Published
@@ -200,13 +250,13 @@ const { tableHeight, wrapper } = useTableHeight()
       <el-table-column prop="categories" :label="t('posts.categories')">
         <template #default="scope">
           <el-tag
-            v-for="(val, k) in scope.row.categories"
-            :key="k"
+            v-for="label in categoryLabelsForPost(scope.row)"
+            :key="label"
             size="small"
             class="tag-item">
-            {{ val }}
+            {{ label }}
           </el-tag>
-          <el-text v-if="Object.keys(scope.row.categories).length == 0">--</el-text>
+          <el-text v-if="categoryLabelsForPost(scope.row).length === 0">--</el-text>
         </template>
       </el-table-column>
       <el-table-column prop="tags" :label="t('posts.tags')">

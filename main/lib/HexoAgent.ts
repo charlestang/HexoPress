@@ -2,14 +2,237 @@ import { app } from 'electron'
 import { existsSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'fs'
 import Hexo from 'hexo'
 import util from 'hexo-util'
+import { parse as parseFrontMatter, stringify as stringifyFrontMatter } from 'hexo-front-matter'
 import { join, relative } from 'path'
 
 const { slugize } = util
+
+type CategoryPath = string[]
+
+type FrontMatterData = Record<string, unknown> & {
+  categories?: string | string[] | string[][]
+}
+
+type FrontMatterDocument = {
+  data: FrontMatterData
+  content: string
+}
+
+type BulkCategoryOperationResult = {
+  total: number
+  success: number
+  failure: number
+  errors?: Array<{ source: string; message: string }>
+}
+
+type MomentLike = {
+  locale: (locale: string) => MomentLike
+  format: (formatString?: string) => string
+}
+
+type HexoTagRecord = {
+  _id: string
+  name: string
+}
+
+type HexoCategoryRecord = {
+  _id: string
+  name: string
+  parent?: string
+}
+
+type HexoPostRecord = {
+  title: string
+  date: MomentLike
+  updated: MomentLike
+  source: string
+  published: boolean
+  layout: string
+  path: string
+  permalink: string
+  asset_dir: string
+  tags: { data: HexoTagRecord[] }
+  categories: { data: HexoCategoryRecord[] }
+}
 export class HexoAgent {
   private hexo!: Hexo
   private rootPath!: string
   private initPromise?: Promise<void>
   private exitPromise?: Promise<void>
+
+  private async ensureReady(): Promise<void> {
+    if (this.exitPromise) {
+      await this.exitPromise
+    }
+    if (this.initPromise) {
+      await this.initPromise
+    }
+    if (typeof this.hexo === 'undefined') {
+      throw new Error('Hexo instance is not initialized')
+    }
+  }
+
+  private readPostFrontMatter(sourcePath: string): FrontMatterDocument {
+    const filePath = join(this.hexo.source_dir, sourcePath)
+    if (!existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`)
+    }
+
+    const raw = readFileSync(filePath, 'utf-8')
+    const parsed = parseFrontMatter(raw)
+    const content = typeof parsed._content === 'string' ? parsed._content : ''
+    delete parsed._content
+
+    return {
+      data: parsed as FrontMatterData,
+      content,
+    }
+  }
+
+  private writePostFrontMatter(sourcePath: string, document: FrontMatterDocument): void {
+    const filePath = join(this.hexo.source_dir, sourcePath)
+    const payload = {
+      ...document.data,
+      _content: document.content,
+    }
+    const output = stringifyFrontMatter(payload, { prefixSeparator: true }) as string
+    writeFileSync(filePath, output)
+  }
+
+  private normalizeCategoryPaths(value: unknown): CategoryPath[] {
+    if (!value && value !== 0) {
+      return []
+    }
+
+    const toPath = (entry: unknown): CategoryPath => {
+      if (Array.isArray(entry)) {
+        return entry.map((segment) => String(segment).trim()).filter((segment) => segment.length > 0)
+      }
+      return [String(entry).trim()].filter((segment) => segment.length > 0)
+    }
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        return []
+      }
+      if (Array.isArray(value[0])) {
+        return (value as unknown[]).map((item) => toPath(item))
+      }
+      return (value as unknown[]).map((item) => toPath(item))
+    }
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim()
+      return trimmed ? [[trimmed]] : []
+    }
+
+    return []
+  }
+
+  private sanitizeCategoryPaths(paths: CategoryPath[]): CategoryPath[] {
+    const dedup = new Set<string>()
+    const sanitized: CategoryPath[] = []
+
+    for (const path of paths) {
+      const clean = path.map((segment) => segment.trim()).filter((segment) => segment.length > 0)
+      if (clean.length === 0) {
+        continue
+      }
+      const key = clean.join('>')
+      if (!dedup.has(key)) {
+        dedup.add(key)
+        sanitized.push(clean)
+      }
+    }
+
+    return sanitized
+  }
+
+  private setFrontMatterCategories(frontMatter: FrontMatterData, paths: CategoryPath[]): void {
+    const sanitized = this.sanitizeCategoryPaths(paths)
+    if (sanitized.length === 0) {
+      delete frontMatter.categories
+      return
+    }
+
+    const allSingleLevel = sanitized.every((path) => path.length === 1)
+    if (allSingleLevel) {
+      const singleValues = sanitized.map((path) => path[0])
+      frontMatter.categories = singleValues.length === 1 ? singleValues[0] : singleValues
+      return
+    }
+
+    frontMatter.categories = sanitized
+  }
+
+  private pathsEqual(a: CategoryPath, b: CategoryPath): boolean {
+    if (a.length !== b.length) {
+      return false
+    }
+    for (let i = 0; i < a.length; i += 1) {
+      if (a[i] !== b[i]) {
+        return false
+      }
+    }
+    return true
+  }
+
+  private async getCategoryPathById(categoryId: string): Promise<CategoryPath> {
+    await this.ensureReady()
+    const categoryModel = this.hexo.database.model('Category')
+    const category = categoryModel.get(categoryId) as HexoCategoryRecord | undefined
+
+    if (!category) {
+      throw new Error(`Category not found: ${categoryId}`)
+    }
+
+    const path: string[] = []
+    let current = category
+    while (current) {
+      path.unshift(current.name)
+      if (!current.parent) {
+        break
+      }
+      current = current.parent
+        ? (categoryModel.get(current.parent) as HexoCategoryRecord | undefined)
+        : undefined
+      if (!current) {
+        break
+      }
+    }
+
+    return path
+  }
+
+  private async mutatePostCategories(
+    sourcePath: string,
+    mutator: (paths: CategoryPath[]) => { paths: CategoryPath[]; changed: boolean },
+  ): Promise<{ changed: boolean }> {
+    await this.ensureReady()
+    const document = this.readPostFrontMatter(sourcePath)
+    const currentPaths = this.normalizeCategoryPaths(document.data.categories)
+    const currentSanitized = this.sanitizeCategoryPaths(currentPaths)
+    const { paths: mutatedPaths, changed } = mutator(currentSanitized)
+    const nextPaths = this.sanitizeCategoryPaths(mutatedPaths)
+
+    const structuralChange =
+      currentSanitized.length !== nextPaths.length ||
+      currentSanitized.some((path, index) => {
+        const target = nextPaths[index]
+        if (!target) {
+          return true
+        }
+        return !this.pathsEqual(path, target)
+      })
+
+    if (!changed && !structuralChange) {
+      return { changed: false }
+    }
+
+    this.setFrontMatterCategories(document.data, nextPaths)
+    this.writePostFrontMatter(sourcePath, document)
+    return { changed: true }
+  }
 
   public init(rootPath: string): void {
     console.log('HexoAgent.init is called. rootPath is: ', rootPath)
@@ -140,7 +363,7 @@ export class HexoAgent {
 
     const locale = app.getSystemLocale()
 
-    posts.each(function (post) {
+    posts.each((post: HexoPostRecord) => {
       const onePost = <Post>{
         title: post.title,
         date: post.date.locale(locale).format(),
@@ -151,14 +374,17 @@ export class HexoAgent {
         path: post.path,
         permalink: post.permalink,
         asset_dir: post.asset_dir,
-        tags: post.tags.data.reduce(function (acc: object, tag) {
+        tags: post.tags.data.reduce<Record<string, string>>((acc, tag: HexoTagRecord) => {
           acc[tag._id] = tag.name
           return acc
         }, {}),
-        categories: post.categories.data.reduce(function (acc: object, cat) {
-          acc[cat._id] = cat.name
-          return acc
-        }, {}),
+        categories: post.categories.data.map((cat: HexoCategoryRecord) => {
+          return {
+            _id: cat._id,
+            name: cat.name,
+            parent: cat.parent,
+          }
+        }),
       }
       postList.push(onePost)
     })
@@ -526,6 +752,134 @@ export class HexoAgent {
       console.error(`Error deleting file ${sourcePath}:`, error)
       throw error
     }
+  }
+
+  public async replaceCategoryForPosts(
+    categoryId: string,
+    sources: string[],
+    replacements: CategoryPath[],
+  ): Promise<BulkCategoryOperationResult> {
+    if (!categoryId) {
+      throw new Error('Category id cannot be empty')
+    }
+
+    await this.ensureReady()
+    const targetPath = await this.getCategoryPathById(categoryId)
+    const sanitizedReplacements = this.sanitizeCategoryPaths(replacements ?? [])
+
+    if (sanitizedReplacements.length === 0) {
+      throw new Error('Replacement categories cannot be empty')
+    }
+
+    const uniqueSources = Array.from(new Set(sources.filter((item) => item && item.trim().length > 0)))
+    const result: BulkCategoryOperationResult = {
+      total: uniqueSources.length,
+      success: 0,
+      failure: 0,
+    }
+
+    let changedAny = false
+
+    for (const source of uniqueSources) {
+      try {
+        const mutation = await this.mutatePostCategories(source, (paths) => {
+          const withoutTarget = paths.filter((path) => !this.pathsEqual(path, targetPath))
+          let changed = withoutTarget.length !== paths.length
+          const combined: CategoryPath[] = [
+            ...withoutTarget.map((path) => [...path]),
+            ...sanitizedReplacements.map((path) => [...path]),
+          ]
+          const deduped = this.sanitizeCategoryPaths(combined)
+
+          if (!changed) {
+            if (deduped.length !== paths.length) {
+              changed = true
+            } else if (
+              deduped.some((path, index) => {
+                const original = paths[index]
+                if (!original) {
+                  return true
+                }
+                return !this.pathsEqual(path, original)
+              })
+            ) {
+              changed = true
+            }
+          }
+
+          return { paths: deduped, changed }
+        })
+
+        if (mutation.changed) {
+          changedAny = true
+        }
+
+        result.success += 1
+      } catch (error) {
+        result.failure += 1
+        const message = error instanceof Error ? error.message : String(error)
+        if (!result.errors) {
+          result.errors = []
+        }
+        result.errors.push({ source, message })
+      }
+    }
+
+    if (changedAny) {
+      await this.updateCache()
+    }
+
+    return result
+  }
+
+  public async removeCategoryFromPosts(
+    categoryId: string,
+    sources: string[],
+  ): Promise<BulkCategoryOperationResult> {
+    if (!categoryId) {
+      throw new Error('Category id cannot be empty')
+    }
+
+    await this.ensureReady()
+    const targetPath = await this.getCategoryPathById(categoryId)
+
+    const uniqueSources = Array.from(new Set(sources.filter((item) => item && item.trim().length > 0)))
+    const result: BulkCategoryOperationResult = {
+      total: uniqueSources.length,
+      success: 0,
+      failure: 0,
+    }
+
+    let changedAny = false
+
+    for (const source of uniqueSources) {
+      try {
+        const mutation = await this.mutatePostCategories(source, (paths) => {
+          const filtered = paths.filter((path) => !this.pathsEqual(path, targetPath))
+          const changed = filtered.length !== paths.length
+          return { paths: filtered, changed }
+        })
+
+        if (mutation.changed) {
+          changedAny = true
+        }
+
+        result.success += 1
+      } catch (error) {
+        result.failure += 1
+        const message = error instanceof Error ? error.message : String(error)
+        if (!result.errors) {
+          result.errors = []
+        }
+        result.errors.push({ source, message })
+      }
+    }
+
+    if (changedAny) {
+      await this.updateCache()
+    }
+
+    return result
   }
 
   /**

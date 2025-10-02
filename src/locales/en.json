@@ -146,6 +146,52 @@
     "deleteSuccess": "Asset deleted",
     "deleteFailed": "Failed to delete asset: "
   },
+  "categoryDetail": {
+    "breadcrumbPrefix": "Categories (total {count})",
+    "returnToList": "Back to Categories",
+    "filteredOut": "{count} post(s) belong to sub-categories and are hidden",
+    "onlyDirect": "Only posts directly under this category are listed",
+    "progress": "Processing: {action}",
+    "table": {
+      "title": "Title",
+      "status": "Status",
+      "updated": "Last Updated",
+      "categories": "Categories"
+    },
+    "status": {
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "actions": {
+      "update": "Modify Categories in Bulk",
+      "delete": "Remove Category in Bulk",
+      "remove": "Remove Category",
+      "confirmRemove": "Remove",
+      "confirmDelete": "Delete",
+      "confirmUpdate": "Apply",
+      "cancel": "Cancel"
+    },
+    "dialogs": {
+      "updateTitle": "Modify Categories in Bulk",
+      "updateSummary": "Selected {count} post(s) from \"{category}\".",
+      "updateConfirm": "Apply",
+      "bulkDeleteConfirm": "Remove category \"{category}\" from {count} posts? This action cannot be undone.",
+      "removeConfirm": "Remove category \"{category}\" from \"{title}\"?"
+    },
+    "messages": {
+      "removeSuccess": "Category \"{category}\" removed",
+      "removeFailure": "Failed to remove category: {message}",
+      "categorySelectionRequired": "Please choose at least one category.",
+      "postsSelectionRequired": "Please select at least one post first.",
+      "updateSummary": "Category update completed: {success} succeeded, {failure} failed",
+      "deleteSummary": "Removal completed: {success} succeeded, {failure} failed",
+      "operationFailure": "Operation failed: {message}",
+      "categoryIdMissing": "Unable to resolve category id",
+      "categoryNotFound": "Category not found",
+      "unknown": "Unknown category"
+    },
+    "empty": "No posts (only entries without sub-categories are shown)"
+  },
   "nav": {
     "allPosts": "All posts",
     "categories": "Categories",

@@ -50,8 +50,26 @@ declare global {
     type: string
   }
 
-  type TagOrCategoryList = {
+  type TagList = {
     [_id: string]: string
+  }
+
+  type PostCategory = {
+    _id: string
+    name: string
+    parent?: string
+  }
+
+  type CategoryList = PostCategory[]
+
+  type BulkCategoryOperationResult = {
+    total: number
+    success: number
+    failure: number
+    errors?: Array<{
+      source: string
+      message: string
+    }>
   }
 
   type Post = {
@@ -64,8 +82,8 @@ declare global {
     path: string
     permalink: string
     asset_dir: string
-    tags: TagOrCategoryList
-    categories: TagOrCategoryList
+    tags: TagList
+    categories: CategoryList
   }
 
   type PostsResults = {
@@ -140,6 +158,15 @@ declare global {
     createFile: (type: string, title: string, slug: string, content: string) => Promise<string>
     moveFile: (sourcePath: string, content: string) => Promise<string>
     deleteFile: (path: string) => Promise<void>
+    replaceCategoryForPosts: (
+      categoryId: string,
+      sources: string[],
+      replacements: string[][],
+    ) => Promise<BulkCategoryOperationResult>
+    removeCategoryFromPosts: (
+      categoryId: string,
+      sources: string[],
+    ) => Promise<BulkCategoryOperationResult>
     getSystemLocale: () => Promise<string>
     openUrl: (url: string) => Promise<void>
     getReadDir: (path: string) => Promise<FileEntry[]>

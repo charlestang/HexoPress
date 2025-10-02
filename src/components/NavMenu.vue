@@ -67,10 +67,24 @@ const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 console.log('Read current path from route: ', route.fullPath)
-const activeIndex = ref(route.fullPath)
+const resolveActiveIndex = (path: string) => {
+  if (path.startsWith('/main/categories')) {
+    return '/main/categories'
+  }
+  return path
+}
+
+const activeIndex = ref(resolveActiveIndex(route.fullPath))
+
+watch(
+  () => route.fullPath,
+  (newPath) => {
+    activeIndex.value = resolveActiveIndex(newPath)
+  },
+)
 const handleSelect = (key: string, keyPath: string[]) => {
   if (key !== '__toggle__') {
-    activeIndex.value = key
+    activeIndex.value = resolveActiveIndex(key)
   }
   console.log(key, keyPath)
 }

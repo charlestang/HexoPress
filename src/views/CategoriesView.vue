@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useCategoryTree } from '@/composables/useCategoryTree'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const categories = ref<Category[]>([])
 const catCount = ref(0)
@@ -20,8 +22,13 @@ fetch()
 const { treeData } = useCategoryTree(categories)
 
 
-function onClickLink(url: string) {
-  window.site.openUrl(url)
+function onClickCategory(categoryId: string) {
+  router.push({
+    name: 'category-detail',
+    params: {
+      categoryId
+    }
+  })
 }
 </script>
 
@@ -38,9 +45,7 @@ function onClickLink(url: string) {
     <el-table-column prop="length" :label="t('cats.total')" sortable />
     <el-table-column :label="t('cats.actions')">
       <template #default="scope">
-        <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
-          t('cats.view')
-        }}</el-link>
+        <el-link type="primary" link @click="onClickCategory(scope.row.id)">{{ t('cats.view') }}</el-link>
       </template>
     </el-table-column>
   </el-table>

@@ -21,6 +21,10 @@ contextBridge.exposeInMainWorld('site', {
   moveFile: (sourcePath: string, content: string) =>
     ipcRenderer.invoke('post:move', sourcePath, content),
   deleteFile: (sourcePath: string) => ipcRenderer.invoke('post:delete', sourcePath),
+  replaceCategoryForPosts: (categoryId: string, sources: string[], replacements: string[][]) =>
+    ipcRenderer.invoke('category:replaceAssignments', categoryId, sources, replacements),
+  removeCategoryFromPosts: (categoryId: string, sources: string[]) =>
+    ipcRenderer.invoke('category:bulkRemove', categoryId, sources),
   getSystemLocale: () => ipcRenderer.invoke('sys:locale'),
   openUrl: (url: string) => ipcRenderer.invoke('shell:openUrl', url),
   getReadDir: (path: string) => ipcRenderer.invoke('fs:readdir', path),

@@ -61,6 +61,14 @@ app.whenReady().then(async () => {
   )
   ipcMain.handle('post:move', (event, sourcePath, content) => agent.moveFile(sourcePath, content))
   ipcMain.handle('post:delete', (event, path) => agent.deleteFile(path))
+  ipcMain.handle(
+    'category:replaceAssignments',
+    (event, categoryId: string, sources: string[], replacements: string[][]) =>
+      agent.replaceCategoryForPosts(categoryId, sources, replacements),
+  )
+  ipcMain.handle('category:bulkRemove', (event, categoryId: string, sources: string[]) =>
+    agent.removeCategoryFromPosts(categoryId, sources),
+  )
   ipcMain.handle('sys:locale', () => app.getSystemLocale())
   ipcMain.handle('shell:openUrl', (event, url) => shell.openExternal(url))
   ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))

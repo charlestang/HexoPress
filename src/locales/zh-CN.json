@@ -147,6 +147,52 @@
     "deleteSuccess": "删除成功",
     "deleteFailed": "删除失败："
   },
+  "categoryDetail": {
+    "breadcrumbPrefix": "分类（共 {count} 个）",
+    "returnToList": "返回分类列表",
+    "filteredOut": "已过滤 {count} 篇包含子分类的文章",
+    "onlyDirect": "仅显示直接归属于当前分类的文章",
+    "progress": "正在执行：{action}",
+    "table": {
+      "title": "标题",
+      "status": "状态",
+      "updated": "最后更新",
+      "categories": "分类"
+    },
+    "status": {
+      "published": "已发布",
+      "draft": "草稿"
+    },
+    "actions": {
+      "update": "批量修改分类",
+      "delete": "批量移除分类",
+      "remove": "移除分类",
+      "confirmRemove": "移除",
+      "confirmDelete": "删除",
+      "confirmUpdate": "确定",
+      "cancel": "取消"
+    },
+    "dialogs": {
+      "updateTitle": "批量修改分类",
+      "updateSummary": "本次将对“{category}”下的 {count} 篇文章修改分类。",
+      "updateConfirm": "确定",
+      "bulkDeleteConfirm": "确定要从 {count} 篇文章中移除分类“{category}”吗？该操作不可撤销。",
+      "removeConfirm": "确定要从《{title}》中移除分类“{category}”吗？"
+    },
+    "messages": {
+      "removeSuccess": "已移除分类“{category}”",
+      "removeFailure": "移除分类失败：{message}",
+      "categorySelectionRequired": "请至少选择一个目标分类。",
+      "postsSelectionRequired": "请先勾选至少一篇文章。",
+      "updateSummary": "批量修改分类完成：成功 {success}，失败 {failure}",
+      "deleteSummary": "批量删除完成：成功 {success}，失败 {failure}",
+      "operationFailure": "操作失败：{message}",
+      "categoryIdMissing": "无法找到该分类标识",
+      "categoryNotFound": "未找到分类",
+      "unknown": "未知分类"
+    },
+    "empty": "暂无文章（仅显示不含子分类的文章）"
+  },
   "nav": {
     "allPosts": "文章",
     "categories": "分类",
