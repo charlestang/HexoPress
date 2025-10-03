@@ -99,34 +99,58 @@ export class HexoAgent {
     writeFileSync(filePath, output)
   }
 
+  private purgeNullRecords(modelName: string): void {
+    const model = this.hexo?.database?.model(modelName) as
+      | { data: Record<string, unknown | null> }
+      | undefined
+    if (!model?.data) {
+      return
+    }
+
+    Object.keys(model.data).forEach((key) => {
+      if (model.data[key] == null) {
+        delete model.data[key]
+      }
+    })
+  }
+
   private normalizeCategoryPaths(value: unknown): CategoryPath[] {
-    if (!value && value !== 0) {
+    if (value === null || typeof value === 'undefined') {
       return []
     }
 
-    const toPath = (entry: unknown): CategoryPath => {
-      if (Array.isArray(entry)) {
-        return entry.map((segment) => String(segment).trim()).filter((segment) => segment.length > 0)
+    const toSegments = (entry: unknown): string[] => {
+      if (entry === null || typeof entry === 'undefined') {
+        return []
       }
-      return [String(entry).trim()].filter((segment) => segment.length > 0)
+
+      if (Array.isArray(entry)) {
+        return entry
+          .flatMap((segment) => toSegments(segment))
+          .filter((segment) => segment.length > 0)
+      }
+
+      return String(entry)
+        .split('>')
+        .map((segment) => segment.trim())
+        .filter((segment) => segment.length > 0)
     }
 
     if (Array.isArray(value)) {
       if (value.length === 0) {
         return []
       }
-      if (Array.isArray(value[0])) {
-        return (value as unknown[]).map((item) => toPath(item))
-      }
-      return (value as unknown[]).map((item) => toPath(item))
+      return value.reduce<CategoryPath[]>((acc, item) => {
+        const segments = toSegments(item)
+        if (segments.length > 0) {
+          acc.push(segments)
+        }
+        return acc
+      }, [])
     }
 
-    if (typeof value === 'string') {
-      const trimmed = value.trim()
-      return trimmed ? [[trimmed]] : []
-    }
-
-    return []
+    const segments = toSegments(value)
+    return segments.length > 0 ? [segments] : []
   }
 
   private sanitizeCategoryPaths(paths: CategoryPath[]): CategoryPath[] {
@@ -700,6 +724,8 @@ export class HexoAgent {
     try {
       console.log('Updating Hexo cache...')
       await this.hexo.source.process()
+      this.purgeNullRecords('PostCategory')
+      this.purgeNullRecords('PostTag')
       await this.hexo.load()
       await this.hexo.database.save()
       console.log('Hexo cache updated successfully')
@@ -778,6 +804,12 @@ export class HexoAgent {
     if (sanitizedReplacements.length === 0) {
       throw new Error('Replacement categories cannot be empty')
     }
+
+    console.debug('replaceCategoryForPosts sanitized replacements', {
+      categoryId,
+      replacements,
+      sanitizedReplacements,
+    })
 
     const uniqueSources = Array.from(new Set(sources.filter((item) => item && item.trim().length > 0)))
     const result: BulkCategoryOperationResult = {

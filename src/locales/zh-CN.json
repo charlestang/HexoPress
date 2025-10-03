@@ -174,8 +174,10 @@
     },
     "dialogs": {
       "updateTitle": "批量修改分类",
-      "updateSummary": "本次将对“{category}”下的 {count} 篇文章修改分类。",
+      "updateSummary": "接下来，会将选中的 {count} 篇文章中属于“{category}”的分类替换为新的分类，请选择目标分类。",
       "updateConfirm": "确定",
+      "updateConfirmTitle": "确认分类替换",
+      "updateConfirmDetail": "确认后，所有选中文章中属于“{category}”的分类都会被替换为：{replacements}。文章里的其他分类将保持不变，是否继续？",
       "bulkDeleteConfirm": "确定要从 {count} 篇文章中移除分类“{category}”吗？该操作不可撤销。",
       "removeConfirm": "确定要从《{title}》中移除分类“{category}”吗？"
     },
@@ -183,6 +185,7 @@
       "removeSuccess": "已移除分类“{category}”",
       "removeFailure": "移除分类失败：{message}",
       "categorySelectionRequired": "请至少选择一个目标分类。",
+      "categorySelectionMustDiffer": "请选择与当前分类不同的目标分类。",
       "postsSelectionRequired": "请先勾选至少一篇文章。",
       "updateSummary": "批量修改分类完成：成功 {success}，失败 {failure}",
       "deleteSummary": "批量删除完成：成功 {success}，失败 {failure}",

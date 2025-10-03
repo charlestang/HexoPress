@@ -5,9 +5,11 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 export interface Props {
   modelValue: string | string[] | (string | string[])[]
+  disabledIds?: string[] | Set<string>
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => [],
+  disabledIds: () => [],
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -68,7 +70,10 @@ function onClickAddCategory() {
 <template>
   <div class="container">
     <el-scrollbar>
-      <CategoriesTree v-model="selectedCategories" :categories="categories" />
+      <CategoriesTree
+        v-model="selectedCategories"
+        :categories="categories"
+        :disabled-ids="props.disabledIds" />
     </el-scrollbar>
     <el-popover
       :visible="showAddNewCategoryPop"

@@ -178,6 +178,24 @@ const bulkForm = reactive({
   categories: [] as (string | string[])[],
 })
 const bulkSubmitting = ref(false)
+const bulkDialogDisabledIds = computed(() => (categoryId.value ? [categoryId.value] : []))
+
+function isSameAsCurrentCategory(path: string[]): boolean {
+  const current = categoryPath.value
+  if (current.length !== path.length) {
+    return false
+  }
+  return path.every((segment, index) => segment === current[index])
+}
+
+function formatCategoryPathsForDisplay(paths: string[][]): string {
+  if (paths.length === 0) {
+    return ''
+  }
+  const listSeparator = /^zh/i.test(appStore.locale) ? '、' : ', '
+  const pathSeparator = ' / '
+  return paths.map((segments) => segments.join(pathSeparator)).join(listSeparator)
+}
 
 async function fetchCategories() {
   categories.value = await window.site.getCategories()
@@ -241,6 +259,30 @@ async function submitBulkUpdate() {
     ElMessage.warning(t('categoryDetail.messages.categorySelectionRequired'))
     return
   }
+  const replacements = normalizedCategories.filter((path) => path.length > 0 && !isSameAsCurrentCategory(path))
+  if (replacements.length === 0) {
+    ElMessage.warning(t('categoryDetail.messages.categorySelectionMustDiffer'))
+    return
+  }
+  const categoryLabel = categoryDisplayName.value || t('categoryDetail.messages.unknown')
+  const replacementsLabel = formatCategoryPathsForDisplay(replacements)
+  try {
+    await ElMessageBox.confirm(
+      t('categoryDetail.dialogs.updateConfirmDetail', {
+        count: selectedSources.value.length,
+        category: categoryLabel,
+        replacements: replacementsLabel,
+      }),
+      t('categoryDetail.dialogs.updateConfirmTitle'),
+      {
+        type: 'warning',
+        confirmButtonText: t('categoryDetail.actions.confirmUpdate'),
+        cancelButtonText: t('categoryDetail.actions.cancel'),
+      },
+    )
+  } catch {
+    return
+  }
   bulkSubmitting.value = true
   bulkState.running = true
   bulkState.action = 'update'
@@ -249,7 +291,7 @@ async function submitBulkUpdate() {
     const result = await window.site.replaceCategoryForPosts(
       categoryId.value,
       selectedSources.value,
-      normalizedCategories,
+      replacements,
     )
     const success = result.success ?? 0
     const failure = result.failure ?? 0
@@ -317,8 +359,8 @@ function openPostEditor(post: Post) {
 }
 
 function openBulkDialog() {
-  const basePath = categoryPath.value
-  bulkForm.categories = basePath.length > 0 ? [basePath.slice()] : []
+  const sanitized = normalizeList(bulkForm.categories).filter((path) => !isSameAsCurrentCategory(path))
+  bulkForm.categories = sanitized.map((segments) => segments.slice()) as (string | string[])[]
   bulkDialogVisible.value = true
 }
 </script>
@@ -451,7 +493,7 @@ function openBulkDialog() {
           category: categoryDisplayName || t('categoryDetail.messages.unknown'),
         })"
         class="mb-3" />
-      <CategoriesTreePanel v-model="bulkForm.categories" />
+      <CategoriesTreePanel v-model="bulkForm.categories" :disabled-ids="bulkDialogDisabledIds" />
       <template #footer>
         <el-button @click="bulkDialogVisible = false" :disabled="bulkSubmitting">
           {{ t('categoryDetail.actions.cancel') }}

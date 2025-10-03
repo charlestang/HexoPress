@@ -42,6 +42,7 @@ declare global {
     permalink?: string
     value: string
     path?: string
+    disabled?: boolean
   }
 
   type FileEntry = {

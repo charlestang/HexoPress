@@ -173,8 +173,10 @@
     },
     "dialogs": {
       "updateTitle": "Modify Categories in Bulk",
-      "updateSummary": "Selected {count} post(s) from \"{category}\".",
+      "updateSummary": "You are about to replace category \"{category}\" on {count} selected post(s). Choose one or more target categories.",
       "updateConfirm": "Apply",
+      "updateConfirmTitle": "Confirm Replacement",
+      "updateConfirmDetail": "Replace category \"{category}\" on {count} post(s) with: {replacements}. Other categories on the posts stay unchanged. Continue?",
       "bulkDeleteConfirm": "Remove category \"{category}\" from {count} posts? This action cannot be undone.",
       "removeConfirm": "Remove category \"{category}\" from \"{title}\"?"
     },
@@ -182,6 +184,7 @@
       "removeSuccess": "Category \"{category}\" removed",
       "removeFailure": "Failed to remove category: {message}",
       "categorySelectionRequired": "Please choose at least one category.",
+      "categorySelectionMustDiffer": "Please choose a different category from the current one.",
       "postsSelectionRequired": "Please select at least one post first.",
       "updateSummary": "Category update completed: {success} succeeded, {failure} failed",
       "deleteSummary": "Removal completed: {success} succeeded, {failure} failed",

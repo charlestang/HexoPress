@@ -1,10 +1,28 @@
-import { computed } from 'vue'
+import { computed, unref } from 'vue'
 import type { Ref } from 'vue'
 
-export function useCategoryTree(categories: Ref<Category[]>) {
+type MaybeIterable<T> = Iterable<T> | ArrayLike<T>
+
+interface UseCategoryTreeOptions {
+  disabledIds?: Ref<MaybeIterable<string>> | MaybeIterable<string>
+}
+
+export function useCategoryTree(categories: Ref<Category[]>, options: UseCategoryTreeOptions = {}) {
+  const disabledSetRef = computed(() => {
+    const raw = options.disabledIds ? unref(options.disabledIds) : undefined
+    if (!raw) {
+      return new Set<string>()
+    }
+    if (raw instanceof Set) {
+      return raw
+    }
+    return new Set(Array.from(raw))
+  })
+
   // Convert category data to mapping
   const nodeMap = computed(() => {
     const map: { [id: string]: NodeData } = {}
+    const disabledSet = disabledSetRef.value
     for (const entry of categories.value) {
       map[entry.id] = {
         id: entry.id,
@@ -14,6 +32,7 @@ export function useCategoryTree(categories: Ref<Category[]>) {
         children: [],
         length: entry.length,
         permalink: entry.permalink,
+        disabled: disabledSet.has(entry.id),
       }
     }
     return map

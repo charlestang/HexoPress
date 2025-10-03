@@ -8,11 +8,13 @@ import { useCategoryTree } from '@/composables/useCategoryTree'
 interface Props {
   modelValue?: string | string[] | (string | string[])[]
   categories?: Category[]
+  disabledIds?: string[] | Set<string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => [],
   categories: () => [],
+  disabledIds: () => [],
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -20,9 +22,10 @@ const emit = defineEmits(['update:modelValue'])
 console.log('categories is: ', props.categories)
 // Create a computed property that responds to changes in props.categories
 const categoriesRef = computed(() => props.categories)
+const disabledIdsRef = computed(() => props.disabledIds)
 
 // Use the computed property as a parameter for useCategoryTree
-const { nodeMap, treeData } = useCategoryTree(categoriesRef)
+const { nodeMap, treeData } = useCategoryTree(categoriesRef, { disabledIds: disabledIdsRef })
 
 // normalize selected categories
 const normalizedCats = computed(() => {
@@ -58,7 +61,7 @@ const treeRef = ref<InstanceType<typeof ElTree>>()
 
 // monitor the changes of categories, update the tree's checked state
 watch(
-  [() => props.categories, () => props.modelValue],
+  [() => props.categories, () => props.modelValue, () => props.disabledIds],
   () => {
     if (treeRef.value) {
       treeRef.value.setCheckedKeys(computeCheckedKeys(normalizedCats.value))
@@ -81,7 +84,11 @@ function onCheck(node: NodeData, selectedNodes: TreeSelectedState) {
     const l = [n.label]
     let p = n
     while (p.parent) {
-      p = nodeMap.value[p.parent]
+      const parentNode = nodeMap.value[p.parent]
+      if (!parentNode) {
+        break
+      }
+      p = parentNode
       l.unshift(p.label)
     }
     return l
