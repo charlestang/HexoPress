@@ -132,6 +132,7 @@ export class HexoAgent {
       data: nextData,
       content: document.content,
     })
+    await this.updateCache()
   }
 
   public async getPostDocument(sourcePath: string): Promise<PostDocument> {
@@ -150,6 +151,7 @@ export class HexoAgent {
       data: nextData,
       content: document.content,
     })
+    await this.updateCache()
   }
 
   private async getCategoryPathById(categoryId: string): Promise<CategoryPath> {
