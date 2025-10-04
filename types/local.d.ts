@@ -73,6 +73,22 @@ declare global {
     }>
   }
 
+  type PostMeta = {
+    title?: string
+    layout?: string
+    date?: string | Date
+    updated?: string | Date
+    permalink?: string
+    excerpt?: string
+    tags?: string[]
+    categories?: string | string[] | string[][]
+    comments?: boolean
+    disableNunjucks?: boolean
+    lang?: string
+    published?: boolean
+    [key: string]: unknown
+  }
+
   type Post = {
     title: string
     date: string
@@ -168,6 +184,8 @@ declare global {
       categoryId: string,
       sources: string[],
     ) => Promise<BulkCategoryOperationResult>
+    getPostMeta: (sourcePath: string) => Promise<PostMeta>
+    updatePostMeta: (sourcePath: string, meta: PostMeta) => Promise<void>
     getSystemLocale: () => Promise<string>
     openUrl: (url: string) => Promise<void>
     getReadDir: (path: string) => Promise<FileEntry[]>

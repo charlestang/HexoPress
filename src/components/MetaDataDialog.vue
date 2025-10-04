@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
-import { ElLoading } from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { toDate, toStringArray } from '@shared/utils/value'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -26,7 +26,7 @@ const showDialog = computed({
   },
 })
 
-const frontMatter = ref<FrontMatter>({
+const frontMatter = ref<PostMeta>({
   title: '',
   permalink: '',
   date: new Date(),
@@ -35,15 +35,25 @@ const frontMatter = ref<FrontMatter>({
   categories: [],
   excerpt: '',
 })
-const content = ref('')
+const categoriesModel = computed<string | string[] | (string | string[])[]>({
+  get() {
+    return (frontMatter.value.categories as string | string[] | (string | string[])[]) ?? []
+  },
+  set(value) {
+    frontMatter.value.categories = value as PostMeta['categories']
+  },
+})
 async function onOpen() {
   const loadingInstance = ElLoading.service({ target: 'dialog' })
-  // The blog post already exists, it is now being edited.
-  await window.site.getContent(props.sourcePath).then((data) => {
-    const parseDown = parseFrontMatter(data)
-    frontMatter.value = parseDown.data as FrontMatter
-    content.value = parseDown.content
-  })
+  const meta = await window.site.getPostMeta(props.sourcePath)
+  frontMatter.value = {
+    ...frontMatter.value,
+    ...meta,
+    date: toDate(meta.date) ?? new Date(),
+    updated: toDate(meta.updated) ?? new Date(),
+    tags: toStringArray(meta.tags),
+    categories: (meta.categories ?? []) as PostMeta['categories'],
+  }
   loadingInstance.close()
 }
 
@@ -56,11 +66,7 @@ async function onSave() {
     })
   }
   frontMatter.value.updated = new Date()
-  // change js object to yaml string
-  const blogContent = stringify(frontMatter.value, content.value)
-
-  // that means this is an update request
-  await window.site.saveContent(props.sourcePath, blogContent)
+  await window.site.updatePostMeta(props.sourcePath, frontMatter.value)
   ElMessage.success(t('editor.createSuccess'))
   emit('success')
   loadingInstance.close()
@@ -89,7 +95,7 @@ async function onSave() {
       </el-form-item>
       <el-form-item :label="t('editor.categories')">
         <div style="width: 100%;">
-          <CategoriesTreePanel v-model="frontMatter.categories" />
+          <CategoriesTreePanel v-model="categoriesModel" />
         </div>
       </el-form-item>
       <el-form-item :label="t('editor.tags')">

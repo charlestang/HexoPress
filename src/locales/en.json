@@ -177,7 +177,8 @@
       "updateConfirm": "Apply",
       "updateConfirmTitle": "Confirm Replacement",
       "updateConfirmDetail": "Replace category \"{category}\" on {count} post(s) with: {replacements}. Other categories on the posts stay unchanged. Continue?",
-      "bulkDeleteConfirm": "Remove category \"{category}\" from {count} posts? This action cannot be undone.",
+      "bulkDeleteConfirm": "Remove category \"{category}\" from {count} posts? This action cannot be undone.{warning}",
+      "bulkDeleteConfirmWarning": "\n\nNote: {count} selected post(s) will have no categories afterwards.",
       "removeConfirm": "Remove category \"{category}\" from \"{title}\"?"
     },
     "messages": {

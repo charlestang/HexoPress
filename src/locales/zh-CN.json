@@ -178,7 +178,8 @@
       "updateConfirm": "确定",
       "updateConfirmTitle": "确认分类替换",
       "updateConfirmDetail": "确认后，所有选中文章中属于“{category}”的分类都会被替换为：{replacements}。文章里的其他分类将保持不变，是否继续？",
-      "bulkDeleteConfirm": "确定要从 {count} 篇文章中移除分类“{category}”吗？该操作不可撤销。",
+      "bulkDeleteConfirm": "确定要从 {count} 篇文章中移除分类“{category}”吗？该操作不可撤销。{warning}",
+      "bulkDeleteConfirmWarning": "\n\n注意：其中 {count} 篇文章将不再属于任何分类。",
       "removeConfirm": "确定要从《{title}》中移除分类“{category}”吗？"
     },
     "messages": {

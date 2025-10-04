@@ -56,6 +56,8 @@ app.whenReady().then(async () => {
   ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
   ipcMain.handle('post:content', (event, path) => agent.getContent(path))
   ipcMain.handle('post:save', (event, path, content) => agent.saveContent(path, content))
+  ipcMain.handle('post:getMeta', (event, path) => agent.getPostMeta(path))
+  ipcMain.handle('post:updateMeta', (event, path, meta) => agent.updatePostMeta(path, meta))
   ipcMain.handle('post:create', (event, type, title, slug, content) =>
     agent.createFile(type, title, slug, content),
   )

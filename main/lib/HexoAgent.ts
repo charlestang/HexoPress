@@ -4,14 +4,18 @@ import Hexo from 'hexo'
 import util from 'hexo-util'
 import { parse as parseFrontMatter, stringify as stringifyFrontMatter } from 'hexo-front-matter'
 import { join, relative } from 'path'
+import {
+  CategoryPath,
+  FrontMatterData,
+  buildPostMeta,
+  normalizeCategoryPaths,
+  pathsEqual,
+  preparePostMeta,
+  sanitizeCategoryPaths,
+  setFrontMatterCategories,
+} from './postMetaUtils'
 
 const { slugize } = util
-
-type CategoryPath = string[]
-
-type FrontMatterData = Record<string, unknown> & {
-  categories?: string | string[] | string[][]
-}
 
 type FrontMatterDocument = {
   data: FrontMatterData
@@ -114,91 +118,20 @@ export class HexoAgent {
     })
   }
 
-  private normalizeCategoryPaths(value: unknown): CategoryPath[] {
-    if (value === null || typeof value === 'undefined') {
-      return []
-    }
-
-    const toSegments = (entry: unknown): string[] => {
-      if (entry === null || typeof entry === 'undefined') {
-        return []
-      }
-
-      if (Array.isArray(entry)) {
-        return entry
-          .flatMap((segment) => toSegments(segment))
-          .filter((segment) => segment.length > 0)
-      }
-
-      return String(entry)
-        .split('>')
-        .map((segment) => segment.trim())
-        .filter((segment) => segment.length > 0)
-    }
-
-    if (Array.isArray(value)) {
-      if (value.length === 0) {
-        return []
-      }
-      return value.reduce<CategoryPath[]>((acc, item) => {
-        const segments = toSegments(item)
-        if (segments.length > 0) {
-          acc.push(segments)
-        }
-        return acc
-      }, [])
-    }
-
-    const segments = toSegments(value)
-    return segments.length > 0 ? [segments] : []
+  public async getPostMeta(sourcePath: string): Promise<PostMeta> {
+    await this.ensureReady()
+    const document = this.readPostFrontMatter(sourcePath)
+    return buildPostMeta(document.data)
   }
 
-  private sanitizeCategoryPaths(paths: CategoryPath[]): CategoryPath[] {
-    const dedup = new Set<string>()
-    const sanitized: CategoryPath[] = []
-
-    for (const path of paths) {
-      const clean = path.map((segment) => segment.trim()).filter((segment) => segment.length > 0)
-      if (clean.length === 0) {
-        continue
-      }
-      const key = clean.join('>')
-      if (!dedup.has(key)) {
-        dedup.add(key)
-        sanitized.push(clean)
-      }
-    }
-
-    return sanitized
-  }
-
-  private setFrontMatterCategories(frontMatter: FrontMatterData, paths: CategoryPath[]): void {
-    const sanitized = this.sanitizeCategoryPaths(paths)
-    if (sanitized.length === 0) {
-      delete frontMatter.categories
-      return
-    }
-
-    const allSingleLevel = sanitized.every((path) => path.length === 1)
-    if (allSingleLevel) {
-      const singleValues = sanitized.map((path) => path[0])
-      frontMatter.categories = singleValues.length === 1 ? singleValues[0] : singleValues
-      return
-    }
-
-    frontMatter.categories = sanitized
-  }
-
-  private pathsEqual(a: CategoryPath, b: CategoryPath): boolean {
-    if (a.length !== b.length) {
-      return false
-    }
-    for (let i = 0; i < a.length; i += 1) {
-      if (a[i] !== b[i]) {
-        return false
-      }
-    }
-    return true
+  public async updatePostMeta(sourcePath: string, meta: PostMeta): Promise<void> {
+    await this.ensureReady()
+    const document = this.readPostFrontMatter(sourcePath)
+    const nextData = preparePostMeta(meta)
+    this.writePostFrontMatter(sourcePath, {
+      data: nextData,
+      content: document.content,
+    })
   }
 
   private async getCategoryPathById(categoryId: string): Promise<CategoryPath> {
@@ -242,10 +175,10 @@ export class HexoAgent {
   ): Promise<{ changed: boolean }> {
     await this.ensureReady()
     const document = this.readPostFrontMatter(sourcePath)
-    const currentPaths = this.normalizeCategoryPaths(document.data.categories)
-    const currentSanitized = this.sanitizeCategoryPaths(currentPaths)
+    const currentPaths = normalizeCategoryPaths(document.data.categories)
+    const currentSanitized = sanitizeCategoryPaths(currentPaths)
     const { paths: mutatedPaths, changed } = mutator(currentSanitized)
-    const nextPaths = this.sanitizeCategoryPaths(mutatedPaths)
+    const nextPaths = sanitizeCategoryPaths(mutatedPaths)
 
     const structuralChange =
       currentSanitized.length !== nextPaths.length ||
@@ -254,14 +187,14 @@ export class HexoAgent {
         if (!target) {
           return true
         }
-        return !this.pathsEqual(path, target)
+        return !pathsEqual(path, target)
       })
 
     if (!changed && !structuralChange) {
       return { changed: false }
     }
 
-    this.setFrontMatterCategories(document.data, nextPaths)
+    setFrontMatterCategories(document.data, nextPaths)
     this.writePostFrontMatter(sourcePath, document)
     return { changed: true }
   }
@@ -799,7 +732,7 @@ export class HexoAgent {
 
     await this.ensureReady()
     const targetPath = await this.getCategoryPathById(categoryId)
-    const sanitizedReplacements = this.sanitizeCategoryPaths(replacements ?? [])
+    const sanitizedReplacements = sanitizeCategoryPaths(replacements ?? [])
 
     if (sanitizedReplacements.length === 0) {
       throw new Error('Replacement categories cannot be empty')
@@ -823,13 +756,13 @@ export class HexoAgent {
     for (const source of uniqueSources) {
       try {
         const mutation = await this.mutatePostCategories(source, (paths) => {
-          const withoutTarget = paths.filter((path) => !this.pathsEqual(path, targetPath))
+          const withoutTarget = paths.filter((path) => !pathsEqual(path, targetPath))
           let changed = withoutTarget.length !== paths.length
           const combined: CategoryPath[] = [
             ...withoutTarget.map((path) => [...path]),
             ...sanitizedReplacements.map((path) => [...path]),
           ]
-          const deduped = this.sanitizeCategoryPaths(combined)
+          const deduped = sanitizeCategoryPaths(combined)
 
           if (!changed) {
             if (deduped.length !== paths.length) {
@@ -840,7 +773,7 @@ export class HexoAgent {
                 if (!original) {
                   return true
                 }
-                return !this.pathsEqual(path, original)
+                return !pathsEqual(path, original)
               })
             ) {
               changed = true
@@ -895,7 +828,7 @@ export class HexoAgent {
     for (const source of uniqueSources) {
       try {
         const mutation = await this.mutatePostCategories(source, (paths) => {
-          const filtered = paths.filter((path) => !this.pathsEqual(path, targetPath))
+          const filtered = paths.filter((path) => !pathsEqual(path, targetPath))
           const changed = filtered.length !== paths.length
           return { paths: filtered, changed }
         })

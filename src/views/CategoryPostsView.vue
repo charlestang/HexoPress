@@ -4,10 +4,10 @@ import { useI18n } from 'vue-i18n'
 import type { ElTable } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useAppStore } from '@/stores/app'
-import { formatDate } from '@/utils/date'
+import { formatDate } from '@shared/utils/date'
 import { useRoute, useRouter } from 'vue-router'
 import { useCategoryTree } from '@/composables/useCategoryTree'
-import { normalizeList } from '@/utils/stringArray'
+import { normalizeList } from '@shared/utils/stringArray'
 import CategoriesTreePanel from '@/components/CategoriesTreePanel.vue'
 
 const route = useRoute()
@@ -315,11 +315,38 @@ async function handleBulkDelete() {
     return
   }
   const categoryLabel = categoryDisplayName.value || t('categoryDetail.messages.unknown')
+  const uncategorizedCount = selectedPosts.value.reduce((count, post) => {
+    const categoriesForPost = post.categories ?? []
+    if (!categoryId.value || categoriesForPost.length === 0) {
+      return count
+    }
+    let hasTarget = false
+    const remaining = new Set<string>()
+    categoriesForPost.forEach((cat) => {
+      const id = cat && cat._id
+      if (!id) {
+        return
+      }
+      if (id === categoryId.value) {
+        hasTarget = true
+        return
+      }
+      remaining.add(id)
+    })
+    if (hasTarget && remaining.size === 0) {
+      return count + 1
+    }
+    return count
+  }, 0)
+  const warningSuffix = uncategorizedCount > 0
+    ? t('categoryDetail.dialogs.bulkDeleteConfirmWarning', { count: uncategorizedCount })
+    : ''
   try {
     await ElMessageBox.confirm(
       t('categoryDetail.dialogs.bulkDeleteConfirm', {
         count: selectedSources.value.length,
         category: categoryLabel,
+        warning: warningSuffix,
       }),
       t('categoryDetail.actions.delete'),
       {

@@ -51,6 +51,7 @@ export default defineConfig((env) => {
       preserveSymlinks: true,
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
+        '@shared': fileURLToPath(new URL('./shared', import.meta.url)),
       },
     },
     clearScreen: false,

@@ -1,14 +1,15 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["../src/**/*", "../types/**/*.d.ts"],
+  "include": ["../src/**/*", "../shared/**/*", "../types/**/*.d.ts"],
   "exclude": ["../src/**/__tests__/*"],
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "rootDir": "../src",
+    "rootDirs": ["../src", "../shared"],
     "baseUrl": "..",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@shared/*": ["shared/*"]
     }
   }
 }

@@ -2,7 +2,7 @@
 import type { ElTree } from 'element-plus'
 import type { TreeData, TreeKey } from 'element-plus/es/components/tree/src/tree.type'
 import { computed, ref, watch } from 'vue'
-import { normalizeList } from '@/utils/stringArray'
+import { normalizeList } from '@shared/utils/stringArray'
 import { useCategoryTree } from '@/composables/useCategoryTree'
 
 interface Props {

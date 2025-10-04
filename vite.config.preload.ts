@@ -1,5 +1,6 @@
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig, mergeConfig } from 'vite'
+import { fileURLToPath } from 'node:url'
 import { getBuildConfig, external, pluginHotRestart } from './vite.config.base'
 
 // https://vitejs.dev/config
@@ -23,6 +24,11 @@ export default defineConfig((env) => {
       },
     },
     plugins: [pluginHotRestart('reload')],
+    resolve: {
+      alias: {
+        '@shared': fileURLToPath(new URL('./shared', import.meta.url)),
+      },
+    },
   }
 
   return mergeConfig(getBuildConfig(forgeEnv), config)

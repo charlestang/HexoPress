@@ -16,6 +16,9 @@ contextBridge.exposeInMainWorld('site', {
   getContent: (sourcePath: string) => ipcRenderer.invoke('post:content', sourcePath),
   saveContent: (sourcePath: string, content: string) =>
     ipcRenderer.invoke('post:save', sourcePath, content),
+  getPostMeta: (sourcePath: string) => ipcRenderer.invoke('post:getMeta', sourcePath),
+  updatePostMeta: (sourcePath: string, meta: PostMeta) =>
+    ipcRenderer.invoke('post:updateMeta', sourcePath, meta),
   createFile: (type, title: string, slug: string, content: string) =>
     ipcRenderer.invoke('post:create', type, title, slug, content),
   moveFile: (sourcePath: string, content: string) =>
