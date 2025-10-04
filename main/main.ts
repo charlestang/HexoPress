@@ -83,12 +83,12 @@ app.whenReady().then(async () => {
     fsAgent.saveImage(path, content)
     agent.generate()
   })
-  ipcMain.handle('agent:init', (event, path) => {
+  ipcMain.handle('agent:init', async (event, path) => {
     const check = HexoAgent.checkDir(path) && HexoAgent.checkHexoDir(path)
     if (check) {
       agent.init(path)
       fsAgent.init(path)
-      httpServer.init(path)
+      await httpServer.init(path)
     }
     return check
   })
