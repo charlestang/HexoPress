@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/preview.css'
-import { parseFrontMatter, type FrontMatter } from '@/components/FrontMatter'
 import { Folder, PriceTag, Timer } from '@element-plus/icons-vue'
+import { normalizeList } from '@shared/utils/stringArray'
+import { toDate, toStringArray } from '@shared/utils/value'
 
 const props = defineProps<{
   modelValue: boolean
@@ -52,22 +53,28 @@ function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): 
   })
 }
 
-const frontMatter = ref<FrontMatter>({
+const frontMatter = ref<PostMeta>({
   title: '',
   date: new Date(),
   permalink: '',
-  categories: [] as string[],
-  tags: [] as string[],
+  categories: [],
+  tags: [],
 })
 
 async function fetchContent() {
   if (!props.sourcePath) return
   loading.value = true
   try {
-    const result = await window.site.getContent(props.sourcePath)
-    const parseDown = parseFrontMatter(result)
-    frontMatter.value = parseDown.data as FrontMatter
-    content.value = parseDown.content
+    const { meta, content: body } = await window.site.getPostDocument(props.sourcePath)
+    frontMatter.value = {
+      ...frontMatter.value,
+      ...meta,
+      date: toDate(meta.date) ?? new Date(),
+      updated: toDate(meta.updated) ?? meta.updated,
+      tags: toStringArray(meta.tags),
+      categories: meta.categories ?? [],
+    }
+    content.value = body
   } catch (error) {
     console.error('Failed to fetch post content:', error)
   } finally {
@@ -92,6 +99,21 @@ watch(
     }
   },
 )
+
+const categoriesDisplay = computed(() => {
+  const normalized = normalizeList(frontMatter.value.categories ?? [])
+  if (normalized.length === 0) {
+    return ''
+  }
+  return normalized.map((path) => path.join(' / ')).join('、')
+})
+
+const tagsDisplay = computed(() => toStringArray(frontMatter.value.tags).join('、'))
+
+const dateDisplay = computed(() => {
+  const date = toDate(frontMatter.value.date)
+  return date ? date.toLocaleString() : ''
+})
 </script>
 
 <template>
@@ -106,18 +128,18 @@ watch(
         <h1 class="text-28px font-600 m-0 mb-4 text-left leading-1.4">{{ frontMatter.title }}</h1>
         <div class="text-14px text-gray-600">
           <div class="flex gap-4 mb-2">
-            <div v-if="frontMatter.categories.length" class="flex items-center gap-1">
+            <div v-if="categoriesDisplay" class="flex items-center gap-1">
               <el-icon class="text-16px text-gray-600"><Folder /></el-icon>
-              <span class="text-gray-800">{{ Array.isArray(frontMatter.categories) ? frontMatter.categories.join(' / ') : frontMatter.categories }}</span>
+              <span class="text-gray-800">{{ categoriesDisplay }}</span>
             </div>
-            <div v-if="frontMatter.tags.length" class="flex items-center gap-1">
+            <div v-if="tagsDisplay" class="flex items-center gap-1">
               <el-icon class="text-16px text-gray-600"><PriceTag /></el-icon>
-              <span class="text-gray-800">{{ frontMatter.tags.join('、') }}</span>
+              <span class="text-gray-800">{{ tagsDisplay }}</span>
             </div>
           </div>
           <div class="flex items-center gap-1">
             <el-icon class="text-16px text-gray-600"><Timer /></el-icon>
-            <span class="text-gray-800">{{ frontMatter.date ? new Date(frontMatter.date).toLocaleString() : '' }}</span>
+            <span class="text-gray-800">{{ dateDisplay }}</span>
           </div>
         </div>
       </div>

@@ -89,6 +89,11 @@ declare global {
     [key: string]: unknown
   }
 
+  type PostDocument = {
+    meta: PostMeta
+    content: string
+  }
+
   type Post = {
     title: string
     date: string
@@ -186,6 +191,8 @@ declare global {
     ) => Promise<BulkCategoryOperationResult>
     getPostMeta: (sourcePath: string) => Promise<PostMeta>
     updatePostMeta: (sourcePath: string, meta: PostMeta) => Promise<void>
+    getPostDocument: (sourcePath: string) => Promise<PostDocument>
+    savePostDocument: (sourcePath: string, document: PostDocument) => Promise<void>
     getSystemLocale: () => Promise<string>
     openUrl: (url: string) => Promise<void>
     getReadDir: (path: string) => Promise<FileEntry[]>

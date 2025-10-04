@@ -28,7 +28,7 @@ const parts = computed((): TextPart[] => {
     return [{ text: props.text, isKeyword: false }]
   }
 
-  const keywordToHighlight = keywords.value[0]
+  const keywordToHighlight = keywords.value[0] ?? ''
   const textToSearch = props.text
   const resultingParts: TextPart[] = []
   let currentIndex = 0

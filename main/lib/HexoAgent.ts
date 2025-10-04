@@ -134,6 +134,24 @@ export class HexoAgent {
     })
   }
 
+  public async getPostDocument(sourcePath: string): Promise<PostDocument> {
+    await this.ensureReady()
+    const document = this.readPostFrontMatter(sourcePath)
+    return {
+      meta: buildPostMeta(document.data),
+      content: document.content,
+    }
+  }
+
+  public async savePostDocument(sourcePath: string, document: PostDocument): Promise<void> {
+    await this.ensureReady()
+    const nextData = preparePostMeta(document.meta)
+    this.writePostFrontMatter(sourcePath, {
+      data: nextData,
+      content: document.content,
+    })
+  }
+
   private async getCategoryPathById(categoryId: string): Promise<CategoryPath> {
     await this.ensureReady()
     const categoryModel = this.hexo.database.model('Category')

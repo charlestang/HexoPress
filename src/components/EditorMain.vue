@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { parseFrontMatter, stringify, type FrontMatter } from '@/components/FrontMatter'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useEditorStore } from '@/stores/editorStore' // Import the editor store
@@ -20,6 +19,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { createSmoothScroll } from '@vavt/util'
+import { toDate, toStringArray } from '@shared/utils/value'
 
 const { t } = useI18n()
 const editorStore = useEditorStore() // Initialize the store
@@ -37,7 +37,7 @@ const sourcePath = ref('')
 const route = useRoute()
 
 isNewPost.value = route.query.type != null && route.query.type === 'new'
-sourcePath.value = route.query.sourcePath as string
+sourcePath.value = (route.query.sourcePath as string) ?? ''
 if (
   !isNewPost.value &&
   (typeof sourcePath.value === 'undefined' || sourcePath.value.length === 0)
@@ -60,37 +60,82 @@ const isDirty = ref(false)
  * @description The content of the blog post.
  */
 const text = ref('')
+const initializing = ref(true)
 
 watch(text, (val, oldVal) => {
+  if (initializing.value) {
+    return
+  }
   if (val !== oldVal) {
     isDirty.value = true
   }
 })
 
-const frontMatter = ref<FrontMatter>({
+const frontMatter = ref<PostMeta>({
   title: '',
   date: new Date(),
   permalink: '',
   categories: [],
   tags: [],
 })
+const dateModel = computed<Date>({
+  get() {
+    return toDate(frontMatter.value.date) ?? new Date()
+  },
+  set(value) {
+    frontMatter.value.date = value
+  },
+})
+const categoriesModel = computed<string | string[] | (string | string[])[]>({
+  get() {
+    return (frontMatter.value.categories as string | string[] | (string | string[])[]) ?? []
+  },
+  set(value) {
+    frontMatter.value.categories = value as PostMeta['categories']
+  },
+})
 
 watch(
   frontMatter,
   () => {
+    if (initializing.value) {
+      return
+    }
     isDirty.value = true
   },
   { deep: true },
 )
 
-if (!isNewPost.value) {
-  // The blog post already exists, it is now being edited.
-  window.site.getContent(sourcePath.value).then((content) => {
-    const parseDown = parseFrontMatter(content)
-    frontMatter.value = parseDown.data as FrontMatter
-    text.value = parseDown.content
-    console.log('parsed front-matter: ', frontMatter.value)
-  })
+function applyDocumentMeta(meta: PostMeta) {
+  const previous = initializing.value
+  initializing.value = true
+  frontMatter.value = {
+    ...frontMatter.value,
+    ...meta,
+    date: toDate(meta.date) ?? new Date(),
+    updated: toDate(meta.updated) ?? meta.updated,
+    tags: toStringArray(meta.tags),
+    categories: meta.categories ?? [],
+  }
+  initializing.value = previous
+}
+
+async function loadDocument(path: string) {
+  try {
+    initializing.value = true
+    const { meta, content } = await window.site.getPostDocument(path)
+    applyDocumentMeta(meta)
+    text.value = content
+    isDirty.value = false
+  } finally {
+    initializing.value = false
+  }
+}
+
+if (!isNewPost.value && sourcePath.value) {
+  loadDocument(sourcePath.value)
+} else {
+  initializing.value = false
 }
 
 /**
@@ -143,22 +188,37 @@ async function _formValidate(): Promise<boolean> {
   }
   return true
 }
-function _getBlogContent(): string {
-  if (isDirty.value) {
-    // Only update frontMatter time if article content has changed
-    frontMatter.value.updated = new Date()
+function buildDocument(): PostDocument {
+  const date = toDate(frontMatter.value.date) ?? new Date()
+  const updated = isDirty.value
+    ? new Date()
+    : toDate(frontMatter.value.updated) ?? date
+
+  const meta: PostMeta = {
+    ...frontMatter.value,
+    date,
+    updated,
+    tags: toStringArray(frontMatter.value.tags),
   }
-  // change js object to yaml string
-  return stringify(frontMatter.value, text.value)
+
+  return {
+    meta,
+    content: text.value,
+  }
 }
+
 async function updatePost() {
   const check = await _formValidate()
   if (!check) {
     return
   }
-  const blogContent = _getBlogContent()
-  // that means this is an update request
-  await window.site.saveContent(sourcePath.value, blogContent)
+  if (!sourcePath.value) {
+    return
+  }
+  const document = buildDocument()
+  await window.site.savePostDocument(sourcePath.value, document)
+  applyDocumentMeta(document.meta)
+  isDirty.value = false
   ElMessage.success(t('editor.createSuccess'))
 }
 
@@ -167,22 +227,28 @@ async function upsertDraft() {
   if (!check) {
     return
   }
-  const blogContent = _getBlogContent()
-  if (typeof sourcePath.value === 'undefined' /* a new document has not sourcePath */) {
+  const document = buildDocument()
+  if (!sourcePath.value) {
     console.log('upsertDraft: ', frontMatter.value)
-    // that means this is a new post or draft
     sourcePath.value = await window.site.createFile(
       '_drafts',
       frontMatter.value.title ?? '',
       frontMatter.value.permalink ?? '',
-      blogContent,
+      '',
     )
+    if (!sourcePath.value) {
+      ElMessage.error(t('editor.createFailed'))
+      return
+    }
+    await window.site.savePostDocument(sourcePath.value, document)
+    applyDocumentMeta(document.meta)
     isDirty.value = false
     isNewPost.value = false
     ElMessage.success(t('editor.draftSaveSuccess'))
   } else {
-    // that means this is an update request
-    await window.site.saveContent(sourcePath.value, blogContent)
+    await window.site.savePostDocument(sourcePath.value, document)
+    applyDocumentMeta(document.meta)
+    isDirty.value = false
     ElMessage.success(t('editor.draftSaveSuccess'))
   }
 }
@@ -192,27 +258,34 @@ async function publishDraft() {
   if (!check) {
     return
   }
-  const blogContent = _getBlogContent()
-  if (typeof sourcePath.value === 'undefined' /* a new document has not sourcePath */) {
-    // that means this is a new post or draft
+  const document = buildDocument()
+  if (!sourcePath.value) {
     sourcePath.value = await window.site.createFile(
       '_posts',
       frontMatter.value.title ?? '',
       frontMatter.value.permalink ?? '',
-      blogContent,
+      '',
     )
+    if (!sourcePath.value) {
+      ElMessage.error(t('editor.createFailed'))
+      return
+    }
+    await window.site.savePostDocument(sourcePath.value, document)
+    applyDocumentMeta(document.meta)
     isDirty.value = false
     isNewPost.value = false
     ElMessage.success(t('editor.draftPublishSuccess'))
   } else {
-    // that means this is an update request
-    const newPath = await window.site.moveFile(sourcePath.value, blogContent)
+    await window.site.savePostDocument(sourcePath.value, document)
+    const newPath = await window.site.moveFile(sourcePath.value, '')
     console.log('move file from: ', sourcePath.value, ' to newPath: ', newPath)
-    if (newPath.length == 0) {
+    if (!newPath) {
       ElMessage.error(t('editor.createFailed'))
       return
     }
     sourcePath.value = newPath
+    applyDocumentMeta(document.meta)
+    isDirty.value = false
     ElMessage.success(t('editor.draftPublishSuccess'))
   }
 }
@@ -258,7 +331,7 @@ async function onUploadImage(
     const monthS = month < 10 ? '0' + month : month
     return `${year}/${monthS}`
   }
-  filePath.value = formatDate(frontMatter.value.date as Date) + '/' + firstFile.name
+  filePath.value = formatDate(dateModel.value) + '/' + firstFile.name
   uploaded.value = function () {
     console.log('upload success')
     // TODO: this is not so good, because it is relative to the permalink.
@@ -491,7 +564,7 @@ function onFontBig() {
         <el-aside :class="asideExpand">
           <el-collapse v-model="activeAsidePanels">
             <el-collapse-item :title="t('editor.meta')" name="meta">
-              <DateMetaEntry v-model="frontMatter.date" class="meta-entry" />
+              <DateMetaEntry v-model="dateModel" class="meta-entry" />
               <UrlMetaEntry v-model="frontMatter.permalink" class="meta-entry" />
               <el-row v-if="postPublished" :gutter="20">
                 <el-col :span="10">
@@ -512,7 +585,7 @@ function onFontBig() {
               </el-row>
             </el-collapse-item>
             <el-collapse-item :title="t('editor.categories')" name="cate">
-              <CategoriesTreePanel v-model="frontMatter.categories" />
+              <CategoriesTreePanel v-model="categoriesModel" />
             </el-collapse-item>
             <el-collapse-item :title="t('editor.tags')" name="tags">
               <el-text type="info" size="small">{{ t('editor.selectTags') }}</el-text>

@@ -24,7 +24,13 @@ async function onSubmit() {
 
 function selectPath() {
   window.site.openDirDialog().then((result) => {
-    form.directory = result['filePaths'][0]
+    if (result.canceled) {
+      return
+    }
+    const [first] = result.filePaths ?? []
+    if (first) {
+      form.directory = first
+    }
   })
 }
 </script>
