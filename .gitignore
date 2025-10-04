@@ -16,6 +16,9 @@ coverage
 
 # Vite
 .vite
+types/auto-imports.d.ts
+types/components.d.ts
+types/.eslintrc-auto-import.json
 
 /cypress/videos/
 /cypress/screenshots/
