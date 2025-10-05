@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
-import { toDate, toStringArray } from '@shared/utils/value'
-import { computed, ref } from 'vue'
+import { cloneValue, toDate, toStringArray } from '@shared/utils/value'
+import { computed, ref, toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -57,6 +57,20 @@ async function onOpen() {
   loadingInstance.close()
 }
 
+function buildMetaPayload(updatedOverride?: Date): PostMeta {
+  const raw = toRaw(frontMatter.value)
+  const meta = cloneValue<PostMeta>(raw as PostMeta)
+  meta.date = toDate(raw.date) ?? new Date()
+  meta.updated = updatedOverride ?? toDate(raw.updated) ?? new Date()
+  meta.tags = toStringArray(raw.tags)
+
+  if (typeof raw.categories !== 'undefined') {
+    meta.categories = cloneValue(raw.categories)
+  }
+
+  return meta
+}
+
 async function onSave() {
   const loadingInstance = ElLoading.service({ target: 'dialog' })
 
@@ -65,8 +79,10 @@ async function onSave() {
       confirmButtonText: t('editor.ok'),
     })
   }
-  frontMatter.value.updated = new Date()
-  await window.site.updatePostMeta(props.sourcePath, frontMatter.value)
+  const updated = new Date()
+  frontMatter.value.updated = updated
+  const payload = buildMetaPayload(updated)
+  await window.site.updatePostMeta(props.sourcePath, payload)
   ElMessage.success(t('editor.createSuccess'))
   emit('success')
   loadingInstance.close()

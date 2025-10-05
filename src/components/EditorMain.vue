@@ -15,11 +15,11 @@ import {
   type CodeMirrorExtension,
 } from 'md-editor-v3' // Import CatalogLink
 import 'md-editor-v3/lib/style.css'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { createSmoothScroll } from '@vavt/util'
-import { toDate, toStringArray } from '@shared/utils/value'
+import { cloneValue, toDate, toStringArray } from '@shared/utils/value'
 
 const { t } = useI18n()
 const editorStore = useEditorStore() // Initialize the store
@@ -189,16 +189,17 @@ async function _formValidate(): Promise<boolean> {
   return true
 }
 function buildDocument(): PostDocument {
-  const date = toDate(frontMatter.value.date) ?? new Date()
-  const updated = isDirty.value
-    ? new Date()
-    : toDate(frontMatter.value.updated) ?? date
+  const rawFrontMatter = toRaw(frontMatter.value)
+  const date = toDate(rawFrontMatter.date) ?? new Date()
+  const updated = isDirty.value ? new Date() : toDate(rawFrontMatter.updated) ?? date
 
-  const meta: PostMeta = {
-    ...frontMatter.value,
-    date,
-    updated,
-    tags: toStringArray(frontMatter.value.tags),
+  const meta = cloneValue<PostMeta>(rawFrontMatter as PostMeta)
+  meta.date = date
+  meta.updated = updated
+  meta.tags = toStringArray(rawFrontMatter.tags)
+
+  if (typeof rawFrontMatter.categories !== 'undefined') {
+    meta.categories = cloneValue(rawFrontMatter.categories)
   }
 
   return {
