@@ -5,6 +5,7 @@ import DashboardView from '@/views/DashboardView.vue'
 import FrameView from '@/views/FrameView.vue'
 import MainWindow from '@/views/MainWindow.vue'
 import MediaLibraryView from '@/views/MediaLibraryView.vue'
+import MediaDetailView from '@/views/MediaDetailView.vue'
 import PostListView from '@/views/PostListView.vue'
 import PreferencesView from '@/views/PreferencesView.vue'
 import SetupView from '@/views/SetupView.vue'
@@ -54,6 +55,12 @@ const router = createRouter({
           path: 'media-library',
           name: 'media-library',
           component: MediaLibraryView,
+        },
+        {
+          path: 'media-library/:groupKey',
+          name: 'media-detail',
+          component: MediaDetailView,
+          props: true,
         },
         {
           path: 'preferences',
