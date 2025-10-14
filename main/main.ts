@@ -83,6 +83,8 @@ app.whenReady().then(async () => {
     fsAgent.saveImage(path, content)
     agent.generate()
   })
+  ipcMain.handle('fs:fileInfo', (event, path) => fsAgent.getFileInfo(path))
+  ipcMain.handle('fs:assetReferences', (event, path) => fsAgent.findAssetReferences(path))
   ipcMain.handle('agent:init', async (event, path) => {
     const check = HexoAgent.checkDir(path) && HexoAgent.checkHexoDir(path)
     if (check) {

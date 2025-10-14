@@ -151,17 +151,35 @@
     "variantCount": "{count} 个尺寸",
     "backToList": "返回列表",
     "detailTitle": "媒体文件详情",
+    "detailImageTitle": "图片：{name}",
     "detailFallback": "素材详情",
     "detailMissing": "素材不存在或已被删除",
+    "fileSize": "文件大小",
+    "dimensions": "尺寸",
+    "createdAt": "创建时间",
+    "updatedAt": "更新时间",
+    "openInBrowser": "在浏览器打开",
+    "openInBrowserLink": "打开",
+    "viewReferences": "查看引用",
+    "referenceDialogTitle": "引用“{name}”的文章",
+    "referenceDialogEmpty": "没有文章引用这张图片。",
+    "referenceDialogDelete": "删除此图片",
     "deleteConfirmTitle": "删除确认",
     "deleteConfirmMessage": "您要删除的文件可能有文章引用，删除后可能导致图片显示为空白，是否继续？",
     "deleteSuccess": "删除成功",
     "deleteFailed": "删除失败："
   },
   "categoryDetail": {
+    "pageTitle": "分类：{path}",
+    "postCount": "（共 {count} 篇）",
+    "toggle": {
+      "showDirectLink": "只显示仅包含在父分类的文章",
+      "showAllLink": "全部显示",
+      "showingAll": "当前列表包含该分类及其子分类的文章。"
+    },
     "breadcrumbPrefix": "分类（共 {count} 个）",
     "returnToList": "返回分类列表",
-    "filteredOut": "已过滤 {count} 篇包含子分类的文章",
+    "filteredOut": "已过滤 {count} 篇包含子分类的文章。",
     "onlyDirect": "仅显示直接归属于当前分类的文章",
     "progress": "正在执行：{action}",
     "table": {
@@ -175,8 +193,8 @@
       "draft": "草稿"
     },
     "actions": {
-      "update": "批量修改分类",
-      "delete": "批量移除分类",
+      "update": "修改分类",
+      "delete": "移除分类",
       "remove": "移除分类",
       "confirmRemove": "移除",
       "confirmDelete": "删除",

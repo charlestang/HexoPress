@@ -150,14 +150,32 @@
     "variantCount": "{count} variant(s)",
     "backToList": "Back to library",
     "detailTitle": "Media File Detail",
+    "detailImageTitle": "Picture: {name}",
     "detailFallback": "Media Detail",
     "detailMissing": "This media entry is unavailable",
+    "fileSize": "File size",
+    "dimensions": "Dimensions",
+    "createdAt": "Created",
+    "updatedAt": "Updated",
+    "openInBrowser": "Open in browser",
+    "openInBrowserLink": "Open",
+    "viewReferences": "View references",
+    "referenceDialogTitle": "Posts referencing {name}",
+    "referenceDialogEmpty": "No posts reference this image.",
+    "referenceDialogDelete": "Delete this image",
     "deleteConfirmTitle": "Delete asset",
     "deleteConfirmMessage": "The file may be referenced by posts. Removing it can result in missing images. Continue?",
     "deleteSuccess": "Asset deleted",
     "deleteFailed": "Failed to delete asset: "
   },
   "categoryDetail": {
+    "pageTitle": "Category: {path}",
+    "postCount": "(No posts.) | (Total 1 post.) | (Total {count} posts.)",
+    "toggle": {
+      "showDirectLink": "Show only posts directly under this category",
+      "showAllLink": "Show all posts (including sub-categories)",
+      "showingAll": "Showing posts from this category and its sub-categories."
+    },
     "breadcrumbPrefix": "Categories (total {count})",
     "returnToList": "Back to Categories",
     "filteredOut": "{count} post(s) belong to sub-categories and are hidden",
@@ -174,8 +192,8 @@
       "draft": "Draft"
     },
     "actions": {
-      "update": "Modify Categories in Bulk",
-      "delete": "Remove Category in Bulk",
+      "update": "Modify Categories",
+      "delete": "Remove Category",
       "remove": "Remove Category",
       "confirmRemove": "Remove",
       "confirmDelete": "Delete",

@@ -1,6 +1,6 @@
 import type { Dirent } from 'node:fs'
-import { access, mkdir, readdir, rename, writeFile as writeFileFs, readFile as readFileFs, rm } from 'node:fs/promises'
-import { dirname, join, relative, resolve } from 'node:path'
+import { access, mkdir, readdir, rename, stat, writeFile as writeFileFs, readFile as readFileFs, rm } from 'node:fs/promises'
+import { dirname, extname, join, relative, resolve } from 'node:path'
 import { Buffer } from 'node:buffer'
 
 interface DirentTransformed {
@@ -11,6 +11,7 @@ interface DirentTransformed {
 
 export class FsAgent {
   private sourceDir: string = ''
+  private readonly referenceFileExtensions = new Set(['.md', '.markdown', '.mdx', '.html', '.htm', '.njk', '.yml', '.yaml', '.json', '.txt'])
 
   init(baseDirectory: string): void {
     this.sourceDir = join(baseDirectory, 'source')
@@ -110,6 +111,68 @@ export class FsAgent {
   async delete(path: string): Promise<void> {
     const targetPath = this.resolveInSource(path)
     await rm(targetPath, { force: true })
+  }
+
+  async getFileInfo(path: string): Promise<{ size: number; createdAt: string; updatedAt: string } | null> {
+    const targetPath = this.resolveInSource(path)
+    try {
+      const result = await stat(targetPath)
+      return {
+        size: result.size,
+        createdAt: result.birthtime.toISOString(),
+        updatedAt: result.mtime.toISOString(),
+      }
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+        return null
+      }
+      throw error
+    }
+  }
+
+  async findAssetReferences(assetPath: string): Promise<string[]> {
+    const normalized = assetPath.replace(/\\/g, '/').replace(/^\//, '')
+    const results: string[] = []
+    const postsRoot = this.resolveInSource('_posts')
+    await this.collectReferences(postsRoot, normalized, results)
+    return results
+  }
+
+  private async collectReferences(directory: string, searchPath: string, results: string[]): Promise<void> {
+    let entries: Dirent[] = []
+    try {
+      entries = await readdir(directory, { withFileTypes: true })
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+        return
+      }
+      throw error
+    }
+
+    for (const entry of entries) {
+      if (entry.name.startsWith('.')) {
+        continue
+      }
+      const fullPath = join(directory, entry.name)
+      if (entry.isDirectory()) {
+        await this.collectReferences(fullPath, searchPath, results)
+        continue
+      }
+      const extension = extname(entry.name).toLowerCase()
+      if (!this.referenceFileExtensions.has(extension)) {
+        continue
+      }
+      let content: string
+      try {
+        content = await readFileFs(fullPath, { encoding: 'utf-8' })
+      } catch {
+        continue
+      }
+      if (content.includes(searchPath) || content.includes('/' + searchPath)) {
+        const relativePath = relative(this.sourceDir, fullPath).replace(/\\/g, '/')
+        results.push(relativePath)
+      }
+    }
   }
 
   private async writeFileInternal(path: string, content: string | Buffer, encoding: BufferEncoding = 'utf-8'): Promise<void> {

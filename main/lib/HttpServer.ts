@@ -4,11 +4,11 @@ import Fastify from 'fastify'
 import { resolve } from 'path'
 
 class HttpServer {
-  private app?: FastifyInstance
-  private currentRoot?: string
-  private listening = false
-  private readonly port = 2357
-  private readonly host = '127.0.0.1'
+  public app?: FastifyInstance
+  public currentRoot?: string
+  public listening = false
+  public readonly port = 2357
+  public readonly host = '127.0.0.1'
 
   public async init(basePath: string): Promise<void> {
     const staticRoot = resolve(basePath, 'public')

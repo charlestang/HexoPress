@@ -16,11 +16,13 @@ const { t } = useI18n()
 const appStore = useAppStore()
 
 const categoryId = ref<string>(route.params.categoryId as string)
+const showOnlyDirect = ref(false)
 
 watch(
   () => route.params.categoryId,
   (next) => {
     categoryId.value = String(next)
+    showOnlyDirect.value = false
     loadData()
   },
 )
@@ -37,6 +39,16 @@ const { nodeMap } = useCategoryTree(categoriesRef)
 
 const categoryNode = computed(() => {
   return nodeMap.value ? nodeMap.value[categoryId.value] : undefined
+})
+
+const hasCategory = computed(() => !!categoryNode.value)
+
+const isLeafCategory = computed(() => {
+  const id = categoryId.value
+  if (!hasCategory.value || !id) {
+    return true
+  }
+  return !categories.value.some((entry) => entry.parent === id)
 })
 
 const categoryPath = computed(() => {
@@ -58,55 +70,90 @@ const categoryPath = computed(() => {
   return segments
 })
 
-const totalCategories = computed(() => categories.value.length)
-
 const categoryDisplayName = computed(() => {
   return categoryPath.value.join(' · ')
 })
+
+const pageTitle = computed(() => {
+  const path = categoryPath.value.join(' > ') || t('categoryDetail.messages.unknown')
+  return t('categoryDetail.pageTitle', { path })
+})
+
+function isDescendantOfTarget(category: PostCategory | undefined, targetId: string): boolean {
+  if (!category || category._id === targetId) {
+    return false
+  }
+  const node = nodeMap.value?.[category._id]
+  let currentParent = category.parent ?? node?.parent
+  while (currentParent) {
+    if (currentParent === targetId) {
+      return true
+    }
+    const parentNode = nodeMap.value?.[currentParent]
+    if (!parentNode) {
+      break
+    }
+    currentParent = parentNode.parent
+  }
+  return false
+}
 
 const filteredResult = computed(() => {
   const targetId = categoryId.value
   if (!targetId) {
     return {
       direct: [] as Post[],
-      descendantOnly: 0,
+      descendants: [] as Post[],
+      all: [] as Post[],
+      descendantCount: 0,
     }
   }
   const direct: Post[] = []
-  let descendantOnly = 0
+  const descendants: Post[] = []
+  const all: Post[] = []
   rawPosts.value.forEach((post) => {
     const categoriesForPost = post.categories ?? []
     const hasDirect = categoriesForPost.some((cat) => cat._id === targetId)
-    if (hasDirect) {
-      direct.push(post)
+    const hasDescendant = categoriesForPost.some((cat) => isDescendantOfTarget(cat, targetId))
+    if (hasDescendant) {
+      descendants.push(post)
+      all.push(post)
       return
     }
-    const hasDescendant = categoriesForPost.some((cat) => {
-      let currentParent = cat.parent
-      while (currentParent) {
-        if (currentParent === targetId) {
-          return true
-        }
-        const parentNode = nodeMap.value?.[currentParent]
-        if (!parentNode) {
-          break
-        }
-        currentParent = parentNode.parent
-      }
-      return false
-    })
-    if (hasDescendant) {
-      descendantOnly += 1
+    if (hasDirect) {
+      direct.push(post)
+      all.push(post)
     }
   })
   return {
     direct,
-    descendantOnly,
+    descendants,
+    all,
+    descendantCount: descendants.length,
   }
 })
 
-const postsForTable = computed(() => filteredResult.value.direct)
-const filteredOutCount = computed(() => filteredResult.value.descendantOnly)
+const showDirectOnlyMessage = computed(() =>
+  hasCategory.value && !isLeafCategory.value && filteredResult.value.descendantCount > 0,
+)
+
+const postsForTable = computed(() => {
+  if (showDirectOnlyMessage.value && showOnlyDirect.value) {
+    return filteredResult.value.direct
+  }
+  if (showDirectOnlyMessage.value) {
+    return filteredResult.value.all
+  }
+  return filteredResult.value.direct
+})
+const filteredOutCount = computed(() =>
+  showDirectOnlyMessage.value && showOnlyDirect.value ? filteredResult.value.descendantCount : 0,
+)
+const totalPostsInCategory = computed(() => postsForTable.value.length)
+const postCountLabel = computed(() => {
+  const count = totalPostsInCategory.value
+  return t('categoryDetail.postCount', { count, plural: count })
+})
 const selectedSources = computed(() => selectedPosts.value.map((post) => post.source))
 const selectedCount = computed(() => selectedPosts.value.length)
 
@@ -233,8 +280,6 @@ onMounted(async () => {
   await loadData()
 })
 
-const hasCategory = computed(() => !!categoryNode.value)
-
 async function refreshAfterMutation() {
   await fetchCategories()
   await fetchPosts()
@@ -248,6 +293,18 @@ function resetSelection() {
 function handleSelectionChange(selection: Post[]) {
   selectedPosts.value = selection
 }
+
+function enableDirectOnlyView() {
+  showOnlyDirect.value = true
+}
+
+function showAllPostsForCategory() {
+  showOnlyDirect.value = false
+}
+
+watch(showOnlyDirect, () => {
+  resetSelection()
+})
 
 async function submitBulkUpdate() {
   if (selectedSources.value.length === 0) {
@@ -377,10 +434,6 @@ async function handleBulkDelete() {
   }
 }
 
-function goBackToCategories() {
-  router.push({ name: 'categories' })
-}
-
 function openPostEditor(post: Post) {
   router.push({ path: '/frame', query: { sourcePath: post.source } })
 }
@@ -390,53 +443,59 @@ function openBulkDialog() {
   bulkForm.categories = sanitized.map((segments) => segments.slice()) as (string | string[])[]
   bulkDialogVisible.value = true
 }
+
+function goBackToCategories() {
+  router.push({ name: 'categories' })
+}
 </script>
 
 <template>
   <div class="category-detail">
     <div class="category-detail__header">
-      <div class="category-detail__breadcrumb">
-        <span class="category-detail__breadcrumb-prefix">
-          {{ t('categoryDetail.breadcrumbPrefix', { count: totalCategories }) }}
-        </span>
-        <span v-if="categoryDisplayName" class="category-detail__breadcrumb-sep">&lt;&lt;</span>
-        <el-link type="primary" @click="goBackToCategories">
-          {{ t('categoryDetail.returnToList') }}
-        </el-link>
-        <span v-if="categoryDisplayName" class="category-detail__breadcrumb-name">
-          {{ categoryDisplayName }}
-        </span>
+      <div class="category-detail__header-left">
+        <h2 class="category-detail__title">
+          {{ pageTitle }}
+          <span class="category-detail__count">
+            {{ postCountLabel }}
+          </span>
+        </h2>
       </div>
-      <div class="category-detail__actions">
-        <el-button
-          type="primary"
-          :disabled="loading || bulkState.running || selectedCount === 0"
-          @click="openBulkDialog">
-          {{ t('categoryDetail.actions.update') }}
-        </el-button>
-        <el-button
-          type="danger"
-          plain
-          :disabled="loading || bulkState.running || selectedCount === 0"
-          @click="handleBulkDelete">
-          {{ t('categoryDetail.actions.delete') }}
+      <div class="category-detail__header-right">
+        <el-button size="small" @click="goBackToCategories">
+          {{ t('categoryDetail.returnToList') }}
         </el-button>
       </div>
     </div>
 
     <el-alert
-      v-if="hasCategory"
+      v-if="showDirectOnlyMessage && !showOnlyDirect"
       type="info"
       :closable="false"
-      class="mb-3"
-      :title="t('categoryDetail.onlyDirect')" />
+      class="mb-3">
+      <template #title>
+        <div class="category-detail__toggle-message">
+          <span>{{ t('categoryDetail.toggle.showingAll') }}</span>
+          <el-link type="primary" link @click="enableDirectOnlyView">
+            {{ t('categoryDetail.toggle.showDirectLink') }}
+          </el-link>
+        </div>
+      </template>
+    </el-alert>
 
     <el-alert
-      v-if="filteredOutCount > 0"
+      v-if="showDirectOnlyMessage && showOnlyDirect"
       type="info"
       :closable="false"
-      class="mb-3"
-      :title="t('categoryDetail.filteredOut', { count: filteredOutCount })" />
+      class="mb-3">
+      <template #title>
+        <div class="category-detail__toggle-message">
+          <span>{{ t('categoryDetail.filteredOut', { count: filteredOutCount }) }}</span>
+          <el-link type="primary" link @click="showAllPostsForCategory">
+            {{ t('categoryDetail.toggle.showAllLink') }}
+          </el-link>
+        </div>
+      </template>
+    </el-alert>
 
     <el-alert
       v-if="bulkState.running"
@@ -466,50 +525,71 @@ function openBulkDialog() {
       v-else-if="!loading && postsForTable.length === 0"
       :description="t('categoryDetail.empty')" />
 
-    <el-table
-      v-else
-      :data="postsForTable"
-      stripe
-      style="width: 100%"
-      v-loading="loading"
-      ref="tableRef"
-      :row-key="(row: Post) => row.source"
-      @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" />
-      <el-table-column :label="t('categoryDetail.table.title')" min-width="220">
-        <template #default="scope">
-          <el-link type="primary" @click="openPostEditor(scope.row)">
-            {{ scope.row.title }}
-          </el-link>
-        </template>
-      </el-table-column>
-      <el-table-column prop="status" :label="t('categoryDetail.table.status')" width="120">
-        <template #default="scope">
-          <el-tag
-            :type="scope.row.status === 'published' ? 'success' : 'info'"
-            disable-transitions>
-            {{ scope.row.status === 'published' ? t('categoryDetail.status.published') : t('categoryDetail.status.draft') }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="updated" :label="t('categoryDetail.table.updated')" width="220">
-        <template #default="scope">
-          {{ scope.row.updated ? formatDate(scope.row.updated, appStore.locale) : '--' }}
-        </template>
-      </el-table-column>
-      <el-table-column :label="t('categoryDetail.table.categories')" min-width="260">
-        <template #default="scope">
-          <el-tag
-            v-for="label in categoryLabelsForPost(scope.row)"
-            :key="label"
+    <template v-else>
+      <div class="category-detail__toolbar">
+        <div class="category-detail__toolbar-left">
+          <el-button
+            type="primary"
             size="small"
-            class="category-detail__tag">
-            {{ label }}
-          </el-tag>
-          <el-text v-if="categoryLabelsForPost(scope.row).length === 0">--</el-text>
-        </template>
-      </el-table-column>
-    </el-table>
+            :disabled="loading || bulkState.running || selectedCount === 0"
+            @click="openBulkDialog">
+            {{ t('categoryDetail.actions.update') }}
+          </el-button>
+          <el-button
+            type="danger"
+            plain
+            size="small"
+            :disabled="loading || bulkState.running || selectedCount === 0"
+            @click="handleBulkDelete">
+            {{ t('categoryDetail.actions.delete') }}
+          </el-button>
+        </div>
+      </div>
+
+      <el-table
+        :data="postsForTable"
+        stripe
+        style="width: 100%"
+        v-loading="loading"
+        ref="tableRef"
+        :row-key="(row: Post) => row.source"
+        @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" />
+        <el-table-column :label="t('categoryDetail.table.title')" min-width="220">
+          <template #default="scope">
+            <el-link type="primary" @click="openPostEditor(scope.row)">
+              {{ scope.row.title }}
+            </el-link>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" :label="t('categoryDetail.table.status')" width="120">
+          <template #default="scope">
+            <el-tag
+              :type="scope.row.status === 'published' ? 'success' : 'info'"
+              disable-transitions>
+              {{ scope.row.status === 'published' ? t('categoryDetail.status.published') : t('categoryDetail.status.draft') }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="updated" :label="t('categoryDetail.table.updated')" width="220">
+          <template #default="scope">
+            {{ scope.row.updated ? formatDate(scope.row.updated, appStore.locale) : '--' }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="t('categoryDetail.table.categories')" min-width="260">
+          <template #default="scope">
+            <el-tag
+              v-for="label in categoryLabelsForPost(scope.row)"
+              :key="label"
+              size="small"
+              class="category-detail__tag">
+              {{ label }}
+            </el-tag>
+            <el-text v-if="categoryLabelsForPost(scope.row).length === 0">--</el-text>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
 
     <el-dialog v-model="bulkDialogVisible" :title="t('categoryDetail.dialogs.updateTitle')">
       <el-alert
@@ -544,24 +624,50 @@ function openBulkDialog() {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.category-detail__breadcrumb {
+.category-detail__header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.category-detail__header-right {
+  display: flex;
+  align-items: center;
+}
+
+.category-detail__title {
+  margin: 0;
+}
+
+.category-detail__count {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--el-color-info);
+}
+
+.category-detail__toggle-message {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  flex-wrap: wrap;
 }
 
-.category-detail__breadcrumb-prefix {
-  font-weight: 600;
+.category-detail__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
-.category-detail__breadcrumb-name {
-  font-weight: 600;
-}
-
-.category-detail__actions {
+.category-detail__toolbar-left {
   display: flex;
   gap: 12px;
 }

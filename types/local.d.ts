@@ -130,6 +130,12 @@ declare global {
     source: string
   }
 
+  type AssetFileInfo = {
+    size: number
+    createdAt: string
+    updatedAt: string
+  }
+
   type Stats = {
     postCount: number
     postDraftCount: number
@@ -198,6 +204,8 @@ declare global {
     getReadDir: (path: string) => Promise<FileEntry[]>
     mv: (from: string, to: string) => Promise<boolean>
     saveImage: (path: string, content: ArrayBuffer) => Promise<void>
+    getFileInfo: (path: string) => Promise<AssetFileInfo | null>
+    getAssetReferences: (path: string) => Promise<string[]>
     onVaultPathChanged: (callback: (newValue: string) => void) => void
     initializeAgent: (path: string) => Promise<boolean>
     setDarkMode: (darkMode: string) => Promise<void>

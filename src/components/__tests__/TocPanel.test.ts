@@ -200,7 +200,7 @@ describe('TocPanel.vue', () => {
     await (wrapper.vm as unknown as TocPanelInstance).handleNodeClick(nodeData)
 
     // Check that the store method was called
-    expect(mockEditorStore.setActiveHeading).toHaveBeenCalledWith({
+    expect(mockEditorStore.setActiveHeading).toHaveBeenCalledExactlyOnceWith({
       id: 'h2-1',
       text: 'Section 1.1',
       level: 2,
@@ -259,7 +259,7 @@ describe('TocPanel.vue', () => {
     await nextTick()
     await wrapper.vm.$nextTick()
 
-    expect(setCurrentKey).toHaveBeenCalledWith('h2-1')
+    expect(setCurrentKey).toHaveBeenCalledExactlyOnceWith('h2-1')
 
     // Test changing to a different heading
     mockEditorStore.activeHeading = { id: 'h1-1', text: 'Chapter 1', level: 1, line: 1 }
@@ -267,7 +267,7 @@ describe('TocPanel.vue', () => {
     // Trigger reactivity again
     await nextTick()
     await wrapper.vm.$nextTick()
-    expect(setCurrentKey).toHaveBeenCalledWith('h1-1')
+    expect(setCurrentKey).toHaveBeenCalledExactlyOnceWith('h1-1')
 
   })
 
