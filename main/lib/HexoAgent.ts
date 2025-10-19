@@ -447,11 +447,29 @@ export class HexoAgent {
 
     // Copy safe properties
     const safeProperties = [
-      'title', 'subtitle', 'description', 'keywords', 'author', 'language',
-      'timezone', 'url', 'permalink', 'date_format', 'time_format', 'theme',
-      'source_dir', 'public_dir', 'tag_dir', 'archive_dir', 'category_dir',
-      'code_dir', 'i18n_dir', 'per_page', 'pagination_dir', 'new_post_name',
-      'default_layout'
+      'title',
+      'subtitle',
+      'description',
+      'keywords',
+      'author',
+      'language',
+      'timezone',
+      'url',
+      'permalink',
+      'date_format',
+      'time_format',
+      'theme',
+      'source_dir',
+      'public_dir',
+      'tag_dir',
+      'archive_dir',
+      'category_dir',
+      'code_dir',
+      'i18n_dir',
+      'per_page',
+      'pagination_dir',
+      'new_post_name',
+      'default_layout',
     ]
 
     for (const prop of safeProperties) {
@@ -764,7 +782,9 @@ export class HexoAgent {
       sanitizedReplacements,
     })
 
-    const uniqueSources = Array.from(new Set(sources.filter((item) => item && item.trim().length > 0)))
+    const uniqueSources = Array.from(
+      new Set(sources.filter((item) => item && item.trim().length > 0)),
+    )
     const result: BulkCategoryOperationResult = {
       total: uniqueSources.length,
       success: 0,
@@ -836,7 +856,9 @@ export class HexoAgent {
     await this.ensureReady()
     const targetPath = await this.getCategoryPathById(categoryId)
 
-    const uniqueSources = Array.from(new Set(sources.filter((item) => item && item.trim().length > 0)))
+    const uniqueSources = Array.from(
+      new Set(sources.filter((item) => item && item.trim().length > 0)),
+    )
     const result: BulkCategoryOperationResult = {
       total: uniqueSources.length,
       success: 0,

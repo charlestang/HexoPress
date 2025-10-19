@@ -21,13 +21,12 @@ fetch()
 // Use useCategoryTree composition function
 const { treeData } = useCategoryTree(categories)
 
-
 function onClickCategory(categoryId: string) {
   router.push({
     name: 'category-detail',
     params: {
-      categoryId
-    }
+      categoryId,
+    },
   })
 }
 </script>
@@ -45,7 +44,9 @@ function onClickCategory(categoryId: string) {
     <el-table-column prop="length" :label="t('cats.total')" sortable />
     <el-table-column :label="t('cats.actions')">
       <template #default="scope">
-        <el-link type="primary" link @click="onClickCategory(scope.row.id)">{{ t('cats.view') }}</el-link>
+        <el-link type="primary" link @click="onClickCategory(scope.row.id)">{{
+          t('cats.view')
+        }}</el-link>
       </template>
     </el-table-column>
   </el-table>

@@ -114,6 +114,10 @@ const dateDisplay = computed(() => {
   const date = toDate(frontMatter.value.date)
   return date ? date.toLocaleString() : ''
 })
+
+const handleDialogModelUpdate = (value: boolean) => {
+  emit('update:modelValue', value)
+}
 </script>
 
 <template>
@@ -122,7 +126,7 @@ const dateDisplay = computed(() => {
     :title="t('posts.preview')"
     width="960px"
     :close-on-click-modal="false"
-    @update:modelValue="(val) => emit('update:modelValue', val)">
+    @update:modelValue="handleDialogModelUpdate">
     <div v-loading="loading" class="min-h-400px max-h-70vh overflow-y-auto p-5 flex flex-col gap-6">
       <div class="max-w-880px mx-auto w-full pb-5 border-b border-gray-200">
         <h1 class="text-28px font-600 m-0 mb-4 text-left leading-1.4">{{ frontMatter.title }}</h1>

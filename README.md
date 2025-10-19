@@ -58,7 +58,6 @@ English | [简体中文](./README_zh.md)
   - [VIII. Join the Community](#viii-join-the-community)
   - [IX. Appendix](#ix-appendix)
 
-
 ## Quick Start
 
 1. [Download the version for your OS](#ii-installation)
@@ -129,22 +128,27 @@ HexoPress makes Hexo blogging as easy as WordPress! No more manual Front Matter 
 > Each screenshot is briefly explained below
 
 ### 1. Dashboard
+
 ![Dashboard][screenshot-dashboard]
 _Overview of your blog data_
 
 ### 2. Posts List
+
 ![Posts List][screenshot-postlist]
 _Quickly filter and manage all posts_
 
 ### 3. Editor
+
 ![Editor][screenshot-editor]
 _WYSIWYG, Vim mode supported_
 
 ### 4. Categories Management
+
 ![Categories Management][screenshot-categories]
 _Tree structure for intuitive category management_
 
 ### 5. Tags Management
+
 ![Tags Management][screenshot-tags]
 _Clear tag overview and statistics_
 

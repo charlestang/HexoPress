@@ -35,12 +35,15 @@ const parts = computed((): TextPart[] => {
   let matchIndex
 
   if (keywordToHighlight.length === 0) {
-      return [{ text: textToSearch, isKeyword: false }];
+    return [{ text: textToSearch, isKeyword: false }]
   }
 
   while ((matchIndex = textToSearch.indexOf(keywordToHighlight, currentIndex)) !== -1) {
     if (matchIndex > currentIndex) {
-      resultingParts.push({ text: textToSearch.substring(currentIndex, matchIndex), isKeyword: false })
+      resultingParts.push({
+        text: textToSearch.substring(currentIndex, matchIndex),
+        isKeyword: false,
+      })
     }
     resultingParts.push({ text: keywordToHighlight, isKeyword: true })
     currentIndex = matchIndex + keywordToHighlight.length
@@ -58,8 +61,7 @@ const parts = computed((): TextPart[] => {
     <mark
       v-if="part.isKeyword"
       :key="index"
-      class="inline align-baseline text-ellipsis whitespace-nowrap overflow-hidden max-w-full bg-yellow-400 text-black"
-    >
+      class="inline align-baseline text-ellipsis whitespace-nowrap overflow-hidden max-w-full bg-yellow-400 text-black">
       {{ part.text }}
     </mark>
     <span

@@ -54,7 +54,7 @@ watch(
     publishTime.value = newValue
     publishDate.value = newValue
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 /**
@@ -80,8 +80,6 @@ function onDateChange(val: Date) {
     emit('update:modelValue', new Date(val.toDateString() + ' ' + o.toTimeString()))
   }
 }
-
-
 </script>
 <template>
   <!-- Date metadata entry row -->

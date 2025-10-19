@@ -191,7 +191,7 @@ async function _formValidate(): Promise<boolean> {
 function buildDocument(): PostDocument {
   const rawFrontMatter = toRaw(frontMatter.value)
   const date = toDate(rawFrontMatter.date) ?? new Date()
-  const updated = isDirty.value ? new Date() : toDate(rawFrontMatter.updated) ?? date
+  const updated = isDirty.value ? new Date() : (toDate(rawFrontMatter.updated) ?? date)
 
   const meta = cloneValue<PostMeta>(rawFrontMatter as PostMeta)
   meta.date = date

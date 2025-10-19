@@ -114,8 +114,7 @@ function handleMouseLeave() {
             <keep-alive>
               <component
                 :is="panels[currentPanel]"
-                :headings="currentPanel === 'tocPanel' ? tocHeadings : undefined"
-              />
+                :headings="currentPanel === 'tocPanel' ? tocHeadings : undefined" />
             </keep-alive>
             <div
               class="resize-handle"

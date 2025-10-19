@@ -69,7 +69,10 @@ export function sanitizeCategoryPaths(paths: CategoryPath[]): CategoryPath[] {
   return sanitized
 }
 
-export function setFrontMatterCategories(frontMatter: FrontMatterData, paths: CategoryPath[]): void {
+export function setFrontMatterCategories(
+  frontMatter: FrontMatterData,
+  paths: CategoryPath[],
+): void {
   const sanitized = sanitizeCategoryPaths(paths)
   if (sanitized.length === 0) {
     delete frontMatter.categories

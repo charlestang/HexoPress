@@ -1,9 +1,9 @@
-import { mount } from '@vue/test-utils'
-import { createPinia, setActivePinia, type Pinia } from 'pinia'
+import { mount, type VueWrapper } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { nextTick, reactive } from 'vue'
+import { defineComponent, h, nextTick, reactive } from 'vue'
+import TocPanel from '../TocPanel.vue'
 
-// Mock the editorStore
 const mockEditorStore = reactive({
   activeHeading: null as Heading | null,
   setActiveHeading: vi.fn(),
@@ -13,321 +13,256 @@ vi.mock('@/stores/editorStore', () => ({
   useEditorStore: () => mockEditorStore,
 }))
 
-const setCurrentKey = vi.fn()
+type SetCurrentKeySpy = ReturnType<typeof vi.fn>
 
-// Mock Element Plus Tree component
-const MockElTree = {
-  name: 'ElTree',
-  template: '<div class="mock-el-tree"><slot /></div>',
-  props: {
-    data: {
-      type: Array,
-      required: true
-    },
+const createElTreeStub = (setCurrentKeySpy: SetCurrentKeySpy) =>
+  defineComponent({
+    name: 'ElTree',
     props: {
-      type: Object,
-      required: true
+      data: { type: Array, required: true },
+      props: { type: Object, required: true },
+      nodeKey: { type: String, required: true },
+      highlightCurrent: { type: Boolean, required: true },
+      currentNodeKey: { type: String, default: undefined },
+      expandOnClickNode: { type: Boolean, required: true },
+      defaultExpandAll: { type: Boolean, required: true },
     },
-    nodeKey: {
-      type: String,
-      required: true
+    emits: ['node-click'],
+    setup(componentProps, { slots, expose }) {
+      expose({ setCurrentKey: setCurrentKeySpy })
+      return () =>
+        h(
+          'div',
+          { class: 'mock-el-tree' },
+          (componentProps.data as TreeNode[]).map((item: TreeNode) =>
+            h(
+              'div',
+              { key: item.id, class: 'mock-el-tree-node' },
+              slots.default ? slots.default({ data: item }) : undefined,
+            ),
+          ),
+        )
     },
-    highlightCurrent: {
-      type: Boolean,
-      required: true
-    },
-    currentNodeKey: {
-      type: String,
-      default: undefined
-    },
-    expandOnClickNode: {
-      type: Boolean,
-      required: true
-    },
-    defaultExpandAll: {
-      type: Boolean,
-      required: true
-    }
-  },
-  emits: ['node-click'],
-  methods: {
-    setCurrentKey: setCurrentKey,
-  },
-  watch: {
-    currentNodeKey: {
-      handler(this: {setCurrentKey: typeof setCurrentKey}, newVal: string | undefined) {
-        if (newVal) {
-          this.setCurrentKey(newVal)
-        }
+  })
+
+type TreeNode = Heading & { children: TreeNode[] }
+
+const sampleHeadings: Heading[] = [
+  { id: 'h1-1', text: 'Chapter 1', level: 1, line: 1 },
+  { id: 'h2-1', text: 'Section 1.1', level: 2, line: 5 },
+  { id: 'h3-1', text: 'Subsection 1.1.1', level: 3, line: 10 },
+  { id: 'h2-2', text: 'Section 1.2', level: 2, line: 15 },
+  { id: 'h1-2', text: 'Chapter 2', level: 1, line: 20 },
+]
+
+const nestedHeadings: Heading[] = [
+  { id: 'parent1', text: 'Parent 1 (H1)', level: 1, line: 1 },
+  { id: 'child1-1', text: 'Child 1.1 (H2)', level: 2, line: 5 },
+  { id: 'grandchild1-1-1', text: 'Grandchild 1.1.1 (H3)', level: 3, line: 10 },
+  { id: 'child1-2', text: 'Child 1.2 (H2)', level: 2, line: 15 },
+  { id: 'parent2', text: 'Parent 2 (H1)', level: 1, line: 20 },
+  { id: 'child2-1', text: 'Child 2.1 (H2)', level: 2, line: 25 },
+]
+
+type MountReturn = {
+  wrapper: VueWrapper
+  elTreeStub: ReturnType<typeof createElTreeStub>
+  setCurrentKeySpy: SetCurrentKeySpy
+}
+
+const mountTocPanel = (
+  headings: Heading[] = sampleHeadings,
+  setCurrentKeySpy?: SetCurrentKeySpy,
+): MountReturn => {
+  const spy = setCurrentKeySpy ?? vi.fn()
+  const elTreeStub = createElTreeStub(spy)
+
+  const wrapper = mount(TocPanel, {
+    props: { headings },
+    global: {
+      plugins: [createPinia()],
+      stubs: {
+        'el-tree': elTreeStub,
       },
-      immediate: true
-    }
+    },
+  })
+
+  return {
+    wrapper,
+    elTreeStub,
+    setCurrentKeySpy: spy,
   }
 }
 
-import TocPanel from '../TocPanel.vue' // Must be imported after the mock
+const getTreeDataProp = (wrapper: VueWrapper, elTreeStub: ReturnType<typeof createElTreeStub>) =>
+  wrapper.findComponent(elTreeStub).props('data') as TreeNode[]
 
-// Type for tree node data
-interface TreeNode {
-  id: string
-  text: string
-  level: number
-  line: number
-  children: TreeNode[]
+const flushTreeUpdate = async () => {
+  await nextTick()
+  await nextTick()
 }
 
-// Type for the component instance
-interface TocPanelInstance {
-  treeData: TreeNode[]
-  handleNodeClick: (data: TreeNode) => void
+const getLastCallArg = (spy: SetCurrentKeySpy) => {
+  const calls = spy.mock.calls
+  return calls.length > 0 ? calls[calls.length - 1]?.[0] : undefined
 }
 
 describe('TocPanel.vue', () => {
-  let pinia: Pinia
-
   beforeEach(() => {
-    pinia = createPinia()
-    setActivePinia(pinia)
-    // Reset the mock store state before each test
+    setActivePinia(createPinia())
     mockEditorStore.activeHeading = null
-    vi.clearAllMocks()
-    setCurrentKey.mockClear()
+    mockEditorStore.setActiveHeading.mockReset()
   })
 
-  const sampleHeadings: Heading[] = [
-    { id: 'h1-1', text: 'Chapter 1', level: 1, line: 1 },
-    { id: 'h2-1', text: 'Section 1.1', level: 2, line: 5 },
-    { id: 'h3-1', text: 'Subsection 1.1.1', level: 3, line: 10 },
-    { id: 'h2-2', text: 'Section 1.2', level: 2, line: 15 },
-    { id: 'h1-2', text: 'Chapter 2', level: 1, line: 20 },
-  ]
-
-  const nestedHeadings: Heading[] = [
-    { id: 'parent1', text: 'Parent 1 (H1)', level: 1, line: 1 },
-    { id: 'child1-1', text: 'Child 1.1 (H2)', level: 2, line: 5 },
-    { id: 'grandchild1-1-1', text: 'Grandchild 1.1.1 (H3)', level: 3, line: 10 },
-    { id: 'child1-2', text: 'Child 1.2 (H2)', level: 2, line: 15 },
-    { id: 'parent2', text: 'Parent 2 (H1)', level: 1, line: 20 },
-    { id: 'child2-1', text: 'Child 2.1 (H2)', level: 2, line: 25 },
-  ]
-
-  it('renders correctly with no headings', () => {
-    const wrapper = mount(TocPanel, {
-      props: { headings: [] },
-      global: {
-        plugins: [pinia],
-        stubs: {
-          'el-tree': MockElTree,
-        },
-      },
-    })
+  it('空目录时仍渲染容器', () => {
+    const { wrapper } = mountTocPanel([])
     expect(wrapper.find('.toc-wrapper').exists()).toBe(true)
     expect(wrapper.find('.mock-el-tree').exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'ElTree' }).exists()).toBe(true)
   })
 
-  it('processes headings into correct tree structure', () => {
-    const wrapper = mount(TocPanel, {
-      props: { headings: sampleHeadings },
-      global: {
-        plugins: [pinia],
-        stubs: {
-          'el-tree': MockElTree,
-        },
-      },
+  it('将线性标题转换为树结构', () => {
+    const { wrapper, elTreeStub } = mountTocPanel()
+    const treeData = getTreeDataProp(wrapper, elTreeStub)
+
+    expect(treeData).toHaveLength(2)
+    const firstRoot = treeData[0]!
+    expect(firstRoot).toMatchObject({
+      id: 'h1-1',
+      text: 'Chapter 1',
+      level: 1,
     })
-
-    // Access the computed treeData through the component instance
-    const treeData = (wrapper.vm as unknown as TocPanelInstance).treeData
-    expect(treeData.length).toBe(2) // Two H1s at the top level
-
-    // Check first H1 structure
-    expect(treeData[0].text).toBe('Chapter 1')
-    expect(treeData[0].level).toBe(1)
-    expect(treeData[0].children.length).toBe(2) // Two H2 children
-
-    // Check H2 structure
-    expect(treeData[0].children[0].text).toBe('Section 1.1')
-    expect(treeData[0].children[0].level).toBe(2)
-    expect(treeData[0].children[0].children.length).toBe(1) // One H3 child
-
-    // Check H3 structure
-    expect(treeData[0].children[0].children[0].text).toBe('Subsection 1.1.1')
-    expect(treeData[0].children[0].children[0].level).toBe(3)
-  })
-
-  it('processes nested headings correctly', () => {
-    const wrapper = mount(TocPanel, {
-      props: { headings: nestedHeadings },
-      global: {
-        plugins: [pinia],
-        stubs: {
-          'el-tree': MockElTree,
-        },
-      },
-    })
-
-    const treeData = (wrapper.vm as unknown as TocPanelInstance).treeData
-    expect(treeData.length).toBe(2) // Two H1s at the top level
-    expect(treeData[0].children.length).toBe(2) // First H1 has two H2 children
-    expect(treeData[0].children[0].children.length).toBe(1) // First H2 child has one H3 grandchild
-
-    // Verify structure
-    expect(treeData[0].text).toBe('Parent 1 (H1)')
-    expect(treeData[0].children[0].text).toBe('Child 1.1 (H2)')
-    expect(treeData[0].children[0].children[0].text).toBe('Grandchild 1.1.1 (H3)')
-  })
-
-  it('emits scrollToHeading event and calls store when node is clicked', async () => {
-    const wrapper = mount(TocPanel, {
-      props: { headings: sampleHeadings },
-      global: {
-        plugins: [pinia],
-        stubs: {
-          'el-tree': MockElTree,
-        },
-      },
-    })
-
-    // Simulate node click by calling the handleNodeClick method directly
-    const nodeData: TreeNode = {
+    expect(firstRoot.children).toHaveLength(2)
+    const firstChild = firstRoot.children[0]!
+    expect(firstChild).toMatchObject({
       id: 'h2-1',
       text: 'Section 1.1',
       level: 2,
-      line: 5,
-      children: [],
-    }
-
-    await (wrapper.vm as unknown as TocPanelInstance).handleNodeClick(nodeData)
-
-    // Check that the store method was called
-    expect(mockEditorStore.setActiveHeading).toHaveBeenCalledExactlyOnceWith({
-      id: 'h2-1',
-      text: 'Section 1.1',
-      level: 2,
-      line: 5,
     })
-
-    // Check that the event was emitted
-    expect(wrapper.emitted().scrollToHeading).toBeTruthy()
-    expect(wrapper.emitted().scrollToHeading![0]).toEqual([
-      {
-        id: 'h2-1',
-        text: 'Section 1.1',
-        level: 2,
-        line: 5,
-      },
-    ])
+    expect(firstChild.children).toHaveLength(1)
+    const firstGrandChild = firstChild.children[0]!
+    expect(firstGrandChild).toMatchObject({
+      id: 'h3-1',
+      text: 'Subsection 1.1.1',
+      level: 3,
+    })
   })
 
-  it('passes correct props to el-tree', () => {
-    const wrapper = mount(TocPanel, {
-      props: { headings: sampleHeadings },
-      global: {
-        plugins: [pinia],
-        stubs: {
-          'el-tree': MockElTree,
-        },
-      },
-    })
+  it('保持深层嵌套结构', () => {
+    const { wrapper, elTreeStub } = mountTocPanel(nestedHeadings)
+    const treeData = getTreeDataProp(wrapper, elTreeStub)
 
-    const elTree = wrapper.findComponent(MockElTree)
-    expect(elTree.exists()).toBe(true)
-
-    const props = elTree.props()
-    expect(props.nodeKey).toBe('id')
-    expect(props.highlightCurrent).toBe(true)
-    expect(props.expandOnClickNode).toBe(false)
-    expect(props.defaultExpandAll).toBe(true)
-    expect(props.data).toEqual((wrapper.vm as unknown as TocPanelInstance).treeData)
+    expect(treeData).toHaveLength(2)
+    const firstRoot = treeData[0]!
+    expect(firstRoot.children).toHaveLength(2)
+    const firstChild = firstRoot.children[0]!
+    expect(firstChild.children).toHaveLength(1)
+    expect(firstChild.children[0]!.text).toBe('Grandchild 1.1.1 (H3)')
   })
 
-  it('updates current node key when activeHeading changes', async () => {
-    const wrapper = mount(TocPanel, {
-      props: { headings: sampleHeadings },
-      global: {
-        plugins: [pinia],
-        stubs: {
-          'el-tree': MockElTree,
-        },
-      },
-    })
+  it('点击节点会设置当前标题并向外发出事件', async () => {
+    const { wrapper, elTreeStub } = mountTocPanel()
+    const elTree = wrapper.findComponent(elTreeStub)
+    const nodeData: Heading = { id: 'h2-1', text: 'Section 1.1', level: 2, line: 5 }
 
-    // Set active heading
+    elTree.vm.$emit('node-click', nodeData)
+    await nextTick()
+
+    expect(mockEditorStore.setActiveHeading).toHaveBeenCalledWith(nodeData)
+    expect(wrapper.emitted('scrollToHeading')?.[0]).toEqual([nodeData])
+  })
+
+  it('向 el-tree 传递正确的属性', () => {
+    const { wrapper, elTreeStub } = mountTocPanel()
+    const elTree = wrapper.findComponent(elTreeStub)
+
+    expect(elTree.props('nodeKey')).toBe('id')
+    expect(elTree.props('highlightCurrent')).toBe(true)
+    expect(elTree.props('expandOnClickNode')).toBe(false)
+    expect(elTree.props('defaultExpandAll')).toBe(true)
+    expect(elTree.props('props')).toEqual({ children: 'children', label: 'text' })
+  })
+
+  it('activeHeading 变化时调用 setCurrentKey', async () => {
+    const setCurrentKeySpy = vi.fn()
+    const { wrapper } = mountTocPanel(sampleHeadings, setCurrentKeySpy)
+
     mockEditorStore.activeHeading = { id: 'h2-1', text: 'Section 1.1', level: 2, line: 5 }
+    await flushTreeUpdate()
 
-    // Trigger reactivity
-    await nextTick()
-    await wrapper.vm.$nextTick()
+    expect(setCurrentKeySpy).toHaveBeenCalled()
+    expect(getLastCallArg(setCurrentKeySpy)).toBe('h2-1')
 
-    expect(setCurrentKey).toHaveBeenCalledExactlyOnceWith('h2-1')
-
-    // Test changing to a different heading
     mockEditorStore.activeHeading = { id: 'h1-1', text: 'Chapter 1', level: 1, line: 1 }
+    await flushTreeUpdate()
 
-    // Trigger reactivity again
-    await nextTick()
-    await wrapper.vm.$nextTick()
-    expect(setCurrentKey).toHaveBeenCalledExactlyOnceWith('h1-1')
+    expect(getLastCallArg(setCurrentKeySpy)).toBe('h1-1')
 
+    await wrapper.unmount()
   })
 
-  it('handles null activeHeading correctly', async () => {
-    const wrapper = mount(TocPanel, {
-      props: { headings: sampleHeadings },
-      global: {
-        plugins: [pinia],
-        stubs: {
-          'el-tree': MockElTree,
-        },
-      },
-    })
+  it('挂载前存在 activeHeading 时立即同步', async () => {
+    mockEditorStore.activeHeading = {
+      id: 'grandchild1-1-1',
+      text: 'Grandchild 1.1.1 (H3)',
+      level: 3,
+      line: 10,
+    }
+    const setCurrentKeySpy = vi.fn()
+    mountTocPanel(nestedHeadings, setCurrentKeySpy)
+    await flushTreeUpdate()
 
-    // Ensure activeHeading is null
+    expect(getLastCallArg(setCurrentKeySpy)).toBe('grandchild1-1-1')
+  })
+
+  it('activeHeading 为空时不会设置 currentNodeKey', async () => {
+    const { wrapper, elTreeStub } = mountTocPanel()
     mockEditorStore.activeHeading = null
+    await flushTreeUpdate()
 
-    await nextTick()
-    await wrapper.vm.$nextTick()
-
-    const elTree = wrapper.findComponent(MockElTree)
-    expect(elTree.props('currentNodeKey')).toBeUndefined()
+    expect(wrapper.findComponent(elTreeStub).props('currentNodeKey')).toBeUndefined()
   })
 
-  it('renders node labels with correct classes and titles', () => {
+  it('渲染默认插槽中的节点标签', () => {
     const wrapper = mount(TocPanel, {
       props: { headings: sampleHeadings },
       global: {
-        plugins: [pinia],
+        plugins: [createPinia()],
         stubs: {
-          'el-tree': {
+          'el-tree': defineComponent({
             name: 'ElTree',
-            template: `
-              <div class="mock-el-tree">
-                <div v-for="item in data" :key="item.id">
-                  <slot :data="item" />
-                </div>
-              </div>
-            `,
-            props: [
-              'data',
-              'props',
-              'nodeKey',
-              'highlightCurrent',
-              'currentNodeKey',
-              'expandOnClickNode',
-              'defaultExpandAll',
-            ],
-          },
+            props: {
+              data: { type: Array, required: true },
+              props: { type: Object, required: true },
+              nodeKey: { type: String, required: true },
+              highlightCurrent: { type: Boolean, required: true },
+              currentNodeKey: { type: String, default: undefined },
+              expandOnClickNode: { type: Boolean, required: true },
+              defaultExpandAll: { type: Boolean, required: true },
+            },
+            setup(componentProps, { slots }) {
+              return () =>
+                h(
+                  'div',
+                  { class: 'mock-el-tree' },
+                  (componentProps.data as TreeNode[]).map((item: TreeNode) =>
+                    h(
+                      'div',
+                      { key: item.id },
+                      slots.default ? slots.default({ data: item }) : undefined,
+                    ),
+                  ),
+                )
+            },
+          }),
         },
       },
     })
 
-    const nodeLabels = wrapper.findAll('.toc-node-label')
-    expect(nodeLabels.length).toBeGreaterThan(0)
-
-    // Check that the first node has correct classes and title
-    const firstLabel = nodeLabels[0]
-    expect(firstLabel.classes()).toContain('toc-node-label')
-    expect(firstLabel.classes()).toContain('toc-level-1')
+    const labels = wrapper.findAll('.toc-node-label')
+    expect(labels).not.toHaveLength(0)
+    const firstLabel = labels[0]!
+    expect(firstLabel.classes()).toEqual(expect.arrayContaining(['toc-node-label', 'toc-level-1']))
     expect(firstLabel.attributes('title')).toBe('Chapter 1')
     expect(firstLabel.text()).toBe('Chapter 1')
   })

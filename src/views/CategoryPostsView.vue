@@ -133,8 +133,8 @@ const filteredResult = computed(() => {
   }
 })
 
-const showDirectOnlyMessage = computed(() =>
-  hasCategory.value && !isLeafCategory.value && filteredResult.value.descendantCount > 0,
+const showDirectOnlyMessage = computed(
+  () => hasCategory.value && !isLeafCategory.value && filteredResult.value.descendantCount > 0,
 )
 
 const postsForTable = computed(() => {
@@ -316,7 +316,9 @@ async function submitBulkUpdate() {
     ElMessage.warning(t('categoryDetail.messages.categorySelectionRequired'))
     return
   }
-  const replacements = normalizedCategories.filter((path) => path.length > 0 && !isSameAsCurrentCategory(path))
+  const replacements = normalizedCategories.filter(
+    (path) => path.length > 0 && !isSameAsCurrentCategory(path),
+  )
   if (replacements.length === 0) {
     ElMessage.warning(t('categoryDetail.messages.categorySelectionMustDiffer'))
     return
@@ -395,9 +397,10 @@ async function handleBulkDelete() {
     }
     return count
   }, 0)
-  const warningSuffix = uncategorizedCount > 0
-    ? t('categoryDetail.dialogs.bulkDeleteConfirmWarning', { count: uncategorizedCount })
-    : ''
+  const warningSuffix =
+    uncategorizedCount > 0
+      ? t('categoryDetail.dialogs.bulkDeleteConfirmWarning', { count: uncategorizedCount })
+      : ''
   try {
     await ElMessageBox.confirm(
       t('categoryDetail.dialogs.bulkDeleteConfirm', {
@@ -420,7 +423,10 @@ async function handleBulkDelete() {
   bulkState.action = 'delete'
   bulkState.summary = ''
   try {
-    const result = await window.site.removeCategoryFromPosts(categoryId.value, selectedSources.value)
+    const result = await window.site.removeCategoryFromPosts(
+      categoryId.value,
+      selectedSources.value,
+    )
     const success = result.success ?? 0
     const failure = result.failure ?? 0
     bulkState.summary = t('categoryDetail.messages.deleteSummary', { success, failure })
@@ -439,7 +445,9 @@ function openPostEditor(post: Post) {
 }
 
 function openBulkDialog() {
-  const sanitized = normalizeList(bulkForm.categories).filter((path) => !isSameAsCurrentCategory(path))
+  const sanitized = normalizeList(bulkForm.categories).filter(
+    (path) => !isSameAsCurrentCategory(path),
+  )
   bulkForm.categories = sanitized.map((segments) => segments.slice()) as (string | string[])[]
   bulkDialogVisible.value = true
 }
@@ -502,11 +510,14 @@ function goBackToCategories() {
       type="warning"
       :closable="false"
       class="mb-3"
-      :title="t('categoryDetail.progress', {
-        action: bulkState.action === 'update'
-          ? t('categoryDetail.actions.update')
-          : t('categoryDetail.actions.delete'),
-      })" />
+      :title="
+        t('categoryDetail.progress', {
+          action:
+            bulkState.action === 'update'
+              ? t('categoryDetail.actions.update')
+              : t('categoryDetail.actions.delete'),
+        })
+      " />
 
     <el-alert
       v-if="!bulkState.running && bulkState.summary"
@@ -567,7 +578,11 @@ function goBackToCategories() {
             <el-tag
               :type="scope.row.status === 'published' ? 'success' : 'info'"
               disable-transitions>
-              {{ scope.row.status === 'published' ? t('categoryDetail.status.published') : t('categoryDetail.status.draft') }}
+              {{
+                scope.row.status === 'published'
+                  ? t('categoryDetail.status.published')
+                  : t('categoryDetail.status.draft')
+              }}
             </el-tag>
           </template>
         </el-table-column>
@@ -595,10 +610,12 @@ function goBackToCategories() {
       <el-alert
         type="info"
         :closable="false"
-        :title="t('categoryDetail.dialogs.updateSummary', {
-          count: selectedCount,
-          category: categoryDisplayName || t('categoryDetail.messages.unknown'),
-        })"
+        :title="
+          t('categoryDetail.dialogs.updateSummary', {
+            count: selectedCount,
+            category: categoryDisplayName || t('categoryDetail.messages.unknown'),
+          })
+        "
         class="mb-3" />
       <CategoriesTreePanel v-model="bulkForm.categories" :disabled-ids="bulkDialogDisabledIds" />
       <template #footer>

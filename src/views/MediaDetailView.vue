@@ -69,11 +69,15 @@ async function handleDelete(asset: Asset) {
   }
 
   try {
-    await ElMessageBox.confirm(t('mediaLibrary.deleteConfirmMessage'), t('mediaLibrary.deleteConfirmTitle'), {
-      confirmButtonText: t('posts.confirm'),
-      cancelButtonText: t('posts.cancel'),
-      type: 'warning',
-    })
+    await ElMessageBox.confirm(
+      t('mediaLibrary.deleteConfirmMessage'),
+      t('mediaLibrary.deleteConfirmTitle'),
+      {
+        confirmButtonText: t('posts.confirm'),
+        cancelButtonText: t('posts.cancel'),
+        type: 'warning',
+      },
+    )
   } catch {
     return
   }
@@ -103,8 +107,8 @@ const groupKey = computed(() => {
   return raw ? decodeURIComponent(raw) : ''
 })
 
-const selectedGroup = computed(() =>
-  imageGroups.value.find((group) => group.key === groupKey.value) ?? null,
+const selectedGroup = computed(
+  () => imageGroups.value.find((group) => group.key === groupKey.value) ?? null,
 )
 
 const representativeAsset = computed(() => selectedGroup.value?.representative ?? null)
@@ -136,7 +140,9 @@ const representativeOpenUrl = computed(() => {
   return assetUrl(representativeAsset.value)
 })
 
-const pageTitle = computed(() => t('mediaLibrary.detailImageTitle', { name: selectedFileName.value }))
+const pageTitle = computed(() =>
+  t('mediaLibrary.detailImageTitle', { name: selectedFileName.value }),
+)
 
 const representativeMeta = reactive({
   size: null as number | null,
@@ -382,9 +388,11 @@ function openPostEditor(post: Post) {
   router.push({ path: '/frame', query: { sourcePath: post.source } })
 }
 
-const canDeleteReferenceAsset = computed(() => 
+const canDeleteReferenceAsset = computed(() =>
   referenceAsset.value ? isDeletableAsset(referenceAsset.value) : false,
 )
+
+const resolveRowKey = (row: Asset) => row.id
 
 function closeReferencesDialog() {
   referencesDialogVisible.value = false
@@ -429,9 +437,7 @@ function loadImageDimensions(url: string): Promise<{ width: number; height: numb
     <el-card v-if="selectedGroup" class="media-detail-card">
       <div class="media-detail-card__content">
         <div class="media-detail-card__preview">
-          <img
-            :src="representativePreviewUrl"
-            :alt="assetName(selectedGroup.representative)" />
+          <img :src="representativePreviewUrl" :alt="assetName(selectedGroup.representative)" />
         </div>
 
         <el-descriptions :column="1" border class="media-detail-card__info">
@@ -462,12 +468,13 @@ function loadImageDimensions(url: string): Promise<{ width: number; height: numb
       </div>
 
       <h3 class="media-detail-card__subtitle">
-        {{ t('mediaLibrary.imageVariants') }} · {{ t('mediaLibrary.variantCount', { count: selectedGroup.assets.length }) }}
+        {{ t('mediaLibrary.imageVariants') }} ·
+        {{ t('mediaLibrary.variantCount', { count: selectedGroup.assets.length }) }}
       </h3>
 
       <el-table
         :data="selectedGroup.assets"
-        :row-key="(row) => row.id"
+        :row-key="resolveRowKey"
         border
         size="small"
         class="media-detail-card__table"
@@ -494,18 +501,10 @@ function loadImageDimensions(url: string): Promise<{ width: number; height: numb
         <el-table-column :label="t('mediaLibrary.operation')" width="220">
           <template #default="scope">
             <div class="media-detail-card__variant-actions">
-              <el-button
-                type="primary"
-                link
-                size="small"
-                @click="openAssetInBrowser(scope.row)">
+              <el-button type="primary" link size="small" @click="openAssetInBrowser(scope.row)">
                 {{ t('mediaLibrary.openInBrowserLink') }}
               </el-button>
-              <el-button
-                type="primary"
-                link
-                size="small"
-                @click="viewAssetReferences(scope.row)">
+              <el-button type="primary" link size="small" @click="viewAssetReferences(scope.row)">
                 {{ t('mediaLibrary.viewReferences') }}
               </el-button>
               <el-button
@@ -542,12 +541,7 @@ function loadImageDimensions(url: string): Promise<{ width: number; height: numb
         <el-empty
           v-else-if="!referencesLoading && referencePosts.length === 0"
           :description="t('mediaLibrary.referenceDialogEmpty')" />
-        <el-table
-          v-else
-          :data="referencePosts"
-          border
-          size="small"
-          style="width: 100%">
+        <el-table v-else :data="referencePosts" border size="small" style="width: 100%">
           <el-table-column :label="t('categoryDetail.table.title')" min-width="220">
             <template #default="scope">
               <el-link type="primary" @click="openPostEditor(scope.row)">

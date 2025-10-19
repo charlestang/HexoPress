@@ -15,47 +15,25 @@ describe('postMetaUtils', () => {
   describe('category helpers', () => {
     it('normalizes various category shapes', () => {
       expect(normalizeCategoryPaths('Tech')).toEqual([['Tech']])
-      expect(normalizeCategoryPaths(['Tech', 'AI'])).toEqual([
-        ['Tech'],
-        ['AI'],
-      ])
-      expect(normalizeCategoryPaths('Life > Health')).toEqual([
-        ['Life', 'Health'],
-      ])
+      expect(normalizeCategoryPaths(['Tech', 'AI'])).toEqual([['Tech'], ['AI']])
+      expect(normalizeCategoryPaths('Life > Health')).toEqual([['Life', 'Health']])
     })
 
     it('sanitizes and deduplicates category paths', () => {
-      const input: CategoryPath[] = [
-        ['Tech', 'AI'],
-        ['Tech', 'AI'],
-        ['  '],
-        ['Life'],
-      ]
-      expect(sanitizeCategoryPaths(input)).toEqual([
-        ['Tech', 'AI'],
-        ['Life'],
-      ])
+      const input: CategoryPath[] = [['Tech', 'AI'], ['Tech', 'AI'], ['  '], ['Life']]
+      expect(sanitizeCategoryPaths(input)).toEqual([['Tech', 'AI'], ['Life']])
     })
 
     it('sets front-matter categories based on sanitized paths', () => {
       const frontMatter: FrontMatterData = {}
-      setFrontMatterCategories(frontMatter, [
-        ['Programming'],
-      ])
+      setFrontMatterCategories(frontMatter, [['Programming']])
       expect(frontMatter.categories).toBe('Programming')
 
-      setFrontMatterCategories(frontMatter, [
-        ['Programming'],
-        ['Design'],
-      ])
+      setFrontMatterCategories(frontMatter, [['Programming'], ['Design']])
       expect(frontMatter.categories).toEqual(['Programming', 'Design'])
 
-      setFrontMatterCategories(frontMatter, [
-        ['Programming', 'Frontend'],
-      ])
-      expect(frontMatter.categories).toEqual([
-        ['Programming', 'Frontend'],
-      ])
+      setFrontMatterCategories(frontMatter, [['Programming', 'Frontend']])
+      expect(frontMatter.categories).toEqual([['Programming', 'Frontend']])
 
       setFrontMatterCategories(frontMatter, [])
       expect(frontMatter.categories).toBeUndefined()
@@ -70,15 +48,7 @@ describe('postMetaUtils', () => {
       expect(toCategoryAssignment([])).toBeUndefined()
       expect(toCategoryAssignment([['A']])).toBe('A')
       expect(toCategoryAssignment([['A', 'B']])).toEqual(['A', 'B'])
-      expect(
-        toCategoryAssignment([
-          ['A'],
-          ['B'],
-        ]),
-      ).toEqual([
-        ['A'],
-        ['B'],
-      ])
+      expect(toCategoryAssignment([['A'], ['B']])).toEqual([['A'], ['B']])
     })
   })
 
@@ -94,10 +64,7 @@ describe('postMetaUtils', () => {
 
       expect(meta.title).toBe('Sample')
       expect(meta.tags).toEqual(['vue', '42'])
-      expect(meta.categories).toEqual([
-        ['Tech'],
-        ['Life', 'Health'],
-      ])
+      expect(meta.categories).toEqual([['Tech'], ['Life', 'Health']])
       expect(meta.draft).toBe(true)
       expect(meta.date).toBeInstanceOf(Date)
     })
@@ -107,19 +74,13 @@ describe('postMetaUtils', () => {
         title: 'Sample',
         date: new Date('2024-01-01T00:00:00Z'),
         tags: ['vue'],
-        categories: [
-          ['Tech'],
-          ['Life', 'Health'],
-        ],
+        categories: [['Tech'], ['Life', 'Health']],
       })
 
       expect(data.title).toBe('Sample')
       expect(data.tags).toEqual(['vue'])
       expect(data.date).toBeInstanceOf(Date)
-      expect(data.categories).toEqual([
-        ['Tech'],
-        ['Life', 'Health'],
-      ])
+      expect(data.categories).toEqual([['Tech'], ['Life', 'Health']])
     })
 
     it('round-trips meta through prepare and build', () => {

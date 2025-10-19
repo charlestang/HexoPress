@@ -58,6 +58,6 @@ export function useCategoryTree(categories: Ref<Category[]>, options: UseCategor
 
   return {
     nodeMap,
-    treeData
+    treeData,
   }
 }

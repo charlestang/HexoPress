@@ -97,7 +97,9 @@ describe('FsAgent', () => {
     const info = await agent.getFileInfo('testFile.txt')
     expect(info).not.toBeNull()
     expect(info?.size).toBe(13)
-    expect(info?.createdAt === created.toISOString() || info?.createdAt === modified.toISOString()).toBe(true)
+    expect(
+      info?.createdAt === created.toISOString() || info?.createdAt === modified.toISOString(),
+    ).toBe(true)
     expect(info?.updatedAt).toBe(modified.toISOString())
   })
 

@@ -21,6 +21,6 @@ export function useTableHeight() {
 
   return {
     tableHeight,
-    wrapper
+    wrapper,
   }
 }

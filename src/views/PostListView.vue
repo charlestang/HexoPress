@@ -186,7 +186,6 @@ function onSearchClick() {
 }
 
 const { tableHeight, wrapper } = useTableHeight()
-
 </script>
 <template>
   <h2>{{ t('posts.pageTitle') }}</h2>
@@ -229,9 +228,10 @@ const { tableHeight, wrapper } = useTableHeight()
           </el-row>
           <el-row class="op">
             <el-col :span="24">
-              <el-link type="primary" @click="onClickPreview(scope.row.source, scope.row.permalink)">{{
-                t('posts.preview')
-              }}</el-link
+              <el-link
+                type="primary"
+                @click="onClickPreview(scope.row.source, scope.row.permalink)"
+                >{{ t('posts.preview') }}</el-link
               ><el-divider direction="vertical" />
               <el-link type="primary" @click="onClick(scope.row.source)"
                 >{{ t('posts.edit') }} </el-link
@@ -261,20 +261,13 @@ const { tableHeight, wrapper } = useTableHeight()
       </el-table-column>
       <el-table-column prop="tags" :label="t('posts.tags')">
         <template #default="scope">
-          <el-tag
-            v-for="(val, k) in scope.row.tags"
-            :key="k"
-            size="small"
-            class="tag-item">
+          <el-tag v-for="(val, k) in scope.row.tags" :key="k" size="small" class="tag-item">
             {{ val }}
           </el-tag>
           <el-text v-if="Object.keys(scope.row.tags).length == 0">--</el-text>
         </template>
       </el-table-column>
-      <el-table-column
-        :label="t('posts.publishedAt')"
-        sortable
-        :sort-by="sortedBy">
+      <el-table-column :label="t('posts.publishedAt')" sortable :sort-by="sortedBy">
         <template #header>
           <el-select v-model="sortedBy" size="small" class="time-type-select">
             <el-option key="publishedAt" :label="t('posts.publishedAt')" value="date" />
@@ -306,7 +299,9 @@ const { tableHeight, wrapper } = useTableHeight()
             </el-row>
             <el-row>
               <el-col :span="24">
-                <span v-if="scope.row.updated != ''">{{ formatDate(scope.row.updated, appStore.locale) }}</span>
+                <span v-if="scope.row.updated != ''">{{
+                  formatDate(scope.row.updated, appStore.locale)
+                }}</span>
               </el-col>
             </el-row>
           </template>

@@ -51,7 +51,6 @@ function computeCheckedKeys(catsArr: string[][]) {
   return checkedKeys
 }
 
-
 const defaultProps = {
   children: 'children',
   label: 'label',
@@ -67,7 +66,7 @@ watch(
       treeRef.value.setCheckedKeys(computeCheckedKeys(normalizedCats.value))
     }
   },
-  { deep: true }
+  { deep: true },
 )
 
 type TreeSelectedState = {

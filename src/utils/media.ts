@@ -58,7 +58,9 @@ export function buildImageGroups(
     const { base, extension } = getAssetNameParts(asset)
     const normalizedBase = normalizeBaseName(base)
     const normalizedExtension = extension.toLowerCase()
-    const keyBase = normalizedExtension ? `${normalizedBase}.${normalizedExtension}` : normalizedBase
+    const keyBase = normalizedExtension
+      ? `${normalizedBase}.${normalizedExtension}`
+      : normalizedBase
     const key = directory ? `${directory}/${keyBase}` : keyBase
 
     if (!groups.has(key)) {

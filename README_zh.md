@@ -29,6 +29,7 @@
 ---
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
 - [HexoPress](#hexopress)
   - [快速开始](#快速开始)
   - [一、简介](#一简介)
@@ -127,22 +128,27 @@ HexoPress 让 Hexo 博客创作像 WordPress 一样简单！无需手动编辑 F
 > 每张截图下方简要说明
 
 ### 1. 仪表盘
+
 ![Dashboard][screenshot-dashboard]
 _总览你的博客数据_
 
 ### 2. 文章列表
+
 ![Posts List][screenshot-postlist]
 _快速筛选、管理所有文章_
 
 ### 3. 文章编辑器
+
 ![Editor][screenshot-editor]
 _所见即所得，支持 Vim 模式_
 
 ### 4. 分类管理
+
 ![Categories Management][screenshot-categories]
 _树形结构，直观管理分类_
 
 ### 5. 标签管理
+
 ![Tags Management][screenshot-tags]
 _标签一览，统计清晰_
 

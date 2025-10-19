@@ -62,11 +62,15 @@ async function handleDelete(asset: Asset) {
   }
 
   try {
-    await ElMessageBox.confirm(t('mediaLibrary.deleteConfirmMessage'), t('mediaLibrary.deleteConfirmTitle'), {
-      confirmButtonText: t('posts.confirm'),
-      cancelButtonText: t('posts.cancel'),
-      type: 'warning',
-    })
+    await ElMessageBox.confirm(
+      t('mediaLibrary.deleteConfirmMessage'),
+      t('mediaLibrary.deleteConfirmTitle'),
+      {
+        confirmButtonText: t('posts.confirm'),
+        cancelButtonText: t('posts.cancel'),
+        type: 'warning',
+      },
+    )
   } catch {
     // user cancelled
     return
@@ -162,7 +166,6 @@ watchEffect(() => {
       <el-empty v-else :description="t('mediaLibrary.noFiles')" />
     </el-tab-pane>
   </el-tabs>
-
 </template>
 
 <style scoped>
@@ -185,7 +188,9 @@ watchEffect(() => {
   margin: 0 auto;
   justify-self: center;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .media-card:hover {

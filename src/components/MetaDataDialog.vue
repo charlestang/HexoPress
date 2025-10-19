@@ -110,12 +110,12 @@ async function onSave() {
         <el-date-picker v-model="frontMatter.updated" type="datetime" />
       </el-form-item>
       <el-form-item :label="t('editor.categories')">
-        <div style="width: 100%;">
+        <div style="width: 100%">
           <CategoriesTreePanel v-model="categoriesModel" />
         </div>
       </el-form-item>
       <el-form-item :label="t('editor.tags')">
-        <el-input-tag v-model="frontMatter.tags" tag-type="success" delimiter=","/>
+        <el-input-tag v-model="frontMatter.tags" tag-type="success" delimiter="," />
       </el-form-item>
       <el-form-item :label="t('editor.excerpt')">
         <el-input v-model="frontMatter.excerpt" type="textarea" />

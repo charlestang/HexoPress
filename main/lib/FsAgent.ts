@@ -1,5 +1,14 @@
 import type { Dirent } from 'node:fs'
-import { access, mkdir, readdir, rename, stat, writeFile as writeFileFs, readFile as readFileFs, rm } from 'node:fs/promises'
+import {
+  access,
+  mkdir,
+  readdir,
+  rename,
+  stat,
+  writeFile as writeFileFs,
+  readFile as readFileFs,
+  rm,
+} from 'node:fs/promises'
 import { dirname, extname, join, relative, resolve } from 'node:path'
 import { Buffer } from 'node:buffer'
 
@@ -11,7 +20,18 @@ interface DirentTransformed {
 
 export class FsAgent {
   private sourceDir: string = ''
-  private readonly referenceFileExtensions = new Set(['.md', '.markdown', '.mdx', '.html', '.htm', '.njk', '.yml', '.yaml', '.json', '.txt'])
+  private readonly referenceFileExtensions = new Set([
+    '.md',
+    '.markdown',
+    '.mdx',
+    '.html',
+    '.htm',
+    '.njk',
+    '.yml',
+    '.yaml',
+    '.json',
+    '.txt',
+  ])
 
   init(baseDirectory: string): void {
     this.sourceDir = join(baseDirectory, 'source')
@@ -27,7 +47,11 @@ export class FsAgent {
     this.ensureInitialized()
     const resolved = resolve(this.sourceDir, target)
     const relativePath = relative(this.sourceDir, resolved)
-    if (relativePath.startsWith('..') || relativePath.includes('..' + this.pathSeparator) || relativePath === '..') {
+    if (
+      relativePath.startsWith('..') ||
+      relativePath.includes('..' + this.pathSeparator) ||
+      relativePath === '..'
+    ) {
       throw new Error('Path escapes source directory')
     }
     return resolved
@@ -98,13 +122,18 @@ export class FsAgent {
     return readFileFs(targetPath, { encoding })
   }
 
-  async writeFile(path: string, content: string | ArrayBuffer | Uint8Array, encoding: BufferEncoding = 'utf-8'): Promise<void> {
+  async writeFile(
+    path: string,
+    content: string | ArrayBuffer | Uint8Array,
+    encoding: BufferEncoding = 'utf-8',
+  ): Promise<void> {
     const targetPath = this.resolveInSource(path)
     if (typeof content === 'string') {
       await this.writeFileInternal(targetPath, content, encoding)
       return
     }
-    const buffer = content instanceof Uint8Array ? Buffer.from(content) : Buffer.from(new Uint8Array(content))
+    const buffer =
+      content instanceof Uint8Array ? Buffer.from(content) : Buffer.from(new Uint8Array(content))
     await this.writeFileInternal(targetPath, buffer)
   }
 
@@ -113,7 +142,9 @@ export class FsAgent {
     await rm(targetPath, { force: true })
   }
 
-  async getFileInfo(path: string): Promise<{ size: number; createdAt: string; updatedAt: string } | null> {
+  async getFileInfo(
+    path: string,
+  ): Promise<{ size: number; createdAt: string; updatedAt: string } | null> {
     const targetPath = this.resolveInSource(path)
     try {
       const result = await stat(targetPath)
@@ -138,7 +169,11 @@ export class FsAgent {
     return results
   }
 
-  private async collectReferences(directory: string, searchPath: string, results: string[]): Promise<void> {
+  private async collectReferences(
+    directory: string,
+    searchPath: string,
+    results: string[],
+  ): Promise<void> {
     let entries: Dirent[] = []
     try {
       entries = await readdir(directory, { withFileTypes: true })
@@ -175,7 +210,11 @@ export class FsAgent {
     }
   }
 
-  private async writeFileInternal(path: string, content: string | Buffer, encoding: BufferEncoding = 'utf-8'): Promise<void> {
+  private async writeFileInternal(
+    path: string,
+    content: string | Buffer,
+    encoding: BufferEncoding = 'utf-8',
+  ): Promise<void> {
     await this.assureDir(path)
     if (typeof content === 'string') {
       await writeFileFs(path, content, { encoding })

@@ -62,7 +62,7 @@ watch(
   (newValue) => {
     permalink.value = newValue
   },
-  { immediate: true}
+  { immediate: true },
 )
 </script>
 <template>

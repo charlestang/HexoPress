@@ -153,10 +153,10 @@ declare global {
   }
 
   type Heading = {
-    id: string;
-    text: string;
-    level: number;
-    line: number;
+    id: string
+    text: string
+    level: number
+    line: number
   }
   interface ISite {
     getPosts: (
