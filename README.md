@@ -84,7 +84,7 @@ HexoPress makes Hexo blogging as easy as WordPress! No more manual Front Matter 
 
 ### 0. Compatibility
 
-- Supports Hexo 7.0.0 and above (uses Hexo 7.1.1 API internally)
+- Supports Hexo 7.0.0 and above (uses Hexo 8.0.0 API internally)
 - Please back up your blog directory before use (git integration recommended)
 
 ### 1. Mac

@@ -84,7 +84,7 @@ HexoPress 让 Hexo 博客创作像 WordPress 一样简单！无需手动编辑 F
 
 ### 0. 兼容性
 
-- 支持 Hexo 7.0.0 及以上版本（内置 Hexo 7.1.1 API）
+- 支持 Hexo 7.0.0 及以上版本（内置 Hexo 8.0.0 API）
 - 建议使用前备份博客目录（已集成 git）
 
 ### 1. Mac
