@@ -34,7 +34,7 @@ HexoPress 以 Electron 作为容器，主进程负责窗口管理与 Hexo 数据
 
 ## 渲染进程结构
 - 渲染入口 `renderer.ts` 创建 Vue 应用并依次安装国际化、路由与 Pinia，然后挂载到 DOM。【F:src/renderer.ts†L1-L27】
-- 路由定义位于 `src/router/index.ts`，在全局导航守卫中根据是否已选择博客目录与代理初始化状态决定跳转或尝试初始化。守卫通过 `window.site.initializeAgent` 调用主进程，并在成功后标记 `appStore.isAgentInitialized`，驱动后续数据拉取。【F:src/router/index.ts†L1-L74】
+- 路由定义位于 `src/router/index.ts`，全局导航守卫的逻辑是：如果没有选择博客目录，则进入 `/setup` 页面，引导设置；如果博客目录已经设置，但是主进程中的代理，也就是 `FsAgent` 没有初始化完毕，则先尝试去初始化该 Agent，然后再进入目标页面，否则会停留在 `/setup` 页面。守卫通过 `window.site.initializeAgent` 调用主进程，并在成功后标记 `appStore.isAgentInitialized`，驱动后续数据拉取。【F:src/router/index.ts†L1-L117】
 - 全局状态由 `appStore` 管理，负责语言、暗色模式、Hexo 根目录等偏好持久化，并在代理初始化完成后自动请求 Hexo 配置与站点信息缓存到 Store。【F:src/stores/app.ts†L1-L89】
 
 ## 数据读取与写入路径

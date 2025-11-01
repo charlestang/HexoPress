@@ -87,11 +87,21 @@ const appStore = useAppStoreWithout()
 
 router.beforeEach((to, from) => {
   console.log('router: beforeEach')
-  console.log('appStore.isBasePathSet: ', appStore.isBasePathSet)
-  console.log('appStore.isAgentInitialized: ', appStore.isAgentInitialized)
+  console.log(
+    'navigating from: ',
+    from,
+    ' to: ',
+    to,
+    ' status checking isBasePathSet: ',
+    appStore.isBasePathSet,
+    ' isAgentInitialized: ',
+    appStore.isAgentInitialized,
+  )
+  // if basePath is not set, redirect to setup page
   if (!appStore.isBasePathSet && to.name !== 'setup') {
     return { path: '/setup' }
   } else {
+    // if basePath is set but agent is not initialized, try to initialize the agent
     if (appStore.isBasePathSet && !appStore.isAgentInitialized) {
       console.log('basePath is set, but agent is not initialized, try to init ....')
       window.site.initializeAgent(appStore.basePath).then((result) => {

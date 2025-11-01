@@ -28,6 +28,6 @@
 ## 深入阅读建议
 1. **配合《架构与数据流指南》**：先理解 Electron 主进程与渲染进程的分层职责，再进入具体业务模块，能更快定位问题或扩展点。【F:docs/architecture-overview.md†L1-L60】
 2. **对照《IPC API 参考》**：在编写组件或 Store 时查阅对应的 IPC 契约，避免遗漏参数或误用返回值结构。【F:docs/ipc-api-reference.md†L1-L80】
-3. **阅读现有单元测试**：从 `main/lib/FsAgent.test.ts` 等文件了解仓库的测试风格，编写新的测试覆盖 HexoAgent 或路由守卫逻辑，有助于防止回归。【F:main/lib/FsAgent.ts†L9-L58】
+3. **阅读现有单元测试**：从 `main/__tests__`，`main/lib/__tests__` 等文件夹了解后端代码的测试风格，编写新的测试覆盖新增的代码，有助于防止回归。
 
 借助以上资料，新人可以逐步熟悉 HexoPress 的运行机制，在保持代码质量的同时高效交付新功能。

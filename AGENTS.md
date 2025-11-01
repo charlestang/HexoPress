@@ -5,6 +5,7 @@
 - 此文件适用于 **整个仓库**（目录根：`/`）的所有内容。
 - 若子目录存在自己的 `AGENTS.md`，**子目录文件优先级更高**，对该子树进行覆盖或补充。
 - 若与**直接的系统/开发者/用户指令**冲突，以后者为准。
+- 与开发者沟通，请使用中文，而提交代码撰写 commit message 时候，请保持英文。
 
 ## Project Layout
 
@@ -50,14 +51,16 @@
 
 ## Programmatic Checks (MANDATORY)
 
-> **无论更改代码还是文档，都必须运行以下检查并确保通过。**
+> **如果修改了代码，在提交之前，都必须运行以下检查并确保通过。**
+> **如果修改了`docs/` 以外的文档（`.md` 文件），必须执行 `npm run format` 来格式化。**
 
 ```bash
 # 1) 安装依赖
 npm install
 
 # 2) 代码质量
-npm run lint
+npm run format
+npm run lint --fix
 npm run check-all
 
 # 3) 测试
@@ -95,10 +98,10 @@ git status --porcelain
 
 ## Common Pitfalls & Fixes
 
-- **类型检查配置分离**：新增或修改 TS 代码后务必根据目标执行对应检查——`vue-tsc -p tsconfig.app.json` (渲染层)、`vue-tsc -p tsconfig.vitest.json` (测试)、`tsc -p tsconfig.node.json|tools.json` (主进程/工具脚本)。混用会导致误报或漏报。
+- **类型检查配置分离**：如果修改了 `.vue` 文件，请在项目根目录下执行 `npm run vue-check`，如果修改了 `main` 目录下的文件，请执行 `npm run node-check`，如果修改了测试文件，请执行 `npm run vitest-check`。如果一次修改的文件较多，涉及多种类型，也可以执行 `npm run check-all`，就会按顺序执行上述各种检查，会比较简单。
 - **Element Plus 组件桩**：在测试里直接 `v-model`/监听事件时，记得给 stub 指定 props/emit 定义及类型断言，否则 `vue-tsc` 会把 `props.data` 推断为 `unknown` 并产生 TS2345/TS2532。
 - **异步侦听器**：组件中常见多层 `nextTick` 更新（如 `watch` 里调用 `setCurrentKey`）。测试断言需封装 `await nextTick()` 两次的 `flush` 助手，避免竞态或未触发的期望。
 - **隐式 any**：模板内联箭头函数（`@update:modelValue="(val) => emit(...)"` 等）在 TS 检查下会报 TS7006，优先将处理器提取为命名函数。
 - **Array.prototype.at**：不同 tsconfig 的 `lib` 设置差异使 `.at()` 未必可用。测试/工具代码若需要末尾元素，可使用 `arr[arr.length - 1]` 或封装助手函数。
 - **示例博客修改**：`blog/` 目录被视作演示数据，修改前确认是否影响文档或示例。若需写操作，优先通过应用逻辑或在测试中使用临时副本。
-- **UnoCSS 渐进迁移**：部分页面已改用 UnoCSS，其余仍保留旧样式体系。新增页面优先选择 UnoCSS，并复用 `src/uno.config.ts` 中的预设；若修改旧页面，确认是否需要同步迁移，避免同一页面混杂两套写法。更新规范时请在此文档记录。如果后续迭代涉及到某个页面或者组件，那么就把迭代遇到的这个页面或者组件重构为使用 UnoCSS。
+- **UnoCSS 渐进迁移**：部分页面已改用 UnoCSS，其余仍保留旧样式体系。新增页面优先选择 UnoCSS，并复用 `src/uno.config.ts` 中的预设；若修改旧页面，确认是否需要同步迁移，避免同一页面混杂两套写法。更新规范时请在此文档记录。
