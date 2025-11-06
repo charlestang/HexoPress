@@ -1,11 +1,14 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import TagPostsDialog from '@/components/TagPostsDialog.vue'
 
 const { t } = useI18n()
 
 const tags = ref<Tag[]>([])
 const tagsCount = ref(0)
+const showDialog = ref(false)
+const activeTag = ref<Tag | null>(null)
 
 async function fetch() {
   tags.value = await window.site.getTags()
@@ -37,9 +40,16 @@ const secondHalf = computed(() => {
   return sortedTags.value?.slice(midIndex.value)
 })
 
-function onClickLink(url: string) {
-  window.site.openUrl(url)
+function onViewTag(tag: Tag) {
+  activeTag.value = tag
+  showDialog.value = true
 }
+
+watch(showDialog, (visible) => {
+  if (!visible) {
+    activeTag.value = null
+  }
+})
 </script>
 
 <template>
@@ -62,9 +72,7 @@ function onClickLink(url: string) {
           <el-table-column prop="length" :label="t('tags.total')" sortable />
           <el-table-column :label="t('tags.actions')">
             <template #default="scope">
-              <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
-                t('tags.view')
-              }}</el-link>
+              <el-link type="primary" link @click="onViewTag(scope.row)">{{ t('tags.view') }}</el-link>
             </template>
           </el-table-column>
         </el-table>
@@ -85,15 +93,14 @@ function onClickLink(url: string) {
           <el-table-column prop="length" :label="t('tags.total')" sortable />
           <el-table-column :label="t('tags.actions')">
             <template #default="scope">
-              <el-link type="primary" link @click="onClickLink(scope.row.permalink)">{{
-                t('tags.view')
-              }}</el-link>
+              <el-link type="primary" link @click="onViewTag(scope.row)">{{ t('tags.view') }}</el-link>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
     </el-row>
   </div>
+  <TagPostsDialog v-model="showDialog" :tag="activeTag" />
 </template>
 <style scoped>
 .wrapper {

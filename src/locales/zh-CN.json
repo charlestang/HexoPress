@@ -307,7 +307,11 @@
     "name": "标签",
     "stats": "（共 {count} 个）",
     "total": "文章总数",
-    "view": "查看"
+    "view": "查看",
+    "dialogTitle": "{name} · 标签文章（共 {count} 篇）",
+    "emptyPosts": "暂无文章关联该标签",
+    "loadError": "文章列表加载失败",
+    "retry": "重试"
   },
   "time": {
     "long": "HH:mm:ss",

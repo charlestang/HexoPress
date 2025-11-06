@@ -286,6 +286,7 @@ export class HexoAgent {
     categoryId: string = '',
     monthCode: string = '',
     keywords: string = '',
+    tagId: string = '',
     orderBy: string = 'date',
     order: string = 'desc',
   ): Promise<PostsResults> {
@@ -297,7 +298,7 @@ export class HexoAgent {
     }
     console.log(
       'HexoAgent.getPosts is called.',
-      `Getting posts with published=${published}, draft=${isDraft}, limit=${limit}, offset=${offset}, keywords=${keywords}, orderBy=${orderBy}, order=${order}`,
+      `Getting posts with published=${published}, draft=${isDraft}, limit=${limit}, offset=${offset}, keywords=${keywords}, tagId=${tagId}, orderBy=${orderBy}, order=${order}`,
     )
     const results = {
       total: 0,
@@ -333,6 +334,12 @@ export class HexoAgent {
     if (keywords !== '') {
       posts = posts.filter((item) => {
         return item.title.includes(keywords) || item.content.includes(keywords)
+      })
+    }
+    if (tagId !== '') {
+      posts = posts.filter((item) => {
+        const tagData = item.tags?.data ?? []
+        return tagData.some((tag: HexoTagRecord) => tag._id === tagId)
       })
     }
     results.total = posts.length

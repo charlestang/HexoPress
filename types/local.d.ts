@@ -167,6 +167,7 @@ declare global {
       categoryId?: string,
       monthCode?: string,
       keywords?: string,
+      tagId?: string,
       orderBy?: string,
       order?: string,
     ) => Promise<PostsResults>
