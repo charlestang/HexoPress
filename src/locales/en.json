@@ -310,7 +310,12 @@
     "dialogTitle": "{name} · Tag posts ({count})",
     "emptyPosts": "No posts use this tag yet.",
     "loadError": "Failed to load tag posts.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "removeTooltip": "Remove tag",
+    "removeConfirmTitle": "Remove tag",
+    "removeConfirmMessage": "Remove \"{tag}\" from \"{post}\"?",
+    "removeConfirm": "Remove",
+    "removeError": "Failed to remove tag. {message}"
   },
   "time": {
     "long": "HH:mm:ss",

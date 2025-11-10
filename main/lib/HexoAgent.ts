@@ -154,6 +154,40 @@ export class HexoAgent {
     await this.updateCache()
   }
 
+  public async removeTagFromPost(sourcePath: string, tagId: string): Promise<void> {
+    if (!sourcePath) {
+      throw new Error('Source path cannot be empty')
+    }
+    if (!tagId) {
+      throw new Error('Tag id cannot be empty')
+    }
+
+    await this.ensureReady()
+    const tagModel = this.hexo.database.model('Tag')
+    const tag = tagModel.findById(tagId, { lean: true }) as HexoTagRecord | undefined
+
+    if (!tag) {
+      throw new Error(`Tag not found: ${tagId}`)
+    }
+
+    const document = this.readPostFrontMatter(sourcePath)
+    const meta = buildPostMeta(document.data)
+    const currentTags = meta.tags ?? []
+    const filtered = currentTags.filter((value) => value !== tag.name)
+
+    if (filtered.length === currentTags.length) {
+      return
+    }
+
+    meta.tags = filtered.length > 0 ? filtered : undefined
+    const nextData = preparePostMeta(meta)
+    this.writePostFrontMatter(sourcePath, {
+      data: nextData,
+      content: document.content,
+    })
+    await this.updateCache()
+  }
+
   private async getCategoryPathById(categoryId: string): Promise<CategoryPath> {
     await this.ensureReady()
     const categoryModel = this.hexo.database.model('Category')

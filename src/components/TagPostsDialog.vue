@@ -1,8 +1,14 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ElMessageBox } from 'element-plus'
+import { Loading } from '@element-plus/icons-vue'
 
 type TagRecord = Tag | null
+type TagChip = {
+  id: string
+  name: string
+}
 
 const props = defineProps<{
   modelValue: boolean
@@ -11,6 +17,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void
+  (event: 'closed'): void
 }>()
 
 const { t } = useI18n()
@@ -18,7 +25,12 @@ const { t } = useI18n()
 const posts = ref<Post[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
+const tagRemovalError = ref<string | null>(null)
 let requestToken = 0
+const pendingRemovalKeys = ref<Set<string>>(new Set())
+const rowsPendingRemoval = ref<Set<string>>(new Set())
+const removalTimers = new Map<string, number>()
+const removalAnimationMs = 300
 
 const dialogTitle = computed(() => {
   const name = props.tag?.name ?? t('tags.name')
@@ -28,6 +40,7 @@ const dialogTitle = computed(() => {
 
 function handleClose() {
   emit('update:modelValue', false)
+  emit('closed')
 }
 
 function resetState() {
@@ -35,6 +48,11 @@ function resetState() {
   posts.value = []
   loading.value = false
   error.value = null
+  tagRemovalError.value = null
+  pendingRemovalKeys.value = new Set()
+  rowsPendingRemoval.value = new Set()
+  removalTimers.forEach((timer) => window.clearTimeout(timer))
+  removalTimers.clear()
 }
 
 async function fetchPosts(tag: Tag) {
@@ -42,6 +60,7 @@ async function fetchPosts(tag: Tag) {
   const currentToken = requestToken
   loading.value = true
   error.value = null
+  tagRemovalError.value = null
   try {
     const result = await window.site.getPosts(true, true, -1, 0, '', '', '', tag.id, 'date', 'desc')
     if (currentToken !== requestToken) {
@@ -130,11 +149,14 @@ function categoryLabelsForPost(post: Post): string[] {
   return labels
 }
 
-function tagLabelsForPost(post: Post): string[] {
+function tagLabelsForPost(post: Post): TagChip[] {
   if (!post.tags) {
     return []
   }
-  return Object.values(post.tags)
+  return Object.entries(post.tags).map(([id, name]) => ({
+    id,
+    name,
+  }))
 }
 
 function onRetry() {
@@ -142,6 +164,122 @@ function onRetry() {
     fetchPosts(props.tag)
   }
 }
+
+function buildRemovalKey(post: Post, tagId: string): string {
+  return `${post.source}::${tagId}`
+}
+
+function setPendingRemoval(key: string, shouldAdd: boolean) {
+  const next = new Set(pendingRemovalKeys.value)
+  if (shouldAdd) {
+    next.add(key)
+  } else {
+    next.delete(key)
+  }
+  pendingRemovalKeys.value = next
+}
+
+function setRowRemoval(sourcePath: string, shouldAdd: boolean) {
+  const next = new Set(rowsPendingRemoval.value)
+  if (shouldAdd) {
+    next.add(sourcePath)
+  } else {
+    next.delete(sourcePath)
+  }
+  rowsPendingRemoval.value = next
+}
+
+function scheduleRowRemoval(sourcePath: string) {
+  if (rowsPendingRemoval.value.has(sourcePath)) {
+    return
+  }
+  setRowRemoval(sourcePath, true)
+  const timer = window.setTimeout(() => {
+    setRowRemoval(sourcePath, false)
+    posts.value = posts.value.filter((post) => post.source !== sourcePath)
+    removalTimers.delete(sourcePath)
+  }, removalAnimationMs)
+  removalTimers.set(sourcePath, timer)
+}
+
+function applyTagRemoval(sourcePath: string, tagId: string): void {
+  let removedFilterTag = false
+  posts.value = posts.value.map((post) => {
+    if (post.source !== sourcePath || !post.tags || !(tagId in post.tags)) {
+      return post
+    }
+    const nextTags = { ...post.tags }
+    delete nextTags[tagId]
+    if (props.tag?.id && !nextTags[props.tag.id]) {
+      removedFilterTag = true
+    }
+    return {
+      ...post,
+      tags: nextTags,
+    }
+  })
+
+  if (removedFilterTag) {
+    scheduleRowRemoval(sourcePath)
+  }
+}
+
+function rowClassName({ row }: { row: Post }): string {
+  return rowsPendingRemoval.value.has(row.source) ? 'is-removing-row' : ''
+}
+
+function isRemovingChip(post: Post, tagId: string): boolean {
+  const key = buildRemovalKey(post, tagId)
+  return pendingRemovalKeys.value.has(key)
+}
+
+async function onRemoveTag(post: Post, tag: TagChip) {
+  if (!post.source || !tag.id) {
+    return
+  }
+
+  const removalKey = buildRemovalKey(post, tag.id)
+  if (pendingRemovalKeys.value.has(removalKey)) {
+    return
+  }
+
+  try {
+    await ElMessageBox.confirm(
+      t('tags.removeConfirmMessage', { tag: tag.name, post: post.title }),
+      t('tags.removeConfirmTitle'),
+      {
+        type: 'warning',
+        confirmButtonText: t('tags.removeConfirm'),
+        cancelButtonText: t('posts.cancel'),
+      },
+    )
+  } catch {
+    return
+  }
+
+  tagRemovalError.value = null
+  setPendingRemoval(removalKey, true)
+  try {
+    await window.site.removeTagFromPost(post.source, tag.id)
+    applyTagRemoval(post.source, tag.id)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    tagRemovalError.value = t('tags.removeError', { message })
+  } finally {
+    setPendingRemoval(removalKey, false)
+  }
+}
+
+onBeforeUnmount(() => {
+  removalTimers.forEach((timer) => window.clearTimeout(timer))
+  removalTimers.clear()
+})
+
+defineExpose({
+  posts,
+  tagRemovalError,
+  onRemoveTag,
+})
 </script>
 
 <template>
@@ -160,14 +298,25 @@ function onRetry() {
         <el-button type="primary" size="small" @click="onRetry">{{ t('tags.retry') }}</el-button>
       </div>
       <el-empty v-else-if="posts.length === 0" :description="t('tags.emptyPosts')" />
-      <el-table
-        v-else
-        :data="posts"
-        stripe
-        class="posts-table"
-        height="360"
-        :border="false"
-        :show-header="true">
+      <template v-else>
+        <div v-if="tagRemovalError" class="removal-error">
+          <el-alert
+            :title="tagRemovalError"
+            type="error"
+            show-icon
+            closable
+            @close="tagRemovalError = null"
+          />
+        </div>
+        <el-table
+          :data="posts"
+          stripe
+          class="posts-table"
+          height="360"
+          :border="false"
+          :show-header="true"
+          row-key="source"
+          :row-class-name="rowClassName">
         <el-table-column type="index" width="64" />
         <el-table-column :label="t('posts.title')" prop="title">
           <template #default="scope">
@@ -192,17 +341,25 @@ function onRetry() {
           <template #default="scope">
             <template v-if="tagLabelsForPost(scope.row).length > 0">
               <el-tag
-                v-for="label in tagLabelsForPost(scope.row)"
-                :key="label"
+                v-for="tag in tagLabelsForPost(scope.row)"
+                :key="`${scope.row.source}-${tag.id}`"
                 size="small"
-                class="tag-item">
-                {{ label }}
+                class="tag-chip"
+                effect="light"
+                :closable="!isRemovingChip(scope.row, tag.id)"
+                :disable-transitions="true"
+                @close="() => onRemoveTag(scope.row, tag)">
+                <span class="tag-chip__label">{{ tag.name }}</span>
+                <el-icon v-if="isRemovingChip(scope.row, tag.id)" class="tag-chip__spinner" :size="12">
+                  <Loading />
+                </el-icon>
               </el-tag>
             </template>
             <el-text v-else>--</el-text>
           </template>
         </el-table-column>
       </el-table>
+      </template>
     </template>
     <template #footer>
       <el-button @click="handleClose">{{ t('posts.cancel') }}</el-button>
@@ -223,10 +380,36 @@ function onRetry() {
 .posts-table {
   width: 100%;
 }
-.tag-item {
+.posts-table :deep(.el-table__body tr) {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.posts-table :deep(.el-table__body tr.is-removing-row) {
+  opacity: 0;
+  transform: translateX(8px);
+}
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   margin: 0 4px 4px 0;
+}
+.tag-chip__label {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tag-chip__spinner {
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 .post-title {
   word-break: break-word;
+}
+.removal-error {
+  margin-bottom: 12px;
 }
 </style>

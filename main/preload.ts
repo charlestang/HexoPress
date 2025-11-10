@@ -22,6 +22,8 @@ contextBridge.exposeInMainWorld('site', {
   getPostDocument: (sourcePath: string) => ipcRenderer.invoke('post:document', sourcePath),
   savePostDocument: (sourcePath: string, document: PostDocument) =>
     ipcRenderer.invoke('post:saveDocument', sourcePath, document),
+  removeTagFromPost: (sourcePath: string, tagId: string) =>
+    ipcRenderer.invoke('posts:remove-tag', sourcePath, tagId),
   createFile: (type, title: string, slug: string, content: string) =>
     ipcRenderer.invoke('post:create', type, title, slug, content),
   moveFile: (sourcePath: string, content: string) =>

@@ -2,6 +2,18 @@
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
 
+<!-- code_chunk_output -->
+
+- [Our Pledge](#our-pledge)
+- [Our Standards](#our-standards)
+- [Our Responsibilities](#our-responsibilities)
+- [Scope](#scope)
+- [Enforcement](#enforcement)
+- [Attribution](#attribution)
+
+<!-- /code_chunk_output -->
+
+
 ## Our Pledge
 
 In the interest of fostering an open and welcoming environment, we as

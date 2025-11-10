@@ -60,6 +60,9 @@ app.whenReady().then(async () => {
   ipcMain.handle('post:saveDocument', (event, path, document) =>
     agent.savePostDocument(path, document),
   )
+  ipcMain.handle('posts:remove-tag', (event, sourcePath: string, tagId: string) =>
+    agent.removeTagFromPost(sourcePath, tagId),
+  )
   ipcMain.handle('post:getMeta', (event, path) => agent.getPostMeta(path))
   ipcMain.handle('post:updateMeta', (event, path, meta) => agent.updatePostMeta(path, meta))
   ipcMain.handle('post:create', (event, type, title, slug, content) =>

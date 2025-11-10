@@ -200,6 +200,7 @@ declare global {
     updatePostMeta: (sourcePath: string, meta: PostMeta) => Promise<void>
     getPostDocument: (sourcePath: string) => Promise<PostDocument>
     savePostDocument: (sourcePath: string, document: PostDocument) => Promise<void>
+    removeTagFromPost: (sourcePath: string, tagId: string) => Promise<void>
     getSystemLocale: () => Promise<string>
     openUrl: (url: string) => Promise<void>
     getReadDir: (path: string) => Promise<FileEntry[]>

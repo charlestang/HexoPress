@@ -45,6 +45,10 @@ function onViewTag(tag: Tag) {
   showDialog.value = true
 }
 
+function onDialogClosed() {
+  fetch()
+}
+
 watch(showDialog, (visible) => {
   if (!visible) {
     activeTag.value = null
@@ -100,7 +104,7 @@ watch(showDialog, (visible) => {
       </el-col>
     </el-row>
   </div>
-  <TagPostsDialog v-model="showDialog" :tag="activeTag" />
+  <TagPostsDialog v-model="showDialog" :tag="activeTag" @closed="onDialogClosed" />
 </template>
 <style scoped>
 .wrapper {

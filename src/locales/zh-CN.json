@@ -311,7 +311,12 @@
     "dialogTitle": "{name} · 标签文章（共 {count} 篇）",
     "emptyPosts": "暂无文章关联该标签",
     "loadError": "文章列表加载失败",
-    "retry": "重试"
+    "retry": "重试",
+    "removeTooltip": "移除标签",
+    "removeConfirmTitle": "移除标签",
+    "removeConfirmMessage": "确认将「{tag}」从《{post}》中移除？",
+    "removeConfirm": "移除",
+    "removeError": "移除标签失败：{message}"
   },
   "time": {
     "long": "HH:mm:ss",
