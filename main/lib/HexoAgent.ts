@@ -997,10 +997,8 @@ export class HexoAgent {
 
       const relativePath = post.path.replace(this.hexo.source_dir, '')
 
-      if (content && content !== '') {
+      if (content && content.trim().length > 0) {
         await this.saveContent(relativePath, content)
-      } else {
-        await this.updateCache()
       }
 
       return relativePath

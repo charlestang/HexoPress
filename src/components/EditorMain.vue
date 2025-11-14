@@ -174,18 +174,23 @@ function toggleAside() {
   }
 }
 
+function hasNonWhitespaceContent(value: string | undefined | null): boolean {
+  return typeof value === 'string' && value.trim().length > 0
+}
+
 async function _formValidate(): Promise<boolean> {
   if (!isDirty.value) {
     ElMessage.info(t('editor.nothingChanged'))
     return false
   }
 
-  if (!frontMatter.value.title || frontMatter.value.title.length === 0) {
-    await ElMessageBox.alert(t('editor.titleRequired'), t('editor.tipsTitle'), {
-      confirmButtonText: t('editor.ok'),
-    })
+  const hasTitle = hasNonWhitespaceContent(frontMatter.value.title)
+  const hasBody = hasNonWhitespaceContent(text.value)
+
+  if (!hasTitle || !hasBody) {
     return false
   }
+
   return true
 }
 function buildDocument(): PostDocument {
