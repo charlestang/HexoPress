@@ -1,18 +1,26 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 import TagPostsDialog from '@/components/TagPostsDialog.vue'
 
 const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
 const tags = ref<Tag[]>([])
 const tagsCount = ref(0)
 const showDialog = ref(false)
 const activeTag = ref<Tag | null>(null)
+const routeTagId = computed(() => (typeof route.query.tagId === 'string' ? route.query.tagId : ''))
+const shouldRestoreDialog = computed(
+  () => route.query.tagDialog === '1' && routeTagId.value.length > 0,
+)
 
 async function fetch() {
   tags.value = await window.site.getTags()
   tagsCount.value = tags.value.length
+  restoreDialogIfNeeded()
 }
 fetch()
 
@@ -43,10 +51,40 @@ const secondHalf = computed(() => {
 function onViewTag(tag: Tag) {
   activeTag.value = tag
   showDialog.value = true
+  updateDialogQuery(tag)
 }
 
 function onDialogClosed() {
+  clearDialogQuery()
   fetch()
+}
+
+function updateDialogQuery(tag: Tag | null) {
+  const nextQuery = { ...route.query }
+  if (tag) {
+    nextQuery.tagId = tag.id
+    nextQuery.tagDialog = '1'
+  } else {
+    delete nextQuery.tagId
+    delete nextQuery.tagDialog
+  }
+  router.replace({ query: nextQuery })
+}
+
+function clearDialogQuery() {
+  updateDialogQuery(null)
+}
+
+function restoreDialogIfNeeded() {
+  if (!shouldRestoreDialog.value || showDialog.value) {
+    return
+  }
+  const target = tags.value.find((tag) => tag.id === routeTagId.value)
+  if (!target) {
+    return
+  }
+  activeTag.value = target
+  showDialog.value = true
 }
 
 watch(showDialog, (visible) => {
@@ -54,6 +92,11 @@ watch(showDialog, (visible) => {
     activeTag.value = null
   }
 })
+
+watch(
+  () => [shouldRestoreDialog.value, routeTagId.value] as const,
+  () => restoreDialogIfNeeded(),
+)
 </script>
 
 <template>
@@ -76,7 +119,9 @@ watch(showDialog, (visible) => {
           <el-table-column prop="length" :label="t('tags.total')" sortable />
           <el-table-column :label="t('tags.actions')">
             <template #default="scope">
-              <el-link type="primary" link @click="onViewTag(scope.row)">{{ t('tags.view') }}</el-link>
+              <el-link type="primary" link @click="onViewTag(scope.row)">{{
+                t('tags.view')
+              }}</el-link>
             </template>
           </el-table-column>
         </el-table>
@@ -97,7 +142,9 @@ watch(showDialog, (visible) => {
           <el-table-column prop="length" :label="t('tags.total')" sortable />
           <el-table-column :label="t('tags.actions')">
             <template #default="scope">
-              <el-link type="primary" link @click="onViewTag(scope.row)">{{ t('tags.view') }}</el-link>
+              <el-link type="primary" link @click="onViewTag(scope.row)">{{
+                t('tags.view')
+              }}</el-link>
             </template>
           </el-table-column>
         </el-table>

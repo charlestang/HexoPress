@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ElMessageBox } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
 
 type TagRecord = Tag | null
 type TagChip = {
@@ -21,6 +22,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const router = useRouter()
 
 const posts = ref<Post[]>([])
 const loading = ref(false)
@@ -37,6 +39,8 @@ const dialogTitle = computed(() => {
   const count = loading.value ? '…' : String(posts.value.length)
   return t('tags.dialogTitle', { name, count })
 })
+
+const activeTagId = computed(() => props.tag?.id ?? '')
 
 function handleClose() {
   emit('update:modelValue', false)
@@ -165,6 +169,24 @@ function onRetry() {
   }
 }
 
+function isActiveTag(tagId: string): boolean {
+  return !!activeTagId.value && activeTagId.value === tagId
+}
+
+function openPostEditor(post: Post) {
+  if (!post.source) {
+    return
+  }
+  const query: Record<string, string> = {
+    sourcePath: post.source,
+  }
+  if (activeTagId.value) {
+    query.tagId = activeTagId.value
+    query.tagDialog = '1'
+  }
+  router.push({ path: '/frame', query })
+}
+
 function buildRemovalKey(post: Post, tagId: string): string {
   return `${post.source}::${tagId}`
 }
@@ -279,6 +301,8 @@ defineExpose({
   posts,
   tagRemovalError,
   onRemoveTag,
+  openPostEditor,
+  isActiveTag,
 })
 </script>
 
@@ -305,8 +329,7 @@ defineExpose({
             type="error"
             show-icon
             closable
-            @close="tagRemovalError = null"
-          />
+            @close="tagRemovalError = null" />
         </div>
         <el-table
           :data="posts"
@@ -317,48 +340,61 @@ defineExpose({
           :show-header="true"
           row-key="source"
           :row-class-name="rowClassName">
-        <el-table-column type="index" width="64" />
-        <el-table-column :label="t('posts.title')" prop="title">
-          <template #default="scope">
-            <span class="post-title">{{ scope.row.title }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="t('posts.categories')" prop="categories">
-          <template #default="scope">
-            <template v-if="categoryLabelsForPost(scope.row).length > 0">
-              <el-tag
-                v-for="label in categoryLabelsForPost(scope.row)"
-                :key="label"
-                size="small"
-                class="tag-item">
-                {{ label }}
-              </el-tag>
+          <el-table-column type="index" width="64" />
+          <el-table-column :label="t('posts.title')" prop="title">
+            <template #default="scope">
+              <el-link
+                class="post-title"
+                type="primary"
+                :underline="false"
+                @click="openPostEditor(scope.row)">
+                {{ scope.row.title }}
+              </el-link>
             </template>
-            <el-text v-else>--</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column :label="t('posts.tags')" prop="tags">
-          <template #default="scope">
-            <template v-if="tagLabelsForPost(scope.row).length > 0">
-              <el-tag
-                v-for="tag in tagLabelsForPost(scope.row)"
-                :key="`${scope.row.source}-${tag.id}`"
-                size="small"
-                class="tag-chip"
-                effect="light"
-                :closable="!isRemovingChip(scope.row, tag.id)"
-                :disable-transitions="true"
-                @close="() => onRemoveTag(scope.row, tag)">
-                <span class="tag-chip__label">{{ tag.name }}</span>
-                <el-icon v-if="isRemovingChip(scope.row, tag.id)" class="tag-chip__spinner" :size="12">
-                  <Loading />
-                </el-icon>
-              </el-tag>
+          </el-table-column>
+          <el-table-column :label="t('posts.categories')" prop="categories">
+            <template #default="scope">
+              <template v-if="categoryLabelsForPost(scope.row).length > 0">
+                <el-tag
+                  v-for="label in categoryLabelsForPost(scope.row)"
+                  :key="label"
+                  size="small"
+                  class="tag-item">
+                  {{ label }}
+                </el-tag>
+              </template>
+              <el-text v-else>--</el-text>
             </template>
-            <el-text v-else>--</el-text>
-          </template>
-        </el-table-column>
-      </el-table>
+          </el-table-column>
+          <el-table-column :label="t('posts.tags')" prop="tags">
+            <template #default="scope">
+              <template v-if="tagLabelsForPost(scope.row).length > 0">
+                <el-tag
+                  v-for="tag in tagLabelsForPost(scope.row)"
+                  :key="`${scope.row.source}-${tag.id}`"
+                  size="small"
+                  :class="[
+                    'tag-chip',
+                    isActiveTag(tag.id) ? 'tag-chip--active' : 'tag-chip--inactive',
+                  ]"
+                  :type="isActiveTag(tag.id) ? 'primary' : 'info'"
+                  :effect="isActiveTag(tag.id) ? 'light' : 'plain'"
+                  :closable="!isRemovingChip(scope.row, tag.id)"
+                  :disable-transitions="true"
+                  @close="() => onRemoveTag(scope.row, tag)">
+                  <span class="tag-chip__label">{{ tag.name }}</span>
+                  <el-icon
+                    v-if="isRemovingChip(scope.row, tag.id)"
+                    class="tag-chip__spinner"
+                    :size="12">
+                    <Loading />
+                  </el-icon>
+                </el-tag>
+              </template>
+              <el-text v-else>--</el-text>
+            </template>
+          </el-table-column>
+        </el-table>
       </template>
     </template>
     <template #footer>
@@ -381,7 +417,9 @@ defineExpose({
   width: 100%;
 }
 .posts-table :deep(.el-table__body tr) {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 .posts-table :deep(.el-table__body tr.is-removing-row) {
   opacity: 0;
@@ -392,6 +430,12 @@ defineExpose({
   align-items: center;
   gap: 4px;
   margin: 0 4px 4px 0;
+}
+.tag-chip--inactive {
+  color: var(--el-text-color-regular);
+}
+.tag-chip--inactive :deep(.el-tag__close) {
+  color: inherit;
 }
 .tag-chip__label {
   max-width: 160px;
@@ -408,6 +452,7 @@ defineExpose({
 }
 .post-title {
   word-break: break-word;
+  padding: 0;
 }
 .removal-error {
   margin-bottom: 12px;

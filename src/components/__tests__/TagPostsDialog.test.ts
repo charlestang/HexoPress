@@ -6,6 +6,7 @@ import TagPostsDialog from '../TagPostsDialog.vue'
 import en from '@/locales/en.json'
 
 const confirmSpy = vi.hoisted(() => vi.fn(() => Promise.resolve()))
+const pushSpy = vi.hoisted(() => vi.fn())
 
 vi.mock('element-plus', async () => {
   const actual = await vi.importActual<typeof import('element-plus')>('element-plus')
@@ -16,6 +17,12 @@ vi.mock('element-plus', async () => {
     },
   }
 })
+
+vi.mock('vue-router', () => ({
+  useRouter: () => ({
+    push: pushSpy,
+  }),
+}))
 
 type MountOptions = {
   posts?: Post[]
@@ -98,6 +105,7 @@ describe('TagPostsDialog.vue', () => {
           'el-empty': { template: '<div><slot /></div>' },
           'el-table': { template: '<div class="el-table"><slot /></div>' },
           'el-table-column': { template: '<div class="el-table-column"></div>' },
+          'el-link': { template: '<a class="el-link" @click="$emit(\'click\')"><slot /></a>' },
           'el-tag': { template: '<span class="el-tag"><slot /></span>' },
           'el-tooltip': { template: '<span class="el-tooltip"><slot /></span>' },
           'el-text': { template: '<span><slot /></span>' },
@@ -114,6 +122,7 @@ describe('TagPostsDialog.vue', () => {
 
   beforeEach(() => {
     confirmSpy.mockClear()
+    pushSpy.mockClear()
   })
 
   afterEach(() => {
@@ -125,19 +134,24 @@ describe('TagPostsDialog.vue', () => {
     const wrapper = (await createWrapper()) as VueWrapper & {
       removeTagFromPost: ReturnType<typeof vi.fn>
     }
-    expect(wrapper.vm.posts).toHaveLength(1)
+    const vm = wrapper.vm as unknown as {
+      posts: Post[]
+      onRemoveTag: (post: Post, tag: { id: string; name: string }) => Promise<void>
+      tagRemovalError: string | null
+    }
+    expect(vm.posts).toHaveLength(1)
 
     vi.useFakeTimers()
-    await wrapper.vm.onRemoveTag(wrapper.vm.posts[0], { id: 'tag-clean', name: 'Cleanup' })
+    await vm.onRemoveTag(vm.posts[0]!, { id: 'tag-clean', name: 'Cleanup' })
 
     expect(confirmSpy).toHaveBeenCalledTimes(1)
     expect(wrapper.removeTagFromPost).toHaveBeenCalledWith('_posts/sample.md', 'tag-clean')
-    expect(wrapper.vm.posts[0]?.tags?.['tag-clean']).toBeUndefined()
+    expect(vm.posts[0]?.tags?.['tag-clean']).toBeUndefined()
 
     vi.runAllTimers()
     await flushPromises()
 
-    expect(wrapper.vm.posts).toHaveLength(0)
+    expect(vm.posts).toHaveLength(0)
   })
 
   it('shows an error message when the removal request fails', async () => {
@@ -145,11 +159,38 @@ describe('TagPostsDialog.vue', () => {
     const wrapper = (await createWrapper({ posts: [failingPost] })) as VueWrapper & {
       removeTagFromPost: ReturnType<typeof vi.fn>
     }
+    const vm = wrapper.vm as unknown as {
+      posts: Post[]
+      onRemoveTag: (post: Post, tag: { id: string; name: string }) => Promise<void>
+      tagRemovalError: string | null
+    }
     wrapper.removeTagFromPost.mockRejectedValueOnce(new Error('disk full'))
 
-    await wrapper.vm.onRemoveTag(wrapper.vm.posts[0], { id: 'tag-clean', name: 'Cleanup' })
+    await vm.onRemoveTag(vm.posts[0]!, { id: 'tag-clean', name: 'Cleanup' })
 
-    expect(wrapper.vm.tagRemovalError).toBe('Failed to remove tag. disk full')
-    expect(wrapper.vm.posts).toHaveLength(1)
+    expect(vm.tagRemovalError).toBe('Failed to remove tag. disk full')
+    expect(vm.posts).toHaveLength(1)
+  })
+
+  it('navigates to editor with tag context when clicking title', async () => {
+    const wrapper = await createWrapper()
+
+    const vm = wrapper.vm as unknown as { openPostEditor: (post: Post) => void; posts: Post[] }
+    vm.openPostEditor(vm.posts[0]!)
+
+    expect(pushSpy).toHaveBeenCalledWith({
+      path: '/frame',
+      query: { sourcePath: '_posts/sample.md', tagId: 'tag-clean', tagDialog: '1' },
+    })
+  })
+
+  it('renders active tag with accent style and others as normal', async () => {
+    const wrapper = await createWrapper()
+    const vm = wrapper.vm as unknown as {
+      isActiveTag: (tagId: string) => boolean
+    }
+
+    expect(vm.isActiveTag('tag-clean')).toBe(true)
+    expect(vm.isActiveTag('tag-keep')).toBe(false)
   })
 })
