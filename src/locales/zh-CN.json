@@ -117,7 +117,8 @@
     "turnToDraft": "切换至草稿",
     "update": "更新",
     "updated": "更新日期",
-    "url": "URL"
+    "url": "URL",
+    "insert": "插入"
   },
   "filenameDialog": {
     "changePath": "修改文件名/路径",
@@ -167,7 +168,8 @@
     "deleteConfirmTitle": "删除确认",
     "deleteConfirmMessage": "您要删除的文件可能有文章引用，删除后可能导致图片显示为空白，是否继续？",
     "deleteSuccess": "删除成功",
-    "deleteFailed": "删除失败："
+    "deleteFailed": "删除失败：",
+    "searchPlaceholder": "搜索图片"
   },
   "categoryDetail": {
     "pageTitle": "分类：{path}",

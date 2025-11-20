@@ -23,6 +23,7 @@ import { cloneValue, toDate, toStringArray } from '@shared/utils/value'
 
 const { t } = useI18n()
 const editorStore = useEditorStore() // Initialize the store
+const emit = defineEmits<{ (event: 'media-uploaded'): void; (event: 'permalink-change', permalink: string): void }>()
 
 /**
  * @description The flag to indicate whether the post is new or not.
@@ -104,6 +105,14 @@ watch(
     isDirty.value = true
   },
   { deep: true },
+)
+
+watch(
+  () => frontMatter.value.permalink ?? '',
+  (permalink) => {
+    emit('permalink-change', permalink)
+  },
+  { immediate: true },
 )
 
 function applyDocumentMeta(meta: PostMeta) {
@@ -345,6 +354,7 @@ async function onUploadImage(
     //       moved to the `public` path.
     const url = '../images/' + filePath.value
     callback([url])
+    emit('media-uploaded')
   }
   showUploadDialog.value = true
 }
@@ -452,6 +462,7 @@ const toolbars = ref<ToolbarNames[]>([
 ])
 
 const editorRef = ref<ExposeParam>()
+const isEditorFocused = ref(false)
 
 const editorMaxWidth = ref(1100)
 // Helper to generate slug-like IDs
@@ -484,6 +495,25 @@ const scrollToLine = (lineNumber: number) => {
     smoothScroll(scroller, top)
   }
 }
+
+function insertImageMarkdown(markdown: string) {
+  const editor = editorRef.value
+  if (!editor) {
+    ElMessage.error('Failed to insert image')
+    return
+  }
+  if (!isEditorFocused.value) {
+    editor.focus('end')
+  }
+  const content = markdown.endsWith('\n') ? markdown : `${markdown}\n\n`
+  editor.insert(() => ({
+    targetValue: content,
+  }))
+}
+
+defineExpose({
+  insertImageMarkdown,
+})
 
 onMounted(() => {
   editorRef.value?.on('preview', (status) => {
@@ -615,7 +645,9 @@ function onFontBig() {
             :toolbars-exclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
             @upload-img="onUploadImage"
             @on-save="onSave"
-            @get-catalog="handleGetCatalog">
+            @get-catalog="handleGetCatalog"
+            @on-focus="isEditorFocused = true"
+            @on-blur="isEditorFocused = false">
             <template #defToolbars>
               <NormalToolbar :title="t('editor.fontIncrease')" @on-click="onFontBig">
                 <template #trigger>

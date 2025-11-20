@@ -116,7 +116,8 @@
     "turnToDraft": "Turn to Draft",
     "update": "Update",
     "updated": "Updated At",
-    "url": "URL"
+    "url": "URL",
+    "insert": "Insert"
   },
   "filenameDialog": {
     "changePath": "Change file path",
@@ -166,7 +167,8 @@
     "deleteConfirmTitle": "Delete asset",
     "deleteConfirmMessage": "The file may be referenced by posts. Removing it can result in missing images. Continue?",
     "deleteSuccess": "Asset deleted",
-    "deleteFailed": "Failed to delete asset: "
+    "deleteFailed": "Failed to delete asset: ",
+    "searchPlaceholder": "Search images"
   },
   "categoryDetail": {
     "pageTitle": "Category: {path}",
@@ -247,7 +249,7 @@
     "deleteCanceled": "Delete canceled",
     "deleteSuccess": "Delete success.",
     "doubleConfirmDeleteContent": "Once delete, it cannot be recovered. Are you sure you want to delete: ",
-    "doubleConfirmDeleteTitle": "Attention ⚠️ ",
+    "doubleConfirmDeleteTitle": "Attention \u26a0\ufe0f ",
     "draft": "Draft",
     "edit": "Edit",
     "editMeta": "Edit meta",
@@ -288,7 +290,7 @@
     "language": "Language",
     "languages": {
       "en": "English",
-      "zh-CN": "简体中文"
+      "zh-CN": "\u7b80\u4f53\u4e2d\u6587"
     },
     "light": "Light",
     "permalinkFirst": "Use permalink as filename if set.",
@@ -307,7 +309,7 @@
     "stats": "( {count} total )",
     "total": "Posts Total",
     "view": "View",
-    "dialogTitle": "{name} · Tag posts ({count})",
+    "dialogTitle": "{name} \u00b7 Tag posts ({count})",
     "emptyPosts": "No posts use this tag yet.",
     "loadError": "Failed to load tag posts.",
     "retry": "Retry",

@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import router from '@/router'
-import { Back, FolderOpened, Memo } from '@element-plus/icons-vue'
+import { Back, FolderOpened, Memo, PictureRounded } from '@element-plus/icons-vue'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import EditorMain from '../components/EditorMain.vue'
 import FileExplorer from '../components/FileExplorer.vue'
 import TocPanel from '../components/TocPanel.vue'
+import MediaPanel from '@/components/MediaPanel.vue'
 import { useEditorStore } from '@/stores/editorStore'
 
 const { t } = useI18n()
@@ -24,12 +25,31 @@ if (editorAsideFold.value == 'aside-fold') {
 const panels = {
   fileTree: FileExplorer,
   tocPanel: TocPanel,
+  mediaPanel: MediaPanel,
 }
 type PanelType = keyof typeof panels
 const currentPanel = ref<PanelType>('fileTree')
 
 // Get headings from the store
 const tocHeadings = computed(() => editorStore.currentHeadings)
+const currentPermalink = ref('')
+const mediaUploadKey = ref(0)
+const mediaPanelActive = computed(() => currentPanel.value === 'mediaPanel')
+const editorMainRef = ref<InstanceType<typeof EditorMain> | null>(null)
+
+const panelProps = computed(() => {
+  if (currentPanel.value === 'tocPanel') {
+    return { headings: tocHeadings.value }
+  }
+  if (currentPanel.value === 'mediaPanel') {
+    return {
+      active: mediaPanelActive.value,
+      uploadKey: mediaUploadKey.value,
+      permalink: currentPermalink.value,
+    }
+  }
+  return {}
+})
 
 function handleToolbarClick(key: PanelType) {
   if (editorAsideFold.value == 'aside-expand') {
@@ -77,6 +97,18 @@ function handleMouseLeave() {
   if (editorAsideFold.value == 'aside-fold') return
   cursorStyle.value = 'default'
 }
+
+function handleMediaUploaded() {
+  mediaUploadKey.value += 1
+}
+
+function handlePermalinkChange(permalink: string) {
+  currentPermalink.value = permalink
+}
+
+function handleInsertRequest(markdown: string) {
+  editorMainRef.value?.insertImageMarkdown(markdown)
+}
 </script>
 <template>
   <el-container>
@@ -108,13 +140,21 @@ function handleMouseLeave() {
               @click="handleToolbarClick('tocPanel')">
               <el-icon size="22"><memo /></el-icon>
             </el-link>
+            <el-link
+              key="mediaPanel"
+              underline="never"
+              :class="{ active: 'mediaPanel' === currentPanel }"
+              @click="handleToolbarClick('mediaPanel')">
+              <el-icon size="22"><picture-rounded /></el-icon>
+            </el-link>
             <!-- 添加更多按钮 -->
           </el-aside>
           <el-main class="toolbar-panel">
             <keep-alive>
               <component
                 :is="panels[currentPanel]"
-                :headings="currentPanel === 'tocPanel' ? tocHeadings : undefined" />
+                v-bind="panelProps"
+                @request-insert="handleInsertRequest" />
             </keep-alive>
             <div
               class="resize-handle"
@@ -125,7 +165,12 @@ function handleMouseLeave() {
           </el-main>
         </el-container>
       </el-aside>
-      <el-main class="main-area"><EditorMain /></el-main>
+      <el-main class="main-area">
+        <EditorMain
+          ref="editorMainRef"
+          @media-uploaded="handleMediaUploaded"
+          @permalink-change="handlePermalinkChange" />
+      </el-main>
     </el-container>
   </el-container>
 </template>

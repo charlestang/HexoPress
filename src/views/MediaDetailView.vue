@@ -4,6 +4,7 @@ import { computed, reactive, ref, watch, watchEffect } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { buildImageGroups, type ImageAssetGroup } from '@/utils/media'
+import { formatBytes } from '@/utils/number'
 import { useAppStore } from '@/stores/app'
 import { formatDate } from '@shared/utils/date'
 
@@ -169,21 +170,6 @@ const referencePosts = ref<Post[]>([])
 const referenceAssetLabel = ref('')
 const referenceAsset = ref<Asset | null>(null)
 const allPostsCache = ref<Post[] | null>(null)
-
-function formatBytes(bytes: number): string {
-  if (!Number.isFinite(bytes)) {
-    return '--'
-  }
-  const units = ['B', 'KB', 'MB', 'GB', 'TB']
-  let value = bytes
-  let unitIndex = 0
-  while (value >= 1024 && unitIndex < units.length - 1) {
-    value /= 1024
-    unitIndex += 1
-  }
-  const precision = value < 10 && unitIndex > 0 ? 1 : 0
-  return `${value.toFixed(precision)} ${units[unitIndex]}`
-}
 
 const formattedFileSize = computed(() => {
   if (!representativeMeta.size || representativeMeta.size <= 0) {

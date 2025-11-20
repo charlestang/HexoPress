@@ -6,7 +6,6 @@ import 'md-editor-v3/lib/preview.css'
 import { Folder, PriceTag, Timer } from '@element-plus/icons-vue'
 import { normalizeList } from '@shared/utils/stringArray'
 import { toDate, toStringArray } from '@shared/utils/value'
-import type MarkdownIt from 'markdown-it'
 
 type TocItem = {
   id: string
