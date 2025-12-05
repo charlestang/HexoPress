@@ -7,7 +7,7 @@ import { useStatsStore } from '@/stores/stats'
 import { formatDate } from '@shared/utils/date'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
-import { ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useTableHeight } from '@/composables/useTableHeight'
 import PostPreviewDialog from '@/components/PostPreviewDialog.vue'
@@ -96,6 +96,7 @@ async function fetch(curPage: number) {
   )
   posts.value = data.posts
   total.value = data.total
+  await nextTick()
 }
 fetch(currentPage.value)
 watch(statusFilterVal, (value, oldValue) => {
@@ -214,7 +215,12 @@ const { tableHeight, wrapper } = useTableHeight()
     <el-col :span="12" class="flex-end"></el-col>
   </el-row>
   <div ref="wrapper" class="wrapper">
-    <el-table :data="posts" stripe :height="tableHeight" class="post-list">
+    <el-table
+      v-if="tableHeight > 0"
+      :data="posts"
+      stripe
+      :height="tableHeight"
+      class="post-list">
       <el-table-column type="index" label="#" width="48" />
       <el-table-column :label="t('posts.title')" width="360">
         <template #default="scope">
