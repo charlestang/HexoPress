@@ -368,19 +368,40 @@ async function onSave() {
   isDirty.value = false
 }
 
-let saveIntervalId: NodeJS.Timeout
-onMounted(() => {
+let saveIntervalId: NodeJS.Timeout | null = null
+function clearAutoSaveInterval() {
+  if (saveIntervalId) {
+    clearInterval(saveIntervalId)
+    saveIntervalId = null
+  }
+}
+
+function setupAutoSaveInterval() {
+  if (appStore.autoSave !== 'autoSaveOn') {
+    clearAutoSaveInterval()
+    return
+  }
+  clearAutoSaveInterval()
   saveIntervalId = setInterval(() => {
     if (isDirty.value) {
       onSave()
     }
   }, 1000 * 30)
+}
+
+onMounted(() => {
+  setupAutoSaveInterval()
 })
 
+watch(
+  () => appStore.autoSave,
+  () => {
+    setupAutoSaveInterval()
+  },
+)
+
 onBeforeUnmount(() => {
-  if (saveIntervalId) {
-    clearInterval(saveIntervalId)
-  }
+  clearAutoSaveInterval()
 })
 
 function onDelete() {
