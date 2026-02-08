@@ -45,6 +45,7 @@ npm run make         # 构建可分发安装包
 ### IPC 通信契约
 
 渲染进程通过 `window.site.<method>(...)` 调用，映射到 `main/main.ts` 中的 IPC 通道处理器。完整的 `ISite` 接口定义在 `types/local.d.ts`。主要通道：
+
 - 读取操作：`site:posts`、`site:categories`、`site:tags`、`site:stats`、`site:heatMap`
 - 写入操作：`post:save`、`post:create`、`post:move`、`post:delete`
 - 文件系统：`fs:readdir`、`fs:mv`、`fs:saveImage`

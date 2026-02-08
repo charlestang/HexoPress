@@ -1,20 +1,80 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# 项目上下文
+# 此上下文会在创建 artifacts 时展示给 AI
+context: |
+  ## Project Purpose
+  HexoPress 是一个基于 Electron 的桌面应用，为 Hexo 博客提供用户友好的管理界面，
+  灵感来自 WordPress 管理后台。它简化了博客文章创建、分类/标签管理和媒体处理等操作。
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  ## Tech Stack
+  - **Electron**：跨平台桌面应用框架
+  - **主进程**：TypeScript，IPC 通信，Fastify HTTP 服务器（端口 2357）
+  - **渲染进程**：Vue 3，Pinia（状态管理），Vue Router（hash 模式），Element Plus（UI 框架）
+  - **构建工具**：Vite，ESLint，Prettier
+  - **测试**：Vitest with jsdom 环境
+
+  ## Architecture
+  - **主进程服务**：
+    - HexoAgent：封装 Hexo CLI，负责缓存加载、文章/分类/标签/统计的 CRUD 操作
+    - FsAgent：source/ 目录下的文件操作（readdir、mv、saveImage）
+    - HttpServer：Fastify 服务器，在 2357 端口暴露 public/ 目录
+  - **渲染进程**：标准的 Vue 3 SPA，使用 Pinia stores 和 Vue Router
+  - **IPC 通信**：所有主进程-渲染进程通信通过 ipcMain.handle/window.site.* 桥接
+
+  ## Code Conventions
+  - 遵循 CLAUDE.md 和 docs/CODING_STANDARD.md 的编码规范
+  - 使用 Conventional Commits（feat:、fix:、docs:、refactor:）
+  - 变量/字段名：camelCase；类/类型名：PascalCase
+  - 新页面：优先使用 UnoCSS（src/uno.config.ts）；避免混用新旧样式系统
+  - 测试文件：放在源文件同级的 __tests__/ 目录下
+  - **语言使用规范**：
+    - 源代码和注释：MUST 使用英文
+    - Commit message：MUST 使用英文
+    - AI spec 文件（openspec/）：使用中文，但二级标题（##）和关键词（SHOULD、MUST）可用英文
+
+  ## Pre-commit Checklist
+  - 运行 `npm run format`（Prettier 格式化）
+  - 运行 `npm run lint`（ESLint 检查和自动修复）
+  - 运行 `npm run check-all`（并行类型检查：vue-check + vitest-check + node-check + conf-check）
+  - 运行 `npm run test`（单元测试必须通过）
+  - 所有检查必须通过才能提交
+
+  ## Git Workflow
+  - 在 main 分支上开发，通过 rebase 保持线性提交历史
+  - 每个 commit 应该是一个完整的、可运行的单元
+  - push 前：运行 `git pull --rebase` 确保分支是最新的
+  - commit 后：用 `git status --porcelain` 验证工作目录干净
+
+  ## Domain Context
+  - 目标用户：拥有本地 Hexo 项目的博客作者（包含 source/、public/、_config.yml）
+  - HexoPress 读写用户的 Hexo 项目目录（source/ 存放文章，source/images/ 存放媒体）
+  - 编辑的文件必须与独立的 Hexo CLI 使用兼容
+  - UI 遵循 CMS 模式（类似 WordPress）：侧边栏导航、列表视图、富文本编辑器、草稿/发布状态
+
+  ## Important Constraints
+  - 需要 Node.js ≥ 20.8.1，npm ≥ 10.5.5
+  - 文件写入仅限于用户选择的 Hexo 项目目录
+  - 不依赖外部云服务；所有博客数据存储在本地
+  - 应用配置可能使用 Electron localStorage
+
+# 每个 artifact 的规则
+rules:
+  proposal:
+    - 面向用户的内容用中文，技术术语用英文
+    - 包含对主进程/渲染进程变更的架构影响分析
+    - 考虑 IPC 通信契约的变更
+    - 参考代码库中的现有模式（HexoAgent、FsAgent、HttpServer）
+
+  tasks:
+    - 将任务拆分为可实现的单元（每个最多 2-3 小时）
+    - 指明每个任务影响哪个进程（main/renderer）
+    - 包含类型检查和测试要求
+    - 标记需要 IPC 契约变更的任务
+
+  implementation:
+    - 编辑前始终先读取现有文件
+    - 优先编辑而非创建新文件
+    - 遵循现有的代码模式和架构
+    - IPC 契约变更时更新 types/local.d.ts 中的类型
+    - 在 __tests__/ 目录下为新功能添加测试

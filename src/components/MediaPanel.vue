@@ -53,7 +53,7 @@ const activeMatchId = computed(() => {
     return null
   }
   const actualIndex = matchIndices.value[matchIndex.value]
-  return actualIndex != null ? items.value[actualIndex]?.asset.id ?? null : null
+  return actualIndex != null ? (items.value[actualIndex]?.asset.id ?? null) : null
 })
 
 const itemRefs = new Map<string, HTMLElement>()
@@ -226,7 +226,6 @@ watch(
     }
   },
 )
-
 </script>
 
 <template>

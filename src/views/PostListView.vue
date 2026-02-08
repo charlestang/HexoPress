@@ -215,12 +215,7 @@ const { tableHeight, wrapper } = useTableHeight()
     <el-col :span="12" class="flex-end"></el-col>
   </el-row>
   <div ref="wrapper" class="wrapper">
-    <el-table
-      v-if="tableHeight > 0"
-      :data="posts"
-      stripe
-      :height="tableHeight"
-      class="post-list">
+    <el-table v-if="tableHeight > 0" :data="posts" stripe :height="tableHeight" class="post-list">
       <el-table-column type="index" label="#" width="48" />
       <el-table-column :label="t('posts.title')" width="360">
         <template #default="scope">

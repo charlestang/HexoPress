@@ -55,18 +55,13 @@
     }
   },
   "dashboard": {
-    "metaAuthor": "作者",
-    "metaDateFormat": "日期格式",
-    "metaDescription": "简介",
-    "metaKeywords": "关键字",
-    "metaLanguage": "语言",
-    "metaPermalink": "永久链接模式",
-    "metaSubtitle": "副标题",
-    "metaTheme": "皮肤主题",
-    "metaTimeFormat": "时间格式",
-    "metaTimezone": "时区",
-    "metaTitle": "博客标题",
-    "metaUrl": "URL"
+    "blogProfile": "博客档案",
+    "drafts": "草稿箱",
+    "loadMore": "更多",
+    "noDrafts": "暂无草稿",
+    "noPosts": "暂无文章",
+    "recentPosts": "最近发布",
+    "writingHeatmap": "写作热力图"
   },
   "date": {
     "long": "YYYY年M月D日",

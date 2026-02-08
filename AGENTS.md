@@ -1,4 +1,3 @@
-
 # AGENTS.md — Repository Root
 
 ## Scope & Precedence

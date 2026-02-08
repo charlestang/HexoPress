@@ -55,18 +55,13 @@
     }
   },
   "dashboard": {
-    "metaAuthor": "Author",
-    "metaDateFormat": "Date Format",
-    "metaDescription": "Description",
-    "metaKeywords": "Keywords",
-    "metaLanguage": "Language",
-    "metaPermalink": "Permalink",
-    "metaSubtitle": "Subtitle",
-    "metaTheme": "Theme",
-    "metaTimeFormat": "Time Format",
-    "metaTimezone": "Timezone",
-    "metaTitle": "Blog title",
-    "metaUrl": "URL"
+    "blogProfile": "Blog Profile",
+    "drafts": "Drafts",
+    "loadMore": "More",
+    "noDrafts": "No drafts",
+    "noPosts": "No posts",
+    "recentPosts": "Recent Posts",
+    "writingHeatmap": "Writing Heatmap"
   },
   "date": {
     "long": "YYYY/M/D",

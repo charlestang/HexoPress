@@ -42,53 +42,8 @@ const createWindow = () => {
 }
 
 app.whenReady().then(async () => {
-  ipcMain.handle('site:posts', (event, ...args) => agent.getPosts(...args))
-  ipcMain.handle('site:postMonth', () => agent.getPostMonths())
-  ipcMain.handle('site:categories', () => agent.getCategories())
-  ipcMain.handle('site:tags', () => agent.getTags())
-  ipcMain.handle('site:assets', () => agent.getAssets())
-  ipcMain.handle('site:assetDelete', (event, assetId: string) => agent.deleteAsset(assetId))
-  ipcMain.handle('site:stats', () => agent.getStats())
-  ipcMain.handle('site:info', () => agent.getSiteInfo())
-  ipcMain.handle('site:refresh', () => agent.updateCache())
-  ipcMain.handle('site:heatMap', () => agent.getHeatMap())
-  ipcMain.handle('hexo:config', () => agent.getHexoConfig())
-  ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
-  ipcMain.handle('post:content', (event, path) => agent.getContent(path))
-  ipcMain.handle('post:save', (event, path, content) => agent.saveContent(path, content))
-  ipcMain.handle('post:document', (event, path) => agent.getPostDocument(path))
-  ipcMain.handle('post:saveDocument', (event, path, document) =>
-    agent.savePostDocument(path, document),
-  )
-  ipcMain.handle('posts:remove-tag', (event, sourcePath: string, tagId: string) =>
-    agent.removeTagFromPost(sourcePath, tagId),
-  )
-  ipcMain.handle('post:getMeta', (event, path) => agent.getPostMeta(path))
-  ipcMain.handle('post:updateMeta', (event, path, meta) => agent.updatePostMeta(path, meta))
-  ipcMain.handle('post:create', (event, type, title, slug, content) =>
-    agent.createFile(type, title, slug, content),
-  )
-  ipcMain.handle('post:move', (event, sourcePath, content) => agent.moveFile(sourcePath, content))
-  ipcMain.handle('post:delete', (event, path) => agent.deleteFile(path))
-  ipcMain.handle(
-    'category:replaceAssignments',
-    (event, categoryId: string, sources: string[], replacements: string[][]) =>
-      agent.replaceCategoryForPosts(categoryId, sources, replacements),
-  )
-  ipcMain.handle('category:bulkRemove', (event, categoryId: string, sources: string[]) =>
-    agent.removeCategoryFromPosts(categoryId, sources),
-  )
-  ipcMain.handle('sys:locale', () => app.getSystemLocale())
-  ipcMain.handle('shell:openUrl', (event, url) => shell.openExternal(url))
-  ipcMain.handle('fs:readdir', (event, path) => fsAgent.readdir(path))
-  ipcMain.handle('fs:mv', (event, from, to) => fsAgent.mv(from, to))
-  ipcMain.handle('fs:saveImage', (event, path, content) => {
-    fsAgent.saveImage(path, content)
-    agent.generate()
-  })
-  ipcMain.handle('fs:fileInfo', (event, path) => fsAgent.getFileInfo(path))
-  ipcMain.handle('fs:assetReferences', (event, path) => fsAgent.findAssetReferences(path))
-  ipcMain.handle('agent:init', async (event, path) => {
+  // Agent lifecycle management
+  ipcMain.handle('agent:init', async (_event, path) => {
     const check = HexoAgent.checkDir(path) && HexoAgent.checkHexoDir(path)
     if (check) {
       agent.init(path)
@@ -97,13 +52,79 @@ app.whenReady().then(async () => {
     }
     return check
   })
+
+  // Category operations
+  ipcMain.handle('category:bulkRemove', (_event, categoryId: string, sources: string[]) =>
+    agent.removeCategoryFromPosts(categoryId, sources),
+  )
+  ipcMain.handle(
+    'category:replaceAssignments',
+    (_event, categoryId: string, sources: string[], replacements: string[][]) =>
+      agent.replaceCategoryForPosts(categoryId, sources, replacements),
+  )
+
+  // Dark mode theme management
   ipcMain.handle('dark:get', () => {
     return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
   })
-  ipcMain.handle('dark:set', (event, val) => {
+  ipcMain.handle('dark:set', (_event, val) => {
     console.log('main.ts dark:set is called, new value is: ', val)
     nativeTheme.themeSource = val
   })
+
+  // System dialogs
+  ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
+
+  // File system operations
+  ipcMain.handle('fs:assetReferences', (_event, path) => fsAgent.findAssetReferences(path))
+  ipcMain.handle('fs:fileInfo', (_event, path) => fsAgent.getFileInfo(path))
+  ipcMain.handle('fs:mv', (_event, from, to) => fsAgent.mv(from, to))
+  ipcMain.handle('fs:readdir', (_event, path) => fsAgent.readdir(path))
+  ipcMain.handle('fs:saveImage', (_event, path, content) => {
+    fsAgent.saveImage(path, content)
+    agent.generate()
+  })
+
+  // Hexo configuration
+  ipcMain.handle('hexo:config', () => agent.getHexoConfig())
+
+  // Post operations
+  ipcMain.handle('post:content', (_event, path) => agent.getContent(path))
+  ipcMain.handle('post:create', (_event, type, title, slug, content) =>
+    agent.createFile(type, title, slug, content),
+  )
+  ipcMain.handle('post:delete', (_event, path) => agent.deleteFile(path))
+  ipcMain.handle('post:document', (_event, path) => agent.getPostDocument(path))
+  ipcMain.handle('post:getMeta', (_event, path) => agent.getPostMeta(path))
+  ipcMain.handle('post:move', (_event, sourcePath, content) => agent.moveFile(sourcePath, content))
+  ipcMain.handle('post:save', (_event, path, content) => agent.saveContent(path, content))
+  ipcMain.handle('post:saveDocument', (_event, path, document) =>
+    agent.savePostDocument(path, document),
+  )
+  ipcMain.handle('post:updateMeta', (_event, path, meta) => agent.updatePostMeta(path, meta))
+
+  // Batch post operations
+  ipcMain.handle('posts:remove-tag', (_event, sourcePath: string, tagId: string) =>
+    agent.removeTagFromPost(sourcePath, tagId),
+  )
+
+  // Shell operations
+  ipcMain.handle('shell:openUrl', (_event, url) => shell.openExternal(url))
+
+  // Site data queries
+  ipcMain.handle('site:assetDelete', (_event, assetId: string) => agent.deleteAsset(assetId))
+  ipcMain.handle('site:assets', () => agent.getAssets())
+  ipcMain.handle('site:categories', () => agent.getCategories())
+  ipcMain.handle('site:heatMap', () => agent.getHeatMap())
+  ipcMain.handle('site:info', () => agent.getSiteInfo())
+  ipcMain.handle('site:postMonth', () => agent.getPostMonths())
+  ipcMain.handle('site:posts', (_event, ...args) => agent.getPosts(...args))
+  ipcMain.handle('site:refresh', () => agent.updateCache())
+  ipcMain.handle('site:stats', () => agent.getStats())
+  ipcMain.handle('site:tags', () => agent.getTags())
+
+  // System information
+  ipcMain.handle('sys:locale', () => app.getSystemLocale())
 
   createWindow()
 })

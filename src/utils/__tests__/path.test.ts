@@ -13,6 +13,8 @@ describe('computeRelativeImagePath', () => {
   })
 
   it('trims leading slashes', () => {
-    expect(computeRelativeImagePath('/posts/sample/', '/images/bar.jpg')).toBe('../../images/bar.jpg')
+    expect(computeRelativeImagePath('/posts/sample/', '/images/bar.jpg')).toBe(
+      '../../images/bar.jpg',
+    )
   })
 })

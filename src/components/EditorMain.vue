@@ -23,7 +23,10 @@ import { cloneValue, toDate, toStringArray } from '@shared/utils/value'
 
 const { t } = useI18n()
 const editorStore = useEditorStore() // Initialize the store
-const emit = defineEmits<{ (event: 'media-uploaded'): void; (event: 'permalink-change', permalink: string): void }>()
+const emit = defineEmits<{
+  (event: 'media-uploaded'): void
+  (event: 'permalink-change', permalink: string): void
+}>()
 
 /**
  * @description The flag to indicate whether the post is new or not.
