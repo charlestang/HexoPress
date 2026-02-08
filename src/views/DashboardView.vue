@@ -175,7 +175,7 @@ function relativeTime(dateStr: string): string {
               v-for="post in posts"
               :key="post.permalink"
               class="flex justify-between items-center py-1.5 px-2 border-b border-gray-100 last:border-b-0">
-              <el-link type="primary" :underline="false" @click="onClick(post.source)">
+              <el-link type="primary" underline="never" @click="onClick(post.source)">
                 {{ post.title }}
               </el-link>
               <span class="text-xs text-gray-400 shrink-0 ml-2">
@@ -191,7 +191,7 @@ function relativeTime(dateStr: string): string {
           <el-link
             v-if="hasMorePosts"
             type="primary"
-            :underline="false"
+            underline="hover"
             class="text-xs"
             @click="fetchPosts"
           >
@@ -211,7 +211,7 @@ function relativeTime(dateStr: string): string {
               v-for="draft in drafts"
               :key="draft.permalink"
               class="flex justify-between items-center py-1.5 px-2 border-b border-gray-100 last:border-b-0">
-              <el-link type="primary" :underline="false" @click="onClick(draft.source)">
+              <el-link type="primary" underline="never" @click="onClick(draft.source)">
                 {{ draft.title }}
               </el-link>
               <span class="text-xs text-gray-400 shrink-0 ml-2">
@@ -227,7 +227,7 @@ function relativeTime(dateStr: string): string {
           <el-link
             v-if="hasMoreDrafts"
             type="primary"
-            :underline="false"
+            underline="hover"
             class="text-xs"
             @click="fetchDrafts"
           >
