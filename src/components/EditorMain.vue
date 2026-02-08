@@ -155,7 +155,6 @@ if (!isNewPost.value && sourcePath.value) {
  * @param html The HTML content of the blog post.
  */
 function filterImage(html: string): string {
-  console.log('filterImage: ', frontMatter.value.permalink)
   return _addPrefixToImgSrc(html, 'http://127.0.0.1:2357/', frontMatter.value.permalink || '')
 }
 
@@ -171,7 +170,6 @@ function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): 
       imgPath.shift()
       curPath.pop()
     }
-    console.log('replaced to : ', p1 + prefix + curPath.concat(imgPath).join('/'))
     return p1 + prefix + curPath.concat(imgPath).join('/')
   })
 }
@@ -247,7 +245,6 @@ async function upsertDraft() {
   }
   const document = buildDocument()
   if (!sourcePath.value) {
-    console.log('upsertDraft: ', frontMatter.value)
     sourcePath.value = await window.site.createFile(
       '_drafts',
       frontMatter.value.title ?? '',
@@ -296,7 +293,6 @@ async function publishDraft() {
   } else {
     await window.site.savePostDocument(sourcePath.value, document)
     const newPath = await window.site.moveFile(sourcePath.value, '')
-    console.log('move file from: ', sourcePath.value, ' to newPath: ', newPath)
     if (!newPath) {
       ElMessage.error(t('editor.createFailed'))
       return
@@ -334,7 +330,6 @@ async function onUploadImage(
   files: File[],
   callback: (urls: string[] | { url: string; alt: string; title: string }[]) => void,
 ) {
-  console.log('onUploadImage: ', files)
   if (!files || files.length === 0) {
     return
   }
@@ -351,7 +346,6 @@ async function onUploadImage(
   }
   filePath.value = formatDate(dateModel.value) + '/' + firstFile.name
   uploaded.value = function () {
-    console.log('upload success')
     // TODO: this is not so good, because it is relative to the permalink.
     //       and the image cannot preview because the image has not been
     //       moved to the `public` path.
@@ -419,8 +413,7 @@ function onDelete() {
       type: 'warning',
     },
   )
-    .then(async (a) => {
-      console.log(a)
+    .then(async () => {
       await window.site.deleteFile(articlePath)
       ElMessage({
         type: 'success',
@@ -499,7 +492,6 @@ const generateHeadingId = (text: string, level: number, index: number) => {
 }
 
 const handleGetCatalog = (headList: HeadList[]) => {
-  console.log('handleGetCatalog', headList)
   const transformedHeadings = headList.map((h, index) => ({
     text: h.text,
     level: h.level,
@@ -562,12 +554,10 @@ onMounted(() => {
 const fontSize = ref(14)
 const lineHeight = ref(20)
 function onFontSmall() {
-  console.log('onFontSmall')
   fontSize.value = 14
   lineHeight.value = 20
 }
 function onFontBig() {
-  console.log('onFontSmall')
   fontSize.value = 18
   lineHeight.value = 26
 }
