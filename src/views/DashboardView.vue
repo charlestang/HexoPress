@@ -193,8 +193,7 @@ function relativeTime(dateStr: string): string {
             type="primary"
             underline="hover"
             class="text-xs"
-            @click="fetchPosts"
-          >
+            @click="fetchPosts">
             {{ t('dashboard.loadMore') }}
           </el-link>
         </div>
@@ -229,8 +228,7 @@ function relativeTime(dateStr: string): string {
             type="primary"
             underline="hover"
             class="text-xs"
-            @click="fetchDrafts"
-          >
+            @click="fetchDrafts">
             {{ t('dashboard.loadMore') }}
           </el-link>
         </div>

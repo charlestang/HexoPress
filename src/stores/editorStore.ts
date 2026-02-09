@@ -6,14 +6,31 @@ export const useEditorStore = defineStore('editor', () => {
   const currentHeadings = ref<Heading[]>([])
   const activeHeading = ref<Heading | null>(null)
 
+  // AI panel shared state
+  const text = ref('')
+  const frontMatter = ref<PostMeta>({})
+  const selectedText = ref('')
+  const selectionRange = ref<SelectionRange | null>(null)
+
   function setHeadings(headings: Heading[]) {
     currentHeadings.value = headings
   }
 
   function setActiveHeading(heading: Heading | null) {
     activeHeading.value = heading
-    // Optionally, scroll to the heading here if direct editor access is too complex from outside
-    // However, the plan is for EditorMain.vue to watch this and scroll.
+  }
+
+  function setText(value: string) {
+    text.value = value
+  }
+
+  function setFrontMatter(meta: PostMeta) {
+    frontMatter.value = meta
+  }
+
+  function setSelection(content: string, range: SelectionRange | null) {
+    selectedText.value = content
+    selectionRange.value = range
   }
 
   return {
@@ -21,6 +38,13 @@ export const useEditorStore = defineStore('editor', () => {
     activeHeading,
     setHeadings,
     setActiveHeading,
+    text,
+    frontMatter,
+    selectedText,
+    selectionRange,
+    setText,
+    setFrontMatter,
+    setSelection,
   }
 })
 

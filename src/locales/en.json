@@ -270,7 +270,30 @@
   "preferences": {
     "preferences": "Preferences"
   },
+  "ai": {
+    "panelTitle": "AI Assistant",
+    "inputPlaceholder": "Ask AI anything...",
+    "send": "Send",
+    "selectModel": "Select Model",
+    "selectMode": "Mode",
+    "modeQuick": "Quick",
+    "modeThink": "Think",
+    "noProvider": "No AI provider configured. Go to Preferences to add one.",
+    "contextFull": "Full text",
+    "contextSelection": "Selection",
+    "contextNone": "No context",
+    "chars": "chars",
+    "presetTypoCheck": "Typo Check",
+    "presetWritingSuggestion": "Writing Tips",
+    "presetPolish": "Polish",
+    "presetSummary": "Summary",
+    "selectTextFirst": "Please select text in the editor first.",
+    "requestFailed": "Request failed: {message}",
+    "streaming": "AI is thinking..."
+  },
   "settings": {
+    "tabGeneral": "General",
+    "tabAi": "AI",
     "alwaysTitle": "Always use title as filename.",
     "autoSave": "Editor Auto Save",
     "autoSaveOff": "Off",
@@ -291,7 +314,15 @@
     "permalinkFirst": "Use permalink as filename if set.",
     "save": "Save",
     "system": "System",
-    "unbind": "Unbind or Change"
+    "unbind": "Unbind or Change",
+    "aiProviders": "AI Providers",
+    "aiProviderName": "Provider Name",
+    "aiProviderEndpoint": "API Endpoint",
+    "aiProviderApiKey": "API Key",
+    "aiProviderSpec": "API Spec",
+    "aiProviderModelId": "Model ID",
+    "aiProviderAdd": "Add Provider",
+    "aiProviderDelete": "Delete"
   },
   "setup": {
     "choose": "Choose",

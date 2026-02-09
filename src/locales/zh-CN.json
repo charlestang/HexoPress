@@ -271,7 +271,30 @@
   "preferences": {
     "preferences": "设置"
   },
+  "ai": {
+    "panelTitle": "AI 助手",
+    "inputPlaceholder": "向 AI 提问...",
+    "send": "发送",
+    "selectModel": "选择模型",
+    "selectMode": "模式",
+    "modeQuick": "快速",
+    "modeThink": "思考",
+    "noProvider": "尚未配置 AI 提供商，请前往设置页面添加。",
+    "contextFull": "全文",
+    "contextSelection": "选区",
+    "contextNone": "无上下文",
+    "chars": "字",
+    "presetTypoCheck": "错别字检查",
+    "presetWritingSuggestion": "写作建议",
+    "presetPolish": "段落润色",
+    "presetSummary": "生成摘要",
+    "selectTextFirst": "请先在编辑器中选中要处理的文本。",
+    "requestFailed": "请求失败：{message}",
+    "streaming": "AI 正在思考..."
+  },
   "settings": {
+    "tabGeneral": "通用",
+    "tabAi": "AI",
     "alwaysTitle": "总是用标题做文件名",
     "autoSave": "编辑器自动保存",
     "autoSaveOff": "关闭",
@@ -292,7 +315,15 @@
     "permalinkFirst": "如果设置了 permalink，优先用 permalink 做文件名",
     "save": "保存",
     "system": "跟随系统",
-    "unbind": "解绑/变更"
+    "unbind": "解绑/变更",
+    "aiProviders": "AI 模型配置",
+    "aiProviderName": "名称",
+    "aiProviderEndpoint": "API 端点",
+    "aiProviderApiKey": "API Key",
+    "aiProviderSpec": "API 规范",
+    "aiProviderModelId": "模型 ID",
+    "aiProviderAdd": "添加提供商",
+    "aiProviderDelete": "删除"
   },
   "setup": {
     "choose": "选择",

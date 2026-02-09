@@ -114,6 +114,47 @@ export const useAppStore = defineStore('app', () => {
     wsCache.set('autoSave', autoSave.value)
   }
 
+  // AI providers
+  const aiProviders = ref<AiProvider[]>([])
+  const aiProvidersVal = wsCache.get('aiProviders')
+  if (aiProvidersVal !== null) {
+    aiProviders.value = aiProvidersVal as AiProvider[]
+  }
+
+  function addAiProvider(provider: AiProvider) {
+    aiProviders.value.push(provider)
+    wsCache.set('aiProviders', aiProviders.value)
+  }
+
+  function updateAiProvider(id: string, updates: Partial<AiProvider>) {
+    const index = aiProviders.value.findIndex((p) => p.id === id)
+    if (index !== -1) {
+      aiProviders.value[index] = { ...aiProviders.value[index], ...updates } as AiProvider
+      wsCache.set('aiProviders', aiProviders.value)
+    }
+  }
+
+  function removeAiProvider(id: string) {
+    aiProviders.value = aiProviders.value.filter((p) => p.id !== id)
+    wsCache.set('aiProviders', aiProviders.value)
+    if (defaultAiProviderId.value === id) {
+      defaultAiProviderId.value = ''
+      wsCache.set('defaultAiProviderId', '')
+    }
+  }
+
+  // Default AI provider selection
+  const defaultAiProviderId = ref('')
+  const defaultAiProviderIdVal = wsCache.get('defaultAiProviderId')
+  if (defaultAiProviderIdVal !== null) {
+    defaultAiProviderId.value = defaultAiProviderIdVal as string
+  }
+
+  function setDefaultAiProviderId(id: string) {
+    defaultAiProviderId.value = id
+    wsCache.set('defaultAiProviderId', id)
+  }
+
   return {
     locale,
     setLocale,
@@ -131,6 +172,12 @@ export const useAppStore = defineStore('app', () => {
     setEditMode,
     autoSave,
     setAutoSave,
+    aiProviders,
+    addAiProvider,
+    updateAiProvider,
+    removeAiProvider,
+    defaultAiProviderId,
+    setDefaultAiProviderId,
   }
 })
 

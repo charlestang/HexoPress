@@ -56,26 +56,51 @@ HexoPress 编辑器当前由 FrameView.vue 承载，左侧边栏包含三个面�
 
 ### Decision 4: AI 提供商配置存储在 localStorage
 
-**选择**：复用现有 `web-storage-cache` 机制，在 appStore 中管理 `aiProviders` 数组
+**选择**：复用现有 `web-storage-cache` 机制，在 appStore 中管理 `aiProviders` 数组和 `defaultAiProviderId`
 
 **替代方案**：
 - Electron Store（主进程文件存储）：更安全但需要新增 IPC 通道
 - 加密存储：增加复杂度，桌面应用场景下收益有限
 
-**理由**：与现有配置（locale、darkMode、editMode 等）保持一致的存储模式。API Key 存储在本地 localStorage 中，对桌面应用可接受。
+**理由**：与现有配置（locale、darkMode、editMode 等）保持一致的存储模式。API Key 存储在本地 localStorage 中，对桌面应用可接受。用户选择的默认供应商也通过同一机制持久化。
 
-### Decision 5: 组件结构
+### Decision 5: AiProvider 四属性配置
+
+**选择**：每个 AiProvider 包含 `name`、`baseUrl`、`apiKey`、`provider`（API 规范，如 "openai"）、`modelId`（模型标识符）
+
+**替代方案**：
+- 仅 name/baseUrl/apiKey + 运行时 mode 选择（quick/think）：不够灵活，mode 概念与实际 API 调用不匹配
+
+**理由**：`provider` 字段预留 API 规范扩展（当前仅 OpenAI Compatible），`modelId` 直接映射到 API 请求的 `model` 参数，语义清晰。AiInputBar 显示供应商下拉框 + Model ID 标签，取代原来的 mode 下拉框。
+
+### Decision 6: 预置功能填充输入框而非自动发送
+
+**选择**：点击预置按钮将结构化提示词填入输入框，用户审阅/编辑后手动发送
+
+**替代方案**：
+- 点击即自动发送：用户无法审阅和调整提示词
+
+**理由**：让用户看到实际发送的提示词内容，可以根据需要编辑调整。聊天气泡显示预置功能的短标签（如"📝 错别字检查"），而非完整提示词，保持界面整洁。提示词采用结构化格式（任务、输出格式、语言要求），便于软件作者迭代调优。
+
+### Decision 7: 设置页面 Tab 分区
+
+**选择**：PreferencesView 使用 el-tabs 将设置分为"通用"和"AI"两个标签页
+
+**理由**：AI 配置与通用设置属于不同领域，Tab 分区使页面结构清晰，避免 AI 配置区出现在保存按钮下方的尴尬布局。
+
+### Decision 8: 组件结构
 
 ```
 AiPanel.vue                    面板主体，管理聊天状态和 context
-├── 预置功能区                  内联在 AiPanel 中，一组按钮
+├── 预置功能区                  内联在 AiPanel 中，一组按钮（点击填充输入框）
 ├── 聊天消息区                  v-for 渲染 AiMessageBubble
-│   └── AiMessageBubble.vue    单条消息，markdown-it 渲染
+│   └── AiMessageBubble.vue    单条消息，markdown-it 渲染；预置消息显示短标签
 ├── Context 状态栏              内联在 AiPanel 中
-└── AiInputBar.vue             输入框 + 模型/模式选择 + 发送
+├── 拖拽分割线                  ns-resize 光标，拖动调整输入区高度
+└── AiInputBar.vue             输入框 + 供应商选择 + Model ID 标签 + 发送
 ```
 
-AiPanel 持有聊天状态（messages 数组）和 context 状态。AiInputBar 通过 emit 向上传递用户输入和模型选择。aiService.ts 封装 fetch + SSE 解析逻辑。
+AiPanel 持有聊天状态（messages 数组）、context 状态和 activePreset 状态。AiInputBar 通过 emit 向上传递用户输入和供应商选择，供应商选择通过 appStore.defaultAiProviderId 持久化。aiService.ts 封装 fetch + SSE 解析逻辑，使用 provider.modelId 作为 API 请求的 model 参数。
 
 ## Risks / Trade-offs
 

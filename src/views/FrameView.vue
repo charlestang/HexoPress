@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import router from '@/router'
 import { Back, FolderOpened, Memo, PictureRounded } from '@element-plus/icons-vue'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import EditorMain from '../components/EditorMain.vue'
 import FileExplorer from '../components/FileExplorer.vue'
 import TocPanel from '../components/TocPanel.vue'
 import MediaPanel from '@/components/MediaPanel.vue'
+import AiPanel from '@/components/AiPanel.vue'
 import { useEditorStore } from '@/stores/editorStore'
 
 const { t } = useI18n()
@@ -26,6 +28,7 @@ const panels = {
   fileTree: FileExplorer,
   tocPanel: TocPanel,
   mediaPanel: MediaPanel,
+  aiPanel: AiPanel,
 }
 type PanelType = keyof typeof panels
 const currentPanel = ref<PanelType>('fileTree')
@@ -36,6 +39,15 @@ const currentPermalink = ref('')
 const mediaUploadKey = ref(0)
 const mediaPanelActive = computed(() => currentPanel.value === 'mediaPanel')
 const editorMainRef = ref<InstanceType<typeof EditorMain> | null>(null)
+const aiPanelRef = ref<InstanceType<typeof AiPanel> | null>(null)
+
+const route = useRoute()
+watch(
+  () => route.query.sourcePath,
+  () => {
+    aiPanelRef.value?.resetChat()
+  },
+)
 
 const panelProps = computed(() => {
   if (currentPanel.value === 'tocPanel') {
@@ -147,12 +159,39 @@ function handleInsertRequest(markdown: string) {
               @click="handleToolbarClick('mediaPanel')">
               <el-icon size="22"><picture-rounded /></el-icon>
             </el-link>
-            <!-- 添加更多按钮 -->
+            <el-link
+              key="aiPanel"
+              underline="never"
+              :class="{ active: 'aiPanel' === currentPanel }"
+              @click="handleToolbarClick('aiPanel')">
+              <el-icon size="22">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="4" y="7" width="16" height="13" rx="2" />
+                  <circle cx="9" cy="13" r="1.5" />
+                  <circle cx="15" cy="13" r="1.5" />
+                  <line x1="9.5" y1="17" x2="14.5" y2="17" />
+                  <line x1="12" y1="3" x2="12" y2="7" />
+                  <circle cx="12" cy="2" r="1" />
+                </svg>
+              </el-icon>
+            </el-link>
           </el-aside>
           <el-main class="toolbar-panel">
             <keep-alive>
               <component
                 :is="panels[currentPanel]"
+                :ref="
+                  (el: unknown) => {
+                    if (currentPanel === 'aiPanel') aiPanelRef = el as InstanceType<typeof AiPanel>
+                  }
+                "
                 v-bind="panelProps"
                 @request-insert="handleInsertRequest" />
             </keep-alive>

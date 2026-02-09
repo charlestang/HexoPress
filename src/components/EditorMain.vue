@@ -73,6 +73,7 @@ watch(text, (val, oldVal) => {
   if (val !== oldVal) {
     isDirty.value = true
   }
+  editorStore.setText(val)
 })
 
 const frontMatter = ref<PostMeta>({
@@ -106,6 +107,7 @@ watch(
       return
     }
     isDirty.value = true
+    editorStore.setFrontMatter({ ...frontMatter.value })
   },
   { deep: true },
 )
@@ -386,8 +388,29 @@ function setupAutoSaveInterval() {
   }, 1000 * 30)
 }
 
+function syncSelectionToStore() {
+  const view = editorRef.value?.getEditorView()
+  if (!view) return
+  const { from, to } = view.state.selection.main
+  if (from !== to) {
+    const content = view.state.sliceDoc(from, to)
+    editorStore.setSelection(content, { from, to })
+  } else {
+    editorStore.setSelection('', null)
+  }
+}
+
+let selectionIntervalId: NodeJS.Timeout | null = null
+
 onMounted(() => {
   setupAutoSaveInterval()
+
+  // Sync initial text and frontMatter to store
+  if (text.value) editorStore.setText(text.value)
+  editorStore.setFrontMatter({ ...frontMatter.value })
+
+  // Poll selection state from CodeMirror
+  selectionIntervalId = setInterval(syncSelectionToStore, 300)
 })
 
 watch(
@@ -399,6 +422,10 @@ watch(
 
 onBeforeUnmount(() => {
   clearAutoSaveInterval()
+  if (selectionIntervalId) {
+    clearInterval(selectionIntervalId)
+    selectionIntervalId = null
+  }
 })
 
 function onDelete() {

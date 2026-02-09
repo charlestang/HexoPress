@@ -158,6 +158,36 @@ declare global {
     level: number
     line: number
   }
+  type AiProvider = {
+    id: string
+    name: string
+    baseUrl: string
+    apiKey: string
+    provider: string
+    modelId: string
+  }
+
+  type AiPreset = {
+    id: string
+    name: string
+    icon: string
+    systemPrompt: string
+    userPrompt: string
+    contextMode: 'full' | 'selection' | 'none'
+  }
+
+  type AiMessage = {
+    role: 'user' | 'assistant'
+    content: string
+    contextLabel?: string
+    presetLabel?: string
+  }
+
+  type SelectionRange = {
+    from: number
+    to: number
+  }
+
   interface ISite {
     getPosts: (
       published?: boolean,

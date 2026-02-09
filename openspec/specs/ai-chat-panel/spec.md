@@ -2,7 +2,7 @@
 
 ### Requirement: AI 聊天面板入口
 
-编辑器侧边栏 **MUST** 提供 AI 面板图标按钮，与 FileExplorer、TocPanel、MediaPanel 并列。点击图标 **SHALL** 展开/折叠 AiPanel，交互行为与其他面板一致。
+编辑器侧边栏 **MUST** 提供 AI 面板图标按钮（outline 风格机器人 SVG 图标），与 FileExplorer、TocPanel、MediaPanel 并列。点击图标 **SHALL** 展开/折叠 AiPanel，交互行为与其他面板一致。
 
 #### Scenario: 打开 AI 面板
 
@@ -67,6 +67,23 @@ AiPanel **MUST** 在输入框上方显示 Context 状态栏，指示当前附着
 - **WHEN** 用户通过 FileExplorer 或路由切换到另一篇文章
 - **THEN** 聊天消息列表 **SHALL** 被清空
 - **AND** context 状态 **SHALL** 重置为 @full（新文章的全文）
+
+### Requirement: 输入区域拖拽调整高度
+
+AiPanel **MUST** 在 Context 状态栏和输入区域之间提供拖拽分割线，允许用户调整输入区域高度。
+
+#### Scenario: 拖拽调整输入区高度
+
+- **WHEN** 用户将鼠标移到 Context 状态栏和输入区域之间的分割线上
+- **THEN** 鼠标光标 **SHALL** 变为 `ns-resize`（上下箭头）
+- **AND** 分割线 **SHALL** 显示浅色高亮提示
+
+#### Scenario: 拖动分割线
+
+- **WHEN** 用户按住分割线并上下拖动
+- **THEN** 输入区域高度 **SHALL** 随鼠标移动实时调整
+- **AND** 高度 **SHALL** 限制在 80px 到 400px 之间
+- **AND** 默认高度 **SHALL** 为 120px
 
 ### Requirement: 发送消息
 

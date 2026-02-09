@@ -7,6 +7,7 @@
 HexoPress 是一款基于 Electron + Vue 3 + Vite + Fastify 的 Hexo 博客桌面编辑器。它通过读取 Hexo 本地缓存，提供文章、分类、标签和媒体资源的可视化管理界面。
 
 **核心技术栈：**
+
 - **Runtime:** Node ≥ 20.8.1, npm >= 10.5.5
 - **Electron:** 主进程与渲染进程架构
 - **Frontend:** Vue 3, Vite, Pinia, Vue Router, Element Plus, UnoCSS, vue-i18n
@@ -15,14 +16,14 @@ HexoPress 是一款基于 Electron + Vue 3 + Vite + Fastify 的 Hexo 博客桌�
 ## 2. 项目结构 (Project Layout)
 
 - **`main/`**: Electron 主进程代码。
-    - `main.ts`: 入口。
-    - `preload.ts`: IPC 桥接 (`window.site.*`)。
-    - `lib/`: 核心服务 (`HexoAgent` - Hexo 操作, `FsAgent` - 文件操作, `HttpServer` - 静态服务)。
+  - `main.ts`: 入口。
+  - `preload.ts`: IPC 桥接 (`window.site.*`)。
+  - `lib/`: 核心服务 (`HexoAgent` - Hexo 操作, `FsAgent` - 文件操作, `HttpServer` - 静态服务)。
 - **`src/`**: 渲染进程 (Vue 3) 代码。
-    - `renderer.ts`: 入口。
-    - `views/`: 页面 (Dashboard, PostList, Editor 等)。
-    - `stores/`: Pinia 状态管理。
-    - `components/`: UI 组件。
+  - `renderer.ts`: 入口。
+  - `views/`: 页面 (Dashboard, PostList, Editor 等)。
+  - `stores/`: Pinia 状态管理。
+  - `components/`: UI 组件。
 - **`shared/`**: 主进程与渲染进程共享的无状态工具库。
 - **`blog/`**: 内置 Hexo 博客示例（兼作操作手册）。
 - **`docs/`**: 项目文档与设计说明。
@@ -32,6 +33,7 @@ HexoPress 是一款基于 Electron + Vue 3 + Vite + Fastify 的 Hexo 博客桌�
 ## 3. 常用命令与工作流
 
 ### 开发与运行
+
 ```bash
 npm install          # 安装依赖
 npm run dev          # 启动开发环境 (Electron + Vite)
@@ -40,6 +42,7 @@ npm run make         # 构建安装包
 ```
 
 ### 测试与质量检查 (MANDATORY)
+
 **在提交代码前，必须执行并通过以下所有命令：**
 
 1.  **格式化**: `npm run format` (Prettier)
@@ -51,20 +54,20 @@ npm run make         # 构建安装包
     - `npm run conf-check`: 检查配置文件
 4.  **单元测试**: `npm run test` (Vitest + JSDOM)
 
-*如果修改了 `docs/` 以外的 `.md` 文件，也必须运行 `npm run format`。*
+_如果修改了 `docs/` 以外的 `.md` 文件，也必须运行 `npm run format`。_
 
 ## 4. 编码规范 (Style & Conventions)
 
 - **语言**: 与开发者沟通使用**中文**；Commit Message 使用**英文**。
 - **Commit 规范**: 遵循 Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `test:` 等)。
 - **命名约定**:
-    - 变量/属性: `camelCase`
-    - 类/类型: `PascalCase`
+  - 变量/属性: `camelCase`
+  - 类/类型: `PascalCase`
 - **样式**: 新页面优先使用 **UnoCSS** (`src/uno.config.ts`)。旧页面可能保留旧样式，同一页面内避免混用。
 - **测试规范**:
-    - 文件位置: 源码同级 `__tests__/` 目录。
-    - 工具: `@vue/test-utils`。
-    - 注意: Element Plus 组件 stub 需定义 props/emit 类型以通过 TS 检查。
+  - 文件位置: 源码同级 `__tests__/` 目录。
+  - 工具: `@vue/test-utils`。
+  - 注意: Element Plus 组件 stub 需定义 props/emit 类型以通过 TS 检查。
 
 ## 5. Git 工作流
 
