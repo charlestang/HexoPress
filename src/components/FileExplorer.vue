@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import { useAppStore } from '@/stores/app'
 import { Document, Folder } from '@element-plus/icons-vue'
 import { dirname, join } from 'path-browserify'
@@ -69,7 +70,7 @@ function handleMouseMove(e: MouseEvent) {
 }
 const files = ref<FileEntry[]>([])
 watchEffect(async () => {
-  files.value = await window.site.getReadDir(currentPath.value)
+  files.value = await site.getReadDir(currentPath.value)
 })
 function handleDoubleClick(path: string) {
   console.log('sigle/double click, path:', path, ' before currentPath is:', currentPath.value)

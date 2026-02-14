@@ -1,3 +1,4 @@
+import { site } from '@/bridge'
 import { useCache } from '@/hooks/useCache'
 import en from 'element-plus/es/locale/lang/en'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
@@ -36,14 +37,14 @@ export const useAppStore = defineStore('app', () => {
   if (darkModeVal !== null) {
     darkMode.value = darkModeVal as string
   }
-  window.site.setDarkMode(darkMode.value)
+  site.setDarkMode(darkMode.value)
 
   function setDarkMode(newDarkMode: string) {
     console.log('appStore setDarkMode called, newVal is: ', newDarkMode)
     if (newDarkMode !== darkMode.value) {
       wsCache.set('darkMode', newDarkMode)
       darkMode.value = newDarkMode
-      window.site.setDarkMode(newDarkMode)
+      site.setDarkMode(newDarkMode)
     }
   }
 
@@ -77,12 +78,12 @@ export const useAppStore = defineStore('app', () => {
 
   watch(isAgentInitialized, (newVal, oldVal) => {
     if (newVal && !oldVal) {
-      window.site.getHexoConfig().then((config) => {
+      site.getHexoConfig().then((config) => {
         if (config != null) {
           hexoConfig.value = config
         }
       })
-      window.site.getSiteInfo().then((info) => {
+      site.getSiteInfo().then((info) => {
         if (info != null) {
           siteInfo.value = info
         }

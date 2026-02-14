@@ -6,6 +6,8 @@
 
 **The ultimate desktop editor for Hexo blogs — simple, efficient, and ready to use!**
 
+**Now also available as a self-hosted web app!**
+
 [![license][license-badge]][LICENSE]
 [![last-commit][last-commit-badge]](last-commit)
 ![Electron.js][electron-badge]
@@ -16,7 +18,7 @@
 ![Fastify][fastify-badge]
 [![downloads][downloads-badge]][releases]
 
-An open-source blogging software that offers a user-friendly article editing interface and content management system for Hexo-based blogs.
+An open-source blogging software that offers a user-friendly article editing interface and content management system for Hexo-based blogs. Available as both a desktop app (Electron) and a self-hosted web app.
 
 English | [简体中文](./README_zh.md)
 
@@ -38,6 +40,7 @@ English | [简体中文](./README_zh.md)
     - [0. Compatibility](#0-compatibility)
     - [1. Mac](#1-mac)
     - [2. Windows](#2-windows)
+    - [3. Web Mode (Self-hosted)](#3-web-mode-self-hosted)
   - [III. Features](#iii-features)
   - [IV. User Guides](#iv-user-guides)
   - [V. Screenshots](#v-screenshots)
@@ -96,6 +99,59 @@ HexoPress makes Hexo blogging as easy as WordPress! No more manual Front Matter 
 
 - [Download for Windows: v1.2.0][download-for-win]
 
+### 3. Web Mode (Self-hosted)
+
+HexoPress can also run as a standalone web application on your server, providing a browser-based management interface for your Hexo blog — no Electron required.
+
+**Step 1: Clone and install**
+
+```bash
+git clone https://github.com/charlestang/HexoPress.git
+cd HexoPress
+npm install
+```
+
+**Step 2: Create a config file**
+
+```bash
+cp web/hexopress.config.example.json hexopress.config.json
+```
+
+Edit `hexopress.config.json`:
+
+```json
+{
+  "hexoDir": "/path/to/your/hexo/blog",
+  "port": 4000,
+  "username": "admin",
+  "password": "your-secure-password",
+  "secret": ""
+}
+```
+
+| Field      | Description                                          |
+| ---------- | ---------------------------------------------------- |
+| `hexoDir`  | Absolute path to your Hexo blog root directory       |
+| `port`     | Port the web server listens on                       |
+| `username` | Login username                                       |
+| `password` | Login password                                       |
+| `secret`   | Cookie signing secret (auto-generated if left empty) |
+
+**Step 3: Build and run**
+
+```bash
+npm run web:build    # Build the SPA and server bundle
+node dist/server.cjs # Start the production server
+```
+
+Then open `http://your-server-ip:4000` in your browser and log in.
+
+**Development mode:**
+
+```bash
+npm run web:dev      # Starts Vite dev server + API server with hot reload
+```
+
 ---
 
 ## III. Features
@@ -114,6 +170,8 @@ HexoPress makes Hexo blogging as easy as WordPress! No more manual Front Matter 
 - 📊 Dropdown for categories/tags
 - 🔖 Batch edit categories/tags (coming soon)
 - ⚙️ Quick FrontMatter editing
+- 🌐 Web mode: self-hosted browser-based management with login authentication
+- 🌍 Multi-language support (English / Simplified Chinese)
 
 ---
 
@@ -179,17 +237,19 @@ npm install
 ### 4. Run
 
 ```bash
-npm run dev      # Start dev environment
-npm run lint     # Lint code
-npm run format   # Format code
-npm run test     # Run tests
+npm run dev          # Start Electron dev environment
+npm run web:dev      # Start Web mode dev environment
+npm run lint         # Lint code
+npm run format       # Format code
+npm run test         # Run tests
 ```
 
 ### 5. Package
 
 ```bash
-npm run package
-npm run make
+npm run package      # Package Electron app
+npm run make         # Build distributable installer
+npm run web:build    # Build web mode for production
 ```
 
 ---

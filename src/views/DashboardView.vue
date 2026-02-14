@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useStatsStore } from '@/stores/stats'
@@ -35,7 +36,7 @@ const postsOffset = ref(0)
 const hasMorePosts = ref(true)
 
 async function fetchPosts() {
-  const data = await window.site.getPosts(true, false, PAGE_SIZE, postsOffset.value)
+  const data = await site.getPosts(true, false, PAGE_SIZE, postsOffset.value)
   posts.value.push(...data.posts)
   postsOffset.value += data.posts.length
   hasMorePosts.value = data.posts.length === PAGE_SIZE
@@ -48,7 +49,7 @@ const draftsOffset = ref(0)
 const hasMoreDrafts = ref(true)
 
 async function fetchDrafts() {
-  const data = await window.site.getPosts(false, true, PAGE_SIZE, draftsOffset.value)
+  const data = await site.getPosts(false, true, PAGE_SIZE, draftsOffset.value)
   drafts.value.push(...data.posts)
   draftsOffset.value += data.posts.length
   hasMoreDrafts.value = data.posts.length === PAGE_SIZE
@@ -59,7 +60,7 @@ fetchDrafts()
 const todayDate = format(new Date(), 'yyyy-MM-dd')
 const heatMap = ref<DateEntry[]>([])
 async function fetchHeatMap() {
-  heatMap.value = await window.site.getHeatMap()
+  heatMap.value = await site.getHeatMap()
 }
 fetchHeatMap()
 

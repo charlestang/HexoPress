@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
+import { site } from '@/bridge'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -16,7 +17,7 @@ const emit = defineEmits(['update:modelValue'])
 // fetch all categories from backend
 const categories = ref<Category[]>([])
 async function fetch() {
-  categories.value = await window.site.getCategories()
+  categories.value = await site.getCategories()
 }
 fetch()
 

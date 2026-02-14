@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import moment from 'moment'
 import { computed, ref, onMounted } from 'vue'
+import { site } from '@/bridge'
 import { useI18n } from 'vue-i18n'
 import type { DateCategoryFilterValue } from './types'
 import { useCategoryTree } from '@/composables/useCategoryTree'
@@ -47,7 +48,7 @@ const postMonths = ref<{ label: string; value: string }[]>([])
 async function fetchPostMonths() {
   isLoadingMonths.value = true
   try {
-    const months = await window.site.getPostMonths()
+    const months = await site.getPostMonths()
     postMonths.value = [
       { label: t('posts.allMonths'), value: 'all' },
       ...months.map((month: string) => ({
@@ -73,7 +74,7 @@ const categories = ref<Category[]>([])
 async function fetchCategories() {
   isLoadingCategories.value = true
   try {
-    categories.value = await window.site.getCategories()
+    categories.value = await site.getCategories()
   } catch (error) {
     console.error('Failed to fetch categories:', error)
     // 可选：向用户显示错误提示

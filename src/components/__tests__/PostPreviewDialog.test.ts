@@ -5,6 +5,14 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import PostPreviewDialog from '../PostPreviewDialog.vue'
 import en from '@/locales/en.json'
 
+const getPostDocumentMock = vi.hoisted(() => vi.fn())
+
+vi.mock('@/bridge', () => ({
+  site: {
+    getPostDocument: getPostDocumentMock,
+  },
+}))
+
 const createMdPreviewStub = () =>
   defineComponent({
     name: 'MdPreview',
@@ -59,21 +67,17 @@ const waitForToc = async (wrapper: ReturnType<typeof mount>) => {
 }
 
 describe('PostPreviewDialog.vue', () => {
-  const getPostDocument = vi.fn(async () => ({
-    meta: {
-      title: 'Hello World',
-      date: '2024-01-01',
-      tags: ['tag1'],
-      categories: ['cat'],
-    },
-    content: '## Intro\n### Part A\n#### Skip',
-  }))
-
   beforeEach(() => {
-    window.site = {
-      getPostDocument,
-    } as unknown as ISite
-    getPostDocument.mockClear()
+    getPostDocumentMock.mockClear()
+    getPostDocumentMock.mockResolvedValue({
+      meta: {
+        title: 'Hello World',
+        date: '2024-01-01',
+        tags: ['tag1'],
+        categories: ['cat'],
+      },
+      content: '## Intro\n### Part A\n#### Skip',
+    })
   })
 
   it('builds a TOC with up to 3 levels and numbered top-level entries', async () => {

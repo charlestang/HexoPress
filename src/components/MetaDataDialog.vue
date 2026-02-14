@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { site } from '@/bridge'
 import { cloneValue, toDate, toStringArray } from '@shared/utils/value'
 import { computed, ref, toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -45,7 +46,7 @@ const categoriesModel = computed<string | string[] | (string | string[])[]>({
 })
 async function onOpen() {
   const loadingInstance = ElLoading.service({ target: 'dialog' })
-  const meta = await window.site.getPostMeta(props.sourcePath)
+  const meta = await site.getPostMeta(props.sourcePath)
   frontMatter.value = {
     ...frontMatter.value,
     ...meta,
@@ -82,7 +83,7 @@ async function onSave() {
   const updated = new Date()
   frontMatter.value.updated = updated
   const payload = buildMetaPayload(updated)
-  await window.site.updatePostMeta(props.sourcePath, payload)
+  await site.updatePostMeta(props.sourcePath, payload)
   ElMessage.success(t('editor.createSuccess'))
   emit('success')
   loadingInstance.close()

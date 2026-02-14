@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { site } from '@/bridge'
 import { useI18n } from 'vue-i18n'
 import { ElMessageBox } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
@@ -66,7 +67,7 @@ async function fetchPosts(tag: Tag) {
   error.value = null
   tagRemovalError.value = null
   try {
-    const result = await window.site.getPosts(true, true, -1, 0, '', '', '', tag.id, 'date', 'desc')
+    const result = await site.getPosts(true, true, -1, 0, '', '', '', tag.id, 'date', 'desc')
     if (currentToken !== requestToken) {
       return
     }
@@ -282,7 +283,7 @@ async function onRemoveTag(post: Post, tag: TagChip) {
   tagRemovalError.value = null
   setPendingRemoval(removalKey, true)
   try {
-    await window.site.removeTagFromPost(post.source, tag.id)
+    await site.removeTagFromPost(post.source, tag.id)
     applyTagRemoval(post.source, tag.id)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

@@ -13,7 +13,10 @@
     "check-all": "concurrently -c \"bgBlue.bold,bgMagenta.bold,bgCyan.bold,bgGreen.bold\" npm:vue-check npm:vitest-check npm:node-check npm:conf-check",
     "conf-check": "tsc --noEmit -p tsconfig/tsconfig.tools.json",
     "dev": "electron-forge start",
-    "format": "prettier --write src/ main/ types/ *.ts *.json *.md",
+    "format": "prettier --write src/ main/ web/ types/ *.ts *.json *.md",
+    "web:dev": "concurrently \"vite --config vite.config.web.ts\" \"npm run web:server && node dist/server.cjs --dev\"",
+    "web:build": "vite build --config vite.config.web.ts && npm run web:server",
+    "web:server": "esbuild web/server.ts --bundle --platform=node --format=cjs --outfile=dist/server.cjs --alias:@shared=./shared --packages=external",
     "lint": "eslint . --fix",
     "make": "electron-forge make",
     "node-check": "tsc --noEmit -p tsconfig/tsconfig.node.json",
@@ -25,6 +28,7 @@
     "vue-check": "vue-tsc --noEmit -p tsconfig/tsconfig.app.json"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/static": "^9.0.0",
     "@replit/codemirror-vim": "^6.3.0",
     "date-fns": "^4.1.0",

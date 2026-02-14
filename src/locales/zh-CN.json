@@ -330,6 +330,17 @@
     "confirm": "确认",
     "selectDirTips": "请输入您 Hexo 博客的根目录，HexoPress 会扫描其中包含的博客文章、草稿和包含在目录中的媒体文件。"
   },
+  "login": {
+    "subtitle": "登录以继续",
+    "username": "用户名",
+    "usernamePlaceholder": "请输入用户名",
+    "password": "密码",
+    "passwordPlaceholder": "请输入密码",
+    "submit": "登录",
+    "emptyFields": "请输入用户名和密码",
+    "failed": "登录失败",
+    "networkError": "网络错误，请重试"
+  },
   "tags": {
     "actions": "操作",
     "name": "标签",

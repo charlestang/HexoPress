@@ -47,6 +47,10 @@ export default defineConfig((env) => {
         include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
       }),
     ],
+    define: {
+      'import.meta.env.VITE_APP_MODE': JSON.stringify('electron'),
+      'import.meta.env.VITE_ASSET_BASE_URL': JSON.stringify('http://127.0.0.1:2357/'),
+    },
     resolve: {
       preserveSymlinks: true,
       alias: {

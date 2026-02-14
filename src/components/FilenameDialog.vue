@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import { useAppStore } from '@/stores/app'
 import { join } from 'path-browserify'
 import { computed, ref, watch, watchEffect } from 'vue'
@@ -47,8 +48,8 @@ watch(
 const visible = ref(false)
 async function changePath() {
   console.log('change file path: from: ', props.sourcePath, ' to: ', newFilePath.value)
-  const res = await window.site.mv(props.sourcePath, newFilePath.value)
-  await window.site.refreshSite()
+  const res = await site.mv(props.sourcePath, newFilePath.value)
+  await site.refreshSite()
   if (res) {
     ElMessage.success({
       message: t('filenameDialog.changePathSuccess'),

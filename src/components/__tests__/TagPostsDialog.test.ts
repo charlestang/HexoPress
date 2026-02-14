@@ -7,6 +7,15 @@ import en from '@/locales/en.json'
 
 const confirmSpy = vi.hoisted(() => vi.fn(() => Promise.resolve()))
 const pushSpy = vi.hoisted(() => vi.fn())
+const getPostsMock = vi.hoisted(() => vi.fn())
+const removeTagFromPostMock = vi.hoisted(() => vi.fn())
+
+vi.mock('@/bridge', () => ({
+  site: {
+    getPosts: getPostsMock,
+    removeTagFromPost: removeTagFromPostMock,
+  },
+}))
 
 vi.mock('element-plus', async () => {
   const actual = await vi.importActual<typeof import('element-plus')>('element-plus')
@@ -66,21 +75,16 @@ describe('TagPostsDialog.vue', () => {
     const posts = options.posts ?? [createPost()]
     const tag = options.tag ?? defaultTag
 
-    const getPosts = vi.fn(async () => ({
+    getPostsMock.mockResolvedValue({
       total: posts.length,
       posts: posts.map((post) => ({
         ...post,
         tags: { ...post.tags },
         categories: [...post.categories],
       })),
-    }))
+    })
 
-    const removeTagFromPost = vi.fn().mockResolvedValue(undefined)
-
-    window.site = {
-      getPosts,
-      removeTagFromPost,
-    } as unknown as ISite
+    removeTagFromPostMock.mockResolvedValue(undefined)
 
     const wrapper = mount(TagPostsDialog, {
       props: {
@@ -115,14 +119,14 @@ describe('TagPostsDialog.vue', () => {
     })
 
     await flushPromises()
-    return Object.assign(wrapper, {
-      removeTagFromPost,
-    })
+    return wrapper
   }
 
   beforeEach(() => {
     confirmSpy.mockClear()
     pushSpy.mockClear()
+    getPostsMock.mockClear()
+    removeTagFromPostMock.mockClear()
   })
 
   afterEach(() => {
@@ -131,9 +135,7 @@ describe('TagPostsDialog.vue', () => {
   })
 
   it('removes the active tag from a post and schedules row removal', async () => {
-    const wrapper = (await createWrapper()) as VueWrapper & {
-      removeTagFromPost: ReturnType<typeof vi.fn>
-    }
+    const wrapper = await createWrapper()
     const vm = wrapper.vm as unknown as {
       posts: Post[]
       onRemoveTag: (post: Post, tag: { id: string; name: string }) => Promise<void>
@@ -145,7 +147,7 @@ describe('TagPostsDialog.vue', () => {
     await vm.onRemoveTag(vm.posts[0]!, { id: 'tag-clean', name: 'Cleanup' })
 
     expect(confirmSpy).toHaveBeenCalledTimes(1)
-    expect(wrapper.removeTagFromPost).toHaveBeenCalledWith('_posts/sample.md', 'tag-clean')
+    expect(removeTagFromPostMock).toHaveBeenCalledWith('_posts/sample.md', 'tag-clean')
     expect(vm.posts[0]?.tags?.['tag-clean']).toBeUndefined()
 
     vi.runAllTimers()
@@ -156,15 +158,13 @@ describe('TagPostsDialog.vue', () => {
 
   it('shows an error message when the removal request fails', async () => {
     const failingPost = createPost()
-    const wrapper = (await createWrapper({ posts: [failingPost] })) as VueWrapper & {
-      removeTagFromPost: ReturnType<typeof vi.fn>
-    }
+    const wrapper = await createWrapper({ posts: [failingPost] })
     const vm = wrapper.vm as unknown as {
       posts: Post[]
       onRemoveTag: (post: Post, tag: { id: string; name: string }) => Promise<void>
       tagRemovalError: string | null
     }
-    wrapper.removeTagFromPost.mockRejectedValueOnce(new Error('disk full'))
+    removeTagFromPostMock.mockRejectedValueOnce(new Error('disk full'))
 
     await vm.onRemoveTag(vm.posts[0]!, { id: 'tag-clean', name: 'Cleanup' })
 

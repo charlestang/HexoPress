@@ -22,6 +22,15 @@ declare global {
     VITE_DEV_SERVER_URL: `${string}_VITE_DEV_SERVER_URL`
     VITE_NAME: `${string}_VITE_NAME`
   }
+
+  interface ImportMetaEnv {
+    readonly VITE_APP_MODE: 'electron' | 'web'
+    readonly VITE_ASSET_BASE_URL: string
+  }
+
+  interface ImportMeta {
+    readonly env: ImportMetaEnv
+  }
 }
 
 declare module 'vite' {

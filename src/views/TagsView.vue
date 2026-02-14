@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -18,7 +19,7 @@ const shouldRestoreDialog = computed(
 )
 
 async function fetch() {
-  tags.value = await window.site.getTags()
+  tags.value = await site.getTags()
   tagsCount.value = tags.value.length
   restoreDialogIfNeeded()
 }

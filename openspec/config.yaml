@@ -27,6 +27,7 @@ context: |
   - 使用 Conventional Commits（feat:、fix:、docs:、refactor:）
   - 变量/字段名：camelCase；类/类型名：PascalCase
   - 新页面：优先使用 UnoCSS（src/uno.config.ts）；避免混用新旧样式系统
+  - 多语言：所有用户可见的界面文案 MUST 使用 vue-i18n（`const { t } = useI18n()`），禁止硬编码字符串。语言包：src/locales/en.json 和 src/locales/zh-CN.json，按功能模块分命名空间，新增 key 需同时更新两个文件
   - 测试文件：放在源文件同级的 __tests__/ 目录下
   - **语言使用规范**：
     - 源代码和注释：MUST 使用英文
@@ -78,3 +79,4 @@ rules:
     - 遵循现有的代码模式和架构
     - IPC 契约变更时更新 types/local.d.ts 中的类型
     - 在 __tests__/ 目录下为新功能添加测试
+    - 新增 UI 组件/页面的所有用户可见文案必须通过 vue-i18n 的 t() 引用，同步更新 en.json 和 zh-CN.json

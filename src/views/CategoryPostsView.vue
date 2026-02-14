@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { ElTable } from 'element-plus'
@@ -245,7 +246,7 @@ function formatCategoryPathsForDisplay(paths: string[][]): string {
 }
 
 async function fetchCategories() {
-  categories.value = await window.site.getCategories()
+  categories.value = await site.getCategories()
 }
 
 async function fetchPosts() {
@@ -253,7 +254,7 @@ async function fetchPosts() {
     rawPosts.value = []
     return
   }
-  const result = await window.site.getPosts(true, true, -1, 0, categoryId.value)
+  const result = await site.getPosts(true, true, -1, 0, categoryId.value)
   rawPosts.value = result.posts ?? []
   await nextTick()
   resetSelection()
@@ -347,7 +348,7 @@ async function submitBulkUpdate() {
   bulkState.action = 'update'
   bulkState.summary = ''
   try {
-    const result = await window.site.replaceCategoryForPosts(
+    const result = await site.replaceCategoryForPosts(
       categoryId.value,
       selectedSources.value,
       replacements,
@@ -423,10 +424,7 @@ async function handleBulkDelete() {
   bulkState.action = 'delete'
   bulkState.summary = ''
   try {
-    const result = await window.site.removeCategoryFromPosts(
-      categoryId.value,
-      selectedSources.value,
-    )
+    const result = await site.removeCategoryFromPosts(categoryId.value, selectedSources.value)
     const success = result.success ?? 0
     const failure = result.failure ?? 0
     bulkState.summary = t('categoryDetail.messages.deleteSummary', { success, failure })

@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { computed, nextTick, reactive, ref, watch, type ComponentPublicInstance } from 'vue'
+import { site } from '@/bridge'
 import SearchBar from '@/components/SearchBar.vue'
 import { formatBytes } from '@/utils/number'
 import { computeRelativeImagePath } from '@/utils/path'
 
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.bmp']
-const assetBaseUrl = 'http://127.0.0.1:2357/'
+const assetBaseUrl = import.meta.env.VITE_ASSET_BASE_URL
 
 type MediaItem = {
   asset: Asset
@@ -102,11 +103,11 @@ async function loadAssets() {
   loading.value = true
   error.value = null
   try {
-    const assets = await window.site.getAssets()
+    const assets = await site.getAssets()
     const imageAssets = assets.filter((asset) => isImageAsset(asset.path))
     const enriched = await Promise.all(
       imageAssets.map(async (asset) => {
-        const fileInfo = await window.site.getFileInfo(asset.path).catch(() => null)
+        const fileInfo = await site.getFileInfo(asset.path).catch(() => null)
         return {
           asset,
           fileInfo,

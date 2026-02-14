@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import { useI18n } from 'vue-i18n'
 import { computed, reactive, ref, watch, watchEffect } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -18,10 +19,10 @@ const deletingState = ref<Record<string, boolean>>({})
 
 const previewableExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp']
 const deletableExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg']
-const assetBaseUrl = 'http://127.0.0.1:2357/'
+const assetBaseUrl = import.meta.env.VITE_ASSET_BASE_URL
 
 async function fetchAssets() {
-  const res = await window.site.getAssets()
+  const res = await site.getAssets()
   assets.value = res
 }
 
@@ -85,7 +86,7 @@ async function handleDelete(asset: Asset) {
 
   try {
     setDeleting(asset.id, true)
-    await window.site.deleteAsset(asset.id)
+    await site.deleteAsset(asset.id)
     ElMessage.success(t('mediaLibrary.deleteSuccess'))
     await fetchAssets()
   } catch (error: unknown) {
@@ -239,7 +240,7 @@ watch(
     representativeMeta.loading = true
     try {
       const [fileInfo, dimensions] = await Promise.all([
-        window.site.getFileInfo(asset.path).catch(() => null),
+        site.getFileInfo(asset.path).catch(() => null),
         loadImageDimensions(targetUrl),
       ])
       if (metaRequestId !== currentRequest) {
@@ -279,7 +280,7 @@ watch(
         group.assets.map(async (asset) => {
           try {
             const [fileInfo, dimensions] = await Promise.all([
-              window.site.getFileInfo(asset.path).catch(() => null),
+              site.getFileInfo(asset.path).catch(() => null),
               loadImageDimensions(assetUrl(asset)),
             ])
             if (variantMetaRequestId !== currentRequest) {
@@ -325,7 +326,7 @@ async function ensureAllPostsLoaded(): Promise<void> {
     return
   }
   try {
-    const result = await window.site.getPosts(true, true, -1, 0)
+    const result = await site.getPosts(true, true, -1, 0)
     allPostsCache.value = result?.posts ?? []
   } catch (error) {
     console.warn('Failed to load posts for references', error)
@@ -343,7 +344,7 @@ async function viewAssetReferences(asset: Asset) {
   referencePosts.value = []
   const currentRequest = ++referencesRequestId
   try {
-    const references = await window.site.getAssetReferences(asset.path)
+    const references = await site.getAssetReferences(asset.path)
     if (referencesRequestId !== currentRequest) {
       return
     }
@@ -367,7 +368,7 @@ async function viewAssetReferences(asset: Asset) {
 }
 
 function openAssetInBrowser(asset: Asset) {
-  window.site.openUrl(assetUrl(asset))
+  site.openUrl(assetUrl(asset))
 }
 
 function openPostEditor(post: Post) {

@@ -40,3 +40,7 @@ out/
 # Yarn
 .yarn
 .yarnrc.yml
+
+# Web Config
+web/hexopress.config.json
+hexopress.config.json

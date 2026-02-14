@@ -1,3 +1,4 @@
+import { site } from '@/bridge'
 import { useAppStoreWithout } from '@/stores/app'
 import { type App } from 'vue'
 import { createI18n } from 'vue-i18n'
@@ -8,7 +9,7 @@ import { watch } from 'vue'
 export const setupI18n = async (app: App) => {
   const { wsCache } = useCache('localStorage')
   const selectedLocale = wsCache.get('locale')
-  const currentLocale = await window.site.getSystemLocale()
+  const currentLocale = await site.getSystemLocale()
   console.log('read system locale from backend: ' + currentLocale)
   const appStore = useAppStoreWithout()
   appStore.setLocale(selectedLocale || currentLocale)

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
+import { site } from '@/bridge'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -58,7 +59,7 @@ async function submit() {
   reader.onload = (e) => {
     const target = e.target
     if (target !== null && target.result !== null) {
-      window.site.saveImage(filePath.value, target.result as ArrayBuffer).then(() => {
+      site.saveImage(filePath.value, target.result as ArrayBuffer).then(() => {
         emit('uploadSuccess')
         showDialog.value = false
       })

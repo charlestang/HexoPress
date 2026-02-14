@@ -1,10 +1,13 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+
+const isWebMode = import.meta.env.VITE_APP_MODE === 'web'
 
 const form = reactive({
   directory: '',
@@ -13,17 +16,14 @@ const form = reactive({
 const appStore = useAppStore()
 
 async function onSubmit() {
-  console.log('form directory:', form.directory)
   if (form.directory === '') return
-  console.log('env is:', import.meta.env)
-  console.log('base url is:', import.meta.env.BASE_URL)
   appStore.setBasePath(form.directory)
-  const res = await router.push({ path: '/' })
-  console.log('router result: ', res)
+  await router.push({ path: '/' })
 }
 
 function selectPath() {
-  window.site.openDirDialog().then((result) => {
+  if (isWebMode) return
+  site.openDirDialog().then((result) => {
     if (result.canceled) {
       return
     }
@@ -44,23 +44,30 @@ function selectPath() {
       <el-aside class="nav" width="collapse"></el-aside>
       <el-main class="main-content">
         <h2>{{ t('common.setup') }}</h2>
-        <el-form label-position="top" :model="form" label-width="200px" style="max-width: 500px">
-          <el-space fill>
-            <el-form-item :label="t('common.selectDir')" label-width="150px">
-              <el-input v-model="form.directory" autocomplete="off" read-only="true">
-                <template #append>
-                  <el-button @click="selectPath">{{ t('setup.choose') }}</el-button>
-                </template>
-              </el-input>
+        <template v-if="isWebMode">
+          <el-alert type="info" show-icon :closable="false">
+            {{ t('setup.webModeInfo', 'Blog directory is configured on the server side.') }}
+          </el-alert>
+        </template>
+        <template v-else>
+          <el-form label-position="top" :model="form" label-width="200px" style="max-width: 500px">
+            <el-space fill>
+              <el-form-item :label="t('common.selectDir')" label-width="150px">
+                <el-input v-model="form.directory" autocomplete="off" read-only="true">
+                  <template #append>
+                    <el-button @click="selectPath">{{ t('setup.choose') }}</el-button>
+                  </template>
+                </el-input>
+              </el-form-item>
+              <el-alert type="info" show-icon :closable="false">
+                {{ t('setup.selectDirTips') }}
+              </el-alert>
+            </el-space>
+            <el-form-item label-width="150px" style="margin-top: 20px">
+              <el-button type="primary" @click="onSubmit">{{ t('setup.confirm') }}</el-button>
             </el-form-item>
-            <el-alert type="info" show-icon :closable="false">
-              {{ t('setup.selectDirTips') }}
-            </el-alert>
-          </el-space>
-          <el-form-item label-width="150px" style="margin-top: 20px">
-            <el-button type="primary" @click="onSubmit">{{ t('setup.confirm') }}</el-button>
-          </el-form-item>
-        </el-form>
+          </el-form>
+        </template>
       </el-main>
     </el-container>
   </el-container>

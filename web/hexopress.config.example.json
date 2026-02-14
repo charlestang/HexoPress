@@ -1,0 +1,7 @@
+{
+  "hexoDir": "/path/to/your/hexo/blog",
+  "port": 4000,
+  "username": "admin",
+  "password": "change-me",
+  "secret": ""
+}

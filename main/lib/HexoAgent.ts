@@ -1,4 +1,3 @@
-import { app } from 'electron'
 import { existsSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'fs'
 import Hexo from 'hexo'
 import util from 'hexo-util'
@@ -256,12 +255,20 @@ export class HexoAgent {
   public init(rootPath: string): void {
     console.log('HexoAgent.init is called. rootPath is: ', rootPath)
 
+    // If already initialized with the same path, skip re-initialization
+    if (typeof this.hexo !== 'undefined' && this.rootPath === rootPath) {
+      console.log('Hexo is already initialized with the same path. Skipping re-initialization.')
+      return
+    }
+
     this.rootPath = rootPath
 
     // Users can unbind the agent with previous directory and bind it with a new one.
     // In this case, we need to exit the previous hexo instance first.
     if (typeof this.hexo !== 'undefined') {
-      console.log('The member hexo is already initialized.')
+      console.log(
+        'The member hexo is already initialized with a different path. Exiting old instance.',
+      )
 
       this.exitPromise = this.hexo.exit()
     }
@@ -273,16 +280,30 @@ export class HexoAgent {
 
     this.initPromise = this.hexo
       .init()
-      .then(() => {
+      .then(async () => {
         console.log('A new instance of Hexo is initialized with rootPath: ', this.rootPath)
+        // Register a dummy renderer for markdown files to make db cache sync.
+        // Must be registered BEFORE loading to avoid expensive template rendering.
+        this.hexo.extend.renderer.register('md', 'html', (data) => data.text, true)
 
-        return this.hexo.load()
+        // Custom load: skip _generate() which renders all posts through the theme
+        // template engine (11+ seconds for ~467 posts). HexoPress only needs the
+        // database (posts/categories/tags metadata), not generated HTML.
+        const hexo = this.hexo as Hexo & {
+          _binaryRelationIndex: {
+            post_tag: { load: () => void }
+            post_category: { load: () => void }
+          }
+        }
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const loadDatabase = require('hexo/dist/hexo/load_database')
+        await loadDatabase(hexo)
+        hexo._binaryRelationIndex.post_tag.load()
+        hexo._binaryRelationIndex.post_category.load()
+        await Promise.all([hexo.source.process(), hexo.theme.process()])
       })
       .then(() => {
         console.log('The instance of Hexo loading finished.')
-
-        // register a dummy render for markdown files make db cache sync.
-        this.hexo.extend.renderer.register('md', 'html', (data) => data.text, true)
       })
   }
 
@@ -327,9 +348,11 @@ export class HexoAgent {
     if (this.exitPromise) {
       await this.exitPromise
     }
+
     if (this.initPromise) {
       await this.initPromise
     }
+
     console.log(
       'HexoAgent.getPosts is called.',
       `Getting posts with published=${published}, draft=${isDraft}, limit=${limit}, offset=${offset}, keywords=${keywords}, tagId=${tagId}, orderBy=${orderBy}, order=${order}`,
@@ -339,10 +362,13 @@ export class HexoAgent {
       posts: <Post[]>[],
     }
     const postList = <Post[]>[]
+
     let posts = this.hexo.locals.get('posts')
+
     if (orderBy && order) {
       posts = posts.sort(orderBy, order)
     }
+
     if (!published) {
       posts = posts.filter((item) => {
         return !item.published
@@ -376,6 +402,7 @@ export class HexoAgent {
         return tagData.some((tag: HexoTagRecord) => tag._id === tagId)
       })
     }
+
     results.total = posts.length
 
     console.log('This query posts total is: ', results.total)
@@ -387,7 +414,7 @@ export class HexoAgent {
       posts = posts.limit(limit)
     }
 
-    const locale = app.getSystemLocale()
+    const locale = Intl.DateTimeFormat().resolvedOptions().locale
 
     posts.each((post: HexoPostRecord) => {
       const onePost = <Post>{
@@ -414,6 +441,7 @@ export class HexoAgent {
       }
       postList.push(onePost)
     })
+
     results.posts = postList
     return results
   }
@@ -736,10 +764,12 @@ export class HexoAgent {
     try {
       console.log('Updating Hexo cache...')
       await this.hexo.source.process()
+
       this.purgeNullRecords('PostCategory')
       this.purgeNullRecords('PostTag')
-      await this.hexo.load()
+
       await this.hexo.database.save()
+
       console.log('Hexo cache updated successfully')
     } catch (error) {
       console.error('Failed to update Hexo cache:', error)

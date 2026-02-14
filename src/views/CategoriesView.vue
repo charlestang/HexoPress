@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -11,7 +12,7 @@ const categories = ref<Category[]>([])
 const catCount = ref(0)
 
 async function fetch() {
-  categories.value = await window.site.getCategories()
+  categories.value = await site.getCategories()
   catCount.value = categories.value.length
   console.log('Categories fetched from API, length: ', catCount.value)
 }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
+import { site } from '@/bridge'
 import { useI18n } from 'vue-i18n'
 import { MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/preview.css'
@@ -44,7 +45,7 @@ function filterImage(html: string): string {
     relativePermalink = relativePermalink.replace(/^https?:\/\/[^\/]+\//, '')
   }
   console.log('relativePermalink', relativePermalink)
-  return _addPrefixToImgSrc(html, 'http://127.0.0.1:2357/', relativePermalink)
+  return _addPrefixToImgSrc(html, import.meta.env.VITE_ASSET_BASE_URL, relativePermalink)
 }
 
 function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): string {
@@ -78,7 +79,7 @@ async function fetchContent() {
   content.value = ''
   loading.value = true
   try {
-    const { meta, content: body } = await window.site.getPostDocument(props.sourcePath)
+    const { meta, content: body } = await site.getPostDocument(props.sourcePath)
     frontMatter.value = {
       ...frontMatter.value,
       ...meta,

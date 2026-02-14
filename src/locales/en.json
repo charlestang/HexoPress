@@ -329,6 +329,17 @@
     "confirm": "Confirm",
     "selectDirTips": "Please enter the root directory of your Hexo blog. HexoPress will scan for blog posts, drafts, and media files contained in the directory."
   },
+  "login": {
+    "subtitle": "Sign in to continue",
+    "username": "Username",
+    "usernamePlaceholder": "Enter username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "submit": "Login",
+    "emptyFields": "Please enter username and password",
+    "failed": "Login failed",
+    "networkError": "Network error, please try again"
+  },
   "tags": {
     "actions": "Actions",
     "name": "Tag",

@@ -3,6 +3,7 @@
  * This file provides a centralized state management for blog statistics
  * using Pinia store.
  */
+import { site } from '@/bridge'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -27,7 +28,7 @@ export const useStatsStore = defineStore('stats', () => {
    * and updates the local state references
    */
   async function updateStats() {
-    const data = await window.site.getStats()
+    const data = await site.getStats()
     postTotal.value = data.postCount + data.postDraftCount
     publishedTotal.value = data.postCount
     draftTotal.value = data.postDraftCount

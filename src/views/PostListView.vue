@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import { PostStatusFilterChoice } from '@/components/PostListFilters'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
@@ -85,7 +86,7 @@ async function fetch(curPage: number) {
   const selectedCat =
     dateCategoryFilterVal.value.category === 'all' ? '' : dateCategoryFilterVal.value.category
 
-  const data = await window.site.getPosts(
+  const data = await site.getPosts(
     published,
     draft,
     limit,
@@ -132,7 +133,7 @@ function onDelete(articleName: string, articlePath: string) {
   )
     .then(async (a) => {
       console.log(a)
-      await window.site.deleteFile(articlePath)
+      await site.deleteFile(articlePath)
       ElMessage({
         type: 'success',
         message: t('posts.deleteSuccess'),
@@ -344,13 +345,6 @@ const { tableHeight, wrapper } = useTableHeight()
 .draft-status {
   font-weight: bold;
 }
-.el-table__cell .op {
-  display: none;
-  line-height: 1.5;
-}
-.el-table__cell:hover .op {
-  display: block;
-}
 .filter-row {
   margin-bottom: 5px;
 }
@@ -363,5 +357,16 @@ const { tableHeight, wrapper } = useTableHeight()
 }
 .time-type-select {
   width: 140px;
+}
+</style>
+
+<style>
+/* Global styles for table hover effect - must be non-scoped to work reliably */
+.el-table__cell .op {
+  display: none !important;
+  line-height: 1.5;
+}
+.el-table__cell:hover .op {
+  display: block !important;
 }
 </style>

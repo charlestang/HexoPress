@@ -44,12 +44,16 @@ npm run make         # 构建可分发安装包
 
 ### IPC 通信契约
 
-渲染进程通过 `window.site.<method>(...)` 调用，映射到 `main/main.ts` 中的 IPC 通道处理器。完整的 `ISite` 接口定义在 `types/local.d.ts`。主要通道：
+渲染进程通过 `window.site.<method>(...)` 调用，映射到 `main/main.ts` 中的 IPC 通道处理器。完整的 `ISite` 接口定义在 `types/local.d.ts`。
 
+- **规模**：`preload.ts` 共暴露 49 个方法；渲染进程中 22 个文件、52 处调用 `window.site.*`
+- **隔离性**：渲染进程无任何直接 `electron` import，所有 Electron API 均通过 `window.site` 桥接
 - 读取操作：`site:posts`、`site:categories`、`site:tags`、`site:stats`、`site:heatMap`
 - 写入操作：`post:save`、`post:create`、`post:move`、`post:delete`
 - 文件系统：`fs:readdir`、`fs:mv`、`fs:saveImage`
 - 生命周期：`agent:init`、`site:refresh`
+- **Electron 特有 API**（仅 4 个）：`openDirDialog`（原生目录选择）、`openUrl`（系统浏览器打开）、`getSystemLocale`（系统语言）、`setDarkMode/getDarkMode`（原生主题）
+- **硬编码 URL**：5 处文件引用 `http://127.0.0.1:2357/`（MediaDetailView、MediaLibraryView、EditorMain、MediaPanel、PostPreviewDialog）
 
 ### 类型系统
 
@@ -61,7 +65,14 @@ npm run make         # 构建可分发安装包
 
 - Electron Forge + Vite 插件（`forge.config.ts`）
 - 三套 Vite 配置：`vite.config.main.ts`（主进程）、`vite.config.preload.ts`、`vite.config.renderer.ts`
+- 公共配置：`vite.config.base.ts`（external 列表、Forge 插件辅助函数）
 - 路径别名：`@` → `src/`，`@shared` → `shared/`
+
+### 关键依赖
+
+- **运行时**：Fastify（HTTP 服务）、Hexo + hexo-front-matter + hexo-fs（博客引擎）、md-editor-v3（Markdown 编辑器）、CodeMirror Vim（vim 模式）
+- **渲染进程**：Vue 3、Pinia、Vue Router、Element Plus、vue-i18n、UnoCSS、vue3-calendar-heatmap
+- **构建**：Electron Forge、Vite、TypeScript、vue-tsc
 
 ## 编码规范
 
@@ -69,5 +80,6 @@ npm run make         # 构建可分发安装包
 - **提交规范**：Conventional Commits（`feat:`、`fix:`、`docs:`、`refactor:`）
 - **命名**：变量/字段用 `camelCase`，类/类型用 `PascalCase`
 - **样式**：新页面优先使用 UnoCSS（`src/uno.config.ts`）；旧页面可能仍用旧样式体系，同一页面内不要混用
+- **多语言**：所有用户可见的界面文案必须使用 `vue-i18n`，禁止硬编码字符串。语言包位于 `src/locales/en.json` 和 `src/locales/zh-CN.json`，按功能模块分命名空间。组件中使用 `const { t } = useI18n()` 后通过 `t('namespace.key')` 引用。新增 key 需同时更新两个语言包
 - **测试**：测试文件放在源码同级的 `__tests__/` 目录下，使用 `@vue/test-utils` + jsdom。Element Plus 组件的 stub 需要正确定义 props/emit 类型，否则会产生 TS 错误
 - **Git 工作流**：保持线性提交历史，PR 前先 rebase 主干，合并后删除分支，每个 commit 应是完整可运行的单元

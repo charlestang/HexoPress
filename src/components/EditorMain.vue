@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useEditorStore } from '@/stores/editorStore' // Import the editor store
@@ -137,7 +138,7 @@ function applyDocumentMeta(meta: PostMeta) {
 async function loadDocument(path: string) {
   try {
     initializing.value = true
-    const { meta, content } = await window.site.getPostDocument(path)
+    const { meta, content } = await site.getPostDocument(path)
     applyDocumentMeta(meta)
     text.value = content
     isDirty.value = false
@@ -157,7 +158,11 @@ if (!isNewPost.value && sourcePath.value) {
  * @param html The HTML content of the blog post.
  */
 function filterImage(html: string): string {
-  return _addPrefixToImgSrc(html, 'http://127.0.0.1:2357/', frontMatter.value.permalink || '')
+  return _addPrefixToImgSrc(
+    html,
+    import.meta.env.VITE_ASSET_BASE_URL,
+    frontMatter.value.permalink || '',
+  )
 }
 
 function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): string {
@@ -234,7 +239,7 @@ async function updatePost() {
     return
   }
   const document = buildDocument()
-  await window.site.savePostDocument(sourcePath.value, document)
+  await site.savePostDocument(sourcePath.value, document)
   applyDocumentMeta(document.meta)
   isDirty.value = false
   ElMessage.success(t('editor.createSuccess'))
@@ -247,7 +252,7 @@ async function upsertDraft() {
   }
   const document = buildDocument()
   if (!sourcePath.value) {
-    sourcePath.value = await window.site.createFile(
+    sourcePath.value = await site.createFile(
       '_drafts',
       frontMatter.value.title ?? '',
       frontMatter.value.permalink ?? '',
@@ -257,13 +262,13 @@ async function upsertDraft() {
       ElMessage.error(t('editor.createFailed'))
       return
     }
-    await window.site.savePostDocument(sourcePath.value, document)
+    await site.savePostDocument(sourcePath.value, document)
     applyDocumentMeta(document.meta)
     isDirty.value = false
     isNewPost.value = false
     ElMessage.success(t('editor.draftSaveSuccess'))
   } else {
-    await window.site.savePostDocument(sourcePath.value, document)
+    await site.savePostDocument(sourcePath.value, document)
     applyDocumentMeta(document.meta)
     isDirty.value = false
     ElMessage.success(t('editor.draftSaveSuccess'))
@@ -277,7 +282,7 @@ async function publishDraft() {
   }
   const document = buildDocument()
   if (!sourcePath.value) {
-    sourcePath.value = await window.site.createFile(
+    sourcePath.value = await site.createFile(
       '_posts',
       frontMatter.value.title ?? '',
       frontMatter.value.permalink ?? '',
@@ -287,14 +292,14 @@ async function publishDraft() {
       ElMessage.error(t('editor.createFailed'))
       return
     }
-    await window.site.savePostDocument(sourcePath.value, document)
+    await site.savePostDocument(sourcePath.value, document)
     applyDocumentMeta(document.meta)
     isDirty.value = false
     isNewPost.value = false
     ElMessage.success(t('editor.draftPublishSuccess'))
   } else {
-    await window.site.savePostDocument(sourcePath.value, document)
-    const newPath = await window.site.moveFile(sourcePath.value, '')
+    await site.savePostDocument(sourcePath.value, document)
+    const newPath = await site.moveFile(sourcePath.value, '')
     if (!newPath) {
       ElMessage.error(t('editor.createFailed'))
       return
@@ -441,7 +446,7 @@ function onDelete() {
     },
   )
     .then(async () => {
-      await window.site.deleteFile(articlePath)
+      await site.deleteFile(articlePath)
       ElMessage({
         type: 'success',
         message: t('posts.deleteSuccess'),

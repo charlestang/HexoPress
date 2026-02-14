@@ -1,8 +1,10 @@
+import { site } from '@/bridge'
 import { useAppStoreWithout } from '@/stores/app'
 import CategoriesView from '@/views/CategoriesView.vue'
 import CategoryPostsView from '@/views/CategoryPostsView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import FrameView from '@/views/FrameView.vue'
+import LoginView from '@/views/LoginView.vue'
 import MainWindow from '@/views/MainWindow.vue'
 import MediaLibraryView from '@/views/MediaLibraryView.vue'
 import MediaDetailView from '@/views/MediaDetailView.vue'
@@ -13,12 +15,19 @@ import TagsView from '@/views/TagsView.vue'
 import type { App } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+const isWebMode = import.meta.env.VITE_APP_MODE === 'web'
+
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       redirect: '/main/dashboard',
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
     },
     {
       path: '/main',
@@ -85,44 +94,52 @@ const router = createRouter({
 
 const appStore = useAppStoreWithout()
 
-router.beforeEach((to, from) => {
-  console.log('router: beforeEach')
-  console.log(
-    'navigating from: ',
-    from,
-    ' to: ',
-    to,
-    ' status checking isBasePathSet: ',
-    appStore.isBasePathSet,
-    ' isAgentInitialized: ',
-    appStore.isAgentInitialized,
-  )
-  // if basePath is not set, redirect to setup page
-  if (!appStore.isBasePathSet && to.name !== 'setup') {
-    return { path: '/setup' }
-  } else {
-    // if basePath is set but agent is not initialized, try to initialize the agent
-    if (appStore.isBasePathSet && !appStore.isAgentInitialized) {
-      console.log('basePath is set, but agent is not initialized, try to init ....')
-      window.site.initializeAgent(appStore.basePath).then((result) => {
-        console.log('initializeAgent result: ', result)
-        if (result) {
-          // initialized successfully, set the flag
-          appStore.setAgentInitialized()
-          console.log('now destination: ', to)
-          console.log('initialized status is:', appStore.isAgentInitialized)
-          return true
-        } else {
-          // initialized failed, reset the basePath and redirect to setup
-          appStore.setBasePath('')
-          return { path: '/setup' }
-        }
-      })
-    } else {
-      console.log('route from: ', from, ' to: ', to)
-      return true
+router.beforeEach(async (to) => {
+  // Web mode: check auth before anything else
+  if (isWebMode && to.name !== 'login') {
+    try {
+      const res = await fetch('/api/auth/check')
+      if (!res.ok) {
+        return { name: 'login' }
+      }
+    } catch {
+      return { name: 'login' }
     }
   }
+
+  // Web mode: skip directory check (path is configured server-side)
+  if (isWebMode) {
+    if (to.name !== 'login' && !appStore.isAgentInitialized) {
+      // In web mode, basePath is managed by the server; just initialize the agent
+      try {
+        const result = await site.initializeAgent('')
+        if (result) {
+          appStore.setAgentInitialized()
+        }
+      } catch {
+        // Agent init failed (e.g. server not ready) — continue anyway
+      }
+    }
+    return true
+  }
+
+  // Electron mode: original logic
+  if (!appStore.isBasePathSet && to.name !== 'setup') {
+    return { path: '/setup' }
+  }
+
+  if (appStore.isBasePathSet && !appStore.isAgentInitialized) {
+    const result = await site.initializeAgent(appStore.basePath)
+    if (result) {
+      appStore.setAgentInitialized()
+      return true
+    } else {
+      appStore.setBasePath('')
+      return { path: '/setup' }
+    }
+  }
+
+  return true
 })
 
 export const setupRouter = (app: App<Element>) => {

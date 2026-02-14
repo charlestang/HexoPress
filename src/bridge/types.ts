@@ -1,0 +1,1 @@
+export type SiteBridge = ISite

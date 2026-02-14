@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { site } from '@/bridge'
 import { useI18n } from 'vue-i18n'
 import { ref, watchEffect, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -15,10 +16,10 @@ const deletingState = ref<Record<string, boolean>>({})
 
 const previewableExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp']
 const deletableExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg']
-const assetBaseUrl = 'http://127.0.0.1:2357/'
+const assetBaseUrl = import.meta.env.VITE_ASSET_BASE_URL
 
 async function fetchAssets() {
-  const res = await window.site.getAssets()
+  const res = await site.getAssets()
   assets.value = res
 }
 
@@ -78,7 +79,7 @@ async function handleDelete(asset: Asset) {
 
   try {
     setDeleting(asset.id, true)
-    await window.site.deleteAsset(asset.id)
+    await site.deleteAsset(asset.id)
     ElMessage.success(t('mediaLibrary.deleteSuccess'))
     await fetchAssets()
   } catch (error: unknown) {
