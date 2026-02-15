@@ -161,15 +161,19 @@ npm run web:dev      # Starts Vite dev server + API server with hot reload
 - 🗂️ Filter by category
 - 🔍 Keyword search
 - 🌳 Tree view for categories with article count
-- 🏷️ Tag list with article count
-- 🖼️ Media resource management
+- 🏷️ Tag list with article count, tag posts dialog, and tag filter
+- 🖼️ Media resource management with detail view
 - 🗑️ Delete unused media assets (png/jpg/jpeg) with confirmation
 - ✍️ Markdown editor with preview
 - 📋 Outline panel
+- 🖼️ Media panel in editor for quick asset insertion
 - ⌨️ Vim key bindings
 - 📊 Dropdown for categories/tags
-- 🔖 Batch edit categories/tags (coming soon)
+- 🔖 Batch edit categories
 - ⚙️ Quick FrontMatter editing
+- 💾 Configurable auto-save
+- 🤖 AI-assisted writing panel with chat interface and presets
+- 📊 Dashboard with profile card, contribution heatmap, and recent posts
 - 🌐 Web mode: self-hosted browser-based management with login authentication
 - 🌍 Multi-language support (English / Simplified Chinese)
 
