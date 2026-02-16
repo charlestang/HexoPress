@@ -2,7 +2,7 @@ import { existsSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSy
 import Hexo from 'hexo'
 import util from 'hexo-util'
 import { parse as parseFrontMatter, stringify as stringifyFrontMatter } from 'hexo-front-matter'
-import { join, relative } from 'path'
+import { join, relative, resolve } from 'path'
 import {
   CategoryPath,
   FrontMatterData,
@@ -63,6 +63,14 @@ export class HexoAgent {
   private initPromise?: Promise<void>
   private exitPromise?: Promise<void>
 
+  private safeResolve(baseDir: string, relativePath: string): string {
+    const resolved = resolve(baseDir, relativePath)
+    if (!resolved.startsWith(resolve(baseDir))) {
+      throw new Error(`Path traversal detected: ${relativePath}`)
+    }
+    return resolved
+  }
+
   private async ensureReady(): Promise<void> {
     if (this.exitPromise) {
       await this.exitPromise
@@ -76,7 +84,7 @@ export class HexoAgent {
   }
 
   private readPostFrontMatter(sourcePath: string): FrontMatterDocument {
-    const filePath = join(this.hexo.source_dir, sourcePath)
+    const filePath = this.safeResolve(this.hexo.source_dir, sourcePath)
     if (!existsSync(filePath)) {
       throw new Error(`File not found: ${filePath}`)
     }
@@ -93,7 +101,7 @@ export class HexoAgent {
   }
 
   private writePostFrontMatter(sourcePath: string, document: FrontMatterDocument): void {
-    const filePath = join(this.hexo.source_dir, sourcePath)
+    const filePath = this.safeResolve(this.hexo.source_dir, sourcePath)
     const payload = {
       ...document.data,
       _content: document.content,
@@ -671,7 +679,7 @@ export class HexoAgent {
       throw new Error(`Asset not found: ${assetId}`)
     }
 
-    const assetPath = join(this.hexo.base_dir, asset._id)
+    const assetPath = this.safeResolve(this.hexo.base_dir, asset._id)
 
     if (!existsSync(assetPath)) {
       throw new Error(`Asset file not found: ${assetPath}`)
@@ -704,7 +712,7 @@ export class HexoAgent {
     }
 
     try {
-      const filePath = join(this.hexo.source_dir, sourcePath)
+      const filePath = this.safeResolve(this.hexo.source_dir, sourcePath)
 
       if (!existsSync(filePath)) {
         throw new Error(`File not found: ${filePath}`)
@@ -736,7 +744,7 @@ export class HexoAgent {
     try {
       console.log('Saving content to file. Path:', sourcePath, 'Content length:', content.length)
 
-      const filePath = join(this.hexo.source_dir, sourcePath)
+      const filePath = this.safeResolve(this.hexo.source_dir, sourcePath)
       const dirPath = filePath.substring(0, filePath.lastIndexOf('/'))
 
       // Ensure the directory exists
@@ -822,7 +830,7 @@ export class HexoAgent {
 
     try {
       console.log('Deleting file:', sourcePath)
-      const filePath = join(this.hexo.source_dir, sourcePath)
+      const filePath = this.safeResolve(this.hexo.source_dir, sourcePath)
 
       if (!existsSync(filePath)) {
         throw new Error(`File not found: ${filePath}`)
@@ -1066,7 +1074,7 @@ export class HexoAgent {
     if (!sourcePath.startsWith('_drafts')) {
       return ''
     }
-    const oldPath = join(this.hexo.source_dir, sourcePath)
+    const oldPath = this.safeResolve(this.hexo.source_dir, sourcePath)
     const newPath = oldPath.replace('_drafts', '_posts')
     console.log('oldPath is: ', oldPath, ' and newPath is: ', newPath)
 
