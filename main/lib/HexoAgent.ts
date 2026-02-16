@@ -690,7 +690,7 @@ export class HexoAgent {
       await asset.remove()
       await this.hexo.database.save()
     } catch (error) {
-      console.error(`Failed to delete asset ${assetId}:`, error)
+      console.error('Failed to delete asset:', assetId, error)
       throw error
     }
 
@@ -721,7 +721,7 @@ export class HexoAgent {
       const buffer = readFileSync(filePath)
       return buffer.toString()
     } catch (error) {
-      console.error(`Error reading file at ${sourcePath}:`, error)
+      console.error('Error reading file at:', sourcePath, error)
       throw error
     }
   }
@@ -755,7 +755,7 @@ export class HexoAgent {
       writeFileSync(filePath, content)
       await this.updateCache()
     } catch (error) {
-      console.error(`Error saving content to ${sourcePath}:`, error)
+      console.error('Error saving content to:', sourcePath, error)
       throw error
     }
   }
@@ -847,7 +847,7 @@ export class HexoAgent {
       await this.updateCache()
       console.log('File deleted successfully:', sourcePath)
     } catch (error) {
-      console.error(`Error deleting file ${sourcePath}:`, error)
+      console.error('Error deleting file:', sourcePath, error)
       throw error
     }
   }
@@ -1080,11 +1080,11 @@ export class HexoAgent {
 
     try {
       renameSync(oldPath, newPath)
-      console.log(`Successfully moved file from ${oldPath} to ${newPath}`)
+      console.log('Successfully moved file from', oldPath, 'to', newPath)
       await this.updateCache()
       return relative(this.hexo.source_dir, newPath)
     } catch (error) {
-      console.error(`Error moving file from ${oldPath} to ${newPath}:`, error)
+      console.error('Error moving file from', oldPath, 'to', newPath, error)
       return ''
     }
   }
