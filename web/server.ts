@@ -2,6 +2,7 @@ import Module from 'node:module'
 import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 import Fastify from 'fastify'
+import rateLimit from '@fastify/rate-limit'
 import fastifyStatic from '@fastify/static'
 import { loadConfig } from './config'
 import authPlugin from './auth'
@@ -64,6 +65,12 @@ async function main() {
 
   // Register auth plugin
   await app.register(authPlugin, { config })
+
+  // Register rate limiting for all API routes
+  await app.register(rateLimit, {
+    max: 100,
+    timeWindow: '1 minute',
+  })
 
   // Register API routes
   await app.register(routesPlugin, { agent, fsAgent, config })
