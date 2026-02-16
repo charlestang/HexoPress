@@ -42,9 +42,10 @@ context: |
   - 所有检查必须通过才能提交
 
   ## Git Workflow
-  - 在 main 分支上开发，通过 rebase 保持线性提交历史
+  - 默认在 `main` 分支开发；当多个 Agent/多人并行开发，或改动风险较高时，使用独立分支
+  - 保持线性提交历史（优先 rebase，避免不必要的 merge commit）
+  - 使用分支时：push 前运行 `git pull --rebase` 以保持与最新主干对齐
   - 每个 commit 应该是一个完整的、可运行的单元
-  - push 前：运行 `git pull --rebase` 确保分支是最新的
   - commit 后：用 `git status --porcelain` 验证工作目录干净
 
   ## Domain Context

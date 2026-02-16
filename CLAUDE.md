@@ -82,4 +82,4 @@ npm run make         # 构建可分发安装包
 - **样式**：新页面优先使用 UnoCSS（`src/uno.config.ts`）；旧页面可能仍用旧样式体系，同一页面内不要混用
 - **多语言**：所有用户可见的界面文案必须使用 `vue-i18n`，禁止硬编码字符串。语言包位于 `src/locales/en.json` 和 `src/locales/zh-CN.json`，按功能模块分命名空间。组件中使用 `const { t } = useI18n()` 后通过 `t('namespace.key')` 引用。新增 key 需同时更新两个语言包
 - **测试**：测试文件放在源码同级的 `__tests__/` 目录下，使用 `@vue/test-utils` + jsdom。Element Plus 组件的 stub 需要正确定义 props/emit 类型，否则会产生 TS 错误
-- **Git 工作流**：保持线性提交历史，PR 前先 rebase 主干，合并后删除分支，每个 commit 应是完整可运行的单元
+- **Git 工作流**：默认在 `main` 分支开发；多 Agent/多人并行或高风险改动时使用独立分支。保持线性提交历史（优先 rebase）；使用分支时 PR 前 rebase 最新 `main`，合并后删除分支。每个 commit 应是完整可运行的单元

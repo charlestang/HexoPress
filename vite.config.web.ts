@@ -10,11 +10,8 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-
 // Vite config for HexoPress Web mode (no Electron dependencies)
 export default defineConfig({
-  root: __dirname,
   base: '/',
   build: {
     outDir: 'dist/web',
@@ -47,15 +44,15 @@ export default defineConfig({
       dts: 'types/components.d.ts',
     }),
     VueI18nPlugin({
-      include: resolve(__dirname, './src/locales/**'),
+      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
     }),
   ],
   resolve: {
     preserveSymlinks: true,
     alias: {
-      '@/bridge': resolve(__dirname, 'src/bridge/web.ts'),
-      '@': resolve(__dirname, 'src'),
-      '@shared': resolve(__dirname, 'shared'),
+      '@/bridge': fileURLToPath(new URL('./src/bridge/web.ts', import.meta.url)),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@shared': fileURLToPath(new URL('./shared', import.meta.url)),
     },
   },
   clearScreen: false,

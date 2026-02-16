@@ -18,6 +18,7 @@ declare global {
   } | null
 
   type SiteInfo = {
+    basePath: string
     name: string
     version: string
     hexoVersion: string
@@ -189,6 +190,20 @@ declare global {
   }
 
   interface ISite {
+    createFile: (type: string, title: string, slug: string, content: string) => Promise<string>
+    deleteAsset: (assetId: string) => Promise<void>
+    deleteFile: (path: string) => Promise<void>
+    getAssetReferences: (path: string) => Promise<string[]>
+    getAssets: () => Promise<Asset[]>
+    getCategories: () => Promise<Category[]>
+    getContent: (path: string) => Promise<string>
+    getDarkMode: () => Promise<string>
+    getFileInfo: (path: string) => Promise<AssetFileInfo | null>
+    getHeatMap: () => Promise<DateEntry[]>
+    getHexoConfig: () => Promise<HexoConfig>
+    getPostDocument: (sourcePath: string) => Promise<PostDocument>
+    getPostMeta: (sourcePath: string) => Promise<PostMeta>
+    getPostMonths: () => Promise<string[]>
     getPosts: (
       published?: boolean,
       draft?: boolean,
@@ -201,47 +216,33 @@ declare global {
       orderBy?: string,
       order?: string,
     ) => Promise<PostsResults>
-    getPostMonths: () => Promise<string[]>
-    getCategories: () => Promise<Category[]>
-    getTags: () => Promise<Tag[]>
-    getAssets: () => Promise<Asset[]>
-    deleteAsset: (assetId: string) => Promise<void>
-    getStats: () => Promise<Stats>
+    getReadDir: (path: string) => Promise<FileEntry[]>
     getSiteInfo: () => Promise<SiteInfo>
-    getHeatMap: () => Promise<DateEntry[]>
-    refreshSite: () => Promise<void>
-    getHexoConfig: () => Promise<HexoConfig>
-    openDirDialog: () => Promise<DialogResult>
-    getContent: (path: string) => Promise<string>
-    saveContent: (path: string, content: string) => Promise<void>
-    createFile: (type: string, title: string, slug: string, content: string) => Promise<string>
+    getStats: () => Promise<Stats>
+    getSystemLocale: () => Promise<string>
+    getTags: () => Promise<Tag[]>
+    initializeAgent: (path: string) => Promise<boolean>
     moveFile: (sourcePath: string, content: string) => Promise<string>
-    deleteFile: (path: string) => Promise<void>
+    mv: (from: string, to: string) => Promise<boolean>
+    onVaultPathChanged: (callback: (newValue: string) => void) => void
+    openDirDialog: () => Promise<DialogResult>
+    openUrl: (url: string) => Promise<void>
+    refreshSite: () => Promise<void>
+    removeCategoryFromPosts: (
+      categoryId: string,
+      sources: string[],
+    ) => Promise<BulkCategoryOperationResult>
+    removeTagFromPost: (sourcePath: string, tagId: string) => Promise<void>
     replaceCategoryForPosts: (
       categoryId: string,
       sources: string[],
       replacements: string[][],
     ) => Promise<BulkCategoryOperationResult>
-    removeCategoryFromPosts: (
-      categoryId: string,
-      sources: string[],
-    ) => Promise<BulkCategoryOperationResult>
-    getPostMeta: (sourcePath: string) => Promise<PostMeta>
-    updatePostMeta: (sourcePath: string, meta: PostMeta) => Promise<void>
-    getPostDocument: (sourcePath: string) => Promise<PostDocument>
-    savePostDocument: (sourcePath: string, document: PostDocument) => Promise<void>
-    removeTagFromPost: (sourcePath: string, tagId: string) => Promise<void>
-    getSystemLocale: () => Promise<string>
-    openUrl: (url: string) => Promise<void>
-    getReadDir: (path: string) => Promise<FileEntry[]>
-    mv: (from: string, to: string) => Promise<boolean>
+    saveContent: (path: string, content: string) => Promise<void>
     saveImage: (path: string, content: ArrayBuffer) => Promise<void>
-    getFileInfo: (path: string) => Promise<AssetFileInfo | null>
-    getAssetReferences: (path: string) => Promise<string[]>
-    onVaultPathChanged: (callback: (newValue: string) => void) => void
-    initializeAgent: (path: string) => Promise<boolean>
+    savePostDocument: (sourcePath: string, document: PostDocument) => Promise<void>
     setDarkMode: (darkMode: string) => Promise<void>
-    getDarkMode: () => Promise<string>
+    updatePostMeta: (sourcePath: string, meta: PostMeta) => Promise<void>
   }
 
   interface Window {

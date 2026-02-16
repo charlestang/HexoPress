@@ -110,11 +110,14 @@ router.beforeEach(async (to) => {
   // Web mode: skip directory check (path is configured server-side)
   if (isWebMode) {
     if (to.name !== 'login' && !appStore.isAgentInitialized) {
-      // In web mode, basePath is managed by the server; just initialize the agent
       try {
         const result = await site.initializeAgent('')
         if (result) {
           appStore.setAgentInitialized()
+          const info = await site.getSiteInfo()
+          if (info?.basePath) {
+            appStore.setBasePath(info.basePath)
+          }
         }
       } catch {
         // Agent init failed (e.g. server not ready) — continue anyway

@@ -44,5 +44,5 @@
 - [x] 6.2 验证 `npm run web:dev` 可正常启动并通过 `http://localhost:8081` 访问
 - [x] 6.3 验证登录鉴权流程（登录、登出、未认证拦截）
 - [x] 6.4 验证性能优化（使用单例，避免重复初始化）
-- [ ] 6.5 验证 `npm run web:build` 输出完整的 SPA 到 `dist/web/`
+- [x] 6.5 验证 `npm run web:build` 输出完整的 SPA 到 `dist/web/`
 - [ ] 6.6 验证文章 CRUD、分类、标签、媒体库等核心功能在 Web 模式下正常工作

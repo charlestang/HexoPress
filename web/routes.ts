@@ -112,7 +112,7 @@ async function routesPlugin(fastify: FastifyInstance, opts: RouteOpts) {
     if (!q.path) {
       throw { statusCode: 400, message: 'Query param "path" is required' }
     }
-    return agent.getContent(q.path)
+    return { content: agent.getContent(q.path) }
   })
 
   // POST /api/post/save
@@ -229,7 +229,7 @@ async function routesPlugin(fastify: FastifyInstance, opts: RouteOpts) {
   fastify.post('/api/fs/saveImage', async (request: FastifyRequest) => {
     const body = request.body as { path: string; content: string }
     const buffer = Buffer.from(body.content, 'base64')
-    await fsAgent.saveImage(body.path, buffer)
+    await fsAgent.saveImage(body.path, buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength))
     await agent.generate()
     return { ok: true }
   })

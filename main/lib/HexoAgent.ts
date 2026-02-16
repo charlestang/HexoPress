@@ -493,6 +493,7 @@ export class HexoAgent {
     const pkgJsonData = readFileSync(pkgJsonPath, 'utf-8')
     const pkgJson = JSON.parse(pkgJsonData)
     return {
+      basePath: this.rootPath,
       name: pkgJson.name,
       version: pkgJson.version,
       hexoVersion: pkgJson.hexo?.version,
@@ -765,8 +766,21 @@ export class HexoAgent {
       console.log('Updating Hexo cache...')
       await this.hexo.source.process()
 
+      // Rebuild binary relation indexes so tag/category counts are correct
+      const hexo = this.hexo as Hexo & {
+        _binaryRelationIndex: {
+          post_tag: { load: () => void }
+          post_category: { load: () => void }
+        }
+      }
+      hexo._binaryRelationIndex.post_tag.load()
+      hexo._binaryRelationIndex.post_category.load()
+
       this.purgeNullRecords('PostCategory')
       this.purgeNullRecords('PostTag')
+
+      // Invalidate locals cache so locals.get('posts') re-reads from database
+      this.hexo.locals.invalidate()
 
       await this.hexo.database.save()
 
@@ -1011,6 +1025,7 @@ export class HexoAgent {
       const layout = directory === '_drafts' ? 'draft' : 'post'
 
       const data = {
+        title,
         path: '',
         slug: '',
         layout,
@@ -1029,6 +1044,8 @@ export class HexoAgent {
 
       if (content && content.trim().length > 0) {
         await this.saveContent(relativePath, content)
+      } else {
+        await this.updateCache()
       }
 
       return relativePath

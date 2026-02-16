@@ -112,7 +112,10 @@ export const site: SiteBridge = {
 
   getHexoConfig: () => apiGet<HexoConfig>('/api/site/hexoConfig'),
 
-  getContent: (path: string) => apiGet<string>('/api/post/content', { path }),
+  getContent: async (path: string) => {
+    const res = await apiGet<{ content: string }>('/api/post/content', { path })
+    return res.content
+  },
 
   getPostMeta: (sourcePath: string) => apiGet<PostMeta>('/api/post/meta', { path: sourcePath }),
 
@@ -135,11 +138,15 @@ export const site: SiteBridge = {
 
   saveContent: (path: string, content: string) => apiPostVoid('/api/post/save', { path, content }),
 
-  createFile: (type: string, title: string, slug: string, content: string) =>
-    apiPost<string>('/api/post/create', { type, title, slug, content }),
+  createFile: async (type: string, title: string, slug: string, content: string) => {
+    const res = await apiPost<{ path: string }>('/api/post/create', { type, title, slug, content })
+    return res.path
+  },
 
-  moveFile: (sourcePath: string, content: string) =>
-    apiPost<string>('/api/post/move', { sourcePath, content }),
+  moveFile: async (sourcePath: string, content: string) => {
+    const res = await apiPost<{ path: string }>('/api/post/move', { sourcePath, content })
+    return res.path
+  },
 
   deleteFile: (path: string) => apiPostVoid('/api/post/delete', { path }),
 
