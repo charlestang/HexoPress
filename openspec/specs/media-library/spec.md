@@ -24,10 +24,17 @@ MediaLibraryView MUST 以标签页区分图片与文件两类资产，图片按�
 ### Requirement: Delete Asset With Confirmation
 用户 MUST 能对支持格式（`.png/.jpg/.jpeg/.webp/.gif/.svg`）的资产执行删除操作，删除前需二次确认，执行中防止重复提交。
 
-#### Scenario: Successful deletion refreshes list
+#### Scenario: Confirmation dialog warns about references
 - **GIVEN** 用户点击某资产的"删除"按钮
-- **WHEN** 确认弹窗中点击确定
+- **WHEN** 确认弹窗弹出
+- **THEN** 弹窗文案 MUST 包含文章引用风险提示（"可能有文章引用，删除后导致图片显示为空白"）
+- **AND** 用户取消时 MUST 不触发任何删除请求
+
+#### Scenario: Successful deletion refreshes list
+- **GIVEN** 用户在确认弹窗中点击确定
+- **WHEN** 删除执行
 - **THEN** 系统 MUST 将该资产按钮置为 Loading 并禁用，调用 `window.site.deleteAsset(id)`
+- **AND** 后端 MUST 删除磁盘文件并更新 Hexo 资产数据库，使后续 `getAssets()` 不再返回该记录
 - **AND** 成功后 MUST 展示成功提示并重新调用 `getAssets()` 刷新列表
 - **AND** 失败时 MUST 展示含原始错误信息的错误提示，并恢复按钮可用状态
 
