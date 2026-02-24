@@ -38,7 +38,6 @@
 | `openUrl(url)` | `shell:openUrl` | `Promise<void>` | 委托系统默认浏览器打开外部链接。【F:main/main.ts†L56-L57】 |
 | `getDarkMode()` | `dark:get` | `Promise<string>` | 返回当前主题模式（`light`/`dark`/`system`），由主进程的 `nativeTheme` 提供。【F:main/main.ts†L74-L77】 |
 | `setDarkMode(value)` | `dark:set` | `Promise<void>` | 设置主进程 `nativeTheme.themeSource`，用于响应用户的主题切换。【F:main/main.ts†L77-L78】【F:src/stores/app.ts†L24-L52】 |
-| `onVaultPathChanged(callback)` | `configChanged:vaultPath`（事件） | `void` | 监听主进程推送的博客路径变更，目前用于未来的设置同步场景；事件在 `preload` 中通过 `ipcRenderer.on` 注册。【F:main/preload.ts†L26-L28】 |
 
 ## 使用建议
 1. **类型优先**：在 TS 代码中直接引入 `types/local.d.ts` 中的类型别名，可以享受参数与返回值的完整提示与编译期校验。【F:types/local.d.ts†L42-L104】

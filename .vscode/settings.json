@@ -37,6 +37,8 @@
     "topbar",
     "tsbuildinfo",
     "uncategorized",
-    "unplugin"
+    "unocss",
+    "unplugin",
+    "VITE"
   ]
 }

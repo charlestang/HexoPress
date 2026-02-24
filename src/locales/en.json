@@ -327,7 +327,8 @@
   "setup": {
     "choose": "Choose",
     "confirm": "Confirm",
-    "selectDirTips": "Please enter the root directory of your Hexo blog. HexoPress will scan for blog posts, drafts, and media files contained in the directory."
+    "selectDirTips": "Please enter the root directory of your Hexo blog. HexoPress will scan for blog posts, drafts, and media files contained in the directory.",
+    "webModeInfo": "Blog directory is configured on the server side."
   },
   "login": {
     "subtitle": "Sign in to continue",

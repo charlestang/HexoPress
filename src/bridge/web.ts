@@ -192,7 +192,4 @@ export const site: SiteBridge = {
 
   setDarkMode: () => Promise.resolve(),
 
-  onVaultPathChanged: () => {
-    // No-op in web mode: vault path changes are not applicable
-  },
 }

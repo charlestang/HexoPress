@@ -46,7 +46,7 @@ function selectPath() {
         <h2>{{ t('common.setup') }}</h2>
         <template v-if="isWebMode">
           <el-alert type="info" show-icon :closable="false">
-            {{ t('setup.webModeInfo', 'Blog directory is configured on the server side.') }}
+            {{ t('setup.webModeInfo') }}
           </el-alert>
         </template>
         <template v-else>

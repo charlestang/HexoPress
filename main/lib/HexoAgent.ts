@@ -2,7 +2,7 @@ import { existsSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSy
 import Hexo from 'hexo'
 import util from 'hexo-util'
 import { parse as parseFrontMatter, stringify as stringifyFrontMatter } from 'hexo-front-matter'
-import { join, relative, resolve } from 'path'
+import { join, relative, resolve, sep } from 'path'
 import {
   CategoryPath,
   FrontMatterData,
@@ -65,7 +65,8 @@ export class HexoAgent {
 
   private safeResolve(baseDir: string, relativePath: string): string {
     const resolved = resolve(baseDir, relativePath)
-    if (!resolved.startsWith(resolve(baseDir))) {
+    const base = resolve(baseDir)
+    if (resolved !== base && !resolved.startsWith(base + sep)) {
       throw new Error(`Path traversal detected: ${relativePath}`)
     }
     return resolved

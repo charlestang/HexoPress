@@ -224,7 +224,6 @@ declare global {
     initializeAgent: (path: string) => Promise<boolean>
     moveFile: (sourcePath: string, content: string) => Promise<string>
     mv: (from: string, to: string) => Promise<boolean>
-    onVaultPathChanged: (callback: (newValue: string) => void) => void
     openDirDialog: () => Promise<DialogResult>
     openUrl: (url: string) => Promise<void>
     refreshSite: () => Promise<void>

@@ -80,9 +80,9 @@ app.whenReady().then(async () => {
   ipcMain.handle('fs:fileInfo', (_event, path) => fsAgent.getFileInfo(path))
   ipcMain.handle('fs:mv', (_event, from, to) => fsAgent.mv(from, to))
   ipcMain.handle('fs:readdir', (_event, path) => fsAgent.readdir(path))
-  ipcMain.handle('fs:saveImage', (_event, path, content) => {
-    fsAgent.saveImage(path, content)
-    agent.generate()
+  ipcMain.handle('fs:saveImage', async (_event, path, content) => {
+    await fsAgent.saveImage(path, content)
+    await agent.generate()
   })
 
   // Hexo configuration
