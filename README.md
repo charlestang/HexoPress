@@ -49,6 +49,10 @@ English | [简体中文](./README_zh.md)
     - [3. Editor](#3-editor)
     - [4. Categories Management](#4-categories-management)
     - [5. Tags Management](#5-tags-management)
+    - [6. Category Detail](#6-category-detail)
+    - [7. Tag Posts Dialog](#7-tag-posts-dialog)
+    - [8. Media Library](#8-media-library)
+    - [9. Media Detail](#9-media-detail)
   - [VI. Getting Started from Source Code](#vi-getting-started-from-source-code)
     - [1. Clone the source code](#1-clone-the-source-code)
     - [2. Running Environment](#2-running-environment)
@@ -214,6 +218,26 @@ _Tree structure for intuitive category management_
 ![Tags Management][screenshot-tags]
 _Clear tag overview and statistics_
 
+### 6. Category Detail
+
+![Category Detail][screenshot-category-management]
+_View all posts under a category, with bulk reassign and bulk remove operations_
+
+### 7. Tag Posts Dialog
+
+![Tag Posts Dialog][screenshot-tag-management]
+_Browse posts under a tag in-app, with inline tag removal_
+
+### 8. Media Library
+
+![Media Library][screenshot-media-library]
+_Image assets grouped by name variants, with card preview_
+
+### 9. Media Detail
+
+![Media Detail][screenshot-media-file-manage]
+_Full metadata, all size variants, reference lookup, and per-variant delete_
+
 ---
 
 ## VI. Getting Started from Source Code
@@ -307,9 +331,13 @@ npm run web:build    # Build web mode for production
 [npm-badge]: https://img.shields.io/badge/NPM-%23CB3837.svg?logo=npm&logoColor=white
 [releases]: https://github.com/charlestang/HexoPress/releases
 [screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png
+[screenshot-category-management]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/category-management.png
 [screenshot-dashboard]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard.png
 [screenshot-editor]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png
+[screenshot-media-file-manage]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/media-file-manage.png
+[screenshot-media-library]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/media-library.png
 [screenshot-postlist]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist.png
+[screenshot-tag-management]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tag-management.png
 [screenshot-tags]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags.png
 [vite-badge]: https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white
 [vuejs-badge]: https://img.shields.io/badge/Vue.js-35495E?logo=vue.js&logoColor=4FC08D

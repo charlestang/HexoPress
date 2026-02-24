@@ -49,6 +49,10 @@
     - [3. 文章编辑器](#3-文章编辑器)
     - [4. 分类管理](#4-分类管理)
     - [5. 标签管理](#5-标签管理)
+    - [6. 分类详情](#6-分类详情)
+    - [7. 标签文章弹窗](#7-标签文章弹窗)
+    - [8. 媒体库](#8-媒体库)
+    - [9. 图片详情](#9-图片详情)
   - [六、从源码开始](#六从源码开始)
     - [1. 克隆源代码](#1-克隆源代码)
     - [2. 运行环境](#2-运行环境)
@@ -214,6 +218,26 @@ _树形结构，直观管理分类_
 ![Tags Management][screenshot-tags]
 _标签一览，统计清晰_
 
+### 6. 分类详情
+
+![Category Detail][screenshot-category-management]
+_查看某分类下的所有文章，支持批量修改分类归属和批量移除分类标签_
+
+### 7. 标签文章弹窗
+
+![Tag Posts Dialog][screenshot-tag-management]
+_在应用内直接浏览某标签下的文章，支持行内移除标签_
+
+### 8. 媒体库
+
+![Media Library][screenshot-media-library]
+_图片资源按文件名变体分组，卡片式预览_
+
+### 9. 图片详情
+
+![Media Detail][screenshot-media-file-manage]
+_查看完整元数据、所有尺寸变体、引用情况，并支持逐个删除_
+
 ---
 
 ## 六、从源码开始
@@ -306,10 +330,14 @@ npm run web:build    # 构建 Web 模式生产版本
 [nodejs-badge]: https://img.shields.io/badge/node.js-6DA55F?logo=node.js&logoColor=white
 [npm-badge]: https://img.shields.io/badge/NPM-%23CB3837.svg?logo=npm&logoColor=white
 [releases]: https://github.com/charlestang/HexoPress/releases
-[screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories.png
+[screenshot-categories]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/categories-cn.png
+[screenshot-category-management]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/category-management-cn.png
 [screenshot-dashboard]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/dashboard-cn.png
-[screenshot-editor]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor.png
+[screenshot-editor]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/editor-cn.png
+[screenshot-media-file-manage]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/media-file-manage-cn.png
+[screenshot-media-library]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/media-library-cn.png
 [screenshot-postlist]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/postlist-cn.png
+[screenshot-tag-management]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tag-management-cn.png
 [screenshot-tags]: https://github.com/charlestang/HexoPress/blob/main/docs/screenshots/tags-cn.png
 [vite-badge]: https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white
 [vuejs-badge]: https://img.shields.io/badge/Vue.js-35495E?logo=vue.js&logoColor=4FC08D
