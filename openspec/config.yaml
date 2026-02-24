@@ -15,12 +15,11 @@ context: |
   - **测试**：Vitest with jsdom 环境
 
   ## Architecture
-  - **主进程服务**：
-    - HexoAgent：封装 Hexo CLI，负责缓存加载、文章/分类/标签/统计的 CRUD 操作
-    - FsAgent：source/ 目录下的文件操作（readdir、mv、saveImage）
-    - HttpServer：Fastify 服务器，在 2357 端口暴露 public/ 目录
-  - **渲染进程**：标准的 Vue 3 SPA，使用 Pinia stores 和 Vue Router
-  - **IPC 通信**：所有主进程-渲染进程通信通过 ipcMain.handle/window.site.* 桥接
+  完整架构说明见 `docs/architecture-overview.md`。关键约束：
+  - 支持 Electron mode（IPC）和 Web mode（HTTP）两种运行模式，共用渲染进程代码
+  - 渲染进程通过 `src/bridge/` 抽象层调用后端，不直接使用 `window.site`
+  - 新增后端方法需同步修改六处：HexoAgent/FsAgent → types/local.d.ts → src/bridge/web.ts → web/routes.ts → main/main.ts → main/preload.ts
+  - 主进程服务：HexoAgent（Hexo CLI 封装）、FsAgent（source/ 文件操作）、HttpServer（静态资源预览，仅 Electron mode）
 
   ## Code Conventions
   - 遵循 CLAUDE.md 和 docs/CODING_STANDARD.md 的编码规范

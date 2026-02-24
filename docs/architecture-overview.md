@@ -1,44 +1,116 @@
-# HexoPress 架构与数据流指南
+# HexoPress 架构概览
 
-## 总览
-HexoPress 以 Electron 作为容器，主进程负责窗口管理与 Hexo 数据服务，渲染进程使用 Vue 3 + Pinia + Vue Router 构建界面。主进程在启动时注册所有 IPC 管道并创建浏览器窗口，随后渲染进程加载 Vue 应用，按需请求 Hexo 数据并渲染各个功能页面。【F:main/main.ts†L14-L78】【F:src/renderer.ts†L1-L27】
+> 本文档是 HexoPress 架构的权威参考，供人类开发者和 AI 工具深度查阅。
+> AI 工具的日常行为约束（命令、规范、陷阱）见各自的指引文件（CLAUDE.md / AGENTS.md / GEMINI.md）。
 
-整个系统围绕三个核心服务展开：
+## 运行模式
 
-- **HexoAgent**：封装 Hexo CLI，负责初始化、缓存加载以及文章、分类、标签、统计等数据的读写。
-- **FsAgent**：负责 Hexo `source/` 目录下的文件枚举、移动与媒体写入。
-- **HttpServer**：包装 Fastify，将 `public/` 目录暴露在本地 2357 端口，用于预览生成后的静态资源。
+HexoPress 支持两种运行模式，共用同一套渲染进程代码：
 
-下列步骤描述了典型的启动与数据流转顺序：
+```
+Electron mode（桌面应用）
+  main/main.ts + main/preload.ts
+  渲染进程 ←IPC→ 主进程服务
 
-1. 渲染层选择博客根目录，并通过 `window.site.initializeAgent` 通知主进程绑定 Hexo 工作目录。
-2. 主进程初始化 HexoAgent、FsAgent、HttpServer，完成 Hexo 缓存加载与静态资源服务准备。
-3. 渲染层通过 `window.site` 调用 IPC 接口获取文章列表、分类树、站点信息等数据，更新 Pinia Store 后驱动界面渲染。
+Web mode（服务器部署）
+  web/server.ts + web/routes.ts
+  渲染进程 ←HTTP→ Fastify API
+```
 
-## 启动流程与生命周期
+两种模式的切换由 `src/bridge/` 抽象层在编译时处理，渲染进程代码无需感知底层协议。
 
-### Electron 主进程
-- `app.whenReady()` 时注册所有与站点、文件系统、主题等相关的 `ipcMain.handle` 处理器，并在所有处理器准备完毕后创建主窗口。【F:main/main.ts†L36-L76】
-- 主窗口加载 Vite 构建的渲染进程入口，如果处于开发模式会自动打开 DevTools，方便调试。【F:main/main.ts†L31-L35】
-- 应用退出与激活流程遵循 Electron 约定：非 macOS 平台在最后一个窗口关闭后退出；macOS 在 Dock 重新激活时复用窗口。【F:main/main.ts†L80-L95】
+## 进程与模块结构
 
-### HexoAgent 生命周期
-- 每次调用 `init` 都会根据传入路径创建新的 Hexo 实例；如果之前已经初始化过，则先调用 `hexo.exit()` 释放旧实例，再启动新的实例，确保切换博客目录时不会复用旧缓存。【F:main/lib/HexoAgent.ts†L9-L37】
-- 初始化过程会先执行 `hexo.init()`，紧接着 `hexo.load()`，并注册一个 Markdown 渲染器以保持数据库缓存同步。整个过程以 `initPromise` 与 `exitPromise` 记录，在后续接口访问前统一等待，避免读取未完成的缓存。【F:main/lib/HexoAgent.ts†L28-L44】【F:main/lib/HexoAgent.ts†L47-L52】
-- 文章列表、热力图、月份归档等读取方法都会在访问前 `await` 初始化承诺，确保拿到最新的 Hexo 本地缓存。过滤与排序逻辑复用 Hexo 内置的 `locals` 数据结构，并根据查询条件筛选出结果列表。【F:main/lib/HexoAgent.ts†L54-L136】
+### Electron 主进程（`main/`）
 
-### FsAgent 与静态资源服务
-- FsAgent 在主进程完成博客根目录绑定时初始化，后续所有相对路径都指向 `source/` 目录。它会过滤隐藏文件，并以简化后的 `relativePath` 与类型返回目录项，供媒体管理器使用。【F:main/lib/FsAgent.ts†L9-L31】
-- 在执行 `mv` 或 `saveImage` 时，会先通过 `assureDir` 保证目标目录存在，再执行重命名或写入操作，避免因为目录缺失导致的失败。【F:main/lib/FsAgent.ts†L33-L58】
-- HttpServer 每次 `init` 时都会重新注册 Fastify 静态插件并监听 2357 端口，如果已有实例则先关闭旧服务，以便在切换博客目录时正确指向新的 `public/` 输出。【F:main/lib/HttpServer.ts†L6-L39】
+- **`main/main.ts`**：注册所有 `ipcMain.handle` 处理器，创建浏览器窗口。
+- **`main/preload.ts`**：通过 `contextBridge.exposeInMainWorld('site', {...})` 将 IPC 方法以 `window.site.*` 暴露给渲染进程。
+- **`main/lib/HexoAgent.ts`**：封装 Hexo CLI，负责初始化、缓存加载、文章/分类/标签/统计的增删改查。使用自定义加载流程（`loadDatabase` + `source.process` + `theme.process`）跳过 `_generate`，避免全量渲染耗时。
+- **`main/lib/FsAgent.ts`**：`source/` 目录下的文件操作（readdir、mv、saveImage、getFileInfo、findAssetReferences）。所有路径操作限制在 `source/` 目录内，防止路径穿越。
+- **`main/lib/HttpServer.ts`**：Fastify 静态服务器，监听 2357 端口，将 `public/` 目录暴露用于图片预览（仅 Electron mode）。
 
-## 渲染进程结构
-- 渲染入口 `renderer.ts` 创建 Vue 应用并依次安装国际化、路由与 Pinia，然后挂载到 DOM。【F:src/renderer.ts†L1-L27】
-- 路由定义位于 `src/router/index.ts`，全局导航守卫的逻辑是：如果没有选择博客目录，则进入 `/setup` 页面，引导设置；如果博客目录已经设置，但是主进程中的代理，也就是 `FsAgent` 没有初始化完毕，则先尝试去初始化该 Agent，然后再进入目标页面，否则会停留在 `/setup` 页面。守卫通过 `window.site.initializeAgent` 调用主进程，并在成功后标记 `appStore.isAgentInitialized`，驱动后续数据拉取。【F:src/router/index.ts†L1-L117】
-- 全局状态由 `appStore` 管理，负责语言、暗色模式、Hexo 根目录等偏好持久化，并在代理初始化完成后自动请求 Hexo 配置与站点信息缓存到 Store。【F:src/stores/app.ts†L1-L89】
+### Web 服务端（`web/`）
 
-## 数据读取与写入路径
-- 渲染层通过 `window.site` 暴露的接口发起请求，例如文章列表 (`site:posts`)、分类 (`site:categories`) 和媒体目录 (`fs:readdir`) 等，这些接口与主进程中的 `ipcMain.handle` 一一对应，形成单向调用链。【F:main/preload.ts†L1-L33】【F:main/main.ts†L36-L76】
-- 写入流程（如保存文章、移动文件、上传图片）同样通过 IPC 调用 HexoAgent 或 FsAgent，写入完成后可以调用 `site:refresh` 或直接重新查询以获取最新数据。【F:main/preload.ts†L15-L33】【F:main/main.ts†L45-L63】
+- **`web/server.ts`**：Web mode 入口，创建 Fastify 实例，注册鉴权、限流、静态文件、API 路由插件，启动 HTTP 服务。
+- **`web/routes.ts`**：将所有 `HexoAgent` 和 `FsAgent` 能力映射为 REST API（`/api/*`），与 Electron IPC 接口一一对应。Electron 特有能力（`openDirDialog`、`setDarkMode` 等）提供 stub 实现。
+- **`web/auth.ts`**：JWT 鉴权插件，保护所有 `/api/*` 路由。
+- **`web/config.ts`**：从 `hexopress.config.json` 加载服务端配置（hexoDir、port、username、password）。
 
-通过以上分层，HexoPress 将 Hexo CLI 的复杂度隔离在主进程服务中，渲染层只需关心 `window.site` 提供的契约，即可实现富客户端的内容管理体验。
+### Bridge 抽象层（`src/bridge/`）
+
+渲染进程通过 `import { site } from '@/bridge'` 调用后端能力，编译时由 Vite alias 决定实现：
+
+```
+src/bridge/types.ts      → SiteBridge = ISite（类型真相）
+src/bridge/electron.ts   → export const site = window.site
+src/bridge/web.ts        → export const site: SiteBridge = { ...fetch 实现 }
+src/bridge/index.ts      → IDE fallback（实际被 alias 覆盖）
+
+vite.config.renderer.ts  → '@/bridge' → electron.ts
+vite.config.web.ts       → '@/bridge' → web.ts
+```
+
+`web.ts` 实现 `SiteBridge` 接口，TypeScript 编译器强制覆盖所有方法，是四层契约中唯一有静态保障的一层。详见 `docs/adr-api-contract-maintenance.md`。
+
+### 渲染进程（`src/`）
+
+- **`src/renderer.ts`**：Vue 3 应用入口，依次安装 vue-i18n、Vue Router、Pinia，挂载到 DOM。
+- **`src/router/index.ts`**：hash 模式路由。导航守卫：未选择博客目录时重定向到 `/setup`；已选择但 agent 未初始化时调用 `site.initializeAgent` 并等待完成。
+- **`src/stores/`**：Pinia stores —— `app.ts`（全局偏好、agent 状态、hexo 配置）、`editorStore.ts`、`filter.ts`、`stats.ts`。
+- **`src/views/`**：页面级组件（Dashboard、PostList、Categories、Tags、MediaLibrary、Preferences、Setup、FrameView 编辑器容器）。
+- **`src/components/`**：可复用 UI 组件（EditorMain、CategoriesTree、NavMenu、SearchBar 等）。
+
+### 共享模块（`shared/`）
+
+主进程和渲染进程共用的无状态工具函数（日期、数组、值处理），无任何 Electron 或浏览器依赖。
+
+## IPC 契约
+
+完整接口定义在 `types/local.d.ts` 的 `ISite`。渲染进程通过 `site.*` 调用（经 bridge 层），映射到主进程 IPC 处理器或 Web API 路由。
+
+| 分类 | 代表方法 | IPC channel / HTTP 路由 |
+|---|---|---|
+| 站点数据 | `getPosts`、`getCategories`、`getTags` | `site:posts` / `GET /api/site/posts` |
+| 内容读写 | `getContent`、`saveContent`、`savePostDocument` | `post:content` / `GET /api/post/content` |
+| 文件系统 | `getReadDir`、`mv`、`saveImage` | `fs:readdir` / `GET /api/fs/readdir` |
+| 生命周期 | `initializeAgent`、`refreshSite` | `agent:init` / `POST /api/agent/init` |
+| Electron 特有 | `openDirDialog`、`openUrl`、`getDarkMode` | 仅 IPC；Web mode 提供 stub |
+
+完整方法列表见 `docs/ipc-api-reference.md`。
+
+**新增方法需同步修改六处**（无静态约束，需人工核对）：
+1. `HexoAgent.ts` 或 `FsAgent.ts` — 实现
+2. `types/local.d.ts` — `ISite` 签名
+3. `src/bridge/web.ts` — fetch 实现（编译器强制）
+4. `web/routes.ts` — Fastify 路由
+5. `main/main.ts` — `ipcMain.handle`
+6. `main/preload.ts` — `ipcRenderer.invoke`（channel 名必须与第 5 步一致）
+
+## 类型系统
+
+- **`types/local.d.ts`**：全局类型（Post、Category、Tag、ISite 等），无需 import，所有 tsconfig 均包含。
+- **`tsconfig/`**：四套独立配置 —— `tsconfig.app.json`（Vue 渲染进程）、`tsconfig.node.json`（主进程）、`tsconfig.vitest.json`（测试）、`tsconfig.tools.json`（构建工具）。
+- 自动生成：`types/auto-imports.d.ts`、`types/components.d.ts`（由 unplugin-auto-import / unplugin-vue-components 生成）。
+
+## 构建系统
+
+- **Electron mode**：Electron Forge + Vite 插件（`forge.config.ts`）。三套 Vite 配置：`vite.config.main.ts`、`vite.config.preload.ts`、`vite.config.renderer.ts`。
+- **Web mode**：`vite.config.web.ts` 构建 SPA 到 `dist/web/`，`web/server.ts` 以 esbuild 编译为独立 Node 服务。
+- **公共配置**：`vite.config.base.ts`（external 列表、Forge 插件辅助函数）。
+- **路径别名**：`@` → `src/`，`@shared` → `shared/`，`@/bridge` → 按模式切换。
+- **静态资源 URL**：渲染进程统一使用 `import.meta.env.VITE_ASSET_BASE_URL`，不硬编码本地服务地址。
+
+## 关键依赖
+
+| 层 | 依赖 |
+|---|---|
+| 主进程运行时 | Hexo、hexo-front-matter、hexo-fs、Fastify |
+| 渲染进程 | Vue 3、Pinia、Vue Router、Element Plus、vue-i18n、UnoCSS、md-editor-v3、CodeMirror Vim |
+| 构建 | Electron Forge、Vite、TypeScript、vue-tsc、esbuild |
+
+## 相关文档
+
+- `docs/ipc-api-reference.md` — 完整 IPC/API 方法参考
+- `docs/adr-api-contract-maintenance.md` — API 契约多层维护的架构决策记录
+- `docs/CODING_STANDARD.md` — 编码规范详细说明
+- `openspec/specs/` — 各功能模块的需求规格

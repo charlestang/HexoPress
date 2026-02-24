@@ -15,20 +15,24 @@ HexoPress 是一款基于 Electron + Vue 3 + Vite + Fastify 的 Hexo 博客桌�
 
 ## 2. 项目结构 (Project Layout)
 
+> 完整架构说明见 `docs/architecture-overview.md`，包含进程模型、Web mode、bridge 层、IPC 契约等详细内容。
+
 - **`main/`**: Electron 主进程代码。
-  - `main.ts`: 入口。
-  - `preload.ts`: IPC 桥接 (`window.site.*`)。
-  - `lib/`: 核心服务 (`HexoAgent` - Hexo 操作, `FsAgent` - 文件操作, `HttpServer` - 静态服务)。
-- **`src/`**: 渲染进程 (Vue 3) 代码。
+  - `main.ts`: 入口，注册所有 IPC 处理器。
+  - `preload.ts`: IPC 桥接（`window.site.*`）。
+  - `lib/`: 核心服务（`HexoAgent`、`FsAgent`、`HttpServer`）。
+- **`web/`**: Web mode 服务端（Fastify、鉴权、REST 路由）。
+- **`src/`**: 渲染进程（Vue 3）代码。
   - `renderer.ts`: 入口。
-  - `views/`: 页面 (Dashboard, PostList, Editor 等)。
+  - `bridge/`: 运行模式抽象层，`@/bridge` alias 在编译时切换 electron/web 实现。
+  - `views/`: 页面（Dashboard、PostList、Editor 等）。
   - `stores/`: Pinia 状态管理。
   - `components/`: UI 组件。
 - **`shared/`**: 主进程与渲染进程共享的无状态工具库。
 - **`blog/`**: 内置 Hexo 博客示例（兼作操作手册）。
-- **`docs/`**: 项目文档与设计说明。
-- **`tsconfig/`**: 各环境的 TypeScript 配置 (app, node, vitest, tools)。
-- **`types/`**: 全局类型声明 (`local.d.ts` 等)。
+- **`docs/`**: 项目文档（架构概览、API 参考、ADR、编码规范等）。
+- **`tsconfig/`**: 各环境的 TypeScript 配置（app、node、vitest、tools）。
+- **`types/`**: 全局类型声明（`local.d.ts` 等）。
 
 ## 3. 常用命令与工作流
 

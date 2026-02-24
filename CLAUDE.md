@@ -25,54 +25,16 @@ npm run make         # 构建可分发安装包
 
 ## 架构
 
-### 进程模型（Electron）
+> 完整架构说明见 `docs/architecture-overview.md`，包含进程模型、Web mode、bridge 层、IPC 契约、构建系统等详细内容。
 
-- **主进程** (`main/main.ts`)：注册所有 `ipcMain.handle` 处理器，创建浏览器窗口。包含三个核心服务：
-  - `HexoAgent` (`main/lib/HexoAgent.ts`)：封装 Hexo CLI —— 初始化、缓存加载、文章/分类/标签/统计的增删改查
-  - `FsAgent` (`main/lib/FsAgent.ts`)：`source/` 目录下的文件操作（readdir、mv、saveImage）
-  - `HttpServer` (`main/lib/HttpServer.ts`)：Fastify 静态服务器，监听 2357 端口，提供 `public/` 目录的图片预览
-- **Preload** (`main/preload.ts`)：通过 `contextBridge.exposeInMainWorld('site', {...})` 桥接主进程与渲染进程，所有 IPC 方法以 `window.site.*` 暴露
-- **渲染进程** (`src/renderer.ts`)：Vue 3 应用，集成 Pinia、Vue Router（hash 模式）、vue-i18n、Element Plus
+以下是编码时需要内化的关键约束：
 
-### 渲染进程结构
-
-- **路由** (`src/router/index.ts`)：基于 hash 的路由。导航守卫在未选择博客目录时重定向到 `/setup`；首次导航时自动初始化 agent
-- **状态管理** (`src/stores/`)：Pinia stores —— `app.ts`（全局偏好、agent 状态、hexo 配置）、`editorStore.ts`、`filter.ts`、`stats.ts`
-- **页面** (`src/views/`)：页面级组件（Dashboard、PostList、Categories、Tags、MediaLibrary、Preferences、Setup、通过 FrameView 承载的编辑器）
-- **组件** (`src/components/`)：可复用 UI 组件（EditorMain、CategoriesTree、NavMenu、SearchBar 等）
-- **共享模块** (`shared/`)：主进程和渲染进程共用的无状态工具函数（日期、数组、值处理）
-
-### IPC 通信契约
-
-渲染进程通过 `window.site.<method>(...)` 调用，映射到 `main/main.ts` 中的 IPC 通道处理器。完整的 `ISite` 接口定义在 `types/local.d.ts`。
-
-- **规模**：`preload.ts` 共暴露 49 个方法；渲染进程中 22 个文件、52 处调用 `window.site.*`
-- **隔离性**：渲染进程无任何直接 `electron` import，所有 Electron API 均通过 `window.site` 桥接
-- 读取操作：`site:posts`、`site:categories`、`site:tags`、`site:stats`、`site:heatMap`
-- 写入操作：`post:save`、`post:create`、`post:move`、`post:delete`
-- 文件系统：`fs:readdir`、`fs:mv`、`fs:saveImage`
-- 生命周期：`agent:init`、`site:refresh`
-- **Electron 特有 API**（仅 4 个）：`openDirDialog`（原生目录选择）、`openUrl`（系统浏览器打开）、`getSystemLocale`（系统语言）、`setDarkMode/getDarkMode`（原生主题）
-- **硬编码 URL**：5 处文件引用 `http://127.0.0.1:2357/`（MediaDetailView、MediaLibraryView、EditorMain、MediaPanel、PostPreviewDialog）
-
-### 类型系统
-
+- 项目支持 **Electron mode** 和 **Web mode** 两种运行模式，共用同一套渲染进程代码
+- 渲染进程通过 `import { site } from '@/bridge'` 调用后端，**不直接使用 `window.site`**；bridge 层在编译时由 Vite alias 切换实现
+- **新增后端方法需同步修改六处**：`HexoAgent/FsAgent` 实现 → `types/local.d.ts` → `src/bridge/web.ts` → `web/routes.ts` → `main/main.ts` → `main/preload.ts`
+- 渲染进程中的资源 URL 统一使用 `import.meta.env.VITE_ASSET_BASE_URL`，不硬编码本地服务地址
 - 全局类型定义在 `types/local.d.ts`（Post、Category、Tag、ISite 等），无需 import
-- `tsconfig/` 下有四套独立的 tsconfig 文件，对应不同编译目标（app、node、vitest、tools）
-- 自动生成的类型文件：`types/auto-imports.d.ts`、`types/components.d.ts`
-
-### 构建系统
-
-- Electron Forge + Vite 插件（`forge.config.ts`）
-- 三套 Vite 配置：`vite.config.main.ts`（主进程）、`vite.config.preload.ts`、`vite.config.renderer.ts`
-- 公共配置：`vite.config.base.ts`（external 列表、Forge 插件辅助函数）
-- 路径别名：`@` → `src/`，`@shared` → `shared/`
-
-### 关键依赖
-
-- **运行时**：Fastify（HTTP 服务）、Hexo + hexo-front-matter + hexo-fs（博客引擎）、md-editor-v3（Markdown 编辑器）、CodeMirror Vim（vim 模式）
-- **渲染进程**：Vue 3、Pinia、Vue Router、Element Plus、vue-i18n、UnoCSS、vue3-calendar-heatmap
-- **构建**：Electron Forge、Vite、TypeScript、vue-tsc
+- `tsconfig/` 下有四套独立配置，对应不同编译目标（app、node、vitest、tools）
 
 ## 编码规范
 

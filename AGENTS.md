@@ -10,16 +10,18 @@
 
 ## Project Layout
 
+> 完整架构说明见 `docs/architecture-overview.md`。
+
 - 代码组织：
   - `blog/`：HexoPress 可以用来管理的博客示例，未来里面的文章是 HexoPress 的操作手册
-  - `docs/`：项目的文档，给 GitHub 的 README 引用的截屏，编码规范，贡献指南等，还有一些产品需求，以及对应的设计文档
-  - `main/`：Electron 主进程代码，入口是 `main.ts`，`lib/`目录下，主要是运行在主进程中的模块，`preload.ts` 是 Electron 进程和渲染进程通信的桥梁
-  - `shared/`：主进程和渲染进程共享的代码，一些无状态的工具函数，日期处理，数组处理等等
-  - `src/`: 渲染进程代码，入口是 `renderer.ts`，主要是运行在渲染进程中的模块
+  - `docs/`：项目文档（架构概览、API 参考、ADR、编码规范、贡献指南等）
+  - `main/`：Electron 主进程代码，入口是 `main.ts`，`lib/` 目录下是核心服务（HexoAgent、FsAgent、HttpServer），`preload.ts` 是 IPC 桥接层
+  - `shared/`：主进程和渲染进程共享的无状态工具函数
+  - `src/`：渲染进程代码，入口是 `renderer.ts`
   - `src/bridge/`：渲染进程桥接层，统一 `site` API，按运行模式切换 `electron/web` 实现
-  - `web/`：Web mode 服务端与配置（Fastify、鉴权、REST 路由、示例配置）
-  - `tsconfig/`：主要放`tsc`命令和`vue-tsc`命令的配置文件，用于 lint 和构建
-  - `types/`：全局类型声明文件
+  - `web/`：Web mode 服务端（Fastify、鉴权、REST 路由、配置）
+  - `tsconfig/`：各环境的 TypeScript 配置（app、node、vitest、tools）
+  - `types/`：全局类型声明文件（`local.d.ts` 等）
   - `openspec/`：需求变更与实现工件（proposal/tasks/specs），遵循 OpenSpec 流程
 - 入口与构建：
   - Node ≥ 20.8.1；npm >= 10.5.5
@@ -27,15 +29,11 @@
 
 ## Runtime Modes
 
-- 项目包含两种运行模式：
-  - Electron mode：`main/main.ts` + `main/preload.ts` + `src/`（IPC 通信）
-  - Web mode：`web/server.ts` + `web/routes.ts` + `src/`（HTTP 通信）
-- 新增/修改业务能力时，必须同时检查：
-  - `types/local.d.ts`（接口类型）
-  - `main/preload.ts` 与 `main/main.ts`（IPC 映射）
-  - `web/routes.ts`（REST 映射）
-  - `src/bridge/web.ts`（前端 HTTP 适配）
-- 新增渲染层资源 URL 时，不要硬编码本地服务地址，统一使用 `import.meta.env.VITE_ASSET_BASE_URL`。
+- 项目包含两种运行模式，详见 `docs/architecture-overview.md`：
+  - **Electron mode**：`main/main.ts` + `main/preload.ts` + `src/`（IPC 通信）
+  - **Web mode**：`web/server.ts` + `web/routes.ts` + `src/`（HTTP 通信）
+- 新增/修改业务能力时，必须同步检查六处（见 architecture-overview.md 的"新增方法"章节）
+- 新增渲染层资源 URL 时，统一使用 `import.meta.env.VITE_ASSET_BASE_URL`，不硬编码本地服务地址
 
 ## Style & Conventions (Repository-wide)
 
