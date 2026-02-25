@@ -2,7 +2,7 @@ import { existsSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSy
 import Hexo from 'hexo'
 import util from 'hexo-util'
 import { parse as parseFrontMatter, stringify as stringifyFrontMatter } from 'hexo-front-matter'
-import { join, relative, resolve, sep } from 'path'
+import { dirname, join, relative, resolve, sep } from 'path'
 import {
   CategoryPath,
   FrontMatterData,
@@ -746,7 +746,7 @@ export class HexoAgent {
       console.log('Saving content to file. Path:', sourcePath, 'Content length:', content.length)
 
       const filePath = this.safeResolve(this.hexo.source_dir, sourcePath)
-      const dirPath = filePath.substring(0, filePath.lastIndexOf('/'))
+      const dirPath = dirname(filePath)
 
       // Ensure the directory exists
       if (!existsSync(dirPath)) {

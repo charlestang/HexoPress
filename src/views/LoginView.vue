@@ -32,7 +32,7 @@ async function onLogin() {
       await router.push({ path: '/' })
     } else {
       const data = await res.json().catch(() => null)
-      ElMessage.error(data?.message || t('login.failed'))
+      ElMessage.error(data?.error || t('login.failed'))
     }
   } catch {
     ElMessage.error(t('login.networkError'))
