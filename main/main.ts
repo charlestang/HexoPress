@@ -4,6 +4,7 @@ import fsAgent from './lib/FsAgent'
 import agent, { HexoAgent } from './lib/HexoAgent'
 import httpServer from './lib/HttpServer'
 import electronSquirrelStartup from 'electron-squirrel-startup'
+import { IPC } from '@shared/ipc-channels'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (electronSquirrelStartup) {
@@ -43,7 +44,7 @@ const createWindow = () => {
 
 app.whenReady().then(async () => {
   // Agent lifecycle management
-  ipcMain.handle('agent:init', async (_event, path) => {
+  ipcMain.handle(IPC.agentInit, async (_event, path) => {
     const check = HexoAgent.checkDir(path) && HexoAgent.checkHexoDir(path)
     if (check) {
       agent.init(path)
@@ -54,77 +55,77 @@ app.whenReady().then(async () => {
   })
 
   // Category operations
-  ipcMain.handle('category:bulkRemove', (_event, categoryId: string, sources: string[]) =>
+  ipcMain.handle(IPC.categoryBulkRemove, (_event, categoryId: string, sources: string[]) =>
     agent.removeCategoryFromPosts(categoryId, sources),
   )
   ipcMain.handle(
-    'category:replaceAssignments',
+    IPC.categoryReplaceAssignments,
     (_event, categoryId: string, sources: string[], replacements: string[][]) =>
       agent.replaceCategoryForPosts(categoryId, sources, replacements),
   )
 
   // Dark mode theme management
-  ipcMain.handle('dark:get', () => {
+  ipcMain.handle(IPC.darkGet, () => {
     return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
   })
-  ipcMain.handle('dark:set', (_event, val) => {
+  ipcMain.handle(IPC.darkSet, (_event, val) => {
     console.log('main.ts dark:set is called, new value is: ', val)
     nativeTheme.themeSource = val
   })
 
   // System dialogs
-  ipcMain.handle('dialog:dir', () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
+  ipcMain.handle(IPC.dialogDir, () => dialog.showOpenDialog({ properties: ['openDirectory'] }))
 
   // File system operations
-  ipcMain.handle('fs:assetReferences', (_event, path) => fsAgent.findAssetReferences(path))
-  ipcMain.handle('fs:fileInfo', (_event, path) => fsAgent.getFileInfo(path))
-  ipcMain.handle('fs:mv', (_event, from, to) => fsAgent.mv(from, to))
-  ipcMain.handle('fs:readdir', (_event, path) => fsAgent.readdir(path))
-  ipcMain.handle('fs:saveImage', async (_event, path, content) => {
+  ipcMain.handle(IPC.fsAssetReferences, (_event, path) => fsAgent.findAssetReferences(path))
+  ipcMain.handle(IPC.fsFileInfo, (_event, path) => fsAgent.getFileInfo(path))
+  ipcMain.handle(IPC.fsMv, (_event, from, to) => fsAgent.mv(from, to))
+  ipcMain.handle(IPC.fsReaddir, (_event, path) => fsAgent.readdir(path))
+  ipcMain.handle(IPC.fsSaveImage, async (_event, path, content) => {
     await fsAgent.saveImage(path, content)
     await agent.generate()
   })
 
   // Hexo configuration
-  ipcMain.handle('hexo:config', () => agent.getHexoConfig())
+  ipcMain.handle(IPC.hexoConfig, () => agent.getHexoConfig())
 
   // Post operations
-  ipcMain.handle('post:content', (_event, path) => agent.getContent(path))
-  ipcMain.handle('post:create', (_event, type, title, slug, content) =>
+  ipcMain.handle(IPC.postContent, (_event, path) => agent.getContent(path))
+  ipcMain.handle(IPC.postCreate, (_event, type, title, slug, content) =>
     agent.createFile(type, title, slug, content),
   )
-  ipcMain.handle('post:delete', (_event, path) => agent.deleteFile(path))
-  ipcMain.handle('post:document', (_event, path) => agent.getPostDocument(path))
-  ipcMain.handle('post:getMeta', (_event, path) => agent.getPostMeta(path))
-  ipcMain.handle('post:move', (_event, sourcePath, content) => agent.moveFile(sourcePath, content))
-  ipcMain.handle('post:save', (_event, path, content) => agent.saveContent(path, content))
-  ipcMain.handle('post:saveDocument', (_event, path, document) =>
+  ipcMain.handle(IPC.postDelete, (_event, path) => agent.deleteFile(path))
+  ipcMain.handle(IPC.postDocument, (_event, path) => agent.getPostDocument(path))
+  ipcMain.handle(IPC.postGetMeta, (_event, path) => agent.getPostMeta(path))
+  ipcMain.handle(IPC.postMove, (_event, sourcePath, content) => agent.moveFile(sourcePath, content))
+  ipcMain.handle(IPC.postSave, (_event, path, content) => agent.saveContent(path, content))
+  ipcMain.handle(IPC.postSaveDocument, (_event, path, document) =>
     agent.savePostDocument(path, document),
   )
-  ipcMain.handle('post:updateMeta', (_event, path, meta) => agent.updatePostMeta(path, meta))
+  ipcMain.handle(IPC.postUpdateMeta, (_event, path, meta) => agent.updatePostMeta(path, meta))
 
   // Batch post operations
-  ipcMain.handle('posts:remove-tag', (_event, sourcePath: string, tagId: string) =>
+  ipcMain.handle(IPC.postsRemoveTag, (_event, sourcePath: string, tagId: string) =>
     agent.removeTagFromPost(sourcePath, tagId),
   )
 
   // Shell operations
-  ipcMain.handle('shell:openUrl', (_event, url) => shell.openExternal(url))
+  ipcMain.handle(IPC.shellOpenUrl, (_event, url) => shell.openExternal(url))
 
   // Site data queries
-  ipcMain.handle('site:assetDelete', (_event, assetId: string) => agent.deleteAsset(assetId))
-  ipcMain.handle('site:assets', () => agent.getAssets())
-  ipcMain.handle('site:categories', () => agent.getCategories())
-  ipcMain.handle('site:heatMap', () => agent.getHeatMap())
-  ipcMain.handle('site:info', () => agent.getSiteInfo())
-  ipcMain.handle('site:postMonth', () => agent.getPostMonths())
-  ipcMain.handle('site:posts', (_event, ...args) => agent.getPosts(...args))
-  ipcMain.handle('site:refresh', () => agent.updateCache())
-  ipcMain.handle('site:stats', () => agent.getStats())
-  ipcMain.handle('site:tags', () => agent.getTags())
+  ipcMain.handle(IPC.siteAssetDelete, (_event, assetId: string) => agent.deleteAsset(assetId))
+  ipcMain.handle(IPC.siteAssets, () => agent.getAssets())
+  ipcMain.handle(IPC.siteCategories, () => agent.getCategories())
+  ipcMain.handle(IPC.siteHeatMap, () => agent.getHeatMap())
+  ipcMain.handle(IPC.siteInfo, () => agent.getSiteInfo())
+  ipcMain.handle(IPC.sitePostMonth, () => agent.getPostMonths())
+  ipcMain.handle(IPC.sitePosts, (_event, ...args) => agent.getPosts(...args))
+  ipcMain.handle(IPC.siteRefresh, () => agent.updateCache())
+  ipcMain.handle(IPC.siteStats, () => agent.getStats())
+  ipcMain.handle(IPC.siteTags, () => agent.getTags())
 
   // System information
-  ipcMain.handle('sys:locale', () => app.getSystemLocale())
+  ipcMain.handle(IPC.sysLocale, () => app.getSystemLocale())
 
   createWindow()
 })
