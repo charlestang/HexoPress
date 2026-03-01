@@ -158,6 +158,6 @@ watch(
 .wrapper {
   flex-grow: 1;
   overflow-y: auto;
-  margin-right: -20px;
+  padding-right: 10px;
 }
 </style>
