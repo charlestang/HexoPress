@@ -4,13 +4,18 @@ import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useEditorStore } from '@/stores/editorStore'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'
-import { UnaEditor, type EditorExposed } from 'una-editor'
+import {
+  UnaEditor,
+  type EditorExposed,
+  type ImageRenderContext,
+  type ImageRenderResult,
+} from 'una-editor'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { cloneValue, toDate, toStringArray } from '@shared/utils/value'
-import { computeRelativeImagePath } from '@/utils/path'
-import { encodeMarkdownImagePath } from '@/utils/markdownImage'
+import { computeImagePath } from '@/utils/path'
+import { encodeMarkdownImagePath, resolveMarkdownImageUrl } from '@/utils/markdownImage'
 
 const { t } = useI18n()
 const editorStore = useEditorStore() // Initialize the store
@@ -277,6 +282,8 @@ async function publishDraft() {
 }
 
 const appStore = useAppStore()
+const assetBaseUrl = import.meta.env.VITE_ASSET_BASE_URL
+const hexoRoot = computed(() => appStore.hexoConfig?.root ?? '/')
 
 const activeAsidePanels = ref(['meta', 'cate', 'tags'])
 
@@ -284,6 +291,21 @@ const showUploadDialog = ref(false)
 const imageFile = ref<File>()
 const filePath = ref('')
 const uploaded = ref(() => {})
+
+function resolveImageUrl(context: ImageRenderContext): Partial<ImageRenderResult> {
+  return {
+    src: resolveMarkdownImageUrl(
+      context.src,
+      assetBaseUrl,
+      frontMatter.value.permalink ?? '',
+      hexoRoot.value,
+    ),
+  }
+}
+
+const renderHooks = {
+  image: resolveImageUrl,
+}
 
 function onDropImage(files: File[]) {
   if (!files || files.length === 0) {
@@ -302,10 +324,9 @@ function onDropImage(files: File[]) {
   }
   filePath.value = formatDate(dateModel.value) + '/' + firstFile.name
   uploaded.value = function () {
-    const permalink = frontMatter.value.permalink ?? ''
     const assetPath = 'images/' + filePath.value
-    const relativePath = computeRelativeImagePath(permalink, assetPath)
-    const encodedPath = encodeMarkdownImagePath(relativePath)
+    const imagePath = computeImagePath(hexoRoot.value, assetPath)
+    const encodedPath = encodeMarkdownImagePath(imagePath)
     insertImageMarkdown(`![](${encodedPath})`)
     emit('media-uploaded')
   }
@@ -578,6 +599,7 @@ const editorLineHeight = computed(() => Math.round(appStore.editorFontSize * 1.5
             class="editor"
             :line-wrap="true"
             :live-preview="true"
+            :render-hooks="renderHooks"
             :vim-mode="appStore.editMode === 'vim'"
             @save="onSave"
             @drop="onDropImage"

@@ -327,7 +327,8 @@ const { tableHeight, wrapper } = useTableHeight()
   <PostPreviewDialog
     v-model="showPreviewDialog"
     :source-path="currentPreviewSourcePath"
-    :permalink="currentPreviewPermalink" />
+    :permalink="currentPreviewPermalink"
+    :root="appStore.hexoConfig?.root ?? '/'" />
 </template>
 <style scoped>
 .wrapper {

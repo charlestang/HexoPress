@@ -8,11 +8,13 @@ import { useI18n } from 'vue-i18n'
 interface Props {
   modelValue: string
   permalink?: string
+  root?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: '',
   permalink: '',
+  root: '/',
 })
 
 const { t } = useI18n()
@@ -64,6 +66,7 @@ markdown.renderer.rules.image = (tokens, idx, options, env, self) => {
     source,
     import.meta.env.VITE_ASSET_BASE_URL,
     props.permalink ?? '',
+    props.root ?? '/',
   )
 
   token?.attrSet('src', resolved)

@@ -1,10 +1,12 @@
-export function computeRelativeImagePath(permalink: string, assetPath: string): string {
-  const cleanAssetPath = assetPath.replace(/^\/+/, '')
-  const cleanPermalink = permalink.replace(/^\/+|\/+$/g, '')
-  const segments = cleanPermalink ? cleanPermalink.split('/').filter(Boolean) : []
-  const prefix = segments.map(() => '..').join('/')
-  if (!prefix) {
-    return cleanAssetPath || 'images'
+import { normalizeHexoRoot } from './markdownImage'
+
+export function computeImagePath(root: string | null | undefined, assetPath: string): string {
+  const normalizedRoot = normalizeHexoRoot(root)
+  const cleanAssetPath = assetPath.replace(/^\/+/, '') || 'images'
+
+  if (normalizedRoot === '/') {
+    return `/${cleanAssetPath}`
   }
-  return `${prefix}/${cleanAssetPath}`
+
+  return `${normalizedRoot}${cleanAssetPath}`
 }

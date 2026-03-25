@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import router from '@/router'
+import { useAppStore } from '@/stores/app'
 import { Back, FolderOpened, Memo, PictureRounded } from '@element-plus/icons-vue'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -12,6 +13,7 @@ import AiPanel from '@/components/AiPanel.vue'
 import { useEditorStore } from '@/stores/editorStore'
 
 const { t } = useI18n()
+const appStore = useAppStore()
 const editorStore = useEditorStore()
 const editorAsideFold = ref('aside-fold')
 const currentWidth = ref(0)
@@ -58,6 +60,7 @@ const panelProps = computed(() => {
       active: mediaPanelActive.value,
       uploadKey: mediaUploadKey.value,
       permalink: currentPermalink.value,
+      root: appStore.hexoConfig?.root ?? '/',
     }
   }
   return {}

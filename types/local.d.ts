@@ -15,6 +15,7 @@ declare global {
     time_format: string
     theme: string
     source_dir: string
+    root: string
   } | null
 
   type SiteInfo = {

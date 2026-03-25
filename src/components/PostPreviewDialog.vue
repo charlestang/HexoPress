@@ -18,6 +18,7 @@ const props = defineProps<{
   modelValue: boolean
   sourcePath: string
   permalink?: string
+  root?: string
 }>()
 
 const emit = defineEmits<{
@@ -243,7 +244,11 @@ function resetPreviewScroll() {
         </div>
         <div ref="previewScrollRef" class="content-column">
           <div class="content-inner content-body" :data-top-level="topHeadingLevel ?? ''">
-            <MdRenderer :key="renderKey" :modelValue="content" :permalink="permalink" />
+            <MdRenderer
+              :key="renderKey"
+              :modelValue="content"
+              :permalink="permalink"
+              :root="root" />
           </div>
         </div>
       </div>

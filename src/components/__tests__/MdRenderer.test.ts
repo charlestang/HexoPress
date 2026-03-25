@@ -34,6 +34,28 @@ describe('MdRenderer.vue', () => {
     expect(image.attributes('src')).toBe('https://assets.example.com/posts/images/2026/01/demo.png')
   })
 
+  it('rewrites root-prefixed absolute image url for local preview', async () => {
+    Object.assign(import.meta.env, {
+      VITE_ASSET_BASE_URL: 'https://assets.example.com',
+    })
+
+    const wrapper = mount(MdRenderer, {
+      props: {
+        modelValue: '![](/HexoPress/images/2026/01/demo.png)',
+        root: '/HexoPress/',
+      },
+      global: {
+        plugins: [i18n],
+      },
+    })
+
+    await nextTick()
+    const image = wrapper.find('img')
+
+    expect(image.exists()).toBe(true)
+    expect(image.attributes('src')).toBe('https://assets.example.com/images/2026/01/demo.png')
+  })
+
   it('shows a fallback placeholder when image loading fails', async () => {
     Object.assign(import.meta.env, {
       VITE_ASSET_BASE_URL: 'https://assets.example.com',

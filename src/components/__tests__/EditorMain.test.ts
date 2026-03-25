@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { defineComponent, nextTick } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -12,6 +12,11 @@ const savePostDocumentMock = vi.hoisted(() => vi.fn())
 const createFileMock = vi.hoisted(() => vi.fn())
 const moveFileMock = vi.hoisted(() => vi.fn())
 const deleteFileMock = vi.hoisted(() => vi.fn())
+const computeImagePathMock = vi.hoisted(() => vi.fn(() => '/HexoPress/images/test.png'))
+const resolveMarkdownImageUrlMock = vi.hoisted(() =>
+  vi.fn(() => 'http://127.0.0.1:2357/images/test.png'),
+)
+const insertTextSpy = vi.hoisted(() => vi.fn())
 
 vi.mock('@/bridge', () => ({
   site: {
@@ -52,11 +57,12 @@ vi.mock('@/router', () => ({
 }))
 
 vi.mock('@/utils/path', () => ({
-  computeRelativeImagePath: vi.fn(() => 'images/test.png'),
+  computeImagePath: computeImagePathMock,
 }))
 
 vi.mock('@/utils/markdownImage', () => ({
   encodeMarkdownImagePath: vi.fn((p: string) => p),
+  resolveMarkdownImageUrl: resolveMarkdownImageUrlMock,
 }))
 
 const i18n = createI18n({
@@ -76,17 +82,18 @@ const sampleMeta: PostMeta = {
 const sampleContent = '# Hello\n\nThis is a test post.'
 
 const globalStubs = {
-  UnaEditor: {
+  UnaEditor: defineComponent({
+    name: 'UnaEditor',
     template: '<div class="una-editor"><slot /></div>',
-    props: ['modelValue', 'livePreview', 'lineWrap', 'vimMode'],
+    props: ['modelValue', 'livePreview', 'lineWrap', 'vimMode', 'renderHooks'],
     emits: ['update:modelValue', 'save', 'drop', 'focus', 'blur'],
     methods: {
       getSelection: () => 'selected text',
       getHeadings: () => [{ text: 'Hello', level: 1, line: 1 }],
       scrollToLine: vi.fn(),
-      insertText: vi.fn(),
+      insertText: insertTextSpy,
     },
-  },
+  }),
   FilenameDialog: { template: '<div />' },
   DateMetaEntry: { template: '<div />', props: ['modelValue'] },
   UrlMetaEntry: { template: '<div />', props: ['modelValue'] },
@@ -133,11 +140,17 @@ describe('EditorMain.vue', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.useFakeTimers()
+    Object.assign(import.meta.env, {
+      VITE_ASSET_BASE_URL: 'http://127.0.0.1:2357/',
+    })
     getPostDocumentMock.mockReset()
     savePostDocumentMock.mockReset()
     createFileMock.mockReset()
     moveFileMock.mockReset()
     deleteFileMock.mockReset()
+    computeImagePathMock.mockClear()
+    resolveMarkdownImageUrlMock.mockClear()
+    insertTextSpy.mockClear()
     pushSpy.mockReset()
     goSpy.mockReset()
 
@@ -390,6 +403,90 @@ describe('EditorMain.vue', () => {
 
       vm.onDropImage([])
       expect(vm.showUploadDialog).toBe(false)
+    })
+
+    it('inserts a deployed absolute image path after upload succeeds', async () => {
+      const { useAppStore } = await import('@/stores/app')
+      const appStore = useAppStore()
+      appStore.hexoConfig = {
+        title: '',
+        subtitle: '',
+        description: '',
+        keywords: [],
+        author: '',
+        language: 'en',
+        timezone: 'UTC',
+        url: '',
+        permalink: '',
+        date_format: '',
+        time_format: '',
+        theme: '',
+        source_dir: 'source',
+        root: '/HexoPress/',
+      }
+
+      const wrapper = createWrapper({ sourcePath: '_posts/hello.md' })
+      await flushAsync()
+
+      const vm = wrapper.vm as unknown as {
+        onDropImage: (files: File[]) => void
+        uploaded: () => void
+      }
+
+      vm.onDropImage([new File(['img'], 'photo.png', { type: 'image/png' })])
+      await nextTick()
+      vm.uploaded()
+      await nextTick()
+
+      expect(computeImagePathMock).toHaveBeenCalledWith('/HexoPress/', 'images/2024/06/photo.png')
+      expect(insertTextSpy).toHaveBeenCalledWith('![](/HexoPress/images/test.png)\n\n')
+      expect(wrapper.emitted('media-uploaded')).toHaveLength(1)
+    })
+  })
+
+  describe('render hooks', () => {
+    it('passes a root-aware image render hook to UnaEditor', async () => {
+      const { useAppStore } = await import('@/stores/app')
+      const appStore = useAppStore()
+      appStore.hexoConfig = {
+        title: '',
+        subtitle: '',
+        description: '',
+        keywords: [],
+        author: '',
+        language: 'en',
+        timezone: 'UTC',
+        url: '',
+        permalink: '',
+        date_format: '',
+        time_format: '',
+        theme: '',
+        source_dir: 'source',
+        root: '/HexoPress/',
+      }
+
+      const wrapper = createWrapper({ sourcePath: '_posts/hello.md' })
+      await flushAsync()
+
+      const editor = wrapper.findComponent({ name: 'UnaEditor' })
+      const renderHooks = editor.props('renderHooks') as {
+        image: (context: Record<string, unknown>) => { src: string }
+      }
+
+      const result = renderHooks.image({
+        src: '/HexoPress/images/test.png',
+        alt: '',
+        raw: '![](/HexoPress/images/test.png)',
+        position: { from: 0, to: 27 },
+      })
+
+      expect(resolveMarkdownImageUrlMock).toHaveBeenCalledWith(
+        '/HexoPress/images/test.png',
+        'http://127.0.0.1:2357/',
+        'test-post',
+        '/HexoPress/',
+      )
+      expect(result).toEqual({ src: 'http://127.0.0.1:2357/images/test.png' })
     })
   })
 

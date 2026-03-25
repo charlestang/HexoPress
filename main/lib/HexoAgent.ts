@@ -509,7 +509,7 @@ export class HexoAgent {
     }
   }
 
-  public async getHexoConfig(): Promise<Record<string, unknown> | null> {
+  public async getHexoConfig(): Promise<HexoConfig> {
     if (this.exitPromise) {
       await this.exitPromise
     }
@@ -539,6 +539,7 @@ export class HexoAgent {
       'time_format',
       'theme',
       'source_dir',
+      'root',
       'public_dir',
       'tag_dir',
       'archive_dir',
@@ -557,7 +558,10 @@ export class HexoAgent {
       }
     }
 
-    return cleanConfig
+    const rawRoot = typeof cleanConfig.root === 'string' ? cleanConfig.root : '/'
+    cleanConfig.root = rawRoot || '/'
+
+    return cleanConfig as HexoConfig
   }
 
   /**

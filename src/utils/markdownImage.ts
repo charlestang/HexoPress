@@ -6,7 +6,44 @@ export function normalizePermalinkPath(permalink: string): string {
   return stripped.replace(/^\/+|\/+$/g, '')
 }
 
-function joinUrl(base: string | undefined, path: string): string {
+export function normalizeHexoRoot(root: string | null | undefined): string {
+  if (!root) {
+    return '/'
+  }
+
+  const stripped = root
+    .trim()
+    .replace(/^https?:\/\/[^/]+\/?/i, '')
+    .replace(/^\/+|\/+$/g, '')
+  if (!stripped) {
+    return '/'
+  }
+
+  return `/${stripped}/`
+}
+
+export function stripHexoRootPrefix(path: string, root: string | null | undefined): string {
+  if (!path.startsWith('/')) {
+    return path
+  }
+
+  const normalizedRoot = normalizeHexoRoot(root)
+  if (normalizedRoot === '/') {
+    return path
+  }
+
+  if (path === normalizedRoot.slice(0, -1)) {
+    return '/'
+  }
+
+  if (path.startsWith(normalizedRoot)) {
+    return `/${path.slice(normalizedRoot.length).replace(/^\/+/, '')}`
+  }
+
+  return path
+}
+
+export function joinPreviewUrl(base: string | undefined, path: string): string {
   const cleanBase = (base ?? '').replace(/\/+$/g, '')
   const cleanPath = path.replace(/^\/+/, '')
   if (!cleanBase) {
@@ -22,6 +59,7 @@ export function resolveMarkdownImageUrl(
   src: string,
   assetBaseUrl: string | undefined,
   permalink: string,
+  root: string | null | undefined = '/',
 ): string {
   if (!src) {
     return src
@@ -32,7 +70,7 @@ export function resolveMarkdownImageUrl(
   }
 
   if (src.startsWith('/')) {
-    return joinUrl(assetBaseUrl, src)
+    return joinPreviewUrl(assetBaseUrl, stripHexoRootPrefix(src, root))
   }
 
   const currentPath = normalizePermalinkPath(permalink)
@@ -40,7 +78,7 @@ export function resolveMarkdownImageUrl(
   const targetSegments = src.split('/').filter(Boolean)
 
   if (targetSegments[0] !== '.' && targetSegments[0] !== '..') {
-    return joinUrl(assetBaseUrl, targetSegments.join('/'))
+    return joinPreviewUrl(assetBaseUrl, targetSegments.join('/'))
   }
 
   while (targetSegments[0] === '.') {
@@ -52,7 +90,7 @@ export function resolveMarkdownImageUrl(
     targetSegments.shift()
   }
 
-  return joinUrl(assetBaseUrl, [...currentSegments, ...targetSegments].join('/'))
+  return joinPreviewUrl(assetBaseUrl, [...currentSegments, ...targetSegments].join('/'))
 }
 
 export function buildImageNotFoundMessage(template: string, url: string): string {

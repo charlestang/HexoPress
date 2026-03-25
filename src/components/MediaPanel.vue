@@ -3,7 +3,7 @@ import { computed, nextTick, reactive, ref, watch, type ComponentPublicInstance 
 import { site } from '@/bridge'
 import SearchBar from '@/components/SearchBar.vue'
 import { formatBytes } from '@/utils/number'
-import { computeRelativeImagePath } from '@/utils/path'
+import { computeImagePath } from '@/utils/path'
 import { encodeMarkdownImagePath } from '@/utils/markdownImage'
 
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.bmp']
@@ -20,6 +20,7 @@ const props = defineProps<{
   active: boolean
   uploadKey?: number
   permalink?: string
+  root?: string
 }>()
 
 const emit = defineEmits<{
@@ -214,9 +215,8 @@ function insertFromPreview() {
 }
 
 function requestInsert(item: MediaItem) {
-  const permalink = props.permalink ?? ''
-  const relativePath = computeRelativeImagePath(permalink, item.asset.path)
-  const encodedPath = encodeMarkdownImagePath(relativePath)
+  const imagePath = computeImagePath(props.root ?? '/', item.asset.path)
+  const encodedPath = encodeMarkdownImagePath(imagePath)
   const markdown = `![](${encodedPath})\n\n`
   emit('request-insert', markdown)
 }
