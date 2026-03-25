@@ -10,7 +10,6 @@ export const useEditorStore = defineStore('editor', () => {
   const text = ref('')
   const frontMatter = ref<PostMeta>({})
   const selectedText = ref('')
-  const selectionRange = ref<SelectionRange | null>(null)
 
   function setHeadings(headings: Heading[]) {
     currentHeadings.value = headings
@@ -28,9 +27,8 @@ export const useEditorStore = defineStore('editor', () => {
     frontMatter.value = meta
   }
 
-  function setSelection(content: string, range: SelectionRange | null) {
+  function setSelection(content: string) {
     selectedText.value = content
-    selectionRange.value = range
   }
 
   return {
@@ -41,7 +39,6 @@ export const useEditorStore = defineStore('editor', () => {
     text,
     frontMatter,
     selectedText,
-    selectionRange,
     setText,
     setFrontMatter,
     setSelection,

@@ -54,10 +54,9 @@ const contextMode = computed<ContextMode>(() => {
 
 const contextLabel = computed(() => {
   if (contextMode.value === 'none') return t('ai.contextNone')
-  if (contextMode.value === 'selection' && editorStore.selectionRange) {
-    const { from, to } = editorStore.selectionRange
+  if (contextMode.value === 'selection' && editorStore.selectedText) {
     const len = editorStore.selectedText.length
-    return `@selection(${from}-${to}) ${len}${t('ai.chars')}`
+    return `@selection(${len}) ${len}${t('ai.chars')}`
   }
   const len = editorStore.text.length
   return `@full (${len}${t('ai.chars')})`
@@ -179,8 +178,8 @@ async function sendToAi(
   const label =
     effectiveCtxMode === 'full'
       ? `@full`
-      : effectiveCtxMode === 'selection' && editorStore.selectionRange
-        ? `@selection(${editorStore.selectionRange.from}-${editorStore.selectionRange.to})`
+      : effectiveCtxMode === 'selection' && editorStore.selectedText
+        ? `@selection(${editorStore.selectedText.length})`
         : undefined
 
   messages.push({ role: 'user', content: userMessage, contextLabel: label, presetLabel })

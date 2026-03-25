@@ -4,6 +4,7 @@ import { site } from '@/bridge'
 import SearchBar from '@/components/SearchBar.vue'
 import { formatBytes } from '@/utils/number'
 import { computeRelativeImagePath } from '@/utils/path'
+import { encodeMarkdownImagePath } from '@/utils/markdownImage'
 
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.bmp']
 const assetBaseUrl = import.meta.env.VITE_ASSET_BASE_URL
@@ -215,7 +216,8 @@ function insertFromPreview() {
 function requestInsert(item: MediaItem) {
   const permalink = props.permalink ?? ''
   const relativePath = computeRelativeImagePath(permalink, item.asset.path)
-  const markdown = `![](${relativePath})\n\n`
+  const encodedPath = encodeMarkdownImagePath(relativePath)
+  const markdown = `![](${encodedPath})\n\n`
   emit('request-insert', markdown)
 }
 

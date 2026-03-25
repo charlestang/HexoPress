@@ -118,7 +118,7 @@ function handlePermalinkChange(permalink: string) {
   currentPermalink.value = permalink
 }
 
-function handleInsertRequest(markdown: string) {
+function handleMediaInsert(markdown: string) {
   editorMainRef.value?.insertImageMarkdown(markdown)
 }
 </script>
@@ -193,7 +193,7 @@ function handleInsertRequest(markdown: string) {
                   }
                 "
                 v-bind="panelProps"
-                @request-insert="handleInsertRequest" />
+                @request-insert="handleMediaInsert" />
             </keep-alive>
             <div
               class="resize-handle"

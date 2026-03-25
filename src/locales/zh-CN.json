@@ -89,7 +89,10 @@
     "excerpt": "摘要",
     "fontDecrease": "减小字体",
     "fontIncrease": "增大字体",
+    "imageNotFound": "图片未找到：{url}",
+    "insert": "插入",
     "meta": "基础信息",
+    "moreDividerLabel": "阅读更多",
     "moveToTrash": "删除文章",
     "notSet": "未设置（默认规则生成）",
     "nothingChanged": "什么都没有修改",
@@ -112,8 +115,7 @@
     "turnToDraft": "切换至草稿",
     "update": "更新",
     "updated": "更新日期",
-    "url": "URL",
-    "insert": "插入"
+    "url": "URL"
   },
   "filenameDialog": {
     "changePath": "修改文件名/路径",
@@ -303,6 +305,7 @@
     "dark": "深色模式",
     "darkMode": "暗黑模式",
     "defaultFilename": "默认文件名",
+    "editorFontSize": "编辑器字体大小",
     "editorMode": "编辑模式",
     "editorNormal": "普通",
     "editorVim": "Vim 模式",

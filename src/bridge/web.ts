@@ -191,5 +191,4 @@ export const site: SiteBridge = {
     Promise.resolve(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
 
   setDarkMode: () => Promise.resolve(),
-
 }

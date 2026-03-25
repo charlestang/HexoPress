@@ -83,6 +83,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(IPC.fsReaddir, (_event, path) => fsAgent.readdir(path))
   ipcMain.handle(IPC.fsSaveImage, async (_event, path, content) => {
     await fsAgent.saveImage(path, content)
+    await agent.updateCache()
     await agent.generate()
   })
 

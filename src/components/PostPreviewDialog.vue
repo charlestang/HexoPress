@@ -2,8 +2,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import { site } from '@/bridge'
 import { useI18n } from 'vue-i18n'
-import { MdPreview } from 'md-editor-v3'
-import 'md-editor-v3/lib/preview.css'
+import MdRenderer from '@/components/MdRenderer.vue'
 import { Folder, PriceTag, Timer } from '@element-plus/icons-vue'
 import { normalizeList } from '@shared/utils/stringArray'
 import { toDate, toStringArray } from '@shared/utils/value'
@@ -32,38 +31,6 @@ const tocItems = ref<TocItem[]>([])
 const previewScrollRef = ref<HTMLElement | null>(null)
 const renderKey = ref(0)
 const topHeadingLevel = ref<number | null>(null)
-
-/**
- * Content sanitizer to help preview display images in content.
- * @param html The HTML content of the blog post.
- */
-function filterImage(html: string): string {
-  console.log('filterImage', props.permalink)
-  let relativePermalink = props.permalink || ''
-  // 移除 URL 中的 http(s)://<host>/ 部分
-  if (relativePermalink) {
-    relativePermalink = relativePermalink.replace(/^https?:\/\/[^\/]+\//, '')
-  }
-  console.log('relativePermalink', relativePermalink)
-  return _addPrefixToImgSrc(html, import.meta.env.VITE_ASSET_BASE_URL, relativePermalink)
-}
-
-function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): string {
-  const regex = /(<img[^>]+src\s*=\s*["'])([^"']*)/gi
-  return html.replace(regex, (match, p1, p2: string) => {
-    console.log('p2', p2)
-    if (p2.startsWith('http://') || p2.startsWith('https://')) {
-      return match
-    }
-    const curPath = currentPath.split('/').filter((p) => p !== '')
-    const imgPath = p2.split('/').filter((p) => p !== '')
-    while (curPath.length > 0 && imgPath[0] == '..') {
-      imgPath.shift()
-      curPath.pop()
-    }
-    return p1 + prefix + curPath.concat(imgPath).join('/')
-  })
-}
 
 const frontMatter = ref<PostMeta>({
   title: '',
@@ -276,7 +243,7 @@ function resetPreviewScroll() {
         </div>
         <div ref="previewScrollRef" class="content-column">
           <div class="content-inner content-body" :data-top-level="topHeadingLevel ?? ''">
-            <MdPreview :key="renderKey" :modelValue="content" :sanitize="filterImage" />
+            <MdRenderer :key="renderKey" :modelValue="content" :permalink="permalink" />
           </div>
         </div>
       </div>
@@ -409,25 +376,25 @@ function resetPreviewScroll() {
 .content-body {
   counter-reset: preview-top-heading;
 }
-.content-body[data-top-level='1'] :deep(.md-editor-preview h1),
-.content-body[data-top-level='2'] :deep(.md-editor-preview h2),
-.content-body[data-top-level='3'] :deep(.md-editor-preview h3) {
+.content-body[data-top-level='1'] :deep(.md-renderer h1),
+.content-body[data-top-level='2'] :deep(.md-renderer h2),
+.content-body[data-top-level='3'] :deep(.md-renderer h3) {
   position: relative;
   color: #1f4b99;
   padding-bottom: 4px;
   margin: 22px 0 22px;
   counter-increment: preview-top-heading;
 }
-.content-body[data-top-level='1'] :deep(.md-editor-preview h1::before),
-.content-body[data-top-level='2'] :deep(.md-editor-preview h2::before),
-.content-body[data-top-level='3'] :deep(.md-editor-preview h3::before) {
+.content-body[data-top-level='1'] :deep(.md-renderer h1::before),
+.content-body[data-top-level='2'] :deep(.md-renderer h2::before),
+.content-body[data-top-level='3'] :deep(.md-renderer h3::before) {
   content: counter(preview-top-heading) '. ';
   font-weight: 700;
   margin-right: 6px;
 }
-.content-body[data-top-level='1'] :deep(.md-editor-preview h1::after),
-.content-body[data-top-level='2'] :deep(.md-editor-preview h2::after),
-.content-body[data-top-level='3'] :deep(.md-editor-preview h3::after) {
+.content-body[data-top-level='1'] :deep(.md-renderer h1::after),
+.content-body[data-top-level='2'] :deep(.md-renderer h2::after),
+.content-body[data-top-level='3'] :deep(.md-renderer h3::after) {
   content: '';
   position: absolute;
   left: 0;
@@ -435,11 +402,11 @@ function resetPreviewScroll() {
   width: 34%;
   border-bottom: 3px solid #1f4b99;
 }
-.content-body[data-top-level='2'] :deep(.md-editor-preview h3) {
+.content-body[data-top-level='2'] :deep(.md-renderer h3) {
   padding-bottom: 3px;
 }
-.content-body[data-top-level='2'] :deep(.md-editor-preview h3::after),
-.content-body[data-top-level='3'] :deep(.md-editor-preview h4::after) {
+.content-body[data-top-level='2'] :deep(.md-renderer h3::after),
+.content-body[data-top-level='3'] :deep(.md-renderer h4::after) {
   content: '';
   position: absolute;
   left: 0;

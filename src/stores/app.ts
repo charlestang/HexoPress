@@ -115,6 +115,19 @@ export const useAppStore = defineStore('app', () => {
     wsCache.set('autoSave', autoSave.value)
   }
 
+  const editorFontSize = ref(16)
+  const editorFontSizeVal = wsCache.get('editorFontSize')
+  if (editorFontSizeVal !== null && typeof editorFontSizeVal === 'number') {
+    editorFontSize.value = editorFontSizeVal
+  } else if (editorFontSizeVal !== null && typeof editorFontSizeVal === 'string') {
+    editorFontSize.value = parseInt(editorFontSizeVal)
+  }
+
+  function setEditorFontSize(newVal: number) {
+    editorFontSize.value = newVal
+    wsCache.set('editorFontSize', editorFontSize.value)
+  }
+
   // AI providers
   const aiProviders = ref<AiProvider[]>([])
   const aiProvidersVal = wsCache.get('aiProviders')
@@ -179,6 +192,8 @@ export const useAppStore = defineStore('app', () => {
     removeAiProvider,
     defaultAiProviderId,
     setDefaultAiProviderId,
+    editorFontSize,
+    setEditorFontSize,
   }
 })
 

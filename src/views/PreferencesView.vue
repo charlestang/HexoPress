@@ -47,6 +47,16 @@ const autoSave = computed({
   },
 })
 
+const editorFontSize = computed({
+  get: () => appStore.editorFontSize,
+  set: (val: number | undefined) => {
+    if (val !== undefined) {
+      console.log('preferences set editorFontSize as:', val)
+      appStore.setEditorFontSize(val)
+    }
+  },
+})
+
 function addProvider() {
   const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6)
   appStore.addAiProvider({ id, name: '', baseUrl: '', apiKey: '', provider: 'openai', modelId: '' })
@@ -99,6 +109,9 @@ const activeTab = ref('general')
             <el-radio value="normal"> {{ t('settings.editorNormal') }}</el-radio>
             <el-radio value="vim"> {{ t('settings.editorVim') }} </el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item :label="t('settings.editorFontSize')">
+          <el-input-number v-model="editorFontSize" :min="10" :max="28" :step="1" />
         </el-form-item>
         <el-form-item :label="t('settings.defaultFilename')">
           <el-radio-group>

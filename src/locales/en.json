@@ -89,7 +89,10 @@
     "excerpt": "Excerpt",
     "fontDecrease": "Font Decrease",
     "fontIncrease": "Font Increase",
+    "imageNotFound": "Image not found: {url}",
+    "insert": "Insert",
     "meta": "Meta",
+    "moreDividerLabel": "MORE",
     "moveToTrash": "Delete Article",
     "notSet": " not set(generated default)",
     "nothingChanged": "Nothing changed.",
@@ -111,8 +114,7 @@
     "turnToDraft": "Turn to Draft",
     "update": "Update",
     "updated": "Updated At",
-    "url": "URL",
-    "insert": "Insert"
+    "url": "URL"
   },
   "filenameDialog": {
     "changePath": "Change file path",
@@ -302,6 +304,7 @@
     "dark": "Dark",
     "darkMode": "Dark Mode",
     "defaultFilename": "Default filename",
+    "editorFontSize": "Editor Font Size",
     "editorMode": "Editor Mode",
     "editorNormal": "Normal",
     "editorVim": "Vim Emulator",

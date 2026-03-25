@@ -229,7 +229,11 @@ async function routesPlugin(fastify: FastifyInstance, opts: RouteOpts) {
   fastify.post('/api/fs/saveImage', async (request: FastifyRequest) => {
     const body = request.body as { path: string; content: string }
     const buffer = Buffer.from(body.content, 'base64')
-    await fsAgent.saveImage(body.path, buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength))
+    await fsAgent.saveImage(
+      body.path,
+      buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength),
+    )
+    await agent.updateCache()
     await agent.generate()
     return { ok: true }
   })

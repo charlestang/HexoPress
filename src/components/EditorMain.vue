@@ -2,25 +2,15 @@
 import { site } from '@/bridge'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
-import { useEditorStore } from '@/stores/editorStore' // Import the editor store
-import { lineNumbers } from '@codemirror/view'
+import { useEditorStore } from '@/stores/editorStore'
 import { Expand, Fold, Folder } from '@element-plus/icons-vue'
-import { Vim, vim } from '@replit/codemirror-vim'
-import {
-  MdEditor,
-  NormalToolbar,
-  config,
-  type ExposeParam,
-  type ToolbarNames,
-  type HeadList,
-  type CodeMirrorExtension,
-} from 'md-editor-v3' // Import CatalogLink
-import 'md-editor-v3/lib/style.css'
-import { computed, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
+import { UnaEditor, type EditorExposed } from 'una-editor'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import { createSmoothScroll } from '@vavt/util'
 import { cloneValue, toDate, toStringArray } from '@shared/utils/value'
+import { computeRelativeImagePath } from '@/utils/path'
+import { encodeMarkdownImagePath } from '@/utils/markdownImage'
 
 const { t } = useI18n()
 const editorStore = useEditorStore() // Initialize the store
@@ -68,10 +58,7 @@ const text = ref('')
 const initializing = ref(true)
 
 watch(text, (val, oldVal) => {
-  if (initializing.value) {
-    return
-  }
-  if (val !== oldVal) {
+  if (!initializing.value && val !== oldVal) {
     isDirty.value = true
   }
   editorStore.setText(val)
@@ -104,10 +91,9 @@ const categoriesModel = computed<string | string[] | (string | string[])[]>({
 watch(
   frontMatter,
   () => {
-    if (initializing.value) {
-      return
+    if (!initializing.value) {
+      isDirty.value = true
     }
-    isDirty.value = true
     editorStore.setFrontMatter({ ...frontMatter.value })
   },
   { deep: true },
@@ -141,44 +127,19 @@ async function loadDocument(path: string) {
     const { meta, content } = await site.getPostDocument(path)
     applyDocumentMeta(meta)
     text.value = content
-    isDirty.value = false
   } finally {
     initializing.value = false
   }
+  // Watchers fire asynchronously (flush: 'pre'); wait for them to settle
+  // before resetting dirty so queued watcher callbacks don't re-dirty.
+  await nextTick()
+  isDirty.value = false
 }
 
 if (!isNewPost.value && sourcePath.value) {
   loadDocument(sourcePath.value)
 } else {
   initializing.value = false
-}
-
-/**
- * Content sanitizer to help preview display images in content.
- * @param html The HTML content of the blog post.
- */
-function filterImage(html: string): string {
-  return _addPrefixToImgSrc(
-    html,
-    import.meta.env.VITE_ASSET_BASE_URL,
-    frontMatter.value.permalink || '',
-  )
-}
-
-function _addPrefixToImgSrc(html: string, prefix: string, currentPath: string): string {
-  const regex = /(<img[^>]+src\s*=\s*["'])([^"']*)/gi
-  return html.replace(regex, (match, p1, p2: string) => {
-    if (p2.startsWith('http://') || p2.startsWith('https://')) {
-      return match
-    }
-    const curPath = currentPath.split('/').filter((p) => p !== '')
-    const imgPath = p2.split('/').filter((p) => p !== '')
-    while (curPath.length > 0 && imgPath[0] == '..') {
-      imgPath.shift()
-      curPath.pop()
-    }
-    return p1 + prefix + curPath.concat(imgPath).join('/')
-  })
 }
 
 const dialogSourcePath = ref(false)
@@ -231,6 +192,7 @@ function buildDocument(): PostDocument {
 }
 
 async function updatePost() {
+  console.log('Updating post...')
   const check = await _formValidate()
   if (!check) {
     return
@@ -239,6 +201,7 @@ async function updatePost() {
     return
   }
   const document = buildDocument()
+  console.log('Saving document to site..., document:', document)
   await site.savePostDocument(sourcePath.value, document)
   applyDocumentMeta(document.meta)
   isDirty.value = false
@@ -246,11 +209,13 @@ async function updatePost() {
 }
 
 async function upsertDraft() {
+  console.log('Saving draft...')
   const check = await _formValidate()
   if (!check) {
     return
   }
   const document = buildDocument()
+  console.log('Saving draft to site..., document:', document)
   if (!sourcePath.value) {
     sourcePath.value = await site.createFile(
       '_drafts',
@@ -313,30 +278,14 @@ async function publishDraft() {
 
 const appStore = useAppStore()
 
-if (appStore.editMode === 'vim') {
-  config({
-    codeMirrorExtensions(extensions: CodeMirrorExtension[]) {
-      const extra: CodeMirrorExtension[] = [
-        { type: 'lineNumbers', extension: lineNumbers() },
-        { type: 'vim', extension: vim() },
-      ]
-      return [...extensions, ...extra]
-    },
-  })
-  Vim.defineEx('write', 'w', () => {
-    onSave()
-  })
-}
 const activeAsidePanels = ref(['meta', 'cate', 'tags'])
 
 const showUploadDialog = ref(false)
 const imageFile = ref<File>()
 const filePath = ref('')
 const uploaded = ref(() => {})
-async function onUploadImage(
-  files: File[],
-  callback: (urls: string[] | { url: string; alt: string; title: string }[]) => void,
-) {
+
+function onDropImage(files: File[]) {
   if (!files || files.length === 0) {
     return
   }
@@ -353,17 +302,18 @@ async function onUploadImage(
   }
   filePath.value = formatDate(dateModel.value) + '/' + firstFile.name
   uploaded.value = function () {
-    // TODO: this is not so good, because it is relative to the permalink.
-    //       and the image cannot preview because the image has not been
-    //       moved to the `public` path.
-    const url = '../images/' + filePath.value
-    callback([url])
+    const permalink = frontMatter.value.permalink ?? ''
+    const assetPath = 'images/' + filePath.value
+    const relativePath = computeRelativeImagePath(permalink, assetPath)
+    const encodedPath = encodeMarkdownImagePath(relativePath)
+    insertImageMarkdown(`![](${encodedPath})`)
     emit('media-uploaded')
   }
   showUploadDialog.value = true
 }
 
 async function onSave() {
+  console.log('Saving post...')
   if (postPublished.value) {
     await updatePost()
   } else {
@@ -394,14 +344,11 @@ function setupAutoSaveInterval() {
 }
 
 function syncSelectionToStore() {
-  const view = editorRef.value?.getEditorView()
-  if (!view) return
-  const { from, to } = view.state.selection.main
-  if (from !== to) {
-    const content = view.state.sliceDoc(from, to)
-    editorStore.setSelection(content, { from, to })
+  const selectedText = editorRef.value?.getSelection()
+  if (selectedText) {
+    editorStore.setSelection(selectedText)
   } else {
-    editorStore.setSelection('', null)
+    editorStore.setSelection('')
   }
 }
 
@@ -409,10 +356,6 @@ let selectionIntervalId: NodeJS.Timeout | null = null
 
 onMounted(() => {
   setupAutoSaveInterval()
-
-  // Sync initial text and frontMatter to store
-  if (text.value) editorStore.setText(text.value)
-  editorStore.setFrontMatter({ ...frontMatter.value })
 
   // Poll selection state from CodeMirror
   selectionIntervalId = setInterval(syncSelectionToStore, 300)
@@ -430,6 +373,10 @@ onBeforeUnmount(() => {
   if (selectionIntervalId) {
     clearInterval(selectionIntervalId)
     selectionIntervalId = null
+  }
+  if (catalogIntervalId) {
+    clearInterval(catalogIntervalId)
+    catalogIntervalId = null
   }
 })
 
@@ -475,45 +422,9 @@ function onDelete() {
     })
 }
 
-const toolbars = ref<ToolbarNames[]>([
-  'bold',
-  'underline',
-  'italic',
-  'strikeThrough',
-  '-',
-  'title',
-  'sub',
-  'sup',
-  'quote',
-  'unorderedList',
-  'orderedList',
-  'task',
-  '-',
-  'codeRow',
-  'code',
-  'link',
-  'image',
-  'table',
-  'mermaid',
-  'katex',
-  '-',
-  'revoke',
-  'next',
-  'save',
-  '-',
-  0,
-  1,
-  '=',
-  'prettier',
-  'preview',
-  'previewOnly',
-  'catalog',
-])
-
-const editorRef = ref<ExposeParam>()
+const editorRef = ref<EditorExposed>()
 const isEditorFocused = ref(false)
 
-const editorMaxWidth = ref(1100)
 // Helper to generate slug-like IDs
 const generateHeadingId = (text: string, level: number, index: number) => {
   const sanitizedText = text
@@ -523,8 +434,11 @@ const generateHeadingId = (text: string, level: number, index: number) => {
   return `heading-${level}-${index}-${sanitizedText}`
 }
 
-const handleGetCatalog = (headList: HeadList[]) => {
-  const transformedHeadings = headList.map((h, index) => ({
+function handleGetCatalog() {
+  const headings = editorRef.value?.getHeadings()
+  if (!headings) return
+
+  const transformedHeadings = headings.map((h, index) => ({
     text: h.text,
     level: h.level,
     id: generateHeadingId(h.text, h.level, index),
@@ -533,15 +447,10 @@ const handleGetCatalog = (headList: HeadList[]) => {
   editorStore.setHeadings(transformedHeadings)
 }
 
-const smoothScroll = createSmoothScroll()
 const scrollToLine = (lineNumber: number) => {
-  const view = editorRef.value?.getEditorView()
-  if (view) {
-    const line = view.state.doc.line(lineNumber + 1)
-    const top = view.lineBlockAt(line.from)?.top
-    const scroller = view.scrollDOM
-    smoothScroll(scroller, top)
-  }
+  // UnaEditor's getHeadings() returns 1-based line numbers
+  // and scrollToLine() also expects 1-based line numbers
+  editorRef.value?.scrollToLine(lineNumber)
 }
 
 function insertImageMarkdown(markdown: string) {
@@ -550,27 +459,19 @@ function insertImageMarkdown(markdown: string) {
     ElMessage.error('Failed to insert image')
     return
   }
-  if (!isEditorFocused.value) {
-    editor.focus('end')
-  }
   const content = markdown.endsWith('\n') ? markdown : `${markdown}\n\n`
-  editor.insert(() => ({
-    targetValue: content,
-  }))
+  editor.insertText(content)
 }
 
 defineExpose({
   insertImageMarkdown,
 })
 
+let catalogIntervalId: NodeJS.Timeout | null = null
+
 onMounted(() => {
-  editorRef.value?.on('preview', (status) => {
-    if (status) {
-      editorMaxWidth.value = 2200
-    } else {
-      editorMaxWidth.value = 1100
-    }
-  })
+  // Poll headings from editor
+  catalogIntervalId = setInterval(handleGetCatalog, 1000)
 
   // Watch for changes in activeHeadingId from the store and scroll the editor
   watch(
@@ -583,16 +484,8 @@ onMounted(() => {
   )
 })
 
-const fontSize = ref(14)
-const lineHeight = ref(20)
-function onFontSmall() {
-  fontSize.value = 14
-  lineHeight.value = 20
-}
-function onFontBig() {
-  fontSize.value = 18
-  lineHeight.value = 26
-}
+const editorFontSize = computed(() => appStore.editorFontSize)
+const editorLineHeight = computed(() => Math.round(appStore.editorFontSize * 1.5))
 </script>
 
 <template>
@@ -678,43 +571,18 @@ function onFontBig() {
         </el-aside>
         <el-main
           class="editor-wrapper"
-          :style="`--font-size: ${fontSize}px; --line-height: ${lineHeight}px`">
-          <MdEditor
+          :style="`--font-size: ${editorFontSize}px; --line-height: ${editorLineHeight}px`">
+          <UnaEditor
             ref="editorRef"
             v-model="text"
             class="editor"
-            :style="{ maxWidth: `${editorMaxWidth}px` }"
-            :toolbars="toolbars"
-            :sanitize="filterImage"
-            :preview="false"
-            :html-preview="false"
-            :toolbars-exclude="['pageFullscreen', 'fullscreen', 'htmlPreview', 'github']"
-            @upload-img="onUploadImage"
-            @on-save="onSave"
-            @get-catalog="handleGetCatalog"
-            @on-focus="isEditorFocused = true"
-            @on-blur="isEditorFocused = false">
-            <template #defToolbars>
-              <NormalToolbar :title="t('editor.fontIncrease')" @on-click="onFontBig">
-                <template #trigger>
-                  <img
-                    class="md-editor-icon"
-                    src="@/assets/font-size-increase.svg"
-                    alt="font increase"
-                    style="width: 19px; height: 19px" />
-                </template>
-              </NormalToolbar>
-              <NormalToolbar :title="t('editor.fontDecrease')" @on-click="onFontSmall">
-                <template #trigger>
-                  <img
-                    class="md-editor-icon"
-                    src="@/assets/font-size-decrease.svg"
-                    alt="font increase"
-                    style="width: 18px; height: 18px" />
-                </template>
-              </NormalToolbar>
-            </template>
-          </MdEditor>
+            :line-wrap="true"
+            :live-preview="true"
+            :vim-mode="appStore.editMode === 'vim'"
+            @save="onSave"
+            @drop="onDropImage"
+            @focus="isEditorFocused = true"
+            @blur="isEditorFocused = false" />
           <UploadImageDialog
             v-model="showUploadDialog"
             v-model:file-path="filePath"
@@ -761,12 +629,13 @@ function onFontBig() {
   text-align: right;
 }
 .editor-wrapper {
-  padding: 10px;
-  padding-top: 0;
+  padding: 0 0 10px 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 .editor {
+  width: 100%;
   height: calc(100vh - 62px - 40px - 60px + 30px);
 }
 .editor :deep(.cm-editor) {

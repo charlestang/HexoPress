@@ -13,11 +13,15 @@ vi.mock('@/bridge', () => ({
   },
 }))
 
-const createMdPreviewStub = () =>
+const createMdRendererStub = () =>
   defineComponent({
-    name: 'MdPreview',
+    name: 'MdRenderer',
     props: {
       modelValue: {
+        type: String,
+        default: '',
+      },
+      permalink: {
         type: String,
         default: '',
       },
@@ -37,7 +41,7 @@ const createMdPreviewStub = () =>
       return () =>
         h(
           'div',
-          { class: 'md-preview-stub' },
+          { class: 'md-renderer' },
           headings.value.map((heading, idx) =>
             h(`h${heading.level}`, { id: `stub-${idx}` }, heading.text),
           ),
@@ -94,7 +98,7 @@ describe('PostPreviewDialog.vue', () => {
           },
           'el-icon': true,
           'el-scrollbar': { template: '<div class="el-scrollbar"><slot /></div>' },
-          MdPreview: createMdPreviewStub(),
+          MdRenderer: createMdRendererStub(),
         },
       },
     })
@@ -131,7 +135,7 @@ describe('PostPreviewDialog.vue', () => {
           },
           'el-icon': true,
           'el-scrollbar': { template: '<div class="el-scrollbar"><slot /></div>' },
-          MdPreview: createMdPreviewStub(),
+          MdRenderer: createMdRendererStub(),
         },
       },
     })
@@ -174,7 +178,7 @@ describe('PostPreviewDialog.vue', () => {
           },
           'el-icon': true,
           'el-scrollbar': { template: '<div class="el-scrollbar"><slot /></div>' },
-          MdPreview: createMdPreviewStub(),
+          MdRenderer: createMdRendererStub(),
         },
       },
     })
