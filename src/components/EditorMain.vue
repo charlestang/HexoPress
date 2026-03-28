@@ -619,7 +619,8 @@ const editorLineHeight = computed(() => Math.round(appStore.editorFontSize * 1.5
 <style scoped>
 .aside-expand {
   width: 240px;
-  padding: 0 10px 0 0;
+  border-left: 1px solid var(--el-border-color-lighter, #ebeef5);
+  padding: 0 10px 0 12px;
 }
 .aside-collapsed {
   width: 0;
