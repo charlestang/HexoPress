@@ -19,7 +19,7 @@ const hasProviders = computed(() => providers.value.length > 0)
 const selectedProviderId = computed({
   get: () => {
     const stored = appStore.defaultAiProviderId
-    if (providers.value.find((p) => p.id === stored)) return stored
+    if (providers.value.find((p: AiProvider) => p.id === stored)) return stored
     return providers.value.length > 0 ? providers.value[0]!.id : ''
   },
   set: (val: string) => {
@@ -28,7 +28,7 @@ const selectedProviderId = computed({
 })
 
 const currentProvider = computed(() => {
-  return providers.value.find((p) => p.id === selectedProviderId.value) ?? null
+  return providers.value.find((p: AiProvider) => p.id === selectedProviderId.value) ?? null
 })
 
 const currentModelId = computed(() => currentProvider.value?.modelId ?? '')

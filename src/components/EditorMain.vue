@@ -1,5 +1,10 @@
 <script lang="ts" setup>
 import { site } from '@/bridge'
+import {
+  getCodeFontFamilyStack,
+  getEditorFontFamilyStack,
+  resolveAppTheme,
+} from '@/constants/appearance'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { useEditorStore } from '@/stores/editorStore'
@@ -284,6 +289,26 @@ async function publishDraft() {
 const appStore = useAppStore()
 const assetBaseUrl = import.meta.env.VITE_ASSET_BASE_URL
 const hexoRoot = computed(() => appStore.hexoConfig?.root ?? '/')
+const resolvedSystemTheme = ref<'light' | 'dark'>('light')
+
+async function syncResolvedSystemTheme() {
+  try {
+    const theme = await site.getDarkMode()
+    resolvedSystemTheme.value = theme === 'dark' ? 'dark' : 'light'
+  } catch {
+    resolvedSystemTheme.value = 'light'
+  }
+}
+
+watch(
+  () => appStore.darkMode,
+  (theme) => {
+    if (theme === 'system') {
+      void syncResolvedSystemTheme()
+    }
+  },
+  { immediate: true },
+)
 
 const activeAsidePanels = ref(['meta', 'cate', 'tags'])
 
@@ -507,6 +532,12 @@ onMounted(() => {
 
 const editorFontSize = computed(() => appStore.editorFontSize)
 const editorLineHeight = computed(() => Math.round(appStore.editorFontSize * 1.5))
+const editorTheme = computed(() => resolveAppTheme(appStore.darkMode, resolvedSystemTheme.value))
+const editorLineWrap = computed(() => appStore.editorLineWrap)
+const editorFontFamily = computed(() => getEditorFontFamilyStack(appStore.editorFontFamily))
+const codeTheme = computed(() => appStore.codeTheme)
+const codeLineNumbers = computed(() => appStore.codeLineNumbers)
+const codeFontFamily = computed(() => getCodeFontFamilyStack(appStore.codeFontFamily))
 </script>
 
 <template>
@@ -590,15 +621,19 @@ const editorLineHeight = computed(() => Math.round(appStore.editorFontSize * 1.5
             </el-collapse-item>
           </el-collapse>
         </el-aside>
-        <el-main
-          class="editor-wrapper"
-          :style="`--font-size: ${editorFontSize}px; --line-height: ${editorLineHeight}px`">
+        <el-main class="editor-wrapper" :style="`--line-height: ${editorLineHeight}px`">
           <UnaEditor
             ref="editorRef"
             v-model="text"
             class="editor"
-            :line-wrap="true"
+            :theme="editorTheme"
+            :line-wrap="editorLineWrap"
             :live-preview="true"
+            :font-size="editorFontSize"
+            :font-family="editorFontFamily"
+            :code-theme="codeTheme"
+            :code-line-numbers="codeLineNumbers"
+            :code-font-family="codeFontFamily"
             :render-hooks="renderHooks"
             :vim-mode="appStore.editMode === 'vim'"
             @save="onSave"
@@ -660,9 +695,6 @@ const editorLineHeight = computed(() => Math.round(appStore.editorFontSize * 1.5
 .editor {
   width: 100%;
   height: calc(100vh - 62px - 40px - 60px + 30px);
-}
-.editor :deep(.cm-editor) {
-  font-size: var(--font-size) !important;
 }
 .editor :deep(.cm-scroller) {
   line-height: var(--line-height) !important;

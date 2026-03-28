@@ -295,7 +295,30 @@
     "streaming": "AI 正在思考..."
   },
   "settings": {
+    "applyImmediately": "修改会立即生效。",
+    "appearanceCodeBlockSection": "代码块",
+    "appearanceEditorSection": "编辑器",
+    "appearanceThemeSection": "主题",
+    "codeBlockTheme": "代码块主题",
+    "codeFontFamily": "代码字体",
+    "codeLineNumbers": "显示行号",
+    "codeThemeGroups": {
+      "dark": "深色主题",
+      "light": "浅色主题"
+    },
+    "codeThemes": {
+      "atomOneLight": "Atom One Light",
+      "dracula": "Dracula",
+      "githubLight": "GitHub Light",
+      "monokai": "Monokai",
+      "nord": "Nord",
+      "oneDark": "One Dark",
+      "solarizedDark": "Solarized Dark",
+      "solarizedLight": "Solarized Light",
+      "tokyoNight": "Tokyo Night"
+    },
     "tabGeneral": "通用",
+    "tabAppearance": "外观",
     "tabAi": "AI",
     "alwaysTitle": "总是用标题做文件名",
     "autoSave": "编辑器自动保存",
@@ -306,9 +329,19 @@
     "darkMode": "暗黑模式",
     "defaultFilename": "默认文件名",
     "editorFontSize": "编辑器字体大小",
+    "editorFontFamily": "编辑器字体",
+    "editorLineWrap": "自动换行",
     "editorMode": "编辑模式",
     "editorNormal": "普通",
     "editorVim": "Vim 模式",
+    "fontPresets": {
+      "cleanSans": "Clean Sans",
+      "firaCode": "Fira Code",
+      "jetbrainsMono": "JetBrains Mono",
+      "mono": "Mono",
+      "readingSerif": "Reading Serif",
+      "systemMono": "System Mono"
+    },
     "language": "界面语言",
     "languages": {
       "en": "English",
@@ -318,6 +351,7 @@
     "permalinkFirst": "如果设置了 permalink，优先用 permalink 做文件名",
     "save": "保存",
     "system": "跟随系统",
+    "theme": "主题",
     "unbind": "解绑/变更",
     "aiProviders": "AI 模型配置",
     "aiProviderName": "名称",

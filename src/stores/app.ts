@@ -1,4 +1,15 @@
 import { site } from '@/bridge'
+import {
+  appearanceDefaults,
+  appThemeValues,
+  codeFontPresetValues,
+  codeThemeValues,
+  editorFontPresetValues,
+  type AppThemePreference,
+  type AppearanceCodeTheme,
+  type CodeFontPresetId,
+  type EditorFontPresetId,
+} from '@/constants/appearance'
 import { useCache } from '@/hooks/useCache'
 import en from 'element-plus/es/locale/lang/en'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
@@ -13,6 +24,43 @@ const languages = {
 
 export const useAppStore = defineStore('app', () => {
   const { wsCache } = useCache('localStorage')
+
+  function getStoredEnumValue<T extends string>(key: string, values: readonly T[], fallback: T): T {
+    const stored = wsCache.get(key)
+    if (typeof stored === 'string' && values.includes(stored as T)) {
+      return stored as T
+    }
+    return fallback
+  }
+
+  function getStoredBoolean(key: string, fallback: boolean): boolean {
+    const stored = wsCache.get(key)
+    if (typeof stored === 'boolean') {
+      return stored
+    }
+    if (stored === 'true') {
+      return true
+    }
+    if (stored === 'false') {
+      return false
+    }
+    return fallback
+  }
+
+  function getStoredNumber(key: string, fallback: number, min: number, max: number): number {
+    const stored = wsCache.get(key)
+    const parsed =
+      typeof stored === 'number'
+        ? stored
+        : typeof stored === 'string'
+          ? Number.parseInt(stored, 10)
+          : Number.NaN
+
+    if (Number.isFinite(parsed) && parsed >= min && parsed <= max) {
+      return parsed
+    }
+    return fallback
+  }
 
   // locale
   const locale = ref(wsCache.get('locale') || 'en')
@@ -32,14 +80,12 @@ export const useAppStore = defineStore('app', () => {
   })
 
   // dark mode
-  const darkMode = ref('system')
-  const darkModeVal = wsCache.get('darkMode')
-  if (darkModeVal !== null) {
-    darkMode.value = darkModeVal as string
-  }
+  const darkMode = ref<AppThemePreference>(
+    getStoredEnumValue('darkMode', appThemeValues, appearanceDefaults.darkMode),
+  )
   site.setDarkMode(darkMode.value)
 
-  function setDarkMode(newDarkMode: string) {
+  function setDarkMode(newDarkMode: AppThemePreference) {
     console.log('appStore setDarkMode called, newVal is: ', newDarkMode)
     if (newDarkMode !== darkMode.value) {
       wsCache.set('darkMode', newDarkMode)
@@ -115,17 +161,60 @@ export const useAppStore = defineStore('app', () => {
     wsCache.set('autoSave', autoSave.value)
   }
 
-  const editorFontSize = ref(16)
-  const editorFontSizeVal = wsCache.get('editorFontSize')
-  if (editorFontSizeVal !== null && typeof editorFontSizeVal === 'number') {
-    editorFontSize.value = editorFontSizeVal
-  } else if (editorFontSizeVal !== null && typeof editorFontSizeVal === 'string') {
-    editorFontSize.value = parseInt(editorFontSizeVal)
+  const editorLineWrap = ref(getStoredBoolean('editorLineWrap', appearanceDefaults.editorLineWrap))
+
+  function setEditorLineWrap(newVal: boolean) {
+    editorLineWrap.value = newVal
+    wsCache.set('editorLineWrap', newVal)
   }
+
+  const editorFontSize = ref(
+    getStoredNumber('editorFontSize', appearanceDefaults.editorFontSize, 10, 28),
+  )
 
   function setEditorFontSize(newVal: number) {
     editorFontSize.value = newVal
     wsCache.set('editorFontSize', editorFontSize.value)
+  }
+
+  const editorFontFamily = ref<EditorFontPresetId>(
+    getStoredEnumValue(
+      'editorFontFamily',
+      editorFontPresetValues,
+      appearanceDefaults.editorFontFamily,
+    ),
+  )
+
+  function setEditorFontFamily(newVal: EditorFontPresetId) {
+    editorFontFamily.value = newVal
+    wsCache.set('editorFontFamily', newVal)
+  }
+
+  const codeTheme = ref<AppearanceCodeTheme>(
+    getStoredEnumValue('codeTheme', codeThemeValues, appearanceDefaults.codeTheme),
+  )
+
+  function setCodeTheme(newVal: AppearanceCodeTheme) {
+    codeTheme.value = newVal
+    wsCache.set('codeTheme', newVal)
+  }
+
+  const codeLineNumbers = ref(
+    getStoredBoolean('codeLineNumbers', appearanceDefaults.codeLineNumbers),
+  )
+
+  function setCodeLineNumbers(newVal: boolean) {
+    codeLineNumbers.value = newVal
+    wsCache.set('codeLineNumbers', newVal)
+  }
+
+  const codeFontFamily = ref<CodeFontPresetId>(
+    getStoredEnumValue('codeFontFamily', codeFontPresetValues, appearanceDefaults.codeFontFamily),
+  )
+
+  function setCodeFontFamily(newVal: CodeFontPresetId) {
+    codeFontFamily.value = newVal
+    wsCache.set('codeFontFamily', newVal)
   }
 
   // AI providers
@@ -186,6 +275,8 @@ export const useAppStore = defineStore('app', () => {
     setEditMode,
     autoSave,
     setAutoSave,
+    editorLineWrap,
+    setEditorLineWrap,
     aiProviders,
     addAiProvider,
     updateAiProvider,
@@ -194,6 +285,14 @@ export const useAppStore = defineStore('app', () => {
     setDefaultAiProviderId,
     editorFontSize,
     setEditorFontSize,
+    editorFontFamily,
+    setEditorFontFamily,
+    codeTheme,
+    setCodeTheme,
+    codeLineNumbers,
+    setCodeLineNumbers,
+    codeFontFamily,
+    setCodeFontFamily,
   }
 })
 

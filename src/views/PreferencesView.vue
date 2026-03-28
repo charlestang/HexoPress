@@ -1,4 +1,14 @@
 <script lang="ts" setup>
+import {
+  appThemeOptions,
+  codeFontPresetOptions,
+  codeThemeGroups,
+  editorFontPresetOptions,
+  type AppThemePreference,
+  type AppearanceCodeTheme,
+  type CodeFontPresetId,
+  type EditorFontPresetId,
+} from '@/constants/appearance'
 import router from '@/router'
 import { useAppStore } from '@/stores/app'
 import { Delete } from '@element-plus/icons-vue'
@@ -9,16 +19,13 @@ const appStore = useAppStore()
 const { t } = useI18n()
 
 function unbindBasePath() {
-  console.log('call unbind basePath')
   appStore.setBasePath('')
-  console.log('call router.push, to /')
   router.push({ path: '/', replace: true })
 }
 
-const darkMode = computed({
+const themePreference = computed<AppThemePreference>({
   get: () => appStore.darkMode,
   set: (val) => {
-    console.log('preferences set darkMode as:', val)
     appStore.setDarkMode(val)
   },
 })
@@ -26,7 +33,6 @@ const darkMode = computed({
 const editMode = computed({
   get: () => appStore.editMode,
   set: (val) => {
-    console.log('preferences set editMode as:', val)
     appStore.setEditMode(val)
   },
 })
@@ -34,7 +40,6 @@ const editMode = computed({
 const locale = computed({
   get: () => appStore.locale,
   set: (val) => {
-    console.log('preferences set locale as:', val)
     appStore.setLocale(val)
   },
 })
@@ -42,7 +47,6 @@ const locale = computed({
 const autoSave = computed({
   get: () => appStore.autoSave,
   set: (val) => {
-    console.log('preferences set autoSave as:', val)
     appStore.setAutoSave(val)
   },
 })
@@ -51,9 +55,43 @@ const editorFontSize = computed({
   get: () => appStore.editorFontSize,
   set: (val: number | undefined) => {
     if (val !== undefined) {
-      console.log('preferences set editorFontSize as:', val)
       appStore.setEditorFontSize(val)
     }
+  },
+})
+
+const editorLineWrap = computed({
+  get: () => appStore.editorLineWrap,
+  set: (val: boolean) => {
+    appStore.setEditorLineWrap(val)
+  },
+})
+
+const editorFontFamily = computed<EditorFontPresetId>({
+  get: () => appStore.editorFontFamily,
+  set: (val) => {
+    appStore.setEditorFontFamily(val)
+  },
+})
+
+const codeTheme = computed<AppearanceCodeTheme>({
+  get: () => appStore.codeTheme,
+  set: (val) => {
+    appStore.setCodeTheme(val)
+  },
+})
+
+const codeLineNumbers = computed({
+  get: () => appStore.codeLineNumbers,
+  set: (val: boolean) => {
+    appStore.setCodeLineNumbers(val)
+  },
+})
+
+const codeFontFamily = computed<CodeFontPresetId>({
+  get: () => appStore.codeFontFamily,
+  set: (val) => {
+    appStore.setCodeFontFamily(val)
   },
 })
 
@@ -74,9 +112,9 @@ const activeTab = ref('general')
 </script>
 <template>
   <h2>{{ t('preferences.preferences') }}</h2>
-  <el-tabs v-model="activeTab" style="max-width: 750px">
+  <el-tabs v-model="activeTab" class="preferences-tabs">
     <el-tab-pane :label="t('settings.tabGeneral')" name="general">
-      <el-form label-width="180px" label-position="top">
+      <el-form label-width="180px" label-position="top" class="settings-form">
         <el-form-item :label="t('settings.basePath')">
           <el-input v-model="appStore.basePath" disabled />
         </el-form-item>
@@ -91,13 +129,6 @@ const activeTab = ref('general')
             <el-option key="en" :label="t(`settings.languages.en`)" value="en" />
           </el-select>
         </el-form-item>
-        <el-form-item :label="t('settings.darkMode')">
-          <el-select v-model="darkMode">
-            <el-option key="light" :label="t('settings.light')" value="light" />
-            <el-option key="dark" :label="t('settings.dark')" value="dark" />
-            <el-option key="system" :label="t('settings.system')" value="system" />
-          </el-select>
-        </el-form-item>
         <el-form-item :label="t('settings.autoSave')">
           <el-radio-group v-model="autoSave">
             <el-radio value="autoSaveOn"> {{ t('settings.autoSaveOn') }}</el-radio>
@@ -110,9 +141,6 @@ const activeTab = ref('general')
             <el-radio value="vim"> {{ t('settings.editorVim') }} </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="t('settings.editorFontSize')">
-          <el-input-number v-model="editorFontSize" :min="10" :max="28" :step="1" />
-        </el-form-item>
         <el-form-item :label="t('settings.defaultFilename')">
           <el-radio-group>
             <el-radio value="title"> {{ t('settings.alwaysTitle') }}</el-radio>
@@ -122,8 +150,76 @@ const activeTab = ref('general')
       </el-form>
     </el-tab-pane>
 
+    <el-tab-pane :label="t('settings.tabAppearance')" name="appearance">
+      <el-form label-width="180px" label-position="top" class="settings-form">
+        <div class="preferences-note">{{ t('settings.applyImmediately') }}</div>
+
+        <section class="settings-section">
+          <h3 class="settings-section__title">{{ t('settings.appearanceThemeSection') }}</h3>
+          <el-form-item :label="t('settings.theme')">
+            <el-select v-model="themePreference">
+              <el-option
+                v-for="option in appThemeOptions"
+                :key="option.value"
+                :label="t(option.labelKey)"
+                :value="option.value" />
+            </el-select>
+          </el-form-item>
+        </section>
+
+        <section class="settings-section">
+          <h3 class="settings-section__title">{{ t('settings.appearanceEditorSection') }}</h3>
+          <el-form-item :label="t('settings.editorLineWrap')">
+            <el-switch v-model="editorLineWrap" />
+          </el-form-item>
+          <el-form-item :label="t('settings.editorFontSize')">
+            <el-input-number v-model="editorFontSize" :min="10" :max="28" :step="1" />
+          </el-form-item>
+          <el-form-item :label="t('settings.editorFontFamily')">
+            <el-select v-model="editorFontFamily">
+              <el-option
+                v-for="option in editorFontPresetOptions"
+                :key="option.value"
+                :label="t(option.labelKey)"
+                :value="option.value" />
+            </el-select>
+          </el-form-item>
+        </section>
+
+        <section class="settings-section">
+          <h3 class="settings-section__title">{{ t('settings.appearanceCodeBlockSection') }}</h3>
+          <el-form-item :label="t('settings.codeBlockTheme')">
+            <el-select v-model="codeTheme">
+              <el-option-group
+                v-for="group in codeThemeGroups"
+                :key="group.id"
+                :label="t(group.labelKey)">
+                <el-option
+                  v-for="option in group.themes"
+                  :key="option.value"
+                  :label="t(option.labelKey)"
+                  :value="option.value" />
+              </el-option-group>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="t('settings.codeLineNumbers')">
+            <el-switch v-model="codeLineNumbers" />
+          </el-form-item>
+          <el-form-item :label="t('settings.codeFontFamily')">
+            <el-select v-model="codeFontFamily">
+              <el-option
+                v-for="option in codeFontPresetOptions"
+                :key="option.value"
+                :label="t(option.labelKey)"
+                :value="option.value" />
+            </el-select>
+          </el-form-item>
+        </section>
+      </el-form>
+    </el-tab-pane>
+
     <el-tab-pane :label="t('settings.tabAi')" name="ai">
-      <el-form label-width="180px" label-position="top">
+      <el-form label-width="180px" label-position="top" class="settings-form">
         <el-form-item :label="t('settings.aiProviders')">
           <div v-for="provider in appStore.aiProviders" :key="provider.id" class="ai-provider-card">
             <el-input
@@ -186,16 +282,29 @@ const activeTab = ref('general')
       </el-form>
     </el-tab-pane>
   </el-tabs>
-
-  <el-form label-width="180px" label-position="top" style="max-width: 750px">
-    <el-form-item>
-      <el-button type="primary">{{ t('settings.save') }}</el-button>
-    </el-form-item>
-  </el-form>
 </template>
 <style scoped>
+.preferences-tabs {
+  max-width: 750px;
+}
+.settings-form {
+  max-width: 750px;
+}
 .el-form:deep(.el-form-item__label) {
   font-weight: bold;
+}
+.preferences-note {
+  margin-bottom: 16px;
+  color: var(--el-text-color-secondary);
+  font-size: 13px;
+}
+.settings-section {
+  margin-bottom: 24px;
+}
+.settings-section__title {
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;
 }
 .ai-provider-card {
   width: 100%;

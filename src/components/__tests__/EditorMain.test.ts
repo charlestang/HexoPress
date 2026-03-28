@@ -12,6 +12,7 @@ const savePostDocumentMock = vi.hoisted(() => vi.fn())
 const createFileMock = vi.hoisted(() => vi.fn())
 const moveFileMock = vi.hoisted(() => vi.fn())
 const deleteFileMock = vi.hoisted(() => vi.fn())
+const getDarkModeMock = vi.hoisted(() => vi.fn())
 const computeImagePathMock = vi.hoisted(() => vi.fn(() => '/HexoPress/images/test.png'))
 const resolveMarkdownImageUrlMock = vi.hoisted(() =>
   vi.fn(() => 'http://127.0.0.1:2357/images/test.png'),
@@ -25,6 +26,7 @@ vi.mock('@/bridge', () => ({
     createFile: createFileMock,
     moveFile: moveFileMock,
     deleteFile: deleteFileMock,
+    getDarkMode: getDarkModeMock,
     setDarkMode: vi.fn(),
     getHexoConfig: vi.fn(() => Promise.resolve(null)),
     getSiteInfo: vi.fn(() => Promise.resolve(null)),
@@ -85,7 +87,19 @@ const globalStubs = {
   UnaEditor: defineComponent({
     name: 'UnaEditor',
     template: '<div class="una-editor"><slot /></div>',
-    props: ['modelValue', 'livePreview', 'lineWrap', 'vimMode', 'renderHooks'],
+    props: [
+      'modelValue',
+      'livePreview',
+      'lineWrap',
+      'vimMode',
+      'renderHooks',
+      'theme',
+      'fontSize',
+      'fontFamily',
+      'codeTheme',
+      'codeLineNumbers',
+      'codeFontFamily',
+    ],
     emits: ['update:modelValue', 'save', 'drop', 'focus', 'blur'],
     methods: {
       getSelection: () => 'selected text',
@@ -148,6 +162,7 @@ describe('EditorMain.vue', () => {
     createFileMock.mockReset()
     moveFileMock.mockReset()
     deleteFileMock.mockReset()
+    getDarkModeMock.mockReset()
     computeImagePathMock.mockClear()
     resolveMarkdownImageUrlMock.mockClear()
     insertTextSpy.mockClear()
@@ -158,6 +173,7 @@ describe('EditorMain.vue', () => {
       meta: { ...sampleMeta },
       content: sampleContent,
     })
+    getDarkModeMock.mockResolvedValue('dark')
     savePostDocumentMock.mockResolvedValue(undefined)
   })
 
@@ -355,6 +371,63 @@ describe('EditorMain.vue', () => {
 
       const store = useEditorStore()
       expect(store.selectedText).toBe('selected text')
+    })
+  })
+
+  describe('appearance settings', () => {
+    it('maps store-driven appearance props to UnaEditor', async () => {
+      const { useAppStore } = await import('@/stores/app')
+      const appStore = useAppStore()
+      appStore.darkMode = 'dark'
+      appStore.editorLineWrap = false
+      appStore.editorFontSize = 18
+      appStore.editorFontFamily = 'reading-serif'
+      appStore.codeTheme = 'github-light'
+      appStore.codeLineNumbers = true
+      appStore.codeFontFamily = 'fira-code'
+
+      const wrapper = createWrapper({ sourcePath: '_posts/hello.md' })
+      await flushAsync()
+
+      const editor = wrapper.findComponent({ name: 'UnaEditor' })
+      expect(editor.props('theme')).toBe('dark')
+      expect(editor.props('lineWrap')).toBe(false)
+      expect(editor.props('fontSize')).toBe(18)
+      expect(editor.props('fontFamily')).toContain('Georgia')
+      expect(editor.props('codeTheme')).toBe('github-light')
+      expect(editor.props('codeLineNumbers')).toBe(true)
+      expect(editor.props('codeFontFamily')).toContain('Fira Code')
+    })
+
+    it('resolves system theme through getDarkMode for the editor', async () => {
+      const { useAppStore } = await import('@/stores/app')
+      const appStore = useAppStore()
+      appStore.darkMode = 'system'
+      getDarkModeMock.mockResolvedValue('dark')
+
+      const wrapper = createWrapper({ sourcePath: '_posts/hello.md' })
+      await flushAsync()
+
+      const editor = wrapper.findComponent({ name: 'UnaEditor' })
+      expect(getDarkModeMock).toHaveBeenCalled()
+      expect(editor.props('theme')).toBe('dark')
+    })
+
+    it('keeps explicit code theme when global theme changes', async () => {
+      const { useAppStore } = await import('@/stores/app')
+      const appStore = useAppStore()
+      appStore.darkMode = 'light'
+      appStore.codeTheme = 'github-light'
+
+      const wrapper = createWrapper({ sourcePath: '_posts/hello.md' })
+      await flushAsync()
+
+      appStore.setDarkMode('dark')
+      await flushAsync()
+
+      const editor = wrapper.findComponent({ name: 'UnaEditor' })
+      expect(editor.props('theme')).toBe('dark')
+      expect(editor.props('codeTheme')).toBe('github-light')
     })
   })
 

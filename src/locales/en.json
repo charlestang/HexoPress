@@ -294,7 +294,30 @@
     "streaming": "AI is thinking..."
   },
   "settings": {
+    "applyImmediately": "Changes apply immediately.",
+    "appearanceCodeBlockSection": "Code Block",
+    "appearanceEditorSection": "Editor",
+    "appearanceThemeSection": "Theme",
+    "codeBlockTheme": "Code Block Theme",
+    "codeFontFamily": "Code Font Family",
+    "codeLineNumbers": "Show Line Numbers",
+    "codeThemeGroups": {
+      "dark": "Dark Themes",
+      "light": "Light Themes"
+    },
+    "codeThemes": {
+      "atomOneLight": "Atom One Light",
+      "dracula": "Dracula",
+      "githubLight": "GitHub Light",
+      "monokai": "Monokai",
+      "nord": "Nord",
+      "oneDark": "One Dark",
+      "solarizedDark": "Solarized Dark",
+      "solarizedLight": "Solarized Light",
+      "tokyoNight": "Tokyo Night"
+    },
     "tabGeneral": "General",
+    "tabAppearance": "Appearance",
     "tabAi": "AI",
     "alwaysTitle": "Always use title as filename.",
     "autoSave": "Editor Auto Save",
@@ -305,9 +328,19 @@
     "darkMode": "Dark Mode",
     "defaultFilename": "Default filename",
     "editorFontSize": "Editor Font Size",
+    "editorFontFamily": "Editor Font Family",
+    "editorLineWrap": "Line Wrap",
     "editorMode": "Editor Mode",
     "editorNormal": "Normal",
     "editorVim": "Vim Emulator",
+    "fontPresets": {
+      "cleanSans": "Clean Sans",
+      "firaCode": "Fira Code",
+      "jetbrainsMono": "JetBrains Mono",
+      "mono": "Mono",
+      "readingSerif": "Reading Serif",
+      "systemMono": "System Mono"
+    },
     "language": "Language",
     "languages": {
       "en": "English",
@@ -317,6 +350,7 @@
     "permalinkFirst": "Use permalink as filename if set.",
     "save": "Save",
     "system": "System",
+    "theme": "Theme",
     "unbind": "Unbind or Change",
     "aiProviders": "AI Providers",
     "aiProviderName": "Provider Name",
