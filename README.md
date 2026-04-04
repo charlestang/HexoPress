@@ -99,11 +99,7 @@ HexoPress makes Hexo blogging as easy as WordPress! No more manual Front Matter 
 - [Download for Apple Silicon: v1.4.0][download-for-apple]
 - [Download for Intel Chip: v1.4.0][download-for-intel]
 
-### 2. Windows
-
-- [Download for Windows: v1.4.0][download-for-win]
-
-### 3. Web Mode (Self-hosted)
+### 2. Web Mode (Self-hosted)
 
 HexoPress can also run as a standalone web application on your server, providing a browser-based management interface for your Hexo blog — no Electron required.
 
@@ -320,7 +316,6 @@ npm run web:build    # Build web mode for production
 [docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/howto-build-a-blog-with-hexo/
 [download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.4.0/HexoPress-darwin-arm64-1.4.0.zip
 [download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.4.0/HexoPress-darwin-x64-1.4.0.zip
-[download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.4.0/HexoPress-squirrel.windows-x64-1.4.0.zip
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
 [electron-badge]: https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white
 [fastify-badge]: https://img.shields.io/badge/fastify-%23000000.svg?logo=fastify&logoColor=white
