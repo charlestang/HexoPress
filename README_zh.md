@@ -96,12 +96,12 @@ HexoPress 让 Hexo 博客创作像 WordPress 一样简单！无需手动编辑 F
 
 ### 1. Mac
 
-- [下载 苹果M1芯片版本: v1.3.0][download-for-apple]
-- [下载 Intel芯片版本: v1.3.0][download-for-intel]
+- [下载 苹果M1芯片版本: v1.4.0][download-for-apple]
+- [下载 Intel芯片版本: v1.4.0][download-for-intel]
 
 ### 2. Windows
 
-- [下载 Windows版本: v1.2.0][download-for-win]
+- [下载 Windows版本: v1.4.0][download-for-win]
 
 ### 3. Web 模式（自托管）
 
@@ -318,9 +318,9 @@ npm run web:build    # 构建 Web 模式生产版本
 [blog-hexopress]: https://blog.charlestang.org/2024/hexopress-blog-client/
 [blog-why-hexopress]: https://blog.charlestang.org/2023/how-to-use-hexo-and-github-actions-to-build-a-personal-blog/
 [docs-hexo-get-start]: https://blog.charlestang.org/HexoPress/howto-build-a-blog-with-hexo-cn/
-[download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.3.0/HexoPress-darwin-arm64-1.3.0.zip
-[download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.3.0/HexoPress-darwin-x64-1.3.0.zi
-[download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.2.0/HexoPress-squirrel.windows-x64-1.2.0.zip
+[download-for-apple]: https://github.com/charlestang/HexoPress/releases/download/v1.4.0/HexoPress-darwin-arm64-1.4.0.zip
+[download-for-intel]: https://github.com/charlestang/HexoPress/releases/download/v1.4.0/HexoPress-darwin-x64-1.4.0.zip
+[download-for-win]: https://github.com/charlestang/HexoPress/releases/download/v1.4.0/HexoPress-squirrel.windows-x64-1.4.0.zip
 [downloads-badge]: https://img.shields.io/github/downloads/charlestang/HexoPress/total
 [electron-badge]: https://img.shields.io/badge/Electron-191970?logo=Electron&logoColor=white
 [fastify-badge]: https://img.shields.io/badge/fastify-%23000000.svg?logo=fastify&logoColor=white
