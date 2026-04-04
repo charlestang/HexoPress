@@ -7,53 +7,92 @@ tags:
   - hexopress
   - architecture
   - electron
-excerpt: A high-level look at the HexoPress architecture — Electron's multi-process model, IPC communication design, and frontend app structure.
+  - web
+excerpt: A high-level look at the HexoPress architecture — dual runtime modes, shared renderer, and the service layers behind Hexo management.
 date: 2026-02-11 12:00:00
-updated: 2026-02-11 12:00:00
+updated: 2026-04-04 13:35:00
 ---
 
-HexoPress is an Electron-based desktop application that provides a visual management interface for Hexo blogs. This article introduces its technical architecture from a high level, helping you quickly build a mental model of the entire project.
+HexoPress is no longer just an Electron desktop app. It now supports two runtime modes: a desktop experience built on Electron, and a self-hosted web app built on Fastify. Both modes share the same renderer application and the same Hexo-facing service logic.
 
-## Three-Process Model
+## Two Runtime Modes
 
-Like all Electron apps, HexoPress runs across three cooperating processes:
+### Electron Mode
 
-The **main process** handles application lifecycle management and system-level operations. It hosts three core services: an agent layer that interfaces with Hexo, a service for file system operations, and a local HTTP server for image previews. All operations requiring Node.js capabilities happen here.
+The desktop app uses the familiar Electron split:
 
-The **preload script** serves as the security bridge between the main and renderer processes. Using Electron's Context Bridge mechanism, it exposes the main process's capabilities to the renderer as a type-safe API. The renderer cannot access Node.js directly — all system operations must cross this bridge.
+- **Main process** for lifecycle management, Hexo integration, filesystem operations, and local services
+- **Preload script** as the secure bridge that exposes `window.site.*`
+- **Renderer** for the actual UI
 
-The **renderer process** is a standard Vue 3 single-page application responsible for all UI rendering and user interaction. It uses Pinia for state management, Vue Router for navigation, and Element Plus as the UI component library.
+This mode is optimized for local editing with the blog directory chosen directly on the user's machine.
 
-## IPC Communication Design
+### Web Mode
 
-The three processes collaborate through IPC (Inter-Process Communication). HexoPress follows a clean channel naming convention: `domain:action`. For example, `site:posts` fetches the post list, and `post:save` saves a post.
+The self-hosted deployment replaces Electron's IPC boundary with an HTTP boundary:
 
-All IPC calls follow an async request-response pattern. The renderer invokes methods through `window.site.*`, and the main process handles them and returns results. This design makes renderer code look like ordinary async function calls, hiding the complexity of cross-process communication.
+- **Fastify server** hosts authentication, API routes, and site initialization
+- **Renderer SPA** runs in the browser
+- **Same Hexo/FS services** power the actual blog operations on the server side
 
-The complete interface contract is enforced through TypeScript interface definitions, ensuring type consistency on both sides.
+This mode is useful when you want remote access while still keeping the deployment under your own control.
 
-## Hexo Integration Strategy
+## Shared Service Layer
 
-One of HexoPress's key design decisions is importing Hexo directly as a Node.js library rather than shelling out to hexo-cli.
+Under both runtime modes, HexoPress relies on the same backend responsibilities:
 
-This means a Hexo instance runs within the main process, and HexoPress can directly access Hexo's in-memory database to query posts, categories, and tags. File reads and writes go through Hexo's Front Matter parser, ensuring metadata formats always remain Hexo-compatible.
+- **HexoAgent** for loading Hexo data, querying posts/categories/tags, and writing content
+- **FsAgent** for controlled access to files under `source/`
+- **Asset serving and metadata support** for previews, file inspection, and reference lookup
 
-This approach brings significant performance benefits — no need to repeatedly spawn child processes or parse CLI text output. It also lets HexoPress leverage Hexo's rich query API for complex filtering and statistics.
+The important architectural decision is that business capabilities are not duplicated per runtime. Electron IPC handlers and Fastify routes both map to the same underlying services.
 
-## Frontend App Structure
+## Bridge and API Contract
 
-The renderer's Vue 3 application follows a classic layered structure:
+The renderer talks to the backend through a unified `site` interface.
 
-The **routing layer** uses hash mode (more reliable under Electron's file:// protocol) and implements blog directory detection and auto-initialization logic through navigation guards.
+- In Electron mode, that interface is backed by IPC calls exposed from preload
+- In Web mode, the same interface is implemented through `fetch` calls to `/api/*`
 
-The **state layer** consists of multiple Pinia stores, each managing state for a different domain. One notable design is the sharing of editor state — the editor's text content, selected text, heading structure, and other information are lifted into a global store, allowing external components like the AI panel to access editor context.
+This shared contract keeps renderer code largely runtime-agnostic. The UI does not need to care whether a request crosses an IPC channel or an HTTP route.
 
-The **view layer** is split between page-level components and reusable components. The editor page uses a separate full-screen layout, distinct from the navigation layout of other management pages, providing an immersive writing experience.
+## Renderer Structure
 
-## Build System
+The renderer is a Vue 3 single-page app using:
 
-HexoPress uses Electron Forge with a Vite plugin for building. Each of the three processes has its own Vite configuration, optimized for its respective runtime environment (Node.js / sandbox / browser).
+- **Vue Router** for navigation
+- **Pinia** for application state
+- **Element Plus** and **UnoCSS** for UI composition
 
-The renderer build also integrates UnoCSS (atomic CSS), auto-import for components, internationalization tooling, and more — maintaining a great developer experience while keeping bundle size under control.
+The main navigation includes dashboard, posts, categories, tags, media library, and preferences, while the editor uses a separate full-screen workspace with its own side tools.
 
-That's the big picture of HexoPress's architecture. If you're interested in specific areas, subsequent articles dive deeper into editor design, AI integration, and other topics.
+## Editor-Centered State Sharing
+
+One of the more important architectural choices is that the editor does not keep all useful state to itself. The current text, selection, heading outline, and Front Matter are lifted into shared stores so that other panels can collaborate with the editor.
+
+That is what makes these features possible without tight coupling:
+
+- TOC synchronized with the current headings
+- AI panel aware of full text and selection
+- media insertion that understands the current post context
+
+## Hexo as a Library, Not a CLI
+
+HexoPress embeds Hexo directly as a Node.js library rather than shelling out to `hexo` commands for every operation.
+
+This gives the app:
+
+- direct access to Hexo's in-memory data model
+- faster queries for filtering and statistics
+- consistent Front Matter handling when reading and writing files
+
+The result is less process overhead and a more reliable editing experience.
+
+## Build and Delivery
+
+The project uses different build paths for the two runtime modes:
+
+- **Electron mode**: Electron Forge + Vite
+- **Web mode**: Vite for the SPA and esbuild-powered server bundling for Fastify
+
+Even though delivery differs, the architectural goal stays the same: one renderer experience, one service model, two deployment choices.

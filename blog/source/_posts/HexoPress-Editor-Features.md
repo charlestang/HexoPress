@@ -9,71 +9,82 @@ tags:
   - editor
 excerpt: A deep dive into the HexoPress editor — Markdown editing, side panels, and handy shortcuts.
 date: 2026-02-11 10:30:00
-updated: 2026-02-11 10:30:00
+updated: 2026-04-04 13:20:00
 ---
 
-HexoPress comes with a feature-rich Markdown editor that lets you focus on writing while providing convenient tools at your fingertips.
+The HexoPress editor has grown into a writing workspace designed to keep momentum high: title, metadata, body text, images, outline, and AI all live in the same screen.
 
-## Editing Area
+## Top Area: Title and Save Actions
 
-The main body of the editor is a Markdown editing area with syntax highlighting. You can write Markdown content just as you would in any text editor.
+The top area contains the title input and the primary save controls. The available action depends on the document state:
 
-"插图：Screenshot of the full editor page, showing the Front Matter area at top, editing area in the middle, and side panel icons on the right"
+- **new post / draft**: `Save Draft`, `Publish`
+- **published post**: `Update`
 
-The editor supports two modes:
+There is also a file-path dialog available from the title field, so you can inspect or adjust where the document lives on disk.
 
-- **Normal mode**: A standard text editing experience
-- **Vim mode**: For Vim users — enable Vim keybindings in Preferences
+## Metadata Panel
 
-### About Vim Mode
+The collapsible panel beside the editor centralizes Front Matter editing:
 
-For old-school users who live and breathe Vim, this one's for you. When enabled, the editor supports Vim's modal editing along with common motion and editing commands, letting you maintain your familiar keyboard workflow right inside HexoPress.
+- publish date
+- permalink
+- categories
+- tags
 
-Vim mode can be toggled on or off at any time in Preferences — no restart required. If you've never used Vim, just stick with the default normal mode.
+If the current post is already published, the panel also exposes deletion. Categories use a tree-based selector that works well for nested structures, while tags are optimized for quick add/remove operations.
 
-## Front Matter Editing
+> Illustration: add a screenshot of the editor header and metadata panel
 
-At the top of the editor is a Front Matter editing area where you can directly modify the post's metadata:
+## The Main Markdown Editor
 
-- **Title**: The display title of the post
-- **Date**: The publish date
-- **Permalink**: A custom URL path for the post
-- **Categories**: Select or create post categories (hierarchical categories supported)
-- **Tags**: Add or remove tags
-- **Excerpt**: A short description of the post
+The main body uses a live Markdown editor with:
 
-These fields correspond to the YAML Front Matter block at the top of the Markdown file.
+- syntax highlighting
+- live preview
+- Vim mode
+- immediate application of font, size, line-wrap, and code-block appearance settings from Preferences
 
-"插图：Close-up screenshot of the Front Matter editing area, showing title, date, categories, tags fields"
+In other words, the Appearance tab is not abstract configuration. Its changes are visible in the editor right away.
 
-## Auto-Save
+## Drag-and-Drop Image Upload
 
-HexoPress supports auto-save. When enabled, the editor will automatically save the file after you stop typing for a moment — no manual action needed. You can toggle this feature in Preferences.
+This is one of the most practical workflows in the current editor. When you drag a local image into the writing area, HexoPress:
 
-## Side Panels
+1. opens an upload dialog
+2. pre-fills a date-based destination path
+3. uploads the image to `source/images/YYYY/MM/`
+4. inserts the Markdown image syntax automatically
 
-The editor provides four switchable side panels on the right. Click the corresponding icon to expand one:
+That is much smoother than manually copying files and composing relative paths yourself.
+
+## Side Tool Panels
+
+The editor includes a switchable side tool area.
 
 ### File Explorer
 
-Displays the file structure of your blog's `source` directory with breadcrumb navigation. You can browse and switch to other files for editing without going back to the post list.
-
-"插图：Screenshot of the File Explorer side panel expanded"
+The file panel lets you browse the `source` directory structure and follow the current path through breadcrumbs. It is useful when you want quick filesystem context while writing.
 
 ### Table of Contents (TOC)
 
-Automatically parses the heading structure of the current post and generates a table of contents tree. Click any heading in the TOC to scroll the editor to that position — great for navigating long articles.
-
-"插图：Screenshot of the TOC side panel expanded"
+The TOC panel extracts the current heading structure and keeps track of the active heading. Clicking a TOC item scrolls the editor directly to that section.
 
 ### Media Panel
 
-Shows image assets from your blog with search and preview support. You can select an image directly from the media panel to insert it into the current post, saving you from manually typing image paths.
+The media panel reads image assets from the blog and supports:
 
-"插图：Screenshot of the Media side panel expanded, showing image list and search box"
+- search
+- preview
+- path and dimension lookup
+- double-click insertion of Markdown image syntax
+
+It complements the full Media Library: the library is for management, the panel is for fast in-editor insertion.
 
 ### AI Panel
 
-An integrated AI writing assistant that can help with spell-checking, polishing text, generating summaries, and more. For detailed usage, see the dedicated AI Writing Assistant tutorial.
+The AI panel shares editor context, including the full document, the current selection, and Front Matter. It is ideal for polishing, summarizing, and in-flow writing assistance. For the full workflow, see `AI Writing Assistant`.
 
-"插图：Screenshot of the AI side panel expanded, showing preset buttons and chat area"
+## Auto-Save and Writing Without Context Switching
+
+If auto-save is enabled in Preferences, HexoPress periodically saves dirty documents in the background. Combined with drag-and-drop uploads, side panels, and the AI panel, the editor is built to minimize context switching while you write.

@@ -8,54 +8,52 @@ tags:
   - guide
 excerpt: Explore the HexoPress Dashboard and get a quick overview of your blog's status at a glance.
 date: 2026-02-11 10:10:00
-updated: 2026-02-11 10:10:00
+updated: 2026-04-04 13:20:00
 ---
 
-When you open HexoPress, the first thing you see is the Dashboard. It serves as the "cockpit" of your blog, giving you an instant overview of its current state.
+The Dashboard is still the homepage of HexoPress, but it is now more than a row of counters. It acts as a daily inspection surface and a fast entry point into your actual writing workflow.
 
-## Profile Card
+## Blog Profile Card
 
-At the top of the Dashboard is a profile card displaying the blog information configured in your `_config.yml`:
+The upper-left card reads site information from `_config.yml`, including:
 
-- Blog title and subtitle
-- Author name
-- Blog description
-- Keywords
-- Language setting
+- title and subtitle
+- description
+- keywords
+- author
+- language
 
-This information is read directly from Hexo's main configuration file. To make changes, edit the `_config.yml` in your blog's root directory.
+This is especially helpful when you work with multiple blogs or connect remotely through Web mode and want immediate confirmation of which site is currently open.
 
-"插图：Screenshot of the profile card at the top of the Dashboard, showing blog title, author, and other info"
+> Illustration: add a screenshot of the profile card showing the title, subtitle, keywords, and author
 
-## Statistics
+## Site Totals
 
-Below the profile card are three key numbers:
+At the bottom of the profile card, HexoPress shows three site-wide counts:
 
-- **Published**: The number of published posts
-- **Drafts**: The number of unpublished drafts
-- **Pages**: The number of standalone pages
+- **Published**
+- **Drafts**
+- **Pages**
 
-These figures give you a quick sense of your blog's content scale.
-
-"插图：Screenshot of the statistics area showing Published, Drafts, and Pages counts"
+These are global numbers for the whole site, not filtered views, so they work well as a quick health check.
 
 ## Writing Heatmap
 
-The Dashboard features a writing heatmap similar to GitHub's contribution graph. It displays your writing activity over time in a calendar format — the darker the color, the more writing activity on that day.
+The large card on the right is the writing heatmap. It maps activity onto a calendar grid, with darker cells indicating more writing activity for a given day.
 
-"插图：Screenshot of the writing heatmap"
+Think of it as a content rhythm indicator: useful for checking whether you've been posting consistently and for spotting long quiet gaps at a glance.
 
-This heatmap helps you track your writing habits and maintain a consistent rhythm.
+> Illustration: add a screenshot of the writing heatmap
 
 ## Recent Posts and Drafts
 
-The lower section of the page is divided into two lists:
+The lower half of the page is split into two lists:
 
-- **Recent Posts**: Published articles sorted by update time — click any post to jump straight into the editor
-- **Drafts**: All unpublished drafts, making it easy to pick up where you left off
+- **Recent Posts**
+- **Drafts**
 
-"插图：Screenshot of the Recent Posts and Drafts lists"
+Each item shows the title and a relative timestamp such as "3 days ago". Clicking a title opens the editor directly. Both lists support `Load More`, so they work equally well for a quick glance and for tracing further back in time.
 
-Both lists support "Load More" for browsing through larger collections.
+> Illustration: add a screenshot of the two lower lists
 
-The Dashboard is a clean, focused overview page that helps you quickly assess your blog's status and jump directly to the content that needs your attention.
+If your normal startup question is "what should I continue, fix, or publish today?", the Dashboard is designed to answer that immediately.

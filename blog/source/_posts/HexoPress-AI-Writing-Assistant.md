@@ -9,60 +9,84 @@ tags:
   - ai
 excerpt: Configure and use the built-in AI writing assistant in HexoPress for spell-checking, polishing, and summarizing your posts.
 date: 2026-02-11 11:00:00
-updated: 2026-02-11 11:00:00
+updated: 2026-04-04 13:20:00
 ---
 
-HexoPress includes a built-in AI writing assistant that provides real-time help while you write. It's integrated into the editor's side panel and supports any AI service compatible with the OpenAI API format.
+The AI panel in HexoPress is not a detached chatbot. It is a writing assistant that works directly with the editor, using the current document, the selected text, and the post metadata as context. That makes it much more useful for in-flow writing than for generic standalone chatting.
 
-## Configuring an AI Provider
+## Configure a Provider First
 
-Before using the AI assistant, you need to configure an AI service provider. Go to "Preferences" → "AI" tab:
+Go to `Preferences` → `AI` and add at least one provider. The current configuration fields are:
 
-1. Click "Add Provider"
-2. Fill in the following details:
-   - **Name**: A label for this provider, e.g., "OpenAI" or "Local Model"
-   - **Endpoint**: The API endpoint URL
-   - **API Key**: Your API key for the service
-   - **Model ID**: The specific model to use, e.g., `gpt-4` or `claude-3-sonnet`
+- Provider Name
+- API Endpoint
+- API Key
+- API Spec (currently OpenAI-compatible)
+- Model ID
 
-You can configure multiple providers and switch between them freely.
+You can configure multiple providers, such as a cloud model and a local proxy, and switch between them in the editor depending on the task.
 
-"插图：Screenshot of the Preferences AI tab, showing the provider configuration form"
+> Illustration: add a screenshot of the AI settings page with provider cards and the Model ID field
 
 ## Opening the AI Panel
 
-In the editor, click the AI icon in the right sidebar to expand the AI panel. The panel has four preset buttons at the top and a chat area below.
+Click the AI icon on the right side of the editor to open the panel. It has three major parts:
 
-"插图：Screenshot of the AI panel expanded in the editor, showing the four preset buttons and chat input area"
+- preset buttons at the top
+- the message area in the middle
+- the input bar and provider selector at the bottom
 
-## Built-in Presets
+The input bar shows the active provider and displays the current model ID beside it.
 
-HexoPress provides four carefully designed AI presets covering the most common writing needs:
+## Four Built-in Presets
 
-### 📝 Typo Check
+The panel currently ships with four high-frequency presets:
 
-Uses the full article as context and asks the AI to review it thoroughly — finding typos, grammar errors, punctuation issues, and unclear expressions. The AI returns a structured list of issues with specific suggestions for each.
+### Typo Check
 
-### ✨ Writing Suggestions
+Uses the full document as context and looks for typos, grammar issues, punctuation problems, and unclear expression.
 
-Analyzes the entire article across four dimensions — structure, logic, expression, and readability — and provides specific, actionable improvement suggestions. Best used after completing a first draft.
+### Writing Tips
 
-### 🔄 Polish Text
+Uses the full document and reviews structure, logic, expression, and readability.
 
-Select a passage in the editor, and the AI will polish the selected text while preserving the original meaning — improving fluency and expression quality. You must select text in the editor before using this preset.
+### Polish
 
-### 📋 Generate Summary
+Uses only the currently selected text. If nothing is selected, HexoPress prompts you to select text first.
 
-Uses the full article as context to generate a concise 2-3 sentence summary, suitable for use as the post's excerpt, SEO meta description, or social media preview text.
+### Summary
+
+Uses the full document to generate a short summary suitable for excerpts, SEO descriptions, or social previews.
+
+> Illustration: add a screenshot of the AI panel showing the four preset buttons and the message list
+
+## Context Is Chosen Automatically
+
+You do not have to manually pick a context mode every time. The AI panel infers context from the editor state:
+
+- if you have a text selection, it prefers the selection
+- if there is no selection, it defaults to the full document
+- if you dismiss the context chip, the next request becomes context-free
+
+That means simply selecting a paragraph in the editor turns the AI panel into a local rewriting assistant without extra setup.
 
 ## Free Chat
 
-Beyond the presets, you can type any question or instruction directly in the input box to have a free-form conversation with the AI. The AI can understand your article content based on the context mode you choose:
+You can also type your own instructions directly, for example:
 
-- **Full document**: The AI can see the entire article
-- **Selection only**: The AI only sees the text you've selected in the editor
-- **No context**: A pure conversation without any article content attached
+- make this paragraph sound more conversational
+- what is weak in the structure of this article
+- propose five punchier titles for this post
 
-Chat history is preserved in the panel, so you can review previous exchanges at any time.
+Responses stream into the message area progressively, so you can evaluate them while they arrive and decide whether to keep iterating.
 
-"插图：Screenshot of an AI chat conversation, showing user messages and AI responses"
+## Best Use Cases
+
+The AI writing assistant is especially useful for:
+
+- reviewing a draft after the first pass
+- polishing a selected paragraph without touching the rest
+- generating summaries, intros, or social snippets quickly
+- discussing article direction without leaving the editor
+
+If you want AI involved in the development workflow instead of the writing workflow, continue with `AI-Assisted Development with OpenSpec`.

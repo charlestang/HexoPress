@@ -8,20 +8,16 @@ tags:
   - guide
 excerpt: Use the visual interface in HexoPress to manage your blog's category hierarchy and tag system.
 date: 2026-02-11 10:40:00
-updated: 2026-02-11 10:40:00
+updated: 2026-04-04 13:20:00
 ---
 
-Categories and tags are the two pillars of content organization in a blog. HexoPress provides an intuitive visual interface to manage both.
+HexoPress now treats category overview and category cleanup as two separate jobs: the category list gives you the structure, while the category detail page is where bulk maintenance happens. Tags follow a similar pattern: the tag page gives you usage visibility, and the tag dialog is where quick cleanup happens.
 
-## Category Management
+## Categories Page: Start with the Tree
 
-Click "Categories" in the left sidebar to enter the category management page.
+Open `Categories` from the left sidebar to see the full category tree. Every category shows its post count and preserves the original hierarchy.
 
-### Tree View
-
-HexoPress displays all categories in a tree structure, fully representing the category hierarchy. Each category shows the number of posts it contains.
-
-Hexo supports multi-level categories. For example:
+For example, Hexo supports nested categories like:
 
 ```yaml
 categories:
@@ -29,54 +25,63 @@ categories:
     - Frontend
 ```
 
-This means the post belongs to the "Frontend" subcategory under "Technology". In HexoPress's tree view, you can clearly see this hierarchical structure.
+HexoPress renders that hierarchy directly, so you can see at a glance whether a category is top-level or nested under another one.
 
-"插图：Screenshot of the Categories page, showing the tree structure with post counts"
+> Illustration: add a screenshot of the categories page with the tree structure and post counts
 
-### Viewing Posts by Category
+## Category Detail Page: Where Bulk Work Happens
 
-Click any category to view all posts under it. From there, you can jump directly to a post's editing page.
+Click `View` on any category row to open its detail page. This page is a working list of posts rather than a read-only summary.
 
-### Batch Category Management
+### Toggle Parent vs Direct Posts
 
-When your blog grows to hundreds of posts, modifying categories one by one becomes painful. HexoPress includes a carefully designed batch category management tool for exactly this scenario.
+If you open a parent category, the detail page can include posts that belong to descendant categories as well. A banner at the top explains what you're seeing and lets you switch to:
 
-In the post list under a category, you can select multiple posts using checkboxes, then perform bulk operations:
+- the full list including descendants
+- only the posts directly assigned to the current category
 
-- **Batch Replace**: Replace the current category with different categories for all selected posts. For example, move some posts from "Frontend" to "Full Stack" in one click
-- **Batch Remove**: Remove the current category from all selected posts
+This is especially useful when refactoring a large category tree.
 
-A confirmation prompt appears before each operation, and a summary of successes and failures is shown afterward. This feature is especially useful when reorganizing your blog's category structure — you can quickly adjust categories across many posts without opening the editor for each one.
+### Bulk Replace Categories
 
-"插图：Screenshot of the category post list with multiple posts selected and batch action buttons visible"
+After selecting multiple posts, you can replace the current category with one or more new category paths. This is useful for:
 
-## Tag Management
+- reorganizing the category system
+- migrating old categories into new ones
+- reclassifying a subset of posts in one pass
 
-Click "Tags" in the left sidebar to enter the tag management page.
+HexoPress shows a confirmation summary first, then reports success and failure counts when the operation finishes.
 
-### Tag List
+### Bulk Remove Categories
 
-All tags are displayed in a list, sorted by post count from most to least. Each tag shows the number of associated posts, giving you an instant view of which tags are used most frequently.
+You can also remove the current category from the selected posts. If some of those posts would end up with no categories at all, the confirmation dialog warns you before continuing.
 
-"插图：Screenshot of the Tags page, showing the tag list with post counts"
+### Jump Straight Back to the Editor
 
-### Viewing Posts by Tag
+Post titles in the category detail table are clickable, so you can go from bulk cleanup back into single-post editing immediately.
 
-Click any tag to open a dialog listing all posts with that tag. You can jump to post editing directly from here.
+> Illustration: add a screenshot of the category detail page showing the info banner, bulk action buttons, and the post table
 
-### Managing Tags from the Dialog
+## Tags Page: Ranked by Usage
 
-The tag dialog isn't just a post list — you can manage the relationship between posts and tags right here. Each post has a remove action next to it, letting you quickly clean up tag assignments without opening the editor.
+The `Tags` page sorts tags by post count and lays them out in two columns for easier scanning.
 
-Compared to manually editing each post's Front Matter via the command line to adjust tags, this visual approach is far more efficient.
+> Illustration: add a screenshot of the tags page with the two-column layout
 
-## Managing Categories and Tags in the Editor
+## Tag Posts Dialog
 
-Beyond the dedicated management pages, you can also set categories and tags directly in the editor's Front Matter area:
+Click `View` on a tag to open a dialog listing the posts that use it. This dialog is more than a viewer. It lets you:
 
-- **Categories**: Use the dropdown selector to choose an existing category, or type a new category name
-- **Tags**: Type a tag name and press Enter to add it; click the close button on a tag to remove it
+- open a post in the editor
+- remove the current tag from a post directly
 
-"插图：Close-up screenshot of the category selector and tag input in the editor's Front Matter area"
+That makes tag cleanup much faster than editing Front Matter one post at a time, especially when cleaning up legacy, duplicate, or temporary tags.
 
-This approach is ideal for organizing posts on the fly while writing.
+## Categories and Tags in the Editor
+
+You can also manage metadata while writing from the editor's top metadata area:
+
+- **Categories**: choose from the category tree and add a new category path on the fly
+- **Tags**: add or remove tags with the tag input component
+
+The dedicated pages are best for large-scale cleanup. The editor metadata area is best for small adjustments while you write. Together they cover the day-to-day category and tag workflow of a Hexo blog.

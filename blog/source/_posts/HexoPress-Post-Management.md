@@ -8,56 +8,73 @@ tags:
   - guide
 excerpt: Learn how to browse, filter, create, and manage your blog posts in HexoPress.
 date: 2026-02-11 10:20:00
-updated: 2026-02-11 10:20:00
+updated: 2026-04-04 13:20:00
 ---
 
-The post list is one of the most frequently used pages in HexoPress. Here you can browse all your articles, apply filters and searches, and perform various operations on your posts.
+The Posts page is the closest thing HexoPress has to a content operations center. Its job is to help you locate the right article quickly instead of digging through folders one by one.
 
 ## Post List
 
-Click "Posts" in the left sidebar to enter the post list page. Each post displays its title, publish date, update date, categories, and status (published or draft).
+Open `Posts` from the left sidebar. Each row shows:
 
-"插图：Screenshot of the post list page, showing post entries and the filter bar at the top"
+- title
+- post status (published or draft)
+- category paths
+- tags
+- time information
 
-## Filtering and Searching
+When you hover over the title area, quick actions for that post appear inline.
 
-The top of the post list provides several filtering options:
+> Illustration: add a screenshot of the post list page with the filter bar and table
 
-- **Status filter**: Choose to view "Published", "Draft", or "All" posts
-- **Date filter**: Filter posts by month to quickly locate content from a specific time period
-- **Category filter**: Show only posts under a specific category
-- **Keyword search**: Enter keywords to search post titles in real time
+## Top Filters
 
-These filters can be combined to help you quickly find what you're looking for among a large number of posts.
+The list supports combining several filters:
 
-"插图：Close-up screenshot of the filter bar, showing status, date, category filters and search box"
+- **Status**: published, draft, or all
+- **Month**: narrow the list by month
+- **Category**: filter by category
+- **Keyword search**: search by title keywords
 
-## Sorting
+For larger blogs, this is much faster than browsing folders manually.
 
-The post list supports two sorting modes:
+## Switch the Time Column
 
-- Sort by publish date
-- Sort by update date
+The right-most time column can switch between two views:
 
-Click the corresponding sort button to switch between them.
+- **Published At**
+- **Updated At**
 
-## Creating a New Post
-
-On the post list page, click the "New Post" button. A dialog will appear asking for the post's filename. After confirming, HexoPress will create a new Markdown file in the `source/_posts/` directory and automatically open the editor.
-
-"插图：Screenshot of the New Post dialog"
+That makes it easy to review either your publishing rhythm or your recent maintenance work.
 
 ## Post Actions
 
-Each post has action buttons on its right side:
+Each post comes with four common actions:
 
-- **Edit**: Open the editor to modify the post
-- **Preview**: Preview the rendered post in a popup
-- **Edit Metadata**: Modify the post's Front Matter (title, date, categories, tags, etc.) without entering the editor
-- **Delete**: Delete the post (with a confirmation prompt)
+- **Preview**: open a rendered reading view with a table of contents
+- **Edit**: open the full editor
+- **Edit Metadata**: update title, dates, categories, tags, excerpt, and other Front Matter fields
+- **Delete**: remove the post file with confirmation
 
-"插图：Close-up screenshot of the action buttons on a post row, showing Edit, Preview, Metadata, and Delete buttons"
+`Edit Metadata` is especially useful for lightweight cleanup when you do not need the full editor.
 
-## Drafts and Publishing
+## Where New Posts Are Created
 
-In Hexo, drafts are stored in the `source/_drafts/` directory, while published posts live in `source/_posts/`. With HexoPress, you can easily switch between the two — publish a draft or move a published post back to draft status.
+The `New Post` action now lives in the top bar of the main window rather than inside the post list. Clicking it opens a blank editor.
+
+From there, you can either:
+
+- **Save Draft** first
+- or **Publish** directly
+
+On first save, HexoPress creates the actual file path from the title and permalink, then continues managing it as a normal draft or post.
+
+## Pagination
+
+The post list supports pagination and page-size switching. This is more stable for long-running blogs and better suited to day-to-day filtering and review work than loading everything at once.
+
+## Preview Without Leaving the List
+
+The preview dialog renders the post and builds a lightweight TOC. You can quickly verify layout, categories, and tags before deciding whether you need to open the full editor.
+
+That makes the Posts page not just an entry point into files, but also a very efficient review surface.

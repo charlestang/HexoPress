@@ -7,61 +7,71 @@ tags:
   - hexopress
   - design
   - local-first
-excerpt: Why does HexoPress commit to local-first? From data ownership and offline availability to deep Hexo integration — the thinking behind the design.
+excerpt: Why does HexoPress still emphasize local-first principles even after adding a self-hosted web mode?
 date: 2026-02-11 12:10:00
-updated: 2026-02-11 12:10:00
+updated: 2026-04-04 13:35:00
 ---
 
-In a world where cloud services are everywhere, HexoPress takes a different path — local-first. Your data stays on your computer at all times, never passing through any third-party server. This isn't a technical compromise; it's a deliberate design decision.
+HexoPress started from a local-first desktop mindset, and that principle still matters even after the project added a self-hosted web mode. The key idea is no longer "everything must live on one laptop," but rather "your blog remains in files and infrastructure you control."
 
-## Why Local-First
+## What Local-First Means in HexoPress Today
 
-Hexo itself is a local tool. Its blog data — Markdown source files, configuration, themes — all lives on the local filesystem. As Hexo's graphical companion, HexoPress naturally respects this premise.
+For HexoPress, local-first means:
 
-Keeping data local means:
+- your source of truth is still the Hexo project on disk
+- there is no proprietary database layer that owns your content
+- you can keep working with Git, editors, and deployment pipelines you already trust
 
-**Complete data ownership.** Your posts, drafts, and images are all on your own hard drive. No accounts, no subscriptions, no risk of "terms of service changes." You can version with Git, back up with any tool, and open files with any editor.
+In desktop mode, that usually means the blog lives directly on your machine. In Web mode, it means the blog lives on your own server rather than inside a hosted SaaS product.
 
-**Fully offline capable.** No internet connection needed to write, edit, or manage your blog. The only feature requiring network access is the AI writing assistant (since it calls external APIs), and that's entirely optional.
+## Why This Still Matters
 
-**Zero-configuration startup.** Point to a Hexo blog directory and start working. No account registration, no database setup, no backend services to launch.
+### Data Ownership
 
-## Hexo as a Library, Not a CLI
+Posts, drafts, media files, configuration, and themes all remain regular project files. You can back them up however you want, review them in Git, and open them in any editor at any time.
 
-A key technical decision behind the local-first approach is embedding Hexo directly as a Node.js library rather than calling it through the command line.
+### Low Operational Overhead
 
-Many similar tools interact with Hexo by executing `hexo` commands via shell. This approach is straightforward but has clear limitations: each operation spawns a new Node.js process, requires parsing text output, and involves handling various edge cases.
+Desktop mode remains close to zero-config: point HexoPress at a local Hexo directory and start working. Web mode adds a server, but still keeps the operational model simple because the app works directly against the blog files rather than a separate application database.
 
-HexoPress chose a deeper integration path. A Hexo instance runs directly within Electron's main process, giving the app access to Hexo's in-memory database, query API, and file parsers. This brings several benefits:
+### Workflow Compatibility
 
-- Data is immediately available after startup — no repeated loading
-- Query operations complete in memory with near-instant response times
-- File operations go through Hexo's parsers, ensuring format compatibility
-- The full Hexo data model enables rich statistics and filtering features
+HexoPress is designed to join your toolchain, not replace it. Use VS Code, Git, CI/CD, or manual deployment whenever you want. HexoPress changes are still just file changes.
 
-## The Filesystem Is the Database
+## Hexo as a Library, Not a CLI Wrapper
 
-HexoPress has no database of its own. All data comes from files in the Hexo blog directory:
+One of the technical foundations of this philosophy is that HexoPress integrates Hexo as a Node.js library rather than shelling out to `hexo` commands repeatedly.
 
-- Post content comes from Markdown files in `source/_posts/` and `source/_drafts/`
-- Category and tag information comes from each post's Front Matter
-- Media assets come from images and files in the `source/` directory
-- Blog configuration comes from `_config.yml`
+That gives the runtime direct access to:
 
-This means any change you make in HexoPress is directly reflected on the filesystem. Open the same file in another editor and you'll see the same content. No sync issues, no data format conversion, no lock-in.
+- Hexo's data model
+- query capabilities for posts, categories, and tags
+- Front Matter parsing and writing logic
 
-## Compatibility with Existing Workflows
+The same idea holds across runtime modes: Electron and Web mode both use service layers that work directly with the Hexo project instead of treating it as an opaque external command.
 
-The local-first design lets HexoPress integrate seamlessly into your existing workflow:
+## The Filesystem Remains the Source of Truth
 
-- Managing your blog with Git? HexoPress changes are just ordinary file modifications — commit directly
-- Prefer writing long posts in VS Code? Switch anytime — HexoPress will detect file changes automatically
-- Using CI/CD for deployment? HexoPress won't interfere with your deployment pipeline
+HexoPress does not introduce its own content database. It reads and writes the same files that your Hexo project already uses:
 
-HexoPress doesn't try to replace your toolchain — it becomes part of it. It focuses on doing visual management well and leaves other choices to you.
+- Markdown content under `source/_posts/` and `source/_drafts/`
+- media and static assets under `source/`
+- blog configuration in `_config.yml`
 
-## Privacy and Security
+That is why the app stays compatible with the rest of the Hexo ecosystem.
 
-Local-first also means better privacy protection. Your blog content is never uploaded to any server (unless you actively use the AI feature with an external API configured). The app collects no usage data and requires no network permissions to run its core features.
+## Offline vs Remote Access
 
-For writers, this certainty matters — you know where your drafts are, and you know who can see them.
+Desktop mode still preserves the strongest local-first benefits:
+
+- no network needed for normal editing
+- no external service dependency for core blog management
+- direct access to local files
+
+Web mode is a deliberate tradeoff. You give up strict locality in exchange for remote access, but you do not give up ownership because the deployment is still yours.
+
+## Privacy Implications
+
+Core HexoPress functionality does not require sending blog content to a third-party service. The main exception is AI assistance, and that only happens if you explicitly configure an external endpoint.
+
+So the practical promise is this: HexoPress manages content you control, on infrastructure you control, using file formats you already own.

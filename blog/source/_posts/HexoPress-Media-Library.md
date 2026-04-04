@@ -8,53 +8,82 @@ tags:
   - guide
 excerpt: Use the HexoPress Media Library to manage images and file assets in your blog.
 date: 2026-02-11 10:50:00
-updated: 2026-02-11 10:50:00
+updated: 2026-04-04 13:20:00
 ---
 
-Blogs frequently need images and other file assets. The HexoPress Media Library provides a centralized interface for managing all of them.
+The media experience in HexoPress is no longer just a flat image list. It now consists of an **image group overview**, a **media detail page**, and a **file list**, with a stronger focus on variant management, reference lookup, and fast insertion into posts.
 
-## Accessing the Media Library
+## Entering the Media Library
 
-Click "Media Library" in the left sidebar to enter the media management page. The page is divided into two tabs:
+Open `Media Library` from the left sidebar. The page has two tabs:
 
-- **Images**: Manage all image assets in your blog
-- **Files**: Manage other types of files
+- **Images**: grouped image resources
+- **Files**: other non-image files under `source`
 
-## Image Management
+## Image Overview: Groups First, Variants Second
 
-### Browsing Images
+The Images tab groups together files that belong to the same visual asset, even if they differ by format or size. For example, `cover.png`, `cover.webp`, and `cover@2x.png` appear as one card with a variant count.
 
-The Images tab displays all blog images in a grid layout with thumbnail previews. HexoPress automatically groups images with the same name but different formats (e.g., `photo.jpg` and `photo.webp`) together for easier management.
+> Illustration: add a screenshot of the Images tab with grouped cards and the variant count label
 
-Image previews are powered by HexoPress's built-in local HTTP server (port 2357), which starts automatically — no extra configuration needed.
+This grouping works especially well for responsive images, multiple export formats, or hand-maintained size variants.
 
-"插图：Screenshot of the Media Library Images tab, showing the image grid with thumbnail previews"
+## Media Detail Page
 
-### Cleaning Up Unused Images
+Click any image card to open the detail page for that group. It shows:
 
-The Media Library offers a handy feature: deleting images that aren't referenced by any post. This helps you clean up redundant assets in your blog directory and reduce its overall size.
+- a representative preview
+- file size
+- dimensions
+- created and updated timestamps
+- a direct browser link to the asset
 
-Supported image formats for cleanup include: PNG, JPG, JPEG, WebP, GIF, and SVG.
+Below that, a table lists every variant in the group.
 
-## File Management
+### Actions per Variant
 
-The Files tab displays non-post files under the blog's `source` directory in a table format, showing filenames, modification dates, and other information.
+Each file variant supports:
 
-"插图：Screenshot of the Media Library Files tab, showing the file table"
+- **Open**: view the file directly in the browser
+- **View references**: find which posts reference that image
+- **Delete**: remove a single variant
 
-## Inserting Images from the Editor
+> Illustration: add a screenshot of the media detail page with the top metadata panel and the variant table
 
-In addition to browsing images in the Media Library, you can search for and insert images directly from the editor's media side panel. After selecting an image, the editor will automatically generate the Markdown image syntax and insert it at the cursor position.
+## Reference Lookup
 
-## A Major Upgrade from Command-Line Image Management
+`View references` opens a dialog listing the posts that reference the selected image. From there, you can jump back into the editor and fix the content immediately.
 
-In the traditional Hexo workflow, managing images is quite tedious. You need to manually copy images to the right location under the `source` directory, hand-write image paths in Markdown, and keep track of which images are in use and which aren't.
+If no post references the image, the dialog says so explicitly and lets you decide whether to delete the asset.
 
-The HexoPress Media Library transforms this experience entirely:
+This is far more practical than manually searching filenames across your blog directory.
 
-- **Visual browsing**: A thumbnail grid lets you see all images at a glance — no more digging through file managers
-- **Smart grouping**: Images with the same name but different formats are automatically grouped, making multi-format asset management clearer
-- **One-click insertion**: Select an image from the editor's side panel to insert it — no more hand-writing paths
-- **Redundancy cleanup**: Automatically detects unreferenced images, helping you keep your blog directory tidy
+## What Deletion Currently Means
 
-Together, these features turn image management from a headache into a smooth experience.
+Before deleting, HexoPress shows a warning that the file **may still be referenced by posts**. In other words, deletion is available, but the app asks for confirmation instead of assuming the file is unused.
+
+Common directly deletable formats currently include:
+
+- PNG
+- JPG / JPEG
+- WebP
+- GIF
+- SVG
+
+## Files Tab
+
+The Files tab is for non-image resources under `source`, such as downloadable files, attachments, or other static assets. It gives you a table view of paths and timestamps.
+
+> Illustration: add a screenshot of the Files tab in table layout
+
+## Editor Integration
+
+The editor also includes a dedicated media side panel:
+
+- search images
+- preview image metadata
+- double-click to insert Markdown image syntax at the cursor
+
+You can also drag a local image directly into the editor. HexoPress opens an upload dialog, defaults the destination to `source/images/YYYY/MM/`, uploads the file, and inserts the Markdown image path automatically.
+
+That turns "upload image + get the path right + insert it into the post" into one continuous action instead of a manual file-copy workflow.

@@ -8,57 +8,92 @@ tags:
   - guide
 excerpt: Explore HexoPress preferences and customize the editor to fit your workflow.
 date: 2026-02-11 11:10:00
-updated: 2026-02-11 11:10:00
+updated: 2026-04-04 13:20:00
 ---
 
-HexoPress offers a range of preferences that let you tailor the editor's behavior and appearance to your liking. Click "Preferences" in the left sidebar to get started.
+The Preferences page is now organized into three tabs: **General**, **Appearance**, and **AI**. Most changes apply immediately, so you can tune the app without restarting it.
 
-"插图：Screenshot of the Preferences General tab"
+> Illustration: add a screenshot of the full Preferences page with all three tabs
 
-## General Settings
+## General
 
-### Blog Directory
+### Blog Base Path
 
-Displays the path of the currently connected Hexo blog directory. If you want to switch to a different blog, click "Unbind" and then select a new directory.
+This section shows the currently connected blog directory.
+
+- In the desktop app, you can click `Unbind or Change` to switch to another local Hexo site
+- In Web mode, the path is configured on the server and is mostly informational here
 
 ### Language
 
-HexoPress supports both Chinese and English interfaces. The change takes effect immediately after switching.
-
-### Appearance Mode
-
-Three appearance modes are available:
-
-- **Light mode**: The classic white background
-- **Dark mode**: An eye-friendly dark theme
-- **Follow system**: Automatically matches your operating system's appearance setting
+HexoPress currently supports English and Simplified Chinese. Switching languages updates navigation labels, buttons, and other UI text right away.
 
 ### Auto-Save
 
-When enabled, the editor will automatically save the file after you stop typing. If you prefer to control when saves happen, you can turn this off.
+When enabled, the editor periodically saves dirty documents for you. It's useful for long writing sessions. If you prefer explicit save actions, turn it off.
 
 ### Editor Mode
 
-- **Normal mode**: A standard text editing experience, suitable for most users
-- **Vim mode**: Enables Vim keybindings for Vim enthusiasts
+Choose between the normal editing experience and Vim mode. The change is applied directly to the main editor without restarting the window.
 
-### Default Filename
+## Appearance
 
-Sets the default filename format preference when creating new posts.
+The Appearance tab controls the overall look of the app and the reading feel of the editor.
 
-## AI Settings
+### Theme
 
-The AI tab is where you manage AI writing assistant provider configurations.
+Three modes are available:
 
-### Managing Providers
+- **System**
+- **Light**
+- **Dark**
 
-You can add multiple AI service providers. Each provider requires:
+The selected theme affects both the application shell and the editor presentation.
 
-- **Name**: Used to identify and switch between providers in the AI panel
-- **Endpoint**: An OpenAI-compatible API endpoint URL
-- **API Key**: The service's API key
-- **Model ID**: The specific model to call
+### Editor
 
-"插图：Screenshot of the AI tab, showing the provider list and configuration form"
+These settings target the main writing area:
 
-Once configured, you can select which provider to use in the editor's AI panel. You can also remove provider configurations that are no longer needed at any time.
+- **Line Wrap**
+- **Editor Font Size**
+- **Editor Font Family**
+
+The built-in presets cover both reading-oriented and developer-oriented styles.
+
+### Code Blocks
+
+This section affects code snippets in editing and preview:
+
+- **Code Block Theme**, grouped into dark and light families
+- **Show Line Numbers**
+- **Code Font Family**
+
+If you write technical posts frequently, this tab has a noticeable impact on readability.
+
+> Illustration: add a screenshot of the Appearance tab showing the Theme, Editor, and Code Block sections
+
+## AI
+
+The AI tab manages the providers used by the editor's AI side panel.
+
+### Add a Provider
+
+You can configure multiple providers. Each provider includes:
+
+- **Provider Name**
+- **API Endpoint**
+- **API Key**
+- **API Spec**: currently OpenAI-compatible
+- **Model ID**
+
+### Switch Providers in the Editor
+
+Once configured, the AI input bar in the editor shows a provider selector. You can switch models depending on the task, and HexoPress remembers the last selected provider as the default.
+
+### Remove Old Configurations
+
+Providers you no longer use can be deleted directly from Preferences. The AI panel updates immediately after removal.
+
+> Illustration: add a screenshot of the AI tab showing multiple provider cards and the Model ID field
+
+For day-to-day usage patterns, continue with `AI Writing Assistant`.
