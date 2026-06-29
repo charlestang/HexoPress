@@ -58,7 +58,7 @@ describe('HexoAgent', () => {
           }),
         },
       }
-      ;(hexoAgent as unknown as { hexo: unknown }).hexo = fakeHexo
+      ;(hexoAgent as unknown as { ctx: { hexo: unknown } }).ctx.hexo = fakeHexo
       return { tagModel }
     }
 
@@ -80,7 +80,10 @@ describe('HexoAgent', () => {
       assignHexo({ _id: 'tag-clean', name: 'Cleanup' })
       const absolutePath = writePost(['Cleanup', 'Keep'])
       const updateCacheSpy = vi
-        .spyOn(hexoAgent as unknown as { updateCache: () => Promise<void> }, 'updateCache')
+        .spyOn(
+          (hexoAgent as unknown as { ctx: { updateCache: () => Promise<void> } }).ctx,
+          'updateCache',
+        )
         .mockResolvedValue()
 
       await hexoAgent.removeTagFromPost(sourcePath, 'tag-clean')
@@ -103,7 +106,10 @@ describe('HexoAgent', () => {
       assignHexo({ _id: 'tag-clean', name: 'Cleanup' })
       const absolutePath = writePost(['Keep'])
       const updateCacheSpy = vi
-        .spyOn(hexoAgent as unknown as { updateCache: () => Promise<void> }, 'updateCache')
+        .spyOn(
+          (hexoAgent as unknown as { ctx: { updateCache: () => Promise<void> } }).ctx,
+          'updateCache',
+        )
         .mockResolvedValue()
 
       await hexoAgent.removeTagFromPost(sourcePath, 'tag-clean')
