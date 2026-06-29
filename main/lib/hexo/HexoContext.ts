@@ -74,8 +74,7 @@ export class HexoContext {
 
   private purgeNullRecords(modelName: string): void {
     const model = this.hexo?.database?.model(modelName) as
-      | { data: Record<string, unknown | null> }
-      | undefined
+      { data: Record<string, unknown | null> } | undefined
     if (!model?.data) {
       return
     }

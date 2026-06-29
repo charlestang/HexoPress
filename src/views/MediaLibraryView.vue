@@ -152,13 +152,13 @@ watchEffect(() => {
         <el-table-column :label="t('mediaLibrary.operation')" width="120">
           <template #default="scope">
             <el-button
-              v-if="isDeletableAsset(scope.row)"
+              v-if="isDeletableAsset(scope.row as Asset)"
               type="danger"
               link
               size="small"
               :loading="isDeleting(scope.row.id)"
               :disabled="isDeleting(scope.row.id)"
-              @click="handleDelete(scope.row)">
+              @click="handleDelete(scope.row as Asset)">
               {{ t('mediaLibrary.delete') }}
             </el-button>
           </template>

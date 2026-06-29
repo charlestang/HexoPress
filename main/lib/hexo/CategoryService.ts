@@ -42,8 +42,7 @@ export class CategoryService {
     await this.ctx.ensureReady()
     const categoryModel = this.ctx.hexo.database.model('Category')
     const category = categoryModel.findById(categoryId, { lean: true }) as
-      | HexoCategoryRecord
-      | undefined
+      HexoCategoryRecord | undefined
 
     if (!category) {
       throw new Error(`Category not found: ${categoryId}`)
@@ -61,8 +60,7 @@ export class CategoryService {
       }
 
       const parent = categoryModel.findById(parentId, { lean: true }) as
-        | HexoCategoryRecord
-        | undefined
+        HexoCategoryRecord | undefined
       if (!parent) {
         break
       }

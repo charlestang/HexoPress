@@ -247,7 +247,7 @@ git clone https://github.com/charlestang/HexoPress.git
 
 ### 2. Running Environment
 
-- Node.js >= v20.8.1
+- Node.js `^22.18.0 || >=24.11.0`
 - npm >= v10.5.5
 - Ports: 5173 (frontend), 2357 (local image service)
 
