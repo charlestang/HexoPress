@@ -84,7 +84,7 @@ describe('FsAgent', () => {
 
   it('prevents path traversal', async () => {
     const agent = createAgent()
-    await expect(agent.readFile('../outside.txt')).rejects.toThrow('Path escapes source directory')
+    await expect(agent.readFile('../outside.txt')).rejects.toThrow('Path traversal detected')
   })
 
   it('returns file info for existing files', async () => {

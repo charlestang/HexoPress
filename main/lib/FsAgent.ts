@@ -9,8 +9,9 @@ import {
   readFile as readFileFs,
   rm,
 } from 'node:fs/promises'
-import { dirname, extname, join, relative, resolve } from 'node:path'
+import { dirname, extname, join, relative } from 'node:path'
 import { Buffer } from 'node:buffer'
+import { resolveWithin } from './pathGuard'
 
 interface DirentTransformed {
   name: string
@@ -45,20 +46,8 @@ export class FsAgent {
 
   private resolveInSource(target: string): string {
     this.ensureInitialized()
-    const resolved = resolve(this.sourceDir, target)
-    const relativePath = relative(this.sourceDir, resolved)
-    if (
-      relativePath.startsWith('..') ||
-      relativePath.includes('..' + this.pathSeparator) ||
-      relativePath === '..'
-    ) {
-      throw new Error('Path escapes source directory')
-    }
-    return resolved
-  }
-
-  private get pathSeparator(): string {
-    return resolve(this.sourceDir).includes('\\') ? '\\' : '/'
+    // An empty target refers to the source directory itself (e.g. readdir('')).
+    return resolveWithin(this.sourceDir, target === '' ? '.' : target)
   }
 
   async readdir(directory = ''): Promise<DirentTransformed[]> {
