@@ -17,17 +17,31 @@ async function routesPlugin(fastify: FastifyInstance, opts: RouteOpts) {
   // ─── Agent lifecycle ───────────────────────────────────────────────
 
   // POST /api/agent/init
-  // In web mode, always uses the configured hexoDir (ignores client path param)
-  fastify.post('/api/agent/init', async () => {
-    const { HexoAgent: HexoAgentClass } = await import('../main/lib/HexoAgent')
-    const check =
-      HexoAgentClass.checkDir(config.hexoDir) && HexoAgentClass.checkHexoDir(config.hexoDir)
-    if (check) {
-      agent.init(config.hexoDir)
-      fsAgent.init(config.hexoDir)
-    }
-    return check
-  })
+  // In web mode, always uses the configured hexoDir (ignores client path param).
+  // This route triggers local filesystem checks and a full Hexo agent
+  // (re)initialization, so it carries a stricter per-route rate limit on top of
+  // the global limiter registered in web/server.ts.
+  fastify.post(
+    '/api/agent/init',
+    {
+      config: {
+        rateLimit: {
+          max: 10,
+          timeWindow: '1 minute',
+        },
+      },
+    },
+    async () => {
+      const { HexoAgent: HexoAgentClass } = await import('../main/lib/HexoAgent')
+      const check =
+        HexoAgentClass.checkDir(config.hexoDir) && HexoAgentClass.checkHexoDir(config.hexoDir)
+      if (check) {
+        agent.init(config.hexoDir)
+        fsAgent.init(config.hexoDir)
+      }
+      return check
+    },
+  )
 
   // ─── Site data queries (GET) ───────────────────────────────────────
 

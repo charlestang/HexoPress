@@ -1,8 +1,9 @@
 import { existsSync, readFileSync, statSync, writeFileSync } from 'fs'
 import Hexo from 'hexo'
 import { parse as parseFrontMatter, stringify as stringifyFrontMatter } from 'hexo-front-matter'
-import { join, resolve, sep } from 'path'
+import { join } from 'path'
 import { FrontMatterData } from '../postMetaUtils'
+import { resolveWithin } from '../pathGuard'
 import { FrontMatterDocument } from './types'
 
 /**
@@ -41,12 +42,7 @@ export class HexoContext {
   }
 
   public safeResolve(baseDir: string, relativePath: string): string {
-    const resolved = resolve(baseDir, relativePath)
-    const base = resolve(baseDir)
-    if (resolved !== base && !resolved.startsWith(base + sep)) {
-      throw new Error(`Path traversal detected: ${relativePath}`)
-    }
-    return resolved
+    return resolveWithin(baseDir, relativePath)
   }
 
   public readPostFrontMatter(sourcePath: string): FrontMatterDocument {
