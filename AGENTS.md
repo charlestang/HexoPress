@@ -24,7 +24,7 @@
   - `types/`：全局类型声明文件（`local.d.ts` 等）
   - `openspec/`：需求变更与实现工件（proposal/tasks/specs），遵循 OpenSpec 流程
 - 入口与构建：
-  - Node ≥ 20.8.1；npm >= 10.5.5
+  - Node `^22.18.0 || >=24.11.0`；npm >= 10.5.5
   - 必须使用 `npm`
 
 ## Runtime Modes

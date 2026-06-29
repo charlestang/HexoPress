@@ -252,13 +252,13 @@ const { tableHeight, wrapper } = useTableHeight()
       <el-table-column prop="categories" :label="t('posts.categories')">
         <template #default="scope">
           <el-tag
-            v-for="label in categoryLabelsForPost(scope.row)"
+            v-for="label in categoryLabelsForPost(scope.row as Post)"
             :key="label"
             size="small"
             class="tag-item">
             {{ label }}
           </el-tag>
-          <el-text v-if="categoryLabelsForPost(scope.row).length === 0">--</el-text>
+          <el-text v-if="categoryLabelsForPost(scope.row as Post).length === 0">--</el-text>
         </template>
       </el-table-column>
       <el-table-column prop="tags" :label="t('posts.tags')">

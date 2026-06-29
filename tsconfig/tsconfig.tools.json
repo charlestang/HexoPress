@@ -20,7 +20,6 @@
     "skipLibCheck": true,
     "noImplicitAny": true,
     "sourceMap": true,
-    "baseUrl": ".",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "noEmit": true,

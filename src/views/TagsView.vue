@@ -120,7 +120,7 @@ watch(
           <el-table-column prop="length" :label="t('tags.total')" sortable />
           <el-table-column :label="t('tags.actions')">
             <template #default="scope">
-              <el-link type="primary" link @click="onViewTag(scope.row)">{{
+              <el-link type="primary" link @click="onViewTag(scope.row as Tag)">{{
                 t('tags.view')
               }}</el-link>
             </template>
@@ -143,7 +143,7 @@ watch(
           <el-table-column prop="length" :label="t('tags.total')" sortable />
           <el-table-column :label="t('tags.actions')">
             <template #default="scope">
-              <el-link type="primary" link @click="onViewTag(scope.row)">{{
+              <el-link type="primary" link @click="onViewTag(scope.row as Tag)">{{
                 t('tags.view')
               }}</el-link>
             </template>

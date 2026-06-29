@@ -470,38 +470,46 @@ function loadImageDimensions(url: string): Promise<{ width: number; height: numb
           <template #default="scope">
             <img
               class="media-detail-card__variant-preview"
-              :src="assetUrl(scope.row)"
-              :alt="assetName(scope.row)" />
+              :src="assetUrl(scope.row as Asset)"
+              :alt="assetName(scope.row as Asset)" />
           </template>
         </el-table-column>
         <el-table-column prop="path" :label="t('mediaLibrary.path')"></el-table-column>
         <el-table-column :label="t('mediaLibrary.fileSize')" width="140">
           <template #default="scope">
-            {{ variantSizeLabel(scope.row) }}
+            {{ variantSizeLabel(scope.row as Asset) }}
           </template>
         </el-table-column>
         <el-table-column :label="t('mediaLibrary.dimensions')" width="140">
           <template #default="scope">
-            {{ variantDimensionsLabel(scope.row) }}
+            {{ variantDimensionsLabel(scope.row as Asset) }}
           </template>
         </el-table-column>
         <el-table-column :label="t('mediaLibrary.operation')" width="220">
           <template #default="scope">
             <div class="media-detail-card__variant-actions">
-              <el-button type="primary" link size="small" @click="openAssetInBrowser(scope.row)">
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="openAssetInBrowser(scope.row as Asset)">
                 {{ t('mediaLibrary.openInBrowserLink') }}
               </el-button>
-              <el-button type="primary" link size="small" @click="viewAssetReferences(scope.row)">
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="viewAssetReferences(scope.row as Asset)">
                 {{ t('mediaLibrary.viewReferences') }}
               </el-button>
               <el-button
-                v-if="isDeletableAsset(scope.row)"
+                v-if="isDeletableAsset(scope.row as Asset)"
                 type="danger"
                 link
                 size="small"
                 :loading="isDeleting(scope.row.id)"
                 :disabled="isDeleting(scope.row.id)"
-                @click="handleDelete(scope.row)">
+                @click="handleDelete(scope.row as Asset)">
                 {{ t('mediaLibrary.delete') }}
               </el-button>
             </div>
@@ -531,7 +539,7 @@ function loadImageDimensions(url: string): Promise<{ width: number; height: numb
         <el-table v-else :data="referencePosts" border size="small" style="width: 100%">
           <el-table-column :label="t('categoryDetail.table.title')" min-width="220">
             <template #default="scope">
-              <el-link type="primary" @click="openPostEditor(scope.row)">
+              <el-link type="primary" @click="openPostEditor(scope.row as Post)">
                 {{ scope.row.title }}
               </el-link>
             </template>

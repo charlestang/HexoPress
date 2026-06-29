@@ -348,16 +348,16 @@ defineExpose({
                 class="post-title"
                 type="primary"
                 :underline="false"
-                @click="openPostEditor(scope.row)">
+                @click="openPostEditor(scope.row as Post)">
                 {{ scope.row.title }}
               </el-link>
             </template>
           </el-table-column>
           <el-table-column :label="t('posts.categories')" prop="categories">
             <template #default="scope">
-              <template v-if="categoryLabelsForPost(scope.row).length > 0">
+              <template v-if="categoryLabelsForPost(scope.row as Post).length > 0">
                 <el-tag
-                  v-for="label in categoryLabelsForPost(scope.row)"
+                  v-for="label in categoryLabelsForPost(scope.row as Post)"
                   :key="label"
                   size="small"
                   class="tag-item">
@@ -369,9 +369,9 @@ defineExpose({
           </el-table-column>
           <el-table-column :label="t('posts.tags')" prop="tags">
             <template #default="scope">
-              <template v-if="tagLabelsForPost(scope.row).length > 0">
+              <template v-if="tagLabelsForPost(scope.row as Post).length > 0">
                 <el-tag
-                  v-for="tag in tagLabelsForPost(scope.row)"
+                  v-for="tag in tagLabelsForPost(scope.row as Post)"
                   :key="`${scope.row.source}-${tag.id}`"
                   size="small"
                   :class="[
@@ -380,12 +380,12 @@ defineExpose({
                   ]"
                   :type="isActiveTag(tag.id) ? 'primary' : 'info'"
                   :effect="isActiveTag(tag.id) ? 'light' : 'plain'"
-                  :closable="!isRemovingChip(scope.row, tag.id)"
+                  :closable="!isRemovingChip(scope.row as Post, tag.id)"
                   :disable-transitions="true"
-                  @close="() => onRemoveTag(scope.row, tag)">
+                  @close="() => onRemoveTag(scope.row as Post, tag)">
                   <span class="tag-chip__label">{{ tag.name }}</span>
                   <el-icon
-                    v-if="isRemovingChip(scope.row, tag.id)"
+                    v-if="isRemovingChip(scope.row as Post, tag.id)"
                     class="tag-chip__spinner"
                     :size="12">
                     <Loading />

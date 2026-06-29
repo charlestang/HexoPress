@@ -3,7 +3,7 @@
 本文面向希望参与 HexoPress 开发的同学，介绍本地环境准备、项目结构与常见工作流，帮助在阅读源码前建立整体认知。【F:README.md†L93-L142】
 
 ## 开发环境准备
-- **Node.js / npm**：遵循 README 的要求，使用 Node.js ≥ 20.8.1、npm ≥ 10.5.5，以保证 Electron Forge、Vite 与 Vue 构建链一致。【F:README.md†L109-L123】
+- **Node.js / npm**：遵循 README 的要求，使用 Node.js `^22.18.0 || >=24.11.0`、npm ≥ 10.5.5，以保证 Electron Forge、Vite 与 Vue 构建链一致。【F:README.md†L109-L123】
 - **端口占用**：开发模式默认占用 5173（渲染进程 Vite）与 2357（Fastify 静态资源服务器），启动前请确认无冲突。【F:README.md†L109-L123】【F:main/lib/HttpServer.ts†L6-L33】
 - **依赖安装**：执行 `npm install` 安装主进程、渲染进程与工具链依赖；首次进入仓库建议同时运行 `npm run check-all` 验证环境是否完整。【F:README.md†L115-L135】【F:package.json†L12-L33】
 

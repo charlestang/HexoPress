@@ -12,11 +12,11 @@
     "skipLibCheck": true,
     "noImplicitAny": false,
     "sourceMap": true,
-    "baseUrl": ".",
     "paths": {
       "@shared/*": ["../shared/*"]
     },
     "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
     "resolveJsonModule": true,
     "noEmit": true,
     "esModuleInterop": true,

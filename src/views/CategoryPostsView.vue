@@ -2,7 +2,7 @@
 import { site } from '@/bridge'
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { ElTable } from 'element-plus'
+import type { TableInstance } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useAppStore } from '@/stores/app'
 import { formatDate } from '@shared/utils/date'
@@ -32,7 +32,7 @@ const categories = ref<Category[]>([])
 const rawPosts = ref<Post[]>([])
 const loading = ref(false)
 const errorMessage = ref('')
-const tableRef = ref<InstanceType<typeof ElTable>>()
+const tableRef = ref<TableInstance>()
 const selectedPosts = ref<Post[]>([])
 
 const categoriesRef = computed(() => categories.value)
@@ -566,7 +566,7 @@ function goBackToCategories() {
         <el-table-column type="selection" width="55" />
         <el-table-column :label="t('categoryDetail.table.title')" min-width="220">
           <template #default="scope">
-            <el-link type="primary" @click="openPostEditor(scope.row)">
+            <el-link type="primary" @click="openPostEditor(scope.row as Post)">
               {{ scope.row.title }}
             </el-link>
           </template>
@@ -592,13 +592,13 @@ function goBackToCategories() {
         <el-table-column :label="t('categoryDetail.table.categories')" min-width="260">
           <template #default="scope">
             <el-tag
-              v-for="label in categoryLabelsForPost(scope.row)"
+              v-for="label in categoryLabelsForPost(scope.row as Post)"
               :key="label"
               size="small"
               class="category-detail__tag">
               {{ label }}
             </el-tag>
-            <el-text v-if="categoryLabelsForPost(scope.row).length === 0">--</el-text>
+            <el-text v-if="categoryLabelsForPost(scope.row as Post).length === 0">--</el-text>
           </template>
         </el-table-column>
       </el-table>
