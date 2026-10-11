@@ -1,7 +1,7 @@
 import type { ConfigEnv, UserConfig } from 'vite'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vite'
-import { pluginExposeRenderer } from './vite.config.base'
+import { pluginExposeRenderer } from './vite.config.base.mts'
 
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'

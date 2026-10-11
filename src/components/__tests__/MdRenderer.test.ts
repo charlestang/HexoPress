@@ -12,6 +12,16 @@ const i18n = createI18n({
 })
 
 describe('MdRenderer.vue', () => {
+  it('keeps bare domain links clickable after upgrading markdown-it', () => {
+    const wrapper = mount(MdRenderer, {
+      props: { modelValue: 'Visit example.com for details.' },
+      global: { plugins: [i18n] },
+    })
+
+    expect(wrapper.get('a').attributes('href')).toBe('http://example.com')
+    expect(wrapper.get('a').text()).toBe('example.com')
+  })
+
   it('rewrites relative image url by permalink and asset base url', async () => {
     Object.assign(import.meta.env, {
       VITE_ASSET_BASE_URL: 'https://assets.example.com',

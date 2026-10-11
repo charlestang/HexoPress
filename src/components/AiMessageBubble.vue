@@ -7,6 +7,7 @@ const props = defineProps<{
 }>()
 
 const md = new MarkdownIt({ html: false, linkify: true, breaks: true })
+md.linkify.set({ fuzzyLink: true })
 
 const renderedContent = computed(() => {
   if (props.message.role === 'assistant') {

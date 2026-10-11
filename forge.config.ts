@@ -19,6 +19,11 @@ const config: ForgeConfig = {
     asar: true,
     name: 'HexoPress',
     icon: './src/assets/icon',
+    // Main-process dependencies are externalized by Vite and must be packaged.
+    ignore: (file) => {
+      if (!file) return false
+      return !/^\/(?:\.vite|node_modules)(?:\/|$)/.test(file)
+    },
   },
   // The options sent to `electron-rebuild` during both
   // the package and start step. The options are documented at
@@ -49,19 +54,19 @@ const config: ForgeConfig = {
         {
           // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
           entry: 'main/main.ts',
-          config: 'vite.config.main.ts',
+          config: 'vite.config.main.mts',
           target: 'main',
         },
         {
           entry: 'main/preload.ts',
-          config: 'vite.config.preload.ts',
+          config: 'vite.config.preload.mts',
           target: 'preload',
         },
       ],
       renderer: [
         {
           name: 'main_window',
-          config: 'vite.config.renderer.ts',
+          config: 'vite.config.renderer.mts',
         },
       ],
     }),

@@ -1,7 +1,7 @@
 import { builtinModules } from 'node:module'
 import type { AddressInfo } from 'node:net'
 import type { ConfigEnv, Plugin, UserConfig } from 'vite'
-import pkg from './package.json'
+import pkg from './package.json' with { type: 'json' }
 
 export const builtins = ['electron', ...builtinModules.map((m) => [m, `node:${m}`]).flat()]
 
@@ -82,7 +82,7 @@ export function pluginHotRestart(command: 'reload' | 'restart'): Plugin {
     name: '@electron-forge/plugin-vite:hot-restart',
     closeBundle() {
       if (command === 'reload') {
-        for (const server of Object.values(process.viteDevServers)) {
+        for (const server of Object.values(process.viteDevServers ?? {})) {
           // Preload scripts hot reload.
           server.ws.send({ type: 'full-reload' })
         }

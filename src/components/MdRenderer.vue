@@ -45,6 +45,8 @@ const markdown = new MarkdownIt({
   },
 })
 
+markdown.linkify.set({ fuzzyLink: true })
+
 const renderHtmlToken = (tokens: Array<{ content?: string }>, idx: number): string => {
   const content = tokens[idx]?.content ?? ''
   if (isMoreComment(content)) {
@@ -61,7 +63,7 @@ const defaultImageRenderer = markdown.renderer.rules.image
 
 markdown.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx]
-  const source = token?.attrGet('src') ?? ''
+  const source = String(token?.attrGet('src') ?? '')
   const resolved = resolveMarkdownImageUrl(
     source,
     import.meta.env.VITE_ASSET_BASE_URL,

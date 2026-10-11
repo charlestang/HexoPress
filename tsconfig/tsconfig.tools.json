@@ -4,11 +4,12 @@
     "../types/**/*.d.ts",
     "../package.json",
     "../forge.env.d.ts",
-    "../vite.config.base.ts",
-    "../vite.config.main.ts",
-    "../vite.config.preload.ts",
-    "../vite.config.renderer.ts",
-    "../vitest.config.ts",
+    "../vite.config.base.mts",
+    "../vite.config.main.mts",
+    "../vite.config.preload.mts",
+    "../vite.config.renderer.mts",
+    "../vite.config.web.mts",
+    "../vitest.config.mts",
   ],
   "compilerOptions": {
     "composite": true,
@@ -23,6 +24,7 @@
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   }

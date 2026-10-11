@@ -46,8 +46,8 @@ src/bridge/electron.ts   → export const site = window.site
 src/bridge/web.ts        → export const site: SiteBridge = { ...fetch 实现 }
 src/bridge/index.ts      → IDE fallback（实际被 alias 覆盖）
 
-vite.config.renderer.ts  → '@/bridge' → electron.ts
-vite.config.web.ts       → '@/bridge' → web.ts
+vite.config.renderer.mts  → '@/bridge' → electron.ts
+vite.config.web.mts       → '@/bridge' → web.ts
 ```
 
 `web.ts` 实现 `SiteBridge` 接口，TypeScript 编译器强制覆盖所有方法，是四层契约中唯一有静态保障的一层。详见 `docs/adr-api-contract-maintenance.md`。
@@ -94,9 +94,9 @@ vite.config.web.ts       → '@/bridge' → web.ts
 
 ## 构建系统
 
-- **Electron mode**：Electron Forge + Vite 插件（`forge.config.ts`）。三套 Vite 配置：`vite.config.main.ts`、`vite.config.preload.ts`、`vite.config.renderer.ts`。
-- **Web mode**：`vite.config.web.ts` 构建 SPA 到 `dist/web/`，`web/server.ts` 以 esbuild 编译为独立 Node 服务。
-- **公共配置**：`vite.config.base.ts`（external 列表、Forge 插件辅助函数）。
+- **Electron mode**：Electron Forge + Vite 插件（`forge.config.ts`）。三套 Vite 配置：`vite.config.main.mts`、`vite.config.preload.mts`、`vite.config.renderer.mts`。
+- **Web mode**：`vite.config.web.mts` 构建 SPA 到 `dist/web/`，`web/server.ts` 以 esbuild 编译为独立 Node 服务。
+- **公共配置**：`vite.config.base.mts`（external 列表、Forge 插件辅助函数）。
 - **路径别名**：`@` → `src/`，`@shared` → `shared/`，`@/bridge` → 按模式切换。
 - **静态资源 URL**：渲染进程统一使用 `import.meta.env.VITE_ASSET_BASE_URL`，不硬编码本地服务地址。
 

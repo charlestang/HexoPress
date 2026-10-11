@@ -247,9 +247,11 @@ git clone https://github.com/charlestang/HexoPress.git
 
 ### 2. 运行环境
 
-- Node.js >= v20.8.1
+- Node.js `^22.22.2 || ^24.15.0 || >=26.0.0`
 - npm >= v10.5.5
 - 端口：5173（前端）、2357（本地图片服务）
+
+执行 `npm run package` 和 `npm run make` 时请使用 Node.js 24 LTS。Forge 7 的 ZIP 解压链在 Node.js 26.7.0 下可能退出却不生成应用；已使用 Node.js 24.21.0 验证打包。
 
 ### 3. 安装依赖
 
